@@ -1,0 +1,6 @@
+{
+  "usingComponents": {
+    "login-component": "/pages/component/login/login"
+  },
+  "navigationBarTitleText": "店铺收藏"
+}

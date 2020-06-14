@@ -1,0 +1,5 @@
+<!-- 身份证号码 -->
+    <view  class='custom customDisplay wx:if="{{customitem.required == true ? "custom_padd" : ""}}"'>
+      <view class='label_text'><text class="star" wx:if='{{customitem.required == true}}'>*</text>{{customitem.label}}</view>
+      <input type='number' placeholder='{{customitem.placeholder}}' value='{{customitem.value}}' data-index="{{index}}" bindinput='onIDCardFun'></input>
+    </view>

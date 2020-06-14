@@ -1,0 +1,182 @@
+{extend name="platform/new_base" /}
+{block name="resources"/}
+{/block}
+{block name="main"}
+                <!-- page -->
+
+                <div class="mb-20 flex flex-pack-justify">
+                    <div class="">
+                        <a href="{:__URL('PLATFORM_MAIN/Auth/addUser')}" class="btn btn-primary"><i class="icon icon-add1"></i> 添加子账号</a>
+                    </div>
+                    <div class="input-group search-input-group">
+                        <input type="text" class="form-control" id="search_text"  placeholder="账号、使用人">
+                        <span class="input-group-btn "><a class="btn btn-primary search">搜索</a></span>
+                    </div>
+                </div>
+                <table class="table v-table table-auto-center">
+                    <thead>
+                        <tr>
+                            <th>帐号</th>
+                            <th>使用人</th>
+                            <th>角色</th>
+                            <th>状态</th>
+                            <th class="col-md-2 pr-14 operationLeft">操作</th>
+                        </tr>
+                    </thead>
+                    <tbody id="list">
+
+                    </tbody>
+                </table>
+                <nav aria-label="Page navigation" class="clearfix">
+                    <ul id="page" class="pagination pull-right"></ul>
+                </nav>
+         <input type="hidden" id="page_index" value="">       <!-- page end -->
+{/block}
+
+{block name="script"}
+<script>
+require(['util'],function(util){
+    util.initPage(getAuthList);
+    function getAuthList(page_index){
+        $("#page_index").val(page_index);
+        var search_text = $("#search_text").val();
+        $.ajax({
+            type : "post",
+            url : "{:__URL('PLATFORM_MAIN/auth/userList')}",
+            async : true,
+            data : {
+                "page_index" : page_index, "search_text":search_text
+            },
+            success : function(data) {
+                var html = '';
+                if (data["data"].length > 0) {
+                    for (var i = 0; i < data["data"].length; i++) {
+                        html += '<tr>';
+                        html += '<td>' + data["data"][i]["user_tel"] + '</div></td>';
+                        html += '<td>' + data["data"][i]["user"]+ '</td>';
+                        html += '<td>' + data["data"][i]["group_name"] + '</td>';
+                        if(data['data'][i]['uid'] == data['data'][i]['adminid']){
+                                html += data["data"][i]["user_status"] == 0 ? '<td ><span class="label label-danger">停用</span></td>' : '<td><span class="label label-success">正常</span></td>';
+                                html += '<td class="operationLeft">超级管理员不可编辑</td>';
+                            }else{
+                                html += data["data"][i]["user_status"] == 0 ? '<td><span class="label label-danger is_use" data-user_status="1" data-uid="'+data["data"][i]["uid"]+'">停用</span></td>' : '<td><span class="label label-success is_use" data-user_status="0" data-uid="'+data["data"][i]["uid"]+'">正常</span></td>';
+                                html += '<td class="operationLeft"><a class="btn-operation" href="'+__URL('PLATFORM_MAIN/auth/editUser?uid=' + data["data"][i]["uid"]) + '">编辑</a>';
+                                html += data["data"][i]["user_status"] == 0 ? '<a href="javascript:void(0);" class="btn-operation unlock" data-id="'+data["data"][i]["uid"]+'">启用</a>  ' : '<a href="javascript:void(0);" class="btn-operation lock" data-id="'+data["data"][i]["uid"]+'">停用</a> ';
+                                html += '<a href="javascript:void(0);" class="btn-operation del text-red1" data-id="'+data["data"][i]["uid"]+'">删除</a></td>';
+                            }
+
+
+                        html += '</tr>';
+                    }
+                } else {
+                    html += '<tr><th colspan="6">暂无符合条件的数据记录</th></tr>';
+                }
+                $('#page').paginator('option', {
+                    totalCounts: data['total_count']  // 动态修改总数
+                });
+                
+                $("#list").html(html);del();lock();unlock();
+                util.tips();
+            }
+        });
+    }
+    $('.search').on('click',function(){
+        util.initPage(getAuthList);
+    });
+    function del(){
+        $('.del').click(function(e){
+            var id = $(this).data('id');
+            util.alert('是否确定删除此管理员吗？',function(){
+                $.ajax({
+                    type : "post",
+                    url : "{:__URL('PLATFORM_MAIN/Auth/delUser')}",
+                    async : true,
+                    data : {
+                        "uid" : id
+                    },
+                    success : function(data) {
+                        if (data["code"] > 0) {
+                            util.message(data["message"],'success',getAuthList($("#page_index").val()));
+                        }else{
+                            util.message(data["message"],'danger');
+                        }
+                    }
+                });
+            })
+        })
+    }
+    function lock(uid){
+        $('.lock').click(function(e){
+            var uid = $(this).data('id');
+            $(".tooltip.fade.top.in").remove();
+
+        $.ajax({
+            type : "post",
+            url : "{:__URL('PLATFORM_MAIN/auth/userLock')}",
+            async : true,
+            data : {
+                "uid" : uid
+            },
+            success : function(data) {
+                if(data["code"] > 0 ){
+                    util.message(data["message"],'success', getAuthList($("#page_index").val()));
+                }else{
+                    util.message( data["message"],'danger');
+                }
+            }
+        });
+        });
+    }
+    function unlock(uid){
+        $('.unlock').click(function(e){
+            var uid = $(this).data('id');
+            $(".tooltip.fade.top.in").remove();
+            $.ajax({
+                type : "post",
+                url : "{:__URL('PLATFORM_MAIN/auth/userUnLock')}",
+                async : true,
+                data : {
+                    "uid" : uid
+                },
+                success : function(data) {
+                    if(data["code"] > 0 ){
+                        util.message(data["message"],'success', getAuthList($("#page_index").val()));
+                    } else if(data["code"] ==-3){
+                        util.message( '该手机已经在团大人使用','danger');
+                    }else{
+                        util.message( data["message"],'danger');
+                    }
+                }
+            });
+        });
+    }
+    $('#list').on('click', '.is_use', function(){
+        var user_status = $(this).data('user_status');
+        var uid = $(this).data('uid');
+        //0 停用
+        if(user_status == 0){
+            $msg = '确定停用该账号？';
+        }else{
+            $msg = '确定启用该账号？';
+        }
+        util.alert($msg, function(){
+            $.ajax({
+                type : "post",
+                url : "{:__URL('PLATFORM_MAIN/auth/changeUserStatus')}",
+                async : true,
+                data : {
+                    "uid" : uid, "user_status" : user_status
+                },
+                success : function(data) {
+                    if(data["code"] > 0 ){
+                        util.message(data["message"],'success', getAuthList($("#page_index").val()));
+                    }else{
+                        util.message( data["message"],'danger');
+                    }
+                }
+            });
+        })
+    })
+})
+</script>
+{/block}

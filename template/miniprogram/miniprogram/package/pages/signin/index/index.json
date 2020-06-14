@@ -1,0 +1,5 @@
+{
+  "usingComponents": {
+    "phone-compoent": "/pages/component/phone/phonecom"
+  }
+}

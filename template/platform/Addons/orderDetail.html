@@ -1,0 +1,104 @@
+{extend name="platform/new_base" /}
+{block name="resource"}
+<style>
+    .label-danger a {
+        padding-top: 5px;
+    }
+</style>
+{/block}
+{block name="main"}
+        <!-- page -->
+
+        <div class="screen-title">
+            <span class="text">详情信息</span>
+        </div>
+        <div class="row panel-detail">
+            <div class="col-md-4">
+                <div class="item border-right" style="height: auto;">
+                    <h3 class="strong">订单信息</h3>
+                    <p class="p">订单编号：{$order_info['order_no']}</p>
+                    <p class="p">下单时间：{:date('Y-m-d H:i:s',$order_info['create_time'])}</p>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="item">
+                    {if condition='$order_info["order_status"] eq 0'}
+                    <h3 class="p"><i class="icon icon-visitor fs-18"></i> <span class="text-red fs-18">待付款</span></h3>
+                    <p class="p">请在{$order_info['close_time']}完成付款，以免订单关闭！</p>
+                    <p class="p text-red">应付金额：{$order_info['order_money']}</p>
+                    {/if}
+                    {if condition='$order_info["order_status"] eq 2'}
+                    <h3 class="p"><i class="icon icon-visitor fs-18"></i> <span class="text-success fs-18">已支付</span></h3>
+                    <p class="p">实付金额：{$order_info['order_money']}</p>
+                    {/if}
+                    {if condition='$order_info["order_status"] eq 1'}<h3 class="p"><i class="icon icon-visitor fs-18"></i> <span class="text-red fs-18">已关闭</span></h3>{/if}
+                </div>
+            </div>
+            {if condition='$order_info["order_status"] eq 0'}
+            <div class="col-md-4 text-right" style="padding-top: 20px;">
+                <p class="p"><a href="{:__URL('PLATFORM_MAIN/pay/getPayValue&order_id='.$order_info['order_id'])}" class="btn btn-primary">立即支付</a></p>
+                <p class="p"><a href="javascript:void(0);" class="cancel btn btn-default cancel" data-id="{$order_info['order_id']}">取消订单</a></p>
+            </div>
+            {/if}
+        </div>
+
+        <div class="screen-title">
+            <span class="text">订购服务</span>
+        </div>
+        <table class="table v-table table-auto-center">
+            <thead>
+            <tr>
+                <th>订购服务</th>
+                <th>数量</th>
+                <th>原价</th>
+                <th>售价</th>
+            </tr>
+            </thead>
+            <tbody>
+            {if $order_info}
+            <tr>
+                <td>
+                    <div class="media text-left">
+                        <div class="media-left" style="width:60px;height:60px;">
+                            <img src="{:__IMG($order_info['logo'])}" alt="" width="60" height="60">
+                        </div>
+                        <div class="media-body max-w-300">
+                            <div class="line-2-ellipsis">{$order_info['module_name']}</div>
+                        </div>
+                    </div>
+                </td>
+                <td>{$order_info['time']}</td>
+                <td>￥{$order_info['market_price']}</td>
+                <td>￥{$order_info['order_money']}</td>
+            </tr>
+            {/if}
+            </tbody>
+        </table>
+
+        <!-- page end -->
+{/block}
+{block name="script"}
+<script>
+    require(['util'], function (util) {
+        $('.cancel').on('click',function () {
+            var order_id = $(this).data('id');
+            util.alert('确认取消订单', function () {
+                $.ajax({
+                    type: "post",
+                    url: "{:__URL('PLATFORM_MAIN/Addonslist/cancelOrder')}",
+                    data: {
+                        'order_id': order_id,
+                    },
+                    success: function (data) {
+                        if (data["code"] > 0) {
+                            util.message(data["message"], 'success', __URL('PLATFORM_MAIN/Addonslist/incrementOrderList'));
+                        } else {
+                            util.message(data["message"], 'danger');
+                        }
+                    }
+                });
+            })
+        })
+    })
+</script>
+{/block}

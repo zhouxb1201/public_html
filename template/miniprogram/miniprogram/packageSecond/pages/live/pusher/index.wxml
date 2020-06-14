@@ -1,0 +1,165 @@
+<view class="push_home">
+  <view class="push_b" style="width:100%; height: 100%;">
+    <!-- 底层直播间 -->
+    <live-pusher id="pusher" style="width:100%; height: 100%;" mode="{{mode}}" orientation="{{orientation}}" beauty="{{beauty}}" whiteness="{{whiteness}}" muted="{{muted}}" waiting-image="{{waitingImg}}" background-mute="{{backgroundMute}}" url="{{pushUrl}}"
+      enable-camera="{{enableCamera}}" bindstatechange="statechange">
+      <!-- 中间层聊天与功能 -->
+      <cover-view class="middle">
+        <!-- 头部返回 -->
+        <cover-view class="live_header" style="top:{{(headerHeight + statusBarHeight) - 26}}rpx">
+          <cover-image src="/images/back.png" class="black_img" bindtap="endLive"></cover-image>
+          <cover-view class="liver_b">
+            <cover-image class="img" src="{{user_headimg?user_headimg:'/images/no-user.png'}}"></cover-image>
+            <cover-view class="liver_group">
+              <cover-view class="liver_name text-nowrap">{{liver_name?liver_name:'主播名称'}}</cover-view>
+              <cover-view class="text">{{memberNum}}人在观看</cover-view>
+            </cover-view>
+          </cover-view>
+        </cover-view>
+        <cover-view class="live_bottom">
+          <!-- 聊天 -->
+          <cover-view class="live_chat">
+            <cover-view class="live_notice">
+              <cover-view class="live_item" wx:for='{{message_list}}' wx:key='index'>
+                <cover-view class="label" data-uid="{{item.name}}" bindtap="setGroupMemberMuteTime">{{item.name}}
+                  <cover-view class="value text-wrap">{{item.txt}}</cover-view>
+                </cover-view>
+              </cover-view>
+
+            </cover-view>
+          </cover-view>
+          <!-- 推荐商品 -->
+          <cover-view class="rem_goods_list_b">
+            <scroll-view scroll-x>
+              <cover-view class="rem_goods_list">
+                <cover-view class="rem_item" wx:for='{{rem_goods_list}}' wx:key='index' wx:for-item='remItem'>
+                  <cover-image class="rem_good_img" src="{{remItem.pic_cover}}"></cover-image>
+                  <cover-view class="group_info">
+                    <cover-view class='name text-nowrap'>{{remItem.goods_name}}</cover-view>
+                    <cover-view class="price">¥{{remItem.price}}</cover-view>
+                  </cover-view>
+                </cover-view>
+              </cover-view>
+            </scroll-view>
+
+          </cover-view>
+
+          <!-- 底部菜单 -->
+          <cover-view class="live_menu">
+            <cover-view class="menu" wx:if='{{!inputShow}}'>
+              <cover-view class="input_icon" bindtap="inputShow">
+                <cover-image class="menu_img" src="/images/icon_text.png"></cover-image>
+              </cover-view>
+              <cover-view class="group">
+                <cover-image class="menu_img icon_img" src="/images/icon_good.png" bindtap="liveGoodShow"></cover-image>
+                <cover-image class="menu_img icon_img" src="/images/icon_tool.png" bindtap="toolShow"></cover-image>
+              </cover-view>
+            </cover-view>
+            <cover-view class="input_b" wx:else>
+              <cover-view class="input_row">
+                <cover-view class="input_item">
+                  <cover-image class="menu_img txt_img" src="/images/icon_text.png" bindtap="inputShow"></cover-image>
+                  <cover-view class='cover-input' bindtap='tapInput'>
+                    <cover-view class='text'>{{inputInfo}}</cover-view>
+                    <input class='input' value='{{inputModel}}' focus='{{inputFocus}}' cursor-spacing="10" bindinput='blurInput'></input>
+                  </cover-view>
+                </cover-view>
+                <cover-view class="btn" bindtap="sendMessage">发送</cover-view>
+              </cover-view>
+            </cover-view>
+          </cover-view>
+        </cover-view>
+      </cover-view>
+
+      <!-- 上层弹框 -->
+      <cover-view class="upper" wx:if="{{upperShow}}">
+        <!-- 工具盒弹框 -->
+        <cover-view class="fun_menu_box" wx:if='{{toolShow}}'>
+          <cover-view class="shadow" bindtap="toolShow"></cover-view>
+          <cover-view class="fun_menu">
+            <cover-view class="title">直播工具</cover-view>
+            <cover-view class="list">
+              <cover-view class="item" bindtap="bindSwitchCamera">
+                <cover-image class="fun_icon" src="../images/camera.png"></cover-image>
+                <cover-view>翻转</cover-view>
+              </cover-view>
+              <!-- <cover-view class="item" bindtap="bindToggleTorch">
+                <cover-image class="fun_icon" src="../images/camera.png"></cover-image>
+                <cover-view>闪光灯</cover-view>
+              </cover-view> -->
+              <cover-view class="item">
+                <button class="btn_share" open-type="share">
+                  <cover-image class="fun_icon" src="../images/camera.png"></cover-image>
+                  <cover-view>分享</cover-view>
+                </button>
+              </cover-view>
+            </cover-view>
+          </cover-view>
+
+        </cover-view>
+        <!-- 直播商品 -->
+        <cover-view class="live_goods_box" wx:if="{{liveGoodShow}}">
+          <cover-view class="shadow" bindtap="liveGoodShow"></cover-view>
+          <cover-view class="goods_b">
+            <cover-view class="title">
+              <cover-view>直播商品</cover-view> 
+              <cover-view class="add_btn" bindtap="addGoodShow">添加商品</cover-view>
+            </cover-view>
+            <cover-view class="list">
+              <cover-view class="item" wx:for="{{live_goods_list}}" wx:key='index'>
+                <cover-image class="good_img" src="{{item.pic_cover?item.pic_cover:'/images/no-goods.png'}}"></cover-image>
+                <cover-view class="info">
+                  <cover-view class="goods_name">{{item.goods_name}}</cover-view>
+                  <cover-view class="price_b">
+                    <cover-view class="price">¥{{item.price}}</cover-view>
+                    <cover-view class="btn_group">
+                      <cover-view class="btn" data-isrecommend="{{item.is_recommend}}" data-goodsid="{{item.goods_id}}" bindtap="recommendLiveGoods">{{item.is_recommend == 0?'设置主推':'取消主推'}}</cover-view>
+                      <cover-view class="btn" data-isadd="1" data-goodsid="{{item.goods_id}}" bindtap="actAnchorAddGoods">移除</cover-view>
+                    </cover-view>
+                  </cover-view>
+                </cover-view>
+              </cover-view>
+            </cover-view>
+          </cover-view>
+        </cover-view>
+        <!-- 添加商品 -->
+        <cover-view class="add_goods_box" wx:if="{{addGoodShow}}">
+          <cover-view class="add_b">
+            <cover-view class="header">
+              <cover-view class="nav" style="margin-top:{{(headerHeight + statusBarHeight) - 17}}rpx">
+                <cover-image class="back_img" bindtap="addGoodShow" src="/images/back.png" style="top:{{(headerHeight + statusBarHeight) - 26}}rpx"></cover-image>
+                <cover-view class="text">添加商品</cover-view>
+              </cover-view>
+            </cover-view>
+            <cover-view class='list' id="add_good_list">
+              <cover-view class='item' wx:for="{{anchor_goods_list}}" wx:key="" wx:for-item="goodItem">
+                <cover-view class='img'>
+                  <cover-image src='{{goodItem.pic_list[0].pic_cover}}'></cover-image>
+                </cover-view>
+                <cover-view class='info'>
+                  <cover-view class='good_name'>{{goodItem.goods_name}}</cover-view>
+                  <cover-view class='cell_price'>
+                    <cover-view class='price'>¥ {{goodItem.price}}</cover-view>
+                    <cover-view class="btn" data-isadd="{{goodItem.is_add}}" data-goodsid="{{goodItem.goods_id}}" bindtap="actAnchorAddGoods">{{goodItem.is_add == 0?'添加':'取消添加'}}</cover-view>
+                  </cover-view>
+                </cover-view>
+              </cover-view>
+            </cover-view>
+          </cover-view>
+        </cover-view>
+
+      </cover-view>
+
+
+    </live-pusher>
+  </view>
+
+
+  <!-- <view class="btn-box">
+    <button bindtap="bindStart" type="primary">播放推流</button>
+    <button bindtap="bindPause" type="warn">暂停推流</button>
+    <button bindtap="bindStop" type="warn">停止推流</button>
+    <button bindtap="bindResume" type="primary">恢复推流</button>
+    <button bindtap="bindSwitchCamera">切换前后摄像头</button>
+  </view> -->
+</view>

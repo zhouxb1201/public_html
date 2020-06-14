@@ -1,0 +1,354 @@
+{extend name="admin/base" /}
+{block name="main"}
+<!-- page -->
+<!--全选删除添加轮播-->
+<div class="mb-20 flex flex-pack-justify">
+    <div class="allDelAdd">
+        <!--<label for="chek_all">
+            <span class="allDel">
+              <label class="checkbox-inline">
+                <input type="checkbox" class="all decorate" id="chek_all" name="chek_all">&nbsp;全选
+              </label>
+            </span>
+        </label>-->
+        <span class="allDel del add1">批量恢复</span>
+        <span class="allDel del add2">批量删除</span>
+    </div>
+    <div class="input-group search-input-group">
+        <input type="text" class="form-control" id="goods_name" placeholder="商品名称" value="{$search_info}">
+        <span class="input-group-btn "><a class="btn btn-primary search_to">搜索</a></span>
+    </div>
+</div>
+<input type='hidden' id='goods_type_ids'/>
+<!--表格-->
+<table class="table v-table">
+    <thead>
+        <tr>
+            <th><input type="checkbox" class="all decorate" id="chek_all" name="chek_all"></th>
+            <th class="col-md-4">商品</th>
+            <th>售价</th>
+            <th>原价</th>
+            <th>库存</th>
+            <th>销量</th>
+            <th class="col-md-2 pr-14 operationLeft">操作</th>
+        </tr>
+    </thead>
+    <tbody class="trs" id="list">
+    </tbody>
+</table>
+<div class="page clearfix">
+    <div class="M-box3 m-style fr">
+    </div>
+</div>
+<!-- page end -->
+{/block}
+{block name="script"}
+<script type="text/javascript">
+require(['utilAdmin'], function (utilAdmin) { 
+    $(function () {
+        LoadingInfo(1);
+    });
+    function searchData() {
+        LoadingInfo(1);
+    }
+    function LoadingInfo(page_index) {
+        $('#page_index').val(page_index ? page_index : '1');
+        var goods_name = $("#goods_name").val();
+        var category_id_1 = $("#category_id_1").val();
+        var category_id_2 = $("#category_id_2").val();
+        var category_id_3 = $("#category_id_3").val();
+        $.ajax({
+            type: "post",
+            url: "{:__URL('ADMIN_MAIN/goods/recyclelist')}",
+            data: {
+                "page_index": page_index,
+                "page_size": $("#showNumber").val(),
+                "goods_name": goods_name,
+                "category_id_1": category_id_1,
+                "category_id_2": category_id_2,
+                "category_id_3": category_id_3
+            },
+            success: function (data) {
+                var html = '';
+                if (data["data"].length > 0) {
+                    for (var i = 0; i < data["data"].length; i++) {
+                        html += '<tr>';
+                        html += '<td><input class="decorate" type="checkbox" value="' + data["data"][i]["goods_id"] + '" data-state="' + data["data"][i]["state"] + '"></td>';
+                        html += '<td class="picword_td">';
+                        // html += '<div class="col-sm-3 pic_td"><img src="' + __IMG(data["data"][i]["pic_cover_micro"]) + '" alt=""></div>';
+                        // html += '<div class="col-sm-9 word_td">';
+                        // html += '<p class="tdTitles">' + data["data"][i]["goods_name"] + '</p>';
+                        // html += '<p class="desc"></p>';
+                        // html += '</div>';
+                        html += '<div class="media text-left">';
+                        html += '<div class="media-left"><p><img src="' + __IMG(data["data"][i]["pic_cover_mid"]) + '" style="width:60px;height:60px;"></p></div>';
+                        html += '<div class="media-body break-word"><div class="line-2-ellipsis"><a href="javascript:;">' + data["data"][i]["goods_name"] + '</a></div>';
+                        html += '<div class="small-muted line-2-ellipsis"></div>';
+                        html += '</div></div>';
+
+                        html += '</td>';
+                        html += '<td>￥' + data["data"][i]["promotion_price"] + '</td>';
+                        html += '<td>￥' + data["data"][i]["price"] + '</td>';
+                        html += '<td>' + data["data"][i]["stock"] + '</td>';
+                        html += '<td>' + data["data"][i]["real_sales"] + '</td>';
+                        html += '<td class="fs-0 operationLeft">';
+                        html += '<a class="btn-operation add3" href="javascript:void(0);" data-id="' + data["data"][i]["goods_id"] + '">恢复</a>';
+                        html += '<a href="javascript:void(0);" class="btn-operation text-red1 del add4" data-id="' + data["data"][i]["goods_id"] + '">彻底删除</a>';
+                        html += '</td>';
+                        html += '</tr>';
+                    }
+                } else {
+                    html += '<tr align="center"><td colspan="7" class="h-200">暂无符合条件的数据记录</td></tr>';
+                }
+                $("#list").html(html);
+                utilAdmin.tips();
+                utilAdmin.page(".M-box3", data['total_count'], data["page_count"], page_index, LoadingInfo);
+            }
+        });
+    }
+
+//全选
+    // function CheckAll(event) {
+    //     var checked = event.checked;
+    //     $("#list input[type = 'checkbox']").prop("checked", checked);
+    // }
+
+//批量删除回收站数据
+    function batchDelete() {
+        var goods_ids = new Array();
+        $("#list input[type='checkbox']:checked").each(function () {
+            if (!isNaN($(this).val())) {
+                goods_ids.push($(this).val());
+            }
+        });
+        if (goods_ids.length == 0) {
+            utilAdmin.message('请选择需要操作的记录');
+            return false;
+        }
+        deleteGoods(goods_ids);
+    }
+
+//单个删除回收站数据
+    function deleteGoods(goods_ids) {
+        utilAdmin.alert('确定要从回收站彻底删除吗？',function(){
+            $.ajax({
+                type: "post",
+                url: "{:__URL('ADMIN_MAIN/goods/emptydeletegoods')}",
+                data: {"goods_ids": goods_ids.toString()},
+                dataType: "json",
+                success: function (data) {
+                    if (data["code"] > 0) {
+                        LoadingInfo($('#page_index').val());
+                        utilAdmin.message(data["message"],'success',function(){
+                            $("#chek_all").prop("checked", false);
+                        });
+                        return false;
+                    }
+                }
+            });
+        })
+    }
+
+//批量恢复
+    function batchRegainDelete() {
+        var goods_ids = new Array();
+        $("#list input[type='checkbox']:checked").each(function () {
+            if (!isNaN($(this).val())) {
+                goods_ids.push($(this).val());
+            }
+        });
+        if (goods_ids.length == 0) {
+            utilAdmin.message('请选择需要操作的记录');
+            return false;
+        }
+        regainGoodsDeleted(goods_ids);
+    }
+
+//单个恢复已删除商品
+    function regainGoodsDeleted(goods_ids) {
+        utilAdmin.alert('确定要恢复吗？',function(){
+            $.ajax({
+                type: "post",
+                url: "{:__URL('ADMIN_MAIN/goods/regaingoodsdeleted')}",
+                data: {"goods_ids": goods_ids.toString()},
+                dataType: "json",
+                success: function (data) {
+                    if (data["code"] > 0) {
+                        LoadingInfo($('#page_index').val());
+                        utilAdmin.message(data["message"],'success',function(){
+                            $("#chek_all").prop("checked", false);
+                        });
+                    }
+                }
+            });
+        })
+    }
+
+    // $("#goodsCategoryOne").click(function () {
+    //     var isShow = $("#goodsCategoryOne").attr('is_show');
+    //     if (isShow == "false") {
+    //         $(".one").show();
+    //         $(".selectGoodsCategory").css({
+    //             'width': 218,
+    //             'right': 530
+    //         });
+    //         $(".selectGoodsCategory").show();
+    //         $("#goodsCategoryOne").attr('is_show', 'true');
+    //         $(".js-mask-category").show();
+    //     } else {
+    //         $(".one").hide();
+    //         $(".two").hide();
+    //         $(".three").hide();
+    //         $(".selectGoodsCategory").css({
+    //             'width': 218,
+    //             'right': 530
+    //         });
+    //         $(".selectGoodsCategory").hide();
+    //         $("#goodsCategoryOne").attr('is_show', 'false');
+    //     }
+    // })
+
+    // $(".js-mask-category").click(function () {
+    //     $(".one").hide();
+    //     $(".selectGoodsCategory").hide();
+    //     $(".two").hide();
+    //     $(".three").hide();
+    //     $("#goodsCategoryOne").attr('is_show', 'false');
+    //     $(this).hide();
+    // })
+
+    // $(".js-category-one").click(function () {
+    //     parentId = $(this).attr("category_id");
+    //     category_name = $(this).text();
+    //     $(".one ul li").not($(this)).removeClass("selected");
+    //     $(this).addClass("selected");
+    //     $("#goodsCategoryOne").val($.trim(category_name) + ">");
+    //     $("#category_id_1").val(parentId);
+    //     $("#category_id_2").val('');
+    //     $("#category_id_3").val('');
+    //     $.ajax({
+    //         type: 'post',
+    //         url: "{:__URL('ADMIN_MAIN/goods/getcategorybyparentajax')}",
+    //         data: {"parentId": parentId},
+    //         success: function (data) {
+    //             if (data.length > 0) {
+    //                 var html = '';
+    //                 for (var i = 0; i < data.length; i++) {
+    //                     html += '<li class="js-category-two" category_id="' + data[i]['category_id'] + '">' + data[i]['category_name'];
+    //                     if (data[i]['is_parent'] == 1) {
+    //                         html += '<i class="fa fa-angle-right fa-lg"></i>';
+    //                     }
+    //                     html += '</li>';
+    //                 }
+    //                 $("#goodsCategoryTwo").html(html);
+    //                 $(".two").show();
+    //                 $(".selectGoodsCategory").css({
+    //                     'width': 437,
+    //                     'right': 311
+    //                 });
+    //             } else {
+    //                 $(".one").hide();
+    //                 $(".two").hide();
+    //                 $(".js-mask-category").hide();
+    //                 $(".selectGoodsCategory").hide();
+    //                 $("#goodsCategoryOne").attr('is_show', 'false');
+    //             }
+    //             $(".three").hide();
+    //         }
+    //     });
+    //     return false;
+    // });
+
+    // $(".js-category-two").click(function (event) {
+    //     var parentId = $(this).attr("category_id");
+    //     var category_name = $(this).text();
+    //     $(".two ul li").not($(this)).removeClass("selected");
+    //     $(this).addClass("selected");
+    //     var goodsCategoryOne = $("#goodsCategoryOne").val();
+    //     $("#goodsCategoryOne").val(goodsCategoryOne + '' + category_name + '>');
+    //     $("#category_id_2").val(parentId);
+    //     $("#category_id_3").val('');
+    //     $.ajax({
+    //         type: 'post',
+    //         url: "{:__URL('ADMIN_MAIN/goods/getcategorybyparentajax')}",
+    //         data: {"parentId": parentId},
+    //         success: function (data) {
+    //             if (data.length > 0) {
+    //                 var html = '';
+    //                 for (var i = 0; i < data.length; i++) {
+    //                     html += '<li onclick="goodsCategoryThree(this);" category_id="' + data[i]['category_id'] + '">' + data[i]['category_name'] + '<i class="fa fa-angle-right fa-lg"></i></li>';
+    //                 }
+    //                 $("#goodsCategoryThree").html(html);
+    //                 $(".three").show();
+    //                 $(".selectGoodsCategory").css({
+    //                     'width': 636,
+    //                     'right': 112
+    //                 });
+    //             } else {
+    //                 $(".one").hide();
+    //                 $(".two").hide();
+    //                 $(".three").hide();
+    //                 $(".selectGoodsCategory").hide();
+    //                 $(".js-mask-category").hide();
+    //                 $("#goodsCategoryOne").attr('is_show', 'false');
+    //             }
+    //         }
+    //     })
+    //     event.stopPropagation();
+    // });
+
+    // function goodsCategoryThree(obj) {
+    //     var parentId = $(obj).attr("category_id");
+    //     var category_name = $(obj).text();
+    //     $(".three ul li").not($(obj)).removeClass("selected");
+    //     $(obj).addClass("selected");
+    //     var goodsCategoryOne = $("#goodsCategoryOne").val();
+    //     $("#goodsCategoryOne").val(goodsCategoryOne + '' + category_name);
+    //     $("#category_id_3").val(parentId);
+    //     $(".one").hide();
+    //     $(".two").hide();
+    //     $(".three").hide();
+    //     $(".selectGoodsCategory").hide();
+    //     $(".selectGoodsCategory").css({
+    //         'width': 218,
+    //         'right': 530
+    //     });
+    //     $(".js-mask-category").hide();
+    //     $("#goodsCategoryOne").attr('is_show', 'false');
+    // }
+
+    // $("#confirmSelect").click(function () {
+    //     $(".one").hide();
+    //     $(".two").hide();
+    //     $(".three").hide();
+    //     $(".selectGoodsCategory").hide();
+    //     $(".selectGoodsCategory").css({
+    //         'width': 218,
+    //         'right': 530
+    //     });
+    // })
+
+    $('body').on('click','#chek_all',function(){
+        var checked=$(this).prop('checked');
+        $("#list input[type = 'checkbox']").prop("checked", checked);
+    })
+    $('body').on('click','.add1',function(){
+        batchRegainDelete();
+    })
+    $('body').on('click','.add2',function(){
+        batchDelete();
+    })
+    $('body').on('click','.add3',function(){
+        var id=$(this).attr('data-id');
+        regainGoodsDeleted(id);
+    })
+    $('body').on('click','.add4',function(){
+        var id=$(this).attr('data-id');
+        deleteGoods(id);
+    })
+    $('body').on('click','.search_to',function(){
+        LoadingInfo(1);
+    })
+})
+</script>
+{/block}

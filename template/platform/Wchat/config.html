@@ -1,0 +1,765 @@
+{extend name="platform/new_base" /}
+{block name="resources"/}
+{/block}
+{block name="main"}
+           <div class="part1" {if $wchat_config.appid}style="display: none"{/if}>
+                <table class="table table-bordered text-center mini-program-manage">
+                    <tbody>
+                    <tr>
+                        <td style="width: 50%">
+                            <div class="box">
+                                <div class="qr">
+                                    <div><i class="icon icon-public1" style="color: #00c700"></i></div>
+                                </div>
+                                <div>我已经注册公众号</div>
+                                <div class="smule-word">需要已认证的服务号</div>
+                                <div>
+                                    <button class="btn btn-primary" id="authorize">立即授权</button>
+                                </div>
+                            </div>
+                        </td>
+                        <td>
+                            <div class="box">
+                                <div class="qr">
+                                    <div><i class="icon icon-public2" style="color: #C2CFE0"></i></div>
+                                </div>
+                                <div>我还没有注册公众号</div>
+                                <div class="smule-word"><a href="http://kf.qq.com/faq/120911VrYVrA151013MfYvYV.html" target="_blank" class="text-primary">不懂如何申请公众号？</a></div>
+                                <div>
+                                    <a class="btn btn-success" id="" href="https://mp.weixin.qq.com/cgi-bin/registermidpage?action=index&lang=zh_CN&token=" target="_blank">去微信公众平台申请</a>
+                                </div>
+                            </div>
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+                <div class="panel panel-default fs-12">
+                    <!-- Default panel contents -->
+                    <div class="panel-heading"><span>授权说明:</span></div>
+                    <div class="panel-body">
+                        <p>1、 建议使用“<span class="text-red">已认证的服务号</span>”进行授权绑定。</p>
+                        <p>2、开通“<span class="text-red">微信支付商户号</span>”才能使用微信支付交易</p>
+                        <p>3、请认真填写对应信息，信息填写错误将直接影响微信登录及微信支付。</p>
+                    </div>
+                </div>
+            </div>
+                <!-- page -->
+            <div class="part2" {if $wchat_config.appid}style="display: block"{else}style="display: none"{/if}>
+                <form class="form-horizontal widthFixedForm">
+                    <div class="form-heading">公众号开发信息</div>
+                    <div class="form-group">
+                        <label class="col-md-2 control-label">公众号名称</label>
+                        <div class="col-md-8">
+                           <p class="form-control-static">{$wchat_config.public_name} <a href="javascript:void(0);" class="text-primary ml10 editInfo">修改开发信息</a> <a href="javascript:void(0);" class="text-primary ml10 bindOther">绑定其他公众号</a></p>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-md-2 control-label">AppID</label>
+                        <div class="col-md-8">
+                            <p class="form-control-static">{$wchat_config.appid}</p>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-md-2 control-label">AppSecret</label>
+                        <div class="col-md-8">
+                            <p class="form-control-static">{$wchat_config.appsecret}</p>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-md-2 control-label">EncodingAESKey</label>
+                        <div class="col-md-8">
+                            <p class="form-control-static">{$wchat_config.encodingAESKey}</p>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-md-2 control-label">IP白名单</label>
+                        <div class="col-md-8">
+                            <textarea type="text" class="form-control resize_none" id="textarea1" readonly>{$ip}</textarea>
+                            <p class="help-block">复制“IP白名单”到公众号=>开发=>基本配置=>IP白名单</p>
+                        </div>
+                    </div>
+                    <div class="form-heading">服务器配置信息</div>
+                    <div class="form-group">
+                        <label class="col-md-2 control-label">服务器地址（URL）</label>
+                        <div class="col-md-8">
+                            <div class="input-group">
+                                <input type="text" class="form-control" placeholder="URL"  value="{$call_back_url1}"  disabled>
+                                <span class="input-group-btn">
+                                    <a href="javascript:void(0);" class="btn btn-default copy" data-clipboard-text="{$call_back_url1}">复制</a>
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-md-2 control-label">令牌（Token）</label>
+                        <div class="col-md-8">
+                            <div class="input-group">
+                                <input type="text" class="form-control" placeholder="Token" name="empowerToken"  value="{if $wchat_config.token}{$wchat_config.token}{/if}" disabled>
+                                <span class="input-group-btn">
+                                     <a href="javascript:void(0);"  class="btn btn-default copy"  data-clipboard-text="{if $wchat_config.token}{$wchat_config.token}{/if}">复制</a>
+                                    <!--<a href="javascript:void(0);" class="btn btn-default tokenGen ">生成token</a>-->
+                                </span>
+                            </div>
+                            <p class="help-block">将以上服务器地址（URL）、令牌（Token）复制到公众号=>开发=>基本配置=>服务器配置，对应的输入框里</p>
+                        </div>
+                    </div>
+                    <div class="form-heading">功能设置信息</div>
+                    <div class="form-group">
+                        <label class="col-md-2 control-label">业务域名</label>
+                        <div class="col-md-8">
+                            <div class="input-group">
+                                {if $realm_ip}
+                                <input type="text" class="form-control" placeholder="业务域名" id="" value="{$domain_name1}"  disabled>
+                                <span class="input-group-btn">
+                                    <a href="javascript:void(0);" class="btn btn-default copy" data-clipboard-text="{$domain_name1}">复制</a>
+                                </span>
+                                {else}
+                                <input type="text" class="form-control" placeholder="业务域名" id="" value="{$domain_name2}"  disabled>
+                                <span class="input-group-btn">
+                                    <a href="javascript:void(0);" class="btn btn-default copy" data-clipboard-text="{$domain_name2}">复制</a>
+                                </span>
+                                {/if}
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-md-2 control-label">JS接口安全域名</label>
+                        <div class="col-md-8">
+                            <div class="input-group">
+                                {if $realm_ip}
+                                <input type="text" class="form-control" placeholder="JS接口安全域名" id="" value="{$domain_name1}"  disabled>
+                                <span class="input-group-btn">
+                                    <a href="javascript:void(0);" class="btn btn-default copy" data-clipboard-text="{$domain_name1}">复制</a>
+                                </span>
+                                {else}
+                                <input type="text" class="form-control" placeholder="JS接口安全域名" id="" value="{$domain_name2}"  disabled>
+                                <span class="input-group-btn">
+                                    <a href="javascript:void(0);" class="btn btn-default copy" data-clipboard-text="{$domain_name2}">复制</a>
+                                </span>
+                                {/if}
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-md-2 control-label">网页授权域名</label>
+                        <div class="col-md-8">
+                            <div class="input-group">
+                                {if $realm_ip}
+                                <input type="text" class="form-control" placeholder="网页授权域名" id="" value="{$domain_name1}"  disabled>
+                                <span class="input-group-btn">
+                                    <a href="javascript:void(0);" class="btn btn-default copy" data-clipboard-text="{$domain_name1}">复制</a>
+                                </span>
+                                {else}
+                                <input type="text" class="form-control" placeholder="网页授权域名" id="" value="{$domain_name2}"  disabled>
+                                <span class="input-group-btn">
+                                    <a href="javascript:void(0);" class="btn btn-default copy" data-clipboard-text="{$domain_name2}">复制</a>
+                                </span>
+                                {/if}
+                            </div>
+                            <p class="help-block">将以上业务域名、JS接口安全域名、网页授权域名链接填入公众号设置=>功能设置，对应的输入框里。</p>
+                        </div>
+                    </div>
+
+                    <!--<div class="form-heading">微信支付授权目录</div>-->
+                    <!--{if $call_payback_url1}-->
+                    <!--<div class="form-group">-->
+                        <!--<label class="col-md-2 control-label">支付授权目录</label>-->
+                        <!--<div class="col-md-8">-->
+                            <!--<div class="input-group">-->
+                                <!--<input type="text" class="form-control" placeholder="支付授权目录" id="" value="{$call_payback_url1}"  disabled>-->
+                                <!--<span class="input-group-btn">-->
+                                    <!--<a href="javascript:void(0);" class="btn btn-default copy" data-clipboard-text="{$call_payback_url1}">复制</a>-->
+                                <!--</span>-->
+                            <!--</div>-->
+                            <!--<p class="help-block">将以上“支付授权目录”链接，粘贴到到商户平台 产品中心=>开发配置=>支付配置=>公众号支付=>添加支付授权目录里。</p>-->
+                        <!--</div>-->
+                    <!--</div>-->
+                    <!--{else}-->
+                    <!--<div class="form-group">-->
+                        <!--<label class="col-md-2 control-label">支付授权目录</label>-->
+                        <!--<div class="col-md-8">-->
+                            <!--<div class="input-group">-->
+                                <!--<input type="text" class="form-control" placeholder="支付授权目录" id="" value="{$call_payback_url2}"  disabled>-->
+                                <!--<span class="input-group-btn">-->
+                                    <!--<a href="javascript:void(0);" class="btn btn-default copy" data-clipboard-text="{$call_payback_url2}">复制</a>-->
+                                <!--</span>-->
+                            <!--</div>-->
+                            <!--<p class="help-block">将以上“支付授权目录”链接，粘贴到到商户平台 产品中心=>开发配置=>支付配置=>公众号支付=>添加支付授权目录里。</p>-->
+                        <!--</div>-->
+                    <!--</div>-->
+                    <!--{/if}-->
+                    <!--<div class="form-group">
+                        <label class="col-md-2 control-label"></label>
+                        <div class="col-md-8">
+                            <a class="btn btn-primary SAVE" type="submit">保存</a>
+                        </div>
+                    </div>-->
+                </form>
+                </div>
+
+            <div class="part3" style="display: none">
+                   <div class="stepItems">
+                       <ul class="part3-steps">
+                        <li class="part3-step current ">1 填写公众号信息</li>
+                        <li class="part3-step">2 前往微信平台配置信息</li>
+                       </ul>
+                    </div>
+                    <form class="form-horizontal widthFixedForm">
+                        <div class="form-group">
+                            <label class="col-md-2 control-label"><span class="text-bright">*</span> 公众号名称</label>
+                            <div class="col-md-8">
+                                <input type="text" class="form-control" name="wxAccount_name" autocomplete="off" id="wxAccount_name" placeholder="请输入公众号名称">
+
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-md-2 control-label"><span class="text-bright">*</span> AppID</label>
+                            <div class="col-md-8">
+                                <input type="text" class="form-control" name="AppID" autocomplete="off" id="AppID" placeholder="请输入AppID">
+                                <p class="help-block mb-0">请到微信公众号=>基本配置=>公众号开发信息=>开发者ID（AppID）获取。</p>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-md-2 control-label"><span class="text-bright">*</span> AppSecret</label>
+                            <div class="col-md-8">
+                                <input type="text" class="form-control" name="AppSecret" autocomplete="off" id="AppSecret" placeholder="请输入APPSecret">
+                                <p class="help-block mb-0">请到微信公众号=>基本配置=>公众号开发信息=>开发者密码（AppSecret）中获取。</p>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-md-2 control-label">粉丝同步</label>
+                            <div class="col-md-8">
+                                <label class="radio-inline">
+                                    <input type="radio" name="synchronous" class="" value="1"> 开启
+                                </label>
+                                <label class="radio-inline">
+                                    <input type="radio" name="synchronous" class="" value="2"> 关闭
+                                </label>
+                                <div class="help-block mb-0">开启后，授权完成将会自动同步粉丝列表</div>
+                            </div>
+
+                        </div>
+                        <div class="form-group">
+                            <label class="col-md-2 control-label"></label>
+                            <div class="col-md-8">
+                                <a href="javascript:void(0);"  class="btn btn-default mr-10 cancel_config">取消</a>
+                                <a class="btn btn-primary part3_jump" type="submit">下一步</a>
+                            </div>
+                        </div>
+                        <div class="panel panel-default fs-12">
+                            <!-- Default panel contents -->
+                            <div class="panel-heading"><span>授权说明:</span></div>
+                            <div class="panel-body">
+                                <p>1、登录微信公众平台，点击左侧菜单 开发=>基本配置。在公众号上复制开发者ID（AppID）、开发者密码（AppSecret）。</p>
+                                <p>2、如果您未成为开放者，请勾选页面上的同意协议，再点击【成为开放者】按钮。点击查看详细文档</p>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+
+            <div class="part4" style="display: none" >
+                   <div class="stepItems">
+                       <ul class="part3-steps">
+                        <li class="part3-step current ">1 填写公众号信息</li>
+                        <li class="part3-step current">2 前往微信平台配置信息</li>
+                       </ul>
+                    </div>
+                    <form class="form-horizontal widthFixedForm">
+                        <div class="panel panel-default">
+                          <div class="panel-heading"><span>第一步 登录微信公众平台 ，左侧菜单 开发 > 基本配置 ，配置IP白名单、URL、Token</span></div>
+                          <div class="panel-body">
+
+                        <div class="form-group">
+                            <label class="col-md-2 control-label">IP白名单</label>
+                            <div class="col-md-8">
+                                <textarea type="text" class="form-control resize_none" readonly id="textarea2">{$ip}</textarea>
+                                <p class="help-block">复制“IP白名单”到公众号=>开发=>基本配置=>IP白名单</p>
+                            </div>
+                        </div>
+
+                    <div class="form-group">
+                        <label class="col-md-2 control-label">服务器地址（URL）</label>
+                        <div class="col-md-8">
+                            <div class="input-group">
+                                <input type="text" class="form-control" placeholder="URL" id="empowerUrl" value="{$call_back_url1}"  disabled>
+                                <span class="input-group-btn">
+                                    <a href="javascript:void(0);" class="btn btn-default copy" data-clipboard-text="{$call_back_url1}">复制</a>
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="col-md-2 control-label">令牌（Token）</label>
+                        <div class="col-md-8">
+                            <div class="input-group">
+                                <input type="text" class="form-control" placeholder="Token" name="empowerToken" id="empowerToken" value="" disabled>
+                                <span class="input-group-btn">
+                                     <a href="javascript:void(0);" id="clipboard-text" class="btn btn-default copy"  data-clipboard-text="">复制</a>
+                                </span>
+                            </div>
+                            <p class="help-block">将以上服务器地址（URL）、令牌（Token）复制到公众号=>开发=>基本配置=>服务器配置，对应的输入框里</p>
+                        </div>
+                    </div>
+                     <div class="form-group">
+                         <label class="col-md-2 control-label"><span class="text-bright">*</span> EncodingAESKey</label>
+                         <div class="col-md-8">
+                             <input type="text" class="form-control" placeholder="请输入EncodingAESKey" id="encodingAESKey" >
+                             <p class="help-block mb-0">在公众号=>开发=>基本配置=>服务器配置=>EncodingAESKey，点击“随机生成”。</p>
+                         </div>
+                     </div>
+                    <div class="form-group">
+                        <div class="col-md-2"></div>
+                        <div class="col-md-8">
+                            <div class="editor1-main-tips">
+                                <p class="mb-10">第一步 登录<a href="https://mp.weixin.qq.com/" class="text-primary" target="_blank">微信公众平台</a>  ，左侧菜单 开发 => 基本配置 ，配置IP白名单、URL、Token</p>
+                                <p class="mb-10">（1）若服务器配置未开启请点击右边绿色“启用”按钮开启，若已启用则点击右侧“修改配置”重新填写新的配置参数保存即可。</p>
+                                <p class="mb-10">（2）在系统后台复制“IP白名单”，粘贴到公众号=>开发=>基本配置=>IP白名单里；</p>
+                                <p class="mb-10">（3）请将系统后台以下URL、Token链接填入公众号=>开发=>基本配置=>服务器配置，对应的输入框里；</p>
+                                <p class="mb-10">（4）在公众号=>开发=>基本配置=>服务器配置=>EncodingAESKey，点击“随机生成”；</p>
+                                <p class="mb-10">（5）在公众号=>开发=>基本配置=>服务器配置=>消息加解密方式，请选择安全模式。</p>
+                            </div>
+                        </div>
+                    </div>
+                    <!--<div class="mt-10">
+                        <img src="/public/platform/images/wxMenu/wxAccount1.png" alt="">
+                    </div>
+                    <div class="mt-10 mb-10">
+                        <img src="/public/platform/images/wxMenu/wxAccount2.png" alt="">
+                    </div>-->
+
+                          </div>
+                        </div>
+
+
+                    <div class="panel panel-default">
+                        <div class="panel-heading"><span>第二步 登录微信公众平台 ，左侧菜单 公众号设置 > 功能设置 ，配置业务域名、JS接口安全域名、网页授权域名</span></div>
+                        <div class="panel-body">
+
+                            <div class="form-group">
+                                <label class="col-md-2 control-label">业务域名</label>
+                                <div class="col-md-8">
+                                    <div class="input-group">
+                                        {if $realm_ip}
+                                        <input type="text" class="form-control" placeholder="业务域名" id="" value="{$domain_name1}"  disabled>
+                                        <span class="input-group-btn">
+                                    <a href="javascript:void(0);" class="btn btn-default copy" data-clipboard-text="{$domain_name1}">复制</a>
+                                </span>
+                                        {else}
+                                        <input type="text" class="form-control" placeholder="业务域名" id="" value="{$domain_name2}"  disabled>
+                                        <span class="input-group-btn">
+                                    <a href="javascript:void(0);" class="btn btn-default copy" data-clipboard-text="{$domain_name2}">复制</a>
+                                </span>
+                                        {/if}
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-md-2 control-label">JS接口安全域名</label>
+                                <div class="col-md-8">
+                                    <div class="input-group">
+                                        {if $realm_ip}
+                                        <input type="text" class="form-control" placeholder="JS接口安全域名" id="" value="{$domain_name1}"  disabled>
+                                        <span class="input-group-btn">
+                                    <a href="javascript:void(0);" class="btn btn-default copy" data-clipboard-text="{$domain_name1}">复制</a>
+                                </span>
+                                        {else}
+                                        <input type="text" class="form-control" placeholder="JS接口安全域名" id="" value="{$domain_name2}"  disabled>
+                                        <span class="input-group-btn">
+                                    <a href="javascript:void(0);" class="btn btn-default copy" data-clipboard-text="{$domain_name2}">复制</a>
+                                </span>
+                                        {/if}
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-md-2 control-label">网页授权域名</label>
+                                <div class="col-md-8">
+                                    <div class="input-group">
+                                        {if $realm_ip}
+                                        <input type="text" class="form-control" placeholder="网页授权域名" id="" value="{$domain_name1}"  disabled>
+                                        <span class="input-group-btn">
+                                    <a href="javascript:void(0);" class="btn btn-default copy" data-clipboard-text="{$domain_name1}">复制</a>
+                                </span>
+                                        {else}
+                                        <input type="text" class="form-control" placeholder="网页授权域名" id="" value="{$domain_name2}"  disabled>
+                                        <span class="input-group-btn">
+                                    <a href="javascript:void(0);" class="btn btn-default copy" data-clipboard-text="{$domain_name2}">复制</a>
+                                </span>
+                                        {/if}
+                                    </div>
+                                    <p class="help-block">将以上业务域名、JS接口安全域名、网页授权域名链接填入公众号设置=>功能设置，对应的输入框里。</p>
+                                </div>
+                            </div>
+
+                    <div class="form-group">
+                        <div class="col-md-2"></div>
+                        <div class="col-md-8">
+                            <div class="editor1-main-tips">
+                                <p class="mb-10">第二步 登录<a href="https://mp.weixin.qq.com/" class="text-primary" target="_blank">微信公众平台</a>，点击左侧菜单 公众号设置 => 功能设置，配置业务域名、JS接口安全域名、网页授权域名。</p>
+                                <p class="mb-10">请将以上内容填入业务域名、JS接口安全域名、网页授权域名链接对应的输入框里。</p>
+                            </div>
+                        </div>
+                    </div>
+
+                            <!--<div class="mt-10">
+                                <img src="/public/platform/images/wxMenu/wxAccount3.png" alt="">
+                            </div>
+                            <div class="mt-10 mb-10">
+                                <img src="/public/platform/images/wxMenu/wxAccount4.png" alt="">
+                            </div>-->
+
+                        </div>
+                    </div>
+
+                    <!--<div class="panel panel-default">-->
+                        <!--<div class="panel-heading"><span>第三步 登录微信商户平台 ，顶部菜单 产品中心 > 开发配置 ，配置公众号支付授权目录</span></div>-->
+                        <!--<div class="panel-body">-->
+
+                            <!--<div class="form-group">-->
+                                <!--<label class="col-md-2 control-label">支付授权目录</label>-->
+                                <!--<div class="col-md-8">-->
+                                    <!--<div class="input-group">-->
+                                        <!--{if $call_payback_url1}-->
+                                        <!--<input type="text" class="form-control" placeholder="支付授权目录" id="" value="{$call_payback_url1}"  disabled>-->
+                                        <!--<span class="input-group-btn">-->
+                                            <!--<a href="javascript:void(0);" class="btn btn-default copy" data-clipboard-text="{$call_payback_url1}">复制</a>-->
+                                        <!--</span>-->
+                                        <!--{else}-->
+                                        <!--<input type="text" class="form-control" placeholder="支付授权目录" id="" value="{$call_payback_url2}"  disabled>-->
+                                        <!--<span class="input-group-btn">-->
+                                            <!--<a href="javascript:void(0);" class="btn btn-default copy" data-clipboard-text="{$call_payback_url2}">复制</a>-->
+                                        <!--</span>-->
+                                        <!--{/if}-->
+                                    <!--</div>-->
+                                    <!--<p class="help-block">将以上“支付授权目录”链接，粘贴到到商户平台 产品中心=>开发配置=>支付配置=>公众号支付=>添加支付授权目录里。</p>-->
+                                <!--</div>-->
+                            <!--</div>-->
+
+                        <!--<div class="form-group">-->
+                            <!--<div class="col-md-2"></div>-->
+                            <!--<div class="col-md-8">-->
+                                <!--<div class="editor1-main-tips">-->
+                                    <!--<p class="mb-10">第三步 登录<a href="https://pay.weixin.qq.com/index.php/core/home/login?return_url=%2F" class="text-primary" target="_blank">微信商户平台</a>，点击上方 产品中心=>开放配置=>支付配置=>公众号支付，配置公众号授权目录。</p>-->
+                                    <!--<p class="mb-10">在系统后台复制“支付授权目录”链接，粘贴到产品中心=>开放配置=>支付配置=>公众号支付=>添加支付授权目录里。</p>-->
+                                    <!--<p class="mb-10">*电脑首次登录微信商户平台，需在 账户中心=>个人设置=>操作证书里，安装安全控件以及下载证书，才能进行操作。</p>-->
+                                <!--</div>-->
+                            <!--</div>-->
+                        <!--</div>-->
+
+                            <!--&lt;!&ndash;<div class="mt-10">-->
+                                <!--<img src="/public/platform/images/wxMenu/wxAccount5.png" alt="">-->
+                            <!--</div>-->
+                            <!--<div class="mt-10">-->
+                                <!--<img src="/public/platform/images/wxMenu/wxAccount6.png" alt="">-->
+                            <!--</div>&ndash;&gt;-->
+
+                        <!--</div>-->
+                    <!--</div>-->
+
+                        <div class="form-group">
+                            <label class="col-md-2 control-label"></label>
+                            <div class="col-md-8">
+                                <a href="javascript:void(0);"  class="btn btn-default mr-10 cancel_config">取消</a>
+                                <a href="javascript:void(0);"  class="btn btn-default mr-10 part4-jump">上一步</a>
+                                <a class="btn btn-primary SAVE" type="submit">保存</a>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+
+            <div class="part5" style="display: none">
+                    <form class="form-horizontal widthFixedForm">
+                        <div class="form-group">
+                            <label class="col-md-2 control-label"><span class="text-bright">*</span> 公众号名称</label>
+                            <div class="col-md-8">
+                                <input type="text" class="form-control" placeholder="请输入公众号名称" id="wx_name1"  value="{$wchat_config.public_name}" >
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="col-md-2 control-label"><span class="text-bright">*</span> AppID</label>
+                            <div class="col-md-8">
+                                <input type="text" class="form-control" placeholder="请输入AppID" id="appid1" value="{$wchat_config.appid}">
+                                <p class="help-block mb-0">请到微信公众号=>基本配置=>公众号开发信息=>开发者ID（AppID）获取。</p>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="col-md-2 control-label"><span class="text-bright">*</span> AppSecret</label>
+                            <div class="col-md-8">
+                                <input type="text" class="form-control" placeholder="请输入APPSecret" id="appsecret1" value="{$wchat_config.appsecret}">
+                                <p class="help-block mb-0">请到微信公众号=>基本配置=>公众号开发信息=>开发者密码（AppSecret）中获取。</p>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="col-md-2 control-label"><span class="text-bright">*</span> EncodingAESKey</label>
+                            <div class="col-md-8">
+                                <input type="text" class="form-control" placeholder="请输入EncodingAESKey" id="encodingAESKey1" value="{$wchat_config.encodingAESKey}">
+                                <p class="help-block mb-0">请到微信公众号=>开发=>基本配置=>服务器配置=>EncodingAESKey，点击“随机生成”。</p>
+                            </div>
+                        </div>
+                        <input type="hidden" id="token1" value="{$wchat_config.token}">
+                    <div class="form-group">
+                        <label class="col-md-2 control-label"></label>
+                        <div class="col-md-8">
+                            <a class="btn btn-default mr-10 cancel_config">取消</a>
+                            <a class="btn btn-primary SAVE1" type="submit">保存</a>
+                        </div>
+                    </div>
+
+                    </form>
+                </div>
+                <!-- page end -->
+<div id="saveTips" style="display: none">
+    <div class="saving"></div>
+    <div class="saveing-box">
+        <div><img src="/public/platform/images/loading.svg" alt="" style="width: 80px;height: 80px"></div>
+        <p>公众号粉丝同步中</p>
+    </div>
+</div>
+{/block}
+{block name="script"}
+<script>
+require(['util'],function(util){
+    $('.part3_jump').on('click',function(){
+        if($('#wxAccount_name').val()==''){
+            util.message('请输入公众号名称','danger');
+            $('#wxAccount_name').focus();
+            return false;
+        }
+        if($('#AppID').val()==''){
+            util.message('请输入AppID','danger');
+            $('#AppID').focus();
+            return false;
+        }
+        if($('#AppSecret').val()==''){
+            util.message('请输入AppSecret','danger');
+            $('#AppSecret').focus();
+            return false;
+        }
+
+        var letters = 'abcdefghijklmnopqrstuvwxyz0123456789';
+        var token = '';
+        for(var i = 0; i < 32; i++) {
+            var j = parseInt(Math.random() * (31 + 1));
+            token += letters[j];
+        }
+        $(':text[name="empowerToken"]').val(token);
+        $('#clipboard-text').attr('data-clipboard-text',token);
+        var appid = $("#AppID").val();
+        var wxAccount_name = $("#wxAccount_name").val();
+        var appsecret = $("#AppSecret").val();
+        var token = $("#empowerToken").val();
+        $.ajax({
+            type : "post",
+            url :  "{:__URL('PLATFORM_MAIN/wchat/setInstanceWchatConfig')}",
+            async : true,
+            data : {
+                "appid" : appid,
+                "public_name" : wxAccount_name,
+                "appsecret" : appsecret,
+                "token":token,
+            },
+            success : function(data) {
+                if (data["code"] > 0) {
+                    $('.part1').hide();
+                    $('.part2').hide();
+                    $('.part3').hide();
+                    $('.part4').show();
+                    $('.part5').hide();
+                }else{
+                    util.message(data["message"],'danger');
+                }
+            }
+        });
+    })
+    $('.SAVE').on('click',function(){
+        var encodingAESKey = $("#encodingAESKey").val();
+        if(encodingAESKey==''){
+            util.message('请输入EncodingAESKey','danger');
+            $('#encodingAESKey').focus();
+            return false;
+        }
+        var synchronous = $('input[name="synchronous"]:checked').val();
+        $.ajax({
+            type : "post",
+            url :  "{:__URL('PLATFORM_MAIN/wchat/setInstanceWchatConfig')}",
+            async : true,
+            data : {
+                "encodingAESKey":encodingAESKey,
+                "type":1,
+            },
+            success : function(data) {
+                if (data["code"] > 0) {
+                    if(synchronous==1){
+                        $('#saveTips').show();
+                        $.ajax({
+                            type: "post",
+                            url: __URL(PLATFORMMAIN + "/wchat/uploadFans"),
+                            async: true,
+                            success: function (data) {
+                                if(data["code"] > 0){
+                                    $('#saveTips').hide();
+                                    util.message('保存成功','success',"{:__URL('PLATFORM_MAIN/wchat/config')}");
+                                }else{
+                                    util.message(data["message"],'danger');
+                                }
+                            }
+                        })
+                    }else{
+                        util.message('保存成功','success',"{:__URL('PLATFORM_MAIN/wchat/config')}");
+                    }
+                }else{
+                    util.message(data["message"],'danger');
+                }
+            }
+        });
+    })
+    $('.SAVE1').on('click',function(){
+        var appid = $("#appid1").val();
+        var wxAccount_name = $("#wx_name1").val();
+        var appsecret = $("#appsecret1").val();
+        var token = $("#token1").val();
+        var encodingAESKey = $("#encodingAESKey1").val();
+        if(wxAccount_name == ""){
+            util.message('请输入公众号名称','danger');
+            $("#wx_name1").focus();
+            return false;
+        }
+        if(appid == ""){
+            util.message('请输入AppID','danger');
+            $("#appid1").focus();
+            return false;
+        }
+        if(appsecret == ""){
+            util.message('请输入AppSecret','danger');
+            $("#appsecret1").focus();
+            return false;
+        }
+        if(encodingAESKey == ""){
+            util.message('请输入EncodingAESKey','danger');
+            $("#encodingAESKey1").focus();
+            return false;
+        }
+        $.ajax({
+            type : "post",
+            url :  "{:__URL('PLATFORM_MAIN/wchat/setInstanceWchatConfig')}",
+            async : true,
+            data : {
+                "appid" : appid,
+                "token" : token,
+                "public_name" : wxAccount_name,
+                "appsecret" : appsecret,
+                "encodingAESKey" : encodingAESKey,
+            },
+            success : function(data) {
+                if (data["code"] > 0) {
+                    util.message(data["message"],'success',"{:__URL('PLATFORM_MAIN/wchat/config')}");
+                }else{
+                    util.message(data["message"],'danger');
+                }
+            }
+        });
+    })
+    // $('.part3_jump').on('click',function(){
+    //         var letters = 'abcdefghijklmnopqrstuvwxyz0123456789';
+    //         var token = '';
+    //         for(var i = 0; i < 32; i++) {
+    //             var j = parseInt(Math.random() * (31 + 1));
+    //             token += letters[j];
+    //         }
+    //         $(':text[name="empowerToken"]').val(token);
+    // });
+    //上传文件
+    // $('.J-btnwxup').on('click',function(){
+    //     var wx_public = $("#wx_public").val();
+    //     var path = "{:__URL('PLATFORM_MAIN/upload/uploadTxt')}"+'?wx_public='+wx_public;
+    //     util.attachmentUpload(path,function (file_url) {
+    //         if(file_url.state == '1'){
+    //             $(".wx_public").val(file_url.filename)
+    //             $("#wx_public").val(file_url.filesrc)
+    //         }
+    //     })
+    // })
+    $('#authorize').on('click',function(){
+        $('.part1').hide();
+        $('.part2').hide();
+        $('.part3').show();
+        $('.part4').hide();
+        $('.part5').hide();
+    })
+    //绑定其他公众号
+    $('.bindOther').on('click',function(){
+        util.alert('是否要重新授权绑定到其他公众号？',function(){
+            $('.part1').hide();
+            $('.part2').hide();
+            $('.part3').show();
+            $('.part4').hide();
+            $('.part5').hide();
+        })
+    });
+    // 下一步跳转
+    // $('.part3_jump').on('click',function(){
+    //     if($('#wxAccount_name').val()==''){
+    //         util.message('请输入公众号名称','danger');
+    //         $('#wxAccount_name').focus();
+    //         return false;
+    //     }
+    //     if($('#AppID').val()==''){
+    //         util.message('请输入AppID','danger');
+    //         $('#AppID').focus();
+    //         return false;
+    //     }
+    //     if($('#AppSecret').val()==''){
+    //         util.message('请输入AppSecret','danger');
+    //         $('#AppSecret').focus();
+    //         return false;
+    //     }
+    //     var letters = 'abcdefghijklmnopqrstuvwxyz0123456789';
+    //     var token = '';
+    //     for(var i = 0; i < 32; i++) {
+    //         var j = parseInt(Math.random() * (31 + 1));
+    //         token += letters[j];
+    //     }
+    //     $(':text[name="empowerToken"]').val(token);
+    //     $('#clipboard-text').attr('data-clipboard-text',token);
+    //     $('.part1').hide();
+    //     $('.part2').hide();
+    //     $('.part3').hide();
+    //     $('.part4').show();
+    //     $('.part5').hide();
+    // })
+    // 上一步跳转
+    $('.part4-jump').on('click',function(){
+        $('.part1').hide();
+        $('.part2').hide();
+        $('.part3').show();
+        $('.part4').hide();
+        $('.part5').hide();
+    })
+    // 修改开发信息
+    $('.editInfo').on('click',function(){
+            $('.part1').hide();
+            $('.part2').hide();
+            $('.part3').hide();
+            $('.part4').hide();
+            $('.part5').show();
+    })
+    $('.cancel_config').on('click',function(){
+        location.reload();
+    })
+
+util.copy2('#textarea1','textarea1');
+util.copy2('#textarea2','textarea2');
+
+   
+
+
+
+
+})
+
+</script>
+{/block}

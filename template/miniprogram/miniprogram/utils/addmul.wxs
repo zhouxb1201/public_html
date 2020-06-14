@@ -1,0 +1,49 @@
+var filters = {
+  toFix: function (value) {
+    return parseFloat(value).toFixed(2)//此处2为保留两位小数
+  },
+  telvague: function(val) { //将手机号中间4位数变成*
+    return val ? (val.substring(0, 3) + '****' + val.substring(7)) : "匿名";
+  },
+  formatDate: function (time, isSecond) { //处理时间戳
+    var date = getDate(time * 1000);
+    var y = date.getFullYear();
+    var m = date.getMonth() + 1;
+    m = m < 10 ? ('0' + m) : m;
+    var d = date.getDate();
+    d = d < 10 ? ('0' + d) : d;
+    var h = date.getHours();
+    h = h < 10 ? ('0' + h) : h;
+    var minute = date.getMinutes();
+    var second = date.getSeconds();
+    minute = minute < 10 ? ('0' + minute) : minute;
+    second = second < 10 ? ('0' + second) : second;
+    var timeStr = y + '-' + m + '-' + d + ' ' + h + ':' + minute + ':' + second;
+    var timeStamp = y + '-' + m + '-' + d;
+    return isSecond ? timeStr : timeStamp;
+  },
+  toNumber: function (value) {
+    return parseFloat(value);
+  },
+  realFormatSecond:function (second) {
+    var secondType = typeof second
+    if (secondType === 'number' || secondType === 'string') {
+        second = parseInt(second)
+        var hours = Math.floor(second / 3600)
+        second = second - hours * 3600
+        var mimute = Math.floor(second / 60)
+        second = second - mimute * 60
+
+        return hours + ':' + ('0' + mimute).slice(-2) + ':' + ('0' + second).slice(-2)
+    } else {
+        return '0:00:00'
+    }
+  }
+}
+module.exports = {
+  toFix: filters.toFix,
+  telvague: filters.telvague,
+  formatDate: filters.formatDate,
+  toNumber: filters.toNumber,
+  realFormatSecond:filters.realFormatSecond
+}

@@ -1,0 +1,106 @@
+{block name="main"}
+<div class="v-main-right fl">
+	<div class="v-container">
+		<div class="coupon-toolbar">
+			<ul class="coupon-toolbar-ul clearfix">
+				<li class="active"><a href="javascript:;" class="coupontype" data-id="1" >未使用</a></li>
+				<li><a href="javascript:;" class="coupontype" data-id="2">已使用</a></li>
+				<li><a href="javascript:;" class="coupontype" data-id="3">已过期</a></li>
+			</ul>
+		</div>
+		<div class="coupons-list">
+
+	    </div>
+		<!--page-->
+
+		<div class="page clearfix" style="display: none">
+			<div class="M-box3 m-style fr"></div>
+		</div>
+		<!--page-->
+	</div>
+</div>
+{/block}
+{block name="javascript"}
+<script>
+    require(['common','dialog'], function (common,Dialog) {
+        Dialog.withAccount(".coupon-toolbar-ul","li","active");
+		LoadingInfo(1,1);
+        //查询优惠券
+        function LoadingInfo(page_index,type) {
+            if(!type){
+                type = $(".coupon-toolbar-ul").children('.active').children('a').data('id');
+            }
+            $.ajax({
+                type : "post",
+                url : '{$couponListUrl}',
+                async : true,
+                data : {
+                    "page_index" : page_index,
+					"type": type
+                },
+                success : function(data) {
+                    var html = '';
+                    if (data['data'].length>0) {
+                        html += '<ul class="clearfix">';
+                        for (var i = 0; i < data['data'].length; i++) {
+                            if(data['data'][i]['state']==1){
+                                html +='<li>';
+							}else{
+                                html +='<li class="li-gray">';
+							}
+                            html +='<div class="coupons-box">';
+                            html +='<div class="coupons-price clearfix">';
+                            if(data['data'][i]['coupon_genre']==1 || data['data'][i]['coupon_genre']==2){
+                                html +='<div class="price fl"><span class="num">'+data['data'][i]['money']+'</span>元</div>';
+                            }else{
+                                html +='<div class="price fl"><span class="num">'+data['data'][i]['discount']+'</span>折</div>';
+                            }
+                            html +='<div class="isUse fr">'+data['data'][i]['state_name']+'</div>';
+                            html +='</div>';
+                            html +='<dl class="coupons-item clearfix">';
+                            html +='<dt>使用范围：</dt>';
+                            html +='<dd><a href="javascript:;">'+data['data'][i]['range']+'</a></dd>';
+                            html +='</dl>';
+                            html +='<dl class="coupons-item clearfix">';
+                            html +='<dt>使用条件：</dt>';
+                            if(data['data'][i]['coupon_genre']==1){
+                                html +='<dd>'+data['data'][i]['genre']+'</dd>';
+                            }else if(data['data'][i]['coupon_genre']==2){
+                                html +='<dd>满'+data['data'][i]['money']+'元享受</dd>';
+                            }else if(data['data'][i]['coupon_genre']==3){
+                                html +='<dd>满'+data['data'][i]['money']+'元享受</dd>';
+                            }
+                            html +='</dl>';
+                            html +='<dl class="coupons-item clearfix">';
+                            html +='<dt>优惠券号：</dt>';
+                            html +='<dd>'+data['data'][i]['coupon_code']+'</dd>';
+                            html +='</dl>';
+                            html +='<dl class="coupons-item clearfix">';
+                            html +='<dt>有效日期：</dt>';
+                            html +='<dd class="h156">'+data['data'][i]['start_time']+'~'+data['data'][i]['end_time']+'</dd>';
+                            html +='</dl>';
+                            html +='</div>';
+                            html +='</li>';
+                        }
+                        html += '</ul>';
+                        $('.page').css('display','block');
+                        $(".coupons-list").html(html);
+                        common.Pages('.M-box3', data['total_count'], data["page_count"], page_index, LoadingInfo);
+                    }else{
+                        $('.page').css('display','none');
+						var html1='';
+                        html1 +='    <div class="coupons-list"><div class="no-coupons">您还没有获取优惠券</div></div>';
+                        $(".coupons-list").html(html1);
+					}
+
+                }
+            });
+        }
+        Dialog.withAccount(".coupon-toolbar-ul", "li", "active");
+        $('body').on('click','.coupontype',function(){
+            var type = $(this).data('id');
+            LoadingInfo(1,type);
+        })
+    });
+</script>
+{/block}

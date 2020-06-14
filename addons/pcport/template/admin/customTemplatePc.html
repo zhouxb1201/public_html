@@ -1,0 +1,1377 @@
+<!--<link rel="stylesheet" href="PLATFORM_NEW_LIB/bootstrap/css/bootstrap.min.css">
+<link rel="stylesheet" href="PLATFORM_NEW_CSS/indexDecorate/css/common.css">-->
+<link rel="stylesheet" href="PLATFORM_NEW_CSS/indexDecorate/css/layer.css">
+<link rel="stylesheet" href="PLATFORM_NEW_LIB/swiper/css/swiper.min.css">
+<link rel="stylesheet" href="PLATFORM_NEW_CSS/indexDecorate/css/pagination.css">
+
+<!--<link rel="stylesheet" href="PLATFORM_NEW_CSS/indexDecorate/css/purebox.css">-->
+<link rel="stylesheet" href="PLATFORM_NEW_CSS/indexDecorate/css/shop.css">
+{if $style && $style!='default'}
+<link rel="stylesheet" href="PLATFORM_NEW_CSS/indexDecorate/css/{$style}.css">
+{/if}
+<style>
+    .v-main{padding-top:45px;padding-left:259px;}
+    .v-container{padding:0px;min-height: 0;}
+</style>
+<div class="v-subnav component mall-component">
+    <div class="mall-component-title">
+        <ul class="mall-component-title-ul clearfix">
+            <li class="active"><a href="#tab1">组件</a></li>
+            <li><a href="#tab2">风格</a></li>
+        </ul></div>
+    <div class="tab_container">
+        <div id="tab1" class="tab_content" style="display: block; ">
+            <div class="module-list">
+                {if  $type=='custom_templates'}
+                <div class="visual-item ui-draggable topBan J-topBanner lyrow" data-mode="topBanner" data-purebox="adv" ectype="visualItme" data-length="1">
+                    <div class="drag ui-draggable-handle">
+                        <div class="pic toppic">
+                            <img src="ADMIN_IMG/decorate/component/component7.png" alt="">
+                            <p class="txt">顶部广告</p>
+                        </div>
+                        <div class="view" style="display: none">
+                            <div class="bannerWidth topBanner mallTopBanner" data-type="range">
+                                <a href="javascript:void(0);" class="mtb_a"><img src="http://iph.href.lu/1920x80" alt="" class="imgWidth"></a>
+                            </div>
+                            <div class="setup_box">
+                                <div class="barbg"></div>
+                                <a href="javascript:void(0);" class="move-edit mtbEdit" ectype='model_edit'><i class="icon icon-edit"></i>编辑</a>
+                                <a href="javascript:void(0);" class="move-edit move-del"><i class="icon icon-delete"></i>删除</a>
+                            </div>
+                        </div>
+
+
+                    </div>
+                </div>
+                {/if}
+                {if  $type=='home_templates'}
+                <div class="visual-item ui-draggable topBan J-topBanner lyrow" data-mode="topBanner" data-purebox="adv" ectype="visualItme" data-length="1">
+                    <div class="drag ui-draggable-handle">
+                        <div class="pic toppic">
+                            <img src="ADMIN_IMG/decorate/component/component7.png" alt="">
+                            <p class="txt">顶部广告</p>
+                        </div>
+                        <div class="view" style="display: none">
+                            <div class="bannerWidth topBanner mallTopBanner" data-type="range">
+                                <a href="javascript:void(0);" class="mtb_a"><img src="http://iph.href.lu/1920x80" alt="" class="imgWidth"></a>
+                            </div>
+                            <div class="setup_box">
+                                <div class="barbg"></div>
+                                <a href="javascript:void(0);" class="move-edit mtbEdit" ectype='model_edit'><i class="icon icon-edit"></i>编辑</a>
+                                <a href="javascript:void(0);" class="move-edit move-del"><i class="icon icon-delete"></i>删除</a>
+                            </div>
+                        </div>
+
+
+                    </div>
+                </div>
+                <div class="visual-item ui-draggable lunbotu lyrow" data-mode="home_banner" ectype="visualItme" data-length="8" data-purebox="shop_adv" data-li="1">
+                    <div class="drag ui-draggable-handle" data-html="not">
+                        <div class="pic">
+                            <img src="ADMIN_IMG/decorate/component/component6.png" alt="">
+                            <p class="txt">多图轮播</p>
+                        </div>
+                        <div class="setup_box" data-html="not">
+                            <div class="barbg"></div>
+                            <a href="javascript:void(0);" class="move-edit" ectype='model_edit'><i class="icon icon-edit"></i>编辑</a>
+                            <a href="javascript:void(0);" class="move-edit move-del"><i class="icon icon-delete"></i>删除</a>
+                        </div>
+                    </div>
+                    <div class="view">
+                        <!--banner图-->
+                        <div class="banner bannerWidth" data-type='range'>
+                            <div class="swiper-container swiper-container1 swiper-no-swiping">
+                                <div class="swiper-wrapper">
+                                    <div class="swiper-slide"><a href="javascript:void(0);" class="lbtTwo bg-full" style="background-image:url('http://iph.href.lu/1920x520');width: 100%;height: 100%"></a></div>
+                                </div>
+                                <!-- 如果需要分页器 -->
+                                <div class="swiper-pagination"></div>
+                            </div>
+                            <div class="w1200" style="position: relative;">
+                                <div class="vip-outcon">
+                                    <div class="vip-con">
+                                        <div class="user-img">
+                                            <a href="javascript:void(0);"><img src="ADMIN_IMG/decorate/weidenglu.png" alt=""></a>
+                                        </div>
+                                        <p class="infor">Hi,欢迎来到</p>
+                                        <div class="outcon-btn">
+                                            <a href="javascript:void(0);" class="login">登录</a>
+                                            <a href="javascript:void(0);">注册</a>
+                                        </div>
+                                        <div class="entrance">
+                                            <div class="entrance-title">快捷入口</div>
+                                            <div class="entrance-list">
+                                                <ul class="clearfix">
+
+                                                    <li>
+                                                        <a href="javascript:void(0);">
+                                                            <div class="entrance-img"><img src="http://iph.href.lu/30x30" alt=""></div>
+                                                            <p>我的足迹</p>
+                                                        </a>
+                                                    </li>
+                                                    <li>
+                                                        <a href="javascript:void(0);">
+                                                            <div class="entrance-img"><img src="http://iph.href.lu/30x30" alt=""></div>
+                                                            <p>我的足迹</p>
+                                                        </a>
+                                                    </li>
+                                                    <li>
+                                                        <a href="javascript:void(0);">
+                                                            <div class="entrance-img"><img src="http://iph.href.lu/30x30" alt=""></div>
+                                                            <p>我的足迹</p>
+                                                        </a>
+                                                    </li>
+                                                    <li>
+                                                        <a href="javascript:void(0);">
+                                                            <div class="entrance-img"><img src="http://iph.href.lu/30x30" alt=""></div>
+                                                            <p>我的足迹</p>
+                                                        </a>
+                                                    </li>
+                                                    <li>
+                                                        <a href="javascript:void(0);">
+                                                            <div class="entrance-img"><img src="http://iph.href.lu/30x30" alt=""></div>
+                                                            <p>我的足迹</p>
+                                                        </a>
+                                                    </li>
+                                                    <li>
+                                                        <a href="javascript:void(0);">
+                                                            <div class="entrance-img"><img src="http://iph.href.lu/30x30" alt=""></div>
+                                                            <p>我的足迹</p>
+                                                        </a>
+                                                    </li>
+
+
+                                                </ul>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="swiper-pagination"></div>
+                    </div>
+                </div>
+                {/if}
+                {if  $type=='shop_templates'|| $type=='custom_templates'}
+                <div class="visual-item ui-draggable lunbotu lyrow" data-mode="lunbo" ectype="visualItme" data-purebox="adv" data-li="1" data-length="8">
+                    <div class="drag ui-draggable-handle" data-html="not">
+                        <div class="pic">
+                            <img src="ADMIN_IMG/decorate/component/component6.png" alt="">
+                            <p class="txt">多图轮播</p>
+                        </div>
+                        <div class="setup_box" data-html="not">
+                            <div class="barbg"></div>
+                            <a href="javascript:void(0);" class="move-edit" ectype='model_edit'><i class="icon icon-edit"></i>编辑</a>
+                            <a href="javascript:void(0);" class="move-edit move-del"><i class="icon icon-delete"></i>删除</a>
+                        </div>
+                    </div>
+                    <div class="view">
+                        <!--banner图-->
+                        <div class="banner bannerWidth">
+                            <div class="swiper-container swiper-container1 swiper-no-swiping">
+                                <div class="swiper-wrapper" data-type='range'>
+                                    <div class="swiper-slide"><a href="javascript:void(0);" class="lbtTwo bg-full" style="background-image:url('http://iph.href.lu/1920x520');width: 100%;height: 100%"></a></div>
+                                </div>
+                                <!-- 如果需要分页器 -->
+                                <div class="swiper-pagination"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                {/if}
+                {if  $type=='home_templates'||$type=='shop_templates'||$type=='goods_templates'|| $type=='custom_templates'}
+                <div class="visual-item ui-draggable lyrow" data-mode="singleBanner" data-purebox="singleBanner" ectype="visualItme" data-length="1">
+                    <div class="drag ui-draggable-handle" data-html="not">
+                        <div class="pic">
+                            <img src="ADMIN_IMG/decorate/component/component1.png" alt="">
+                            <p class="txt">单图广告</p>
+                        </div>
+                        <!--编辑删除-->
+                        <div class="setup_box" data-html="not">
+                            <div class="barbg"></div>
+                            <a href="javascript:void(0);" class="move-edit" ectype='model_edit'><i class="icon icon-edit"></i>编辑</a>
+                            <a href="javascript:void(0);" class="move-edit move-del"><i class="icon icon-delete"></i>删除</a>
+                        </div>
+                    </div>
+                    <div class="view">
+                        <div class="sBanner">
+                            <div class="s-banner">
+                                <div class="module w1200" data-type="range">
+                                    <a href="javascript:void(0);"><img src="http://iph.href.lu/1200x100" alt=""></a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                {/if}
+                {if $type=='home_templates'||$type=='shop_templates'|| $type=='custom_templates'}
+                <div class="visual-item ui-draggable lyrow" data-mode="hot" data-purebox="hot" ectype="visualItme">
+                    <div class="drag ui-draggable-handle" data-html="not">
+                        <div class="pic">
+                            <img src="ADMIN_IMG/decorate/component/component4.png" alt="">
+                            <p class="txt">热门活动</p>
+                        </div>
+                        <div class="setup_box" data-html="not">
+                            <div class="barbg"></div>
+                            <a href="javascript:void(0);" class="move-edit" ectype='model_edit'><i class="icon icon-edit"></i>编辑</a>
+                            <a href="javascript:void(0);" class="move-edit move-del"><i class="icon icon-delete"></i>删除</a>
+                        </div>
+                    </div>
+                    <div class="view">
+                        <div class="hotActivity" id="h-storeRec" data-type="range" data-lift="">
+                            <div class="w1200 titles">
+                                <h3>热门活动</h3>
+                            </div>
+                            <div class="h-list w1200 clearfix">
+
+                                <div class="h-list-item">
+                                    <a href="javascript:void(0);">
+                                        <div class="h-img">
+                                            <img src="http://iph.href.lu/290x290" alt="">
+                                        </div>
+                                    </a>
+                                </div>
+                                <div class="h-list-item">
+                                    <a href="javascript:void(0);">
+                                        <div class="h-img">
+                                            <img src="http://iph.href.lu/290x290" alt="">
+                                        </div>
+                                    </a>
+                                </div>
+                                <div class="h-list-item">
+                                    <a href="javascript:void(0);">
+                                        <div class="h-img">
+                                            <img src="http://iph.href.lu/290x290" alt="">
+                                        </div>
+                                    </a>
+                                </div>
+                                <div class="h-list-item">
+                                    <a href="javascript:void(0);">
+                                        <div class="h-img">
+                                            <img src="http://iph.href.lu/290x290" alt="">
+                                        </div>
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="visual-item ui-draggable lyrow" data-mode="homeFloor" data-purebox="homeFloor" data-li="1" ectype="visualItme">
+                    <div class="drag ui-draggable-handle" data-html="not">
+                        <div class="pic"><img src="ADMIN_IMG/decorate/component/component5.png" alt=""><p class="txt">主推楼层</p></div>
+                        <!--编辑删除-->
+                        <div class="setup_box" data-html="not">
+                            <div class="barbg"></div>
+                            <a href="javascript:void(0);" class="move-edit" ectype='model_edit'><i class="icon icon-edit"></i>编辑</a>
+                            <a href="javascript:void(0);" class="move-edit move-del"><i class="icon icon-delete"></i>删除</a>
+                        </div>
+                    </div>
+                    <div class="view" data-type="range">
+                        <div class="floor-content1">
+                            <!--标题栏-->
+                            <div class="floor-hd w1200 clearfix">
+                                <div class="hd-tit">魅力型男</div>
+                            </div>
+                            <!--内容栏-->
+                            <div class="f1-list w1200 clearfix">
+
+                                <div class="f-list-item">
+                                    <a href="javascript:void(0);">
+                                        <div class="f-img">
+                                            <img src="http://iph.href.lu/472x280" alt="">
+                                        </div>
+                                    </a>
+                                </div>
+                                <div class="f-list-item">
+                                    <a href="javascript:void(0);">
+                                        <div class="f-img">
+                                            <img src="http://iph.href.lu/230x280" alt="">
+                                        </div>
+                                    </a>
+                                </div>
+                                <div class="f-list-item">
+                                    <a href="javascript:void(0);">
+                                        <div class="f-img">
+                                            <img src="http://iph.href.lu/230x280" alt="">
+                                        </div>
+                                    </a>
+                                </div>
+                                <div class="f-list-item">
+                                    <a href="javascript:void(0);">
+                                        <div class="f-img">
+                                            <img src="http://iph.href.lu/230x280" alt="">
+                                        </div>
+                                    </a>
+                                </div>
+                                <div class="f-list-item">
+                                    <a href="javascript:void(0);">
+                                        <div class="f-img">
+                                            <img src="http://iph.href.lu/230x280" alt="">
+                                        </div>
+                                    </a>
+                                </div>
+                                <div class="f-list-item">
+                                    <a href="javascript:void(0);">
+                                        <div class="f-img">
+                                            <img src="http://iph.href.lu/230x280" alt="">
+                                        </div>
+                                    </a>
+                                </div>
+                                <div class="f-list-item">
+                                    <a href="javascript:void(0);">
+                                        <div class="f-img">
+                                            <img src="http://iph.href.lu/230x280" alt="">
+                                        </div>
+                                    </a>
+                                </div>
+                                <div class="f-list-item">
+                                    <a href="javascript:void(0);">
+                                        <div class="f-img">
+                                            <img src="http://iph.href.lu/230x280" alt="">
+                                        </div>
+                                    </a>
+                                </div>
+                                <div class="f-list-item">
+                                    <a href="javascript:void(0);">
+                                        <div class="f-img">
+                                            <img src="http://iph.href.lu/230x280" alt="">
+                                        </div>
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                {/if}
+                {if $type=='home_templates'}
+                <div class="visual-item ui-draggable lyrow" data-mode="h-shop" data-purebox="homeAdv" data-li="1" ectype="visualItme">
+                    <div class="drag ui-draggable-handle" data-html="not">
+                        <div class="pic">
+                            <img src="ADMIN_IMG/decorate/component/component8.png" alt="">
+                            <p class="txt">精选好店</p>
+                        </div>
+                    </div>
+                    <div class="view"  data-type="range">
+                        <div class="goodShop">
+                            <!--好店列表-->
+                            <div class="w1200 goodShopList clearfix">
+                                <div class="goodShopList-left fl">
+                                    <div class="left-brand-item">
+                                        <div class="left-brand-img">
+                                            <img src="http://iph.href.lu/290x225" alt="">
+                                        </div>
+                                        <a href="javascript:void(0);" class="brand-mask">
+                                            <div class="coupon">
+                                                <span data-spm-anchor-id="875.7931836/B.2016073.i0.31b64265q7qTaZ">伊利</span>
+                                            </div>
+                                            <div class="enter">
+                                                <span>点击进入</span>
+                                            </div>
+                                        </a>
+                                    </div>
+
+                                </div>
+                                <div class="goodShopList-right fl">
+                                    <div class="brand-list">
+                                        <ul>
+
+                                            <li>
+                                                <div class="brand-img">
+                                                    <img src="http://iph.href.lu/148x74" alt="">
+                                                </div>
+                                                <a href="javascript:void(0);" class="brand-mask">
+                                                    <div class="coupon">
+                                                        <span data-spm-anchor-id="875.7931836/B.2016073.i0.31b64265q7qTaZ">伊利</span>
+                                                    </div>
+                                                    <div class="enter">
+                                                        <span>点击进入</span>
+                                                    </div>
+                                                </a>
+                                            </li>
+                                            <li>
+                                                <div class="brand-img">
+                                                    <img src="http://iph.href.lu/148x74" alt="">
+                                                </div>
+                                                <a href="javascript:void(0);" class="brand-mask">
+                                                    <div class="coupon">
+                                                        <span data-spm-anchor-id="875.7931836/B.2016073.i0.31b64265q7qTaZ">伊利</span>
+                                                    </div>
+                                                    <div class="enter">
+                                                        <span>点击进入</span>
+                                                    </div>
+                                                </a>
+                                            </li>
+                                            <li>
+                                                <div class="brand-img">
+                                                    <img src="http://iph.href.lu/148x74" alt="">
+                                                </div>
+                                                <a href="javascript:void(0);" class="brand-mask">
+                                                    <div class="coupon">
+                                                        <span data-spm-anchor-id="875.7931836/B.2016073.i0.31b64265q7qTaZ">伊利</span>
+                                                    </div>
+                                                    <div class="enter">
+                                                        <span>点击进入</span>
+                                                    </div>
+                                                </a>
+                                            </li>
+                                            <li>
+                                                <div class="brand-img">
+                                                    <img src="http://iph.href.lu/148x74" alt="">
+                                                </div>
+                                                <a href="javascript:void(0);" class="brand-mask">
+                                                    <div class="coupon">
+                                                        <span data-spm-anchor-id="875.7931836/B.2016073.i0.31b64265q7qTaZ">伊利</span>
+                                                    </div>
+                                                    <div class="enter">
+                                                        <span>点击进入</span>
+                                                    </div>
+                                                </a>
+                                            </li>
+                                            <li>
+                                                <div class="brand-img">
+                                                    <img src="http://iph.href.lu/148x74" alt="">
+                                                </div>
+                                                <a href="javascript:void(0);" class="brand-mask">
+                                                    <div class="coupon">
+                                                        <span data-spm-anchor-id="875.7931836/B.2016073.i0.31b64265q7qTaZ">伊利</span>
+                                                    </div>
+                                                    <div class="enter">
+                                                        <span>点击进入</span>
+                                                    </div>
+                                                </a>
+                                            </li>
+                                            <li>
+                                                <div class="brand-img">
+                                                    <img src="http://iph.href.lu/148x74" alt="">
+                                                </div>
+                                                <a href="javascript:void(0);" class="brand-mask">
+                                                    <div class="coupon">
+                                                        <span data-spm-anchor-id="875.7931836/B.2016073.i0.31b64265q7qTaZ">伊利</span>
+                                                    </div>
+                                                    <div class="enter">
+                                                        <span>点击进入</span>
+                                                    </div>
+                                                </a>
+                                            </li>
+                                            <li>
+                                                <div class="brand-img">
+                                                    <img src="http://iph.href.lu/148x74" alt="">
+                                                </div>
+                                                <a href="javascript:void(0);" class="brand-mask">
+                                                    <div class="coupon">
+                                                        <span data-spm-anchor-id="875.7931836/B.2016073.i0.31b64265q7qTaZ">伊利</span>
+                                                    </div>
+                                                    <div class="enter">
+                                                        <span>点击进入</span>
+                                                    </div>
+                                                </a>
+                                            </li>
+                                            <li>
+                                                <div class="brand-img">
+                                                    <img src="http://iph.href.lu/148x74" alt="">
+                                                </div>
+                                                <a href="javascript:void(0);" class="brand-mask">
+                                                    <div class="coupon">
+                                                        <span data-spm-anchor-id="875.7931836/B.2016073.i0.31b64265q7qTaZ">伊利</span>
+                                                    </div>
+                                                    <div class="enter">
+                                                        <span>点击进入</span>
+                                                    </div>
+                                                </a>
+                                            </li>
+                                            <li>
+                                                <div class="brand-img">
+                                                    <img src="http://iph.href.lu/148x74" alt="">
+                                                </div>
+                                                <a href="javascript:void(0);" class="brand-mask">
+                                                    <div class="coupon">
+                                                        <span data-spm-anchor-id="875.7931836/B.2016073.i0.31b64265q7qTaZ">伊利</span>
+                                                    </div>
+                                                    <div class="enter">
+                                                        <span>点击进入</span>
+                                                    </div>
+                                                </a>
+                                            </li>
+                                            <li>
+                                                <div class="brand-img">
+                                                    <img src="http://iph.href.lu/148x74" alt="">
+                                                </div>
+                                                <a href="javascript:void(0);" class="brand-mask">
+                                                    <div class="coupon">
+                                                        <span data-spm-anchor-id="875.7931836/B.2016073.i0.31b64265q7qTaZ">伊利</span>
+                                                    </div>
+                                                    <div class="enter">
+                                                        <span>点击进入</span>
+                                                    </div>
+                                                </a>
+                                            </li>
+                                            <li>
+                                                <div class="brand-img">
+                                                    <img src="http://iph.href.lu/148x74" alt="">
+                                                </div>
+                                                <a href="javascript:void(0);" class="brand-mask">
+                                                    <div class="coupon">
+                                                        <span data-spm-anchor-id="875.7931836/B.2016073.i0.31b64265q7qTaZ">伊利</span>
+                                                    </div>
+                                                    <div class="enter">
+                                                        <span>点击进入</span>
+                                                    </div>
+                                                </a>
+                                            </li>
+                                            <li>
+                                                <div class="brand-img">
+                                                    <img src="http://iph.href.lu/148x74" alt="">
+                                                </div>
+                                                <a href="javascript:void(0);" class="brand-mask">
+                                                    <div class="coupon">
+                                                        <span data-spm-anchor-id="875.7931836/B.2016073.i0.31b64265q7qTaZ">伊利</span>
+                                                    </div>
+                                                    <div class="enter">
+                                                        <span>点击进入</span>
+                                                    </div>
+                                                </a>
+                                            </li>
+                                            <li>
+                                                <div class="brand-img">
+                                                    <img src="http://iph.href.lu/148x74" alt="">
+                                                </div>
+                                                <a href="javascript:void(0);" class="brand-mask">
+                                                    <div class="coupon">
+                                                        <span data-spm-anchor-id="875.7931836/B.2016073.i0.31b64265q7qTaZ">伊利</span>
+                                                    </div>
+                                                    <div class="enter">
+                                                        <span>点击进入</span>
+                                                    </div>
+                                                </a>
+                                            </li>
+                                            <li>
+                                                <div class="brand-img">
+                                                    <img src="http://iph.href.lu/148x74" alt="">
+                                                </div>
+                                                <a href="javascript:void(0);" class="brand-mask">
+                                                    <div class="coupon">
+                                                        <span data-spm-anchor-id="875.7931836/B.2016073.i0.31b64265q7qTaZ">伊利</span>
+                                                    </div>
+                                                    <div class="enter">
+                                                        <span>点击进入</span>
+                                                    </div>
+                                                </a>
+                                            </li>
+                                            <li>
+                                                <div class="brand-img">
+                                                    <img src="http://iph.href.lu/148x74" alt="">
+                                                </div>
+                                                <a href="javascript:void(0);" class="brand-mask">
+                                                    <div class="coupon">
+                                                        <span data-spm-anchor-id="875.7931836/B.2016073.i0.31b64265q7qTaZ">伊利</span>
+                                                    </div>
+                                                    <div class="enter">
+                                                        <span>点击进入</span>
+                                                    </div>
+                                                </a>
+                                            </li>
+                                            <li>
+                                                <div class="brand-img">
+                                                    <img src="http://iph.href.lu/148x74" alt="">
+                                                </div>
+                                                <a href="javascript:void(0);" class="brand-mask">
+                                                    <div class="coupon">
+                                                        <span data-spm-anchor-id="875.7931836/B.2016073.i0.31b64265q7qTaZ">伊利</span>
+                                                    </div>
+                                                    <div class="enter">
+                                                        <span>点击进入</span>
+                                                    </div>
+                                                </a>
+                                            </li>
+                                            <li>
+                                                <div class="brand-img">
+                                                    <img src="http://iph.href.lu/148x74" alt="">
+                                                </div>
+                                                <a href="javascript:void(0);" class="brand-mask">
+                                                    <div class="coupon">
+                                                        <span data-spm-anchor-id="875.7931836/B.2016073.i0.31b64265q7qTaZ">伊利</span>
+                                                    </div>
+                                                    <div class="enter">
+                                                        <span>点击进入</span>
+                                                    </div>
+                                                </a>
+                                            </li>
+                                            <li class="last">
+                                                <div class="brand-img">
+                                                    <a href="javascript:void(0);">发现更多好店>></a>
+                                                </div>
+                                            </li>
+
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+                    <!--编辑删除-->
+                    <div class="setup_box">
+                        <div class="barbg"></div>
+                        <a href="javascript:void(0);" class="move-up iconfont icon-up1"></a>
+                        <a href="javascript:void(0);" class="move-down iconfont icon-down1"></a>
+                        <a href="javascript:void(0);" class="move-edit" ectype='model_edit'><i class="iconfont icon-edit"></i>编辑</a>
+                        <a href="javascript:void(0);" class="move-edit move-del"><i class="iconfont icon-delete"></i>删除</a>
+                    </div>
+                </div>
+                {/if}
+                <div class="visual-item ui-draggable lyrow" data-mode="goodsRecom" data-purebox="goods" ectype="visualItme">
+                    <div class="drag ui-draggable-handle" data-html="not">
+                        <div class="pic"><img src="ADMIN_IMG/decorate/component/component2.png" alt=""><p class="txt">商品推荐</p></div>
+                        <!--编辑删除-->
+                        <div class="setup_box" data-html="not">
+                            <div class="barbg"></div>
+                            <a href="javascript:void(0);" class="move-edit" ectype='model_edit'><i class="icon icon-edit"></i>编辑</a>
+                            <a href="javascript:void(0);" class="move-edit move-del"><i class="icon icon-delete"></i>删除</a>
+                        </div>
+                    </div>
+                    <div class="view">
+                        <div class="goodsRecom" data-type="range" data-lift="" data-rec_type="" data-count="" data-sort="">
+                            <div class="w1200 titles" data-goodsTitle='title'>
+                                <h3>商品推荐</h3>
+                            </div>
+                            <!--推荐内容-->
+                            <div class="goodsRecom-ul w1200">
+                                <ul class="clearfix">
+                                    <li>
+                                        <div class="product_box">
+                                            <div class="product_img"><a href="javascript:void(0);"><img src="http://iph.href.lu/220x220" alt=""></a></div>
+                                            <div class="product_info">
+                                                <div class="product_name"><a class="pName" href="javascript:void(0);">时尚潮流眼镜 时尚时尚最时尚时尚潮流眼镜时尚潮流眼镜 时尚时尚最时尚时尚潮流眼镜11111111111111111111111111</a></div>
+                                                <div class="product_store"><a class="sName" href="javascript:void(0);">美的眼镜旗舰店</a> <a class="proprietary notproprietary"
+                                                                                                                                      href="javascript:void(0);">自营</a></div>
+                                                <div class="product_sell clearfix"><span class="price pull-left">￥198.00</span><span class="sellsNum pull-right">销量：<b>9999</b></span></div>
+                                            </div>
+                                        </div>
+                                    </li>
+                                    <li>
+                                        <div class="product_box">
+                                            <div class="product_img"><a href="javascript:void(0);"><img src="http://iph.href.lu/220x220" alt=""></a></div>
+                                            <div class="product_info">
+                                                <div class="product_name"><a class="pName" href="javascript:void(0);">时尚潮流眼镜 时尚时尚最时尚时尚潮流眼镜时尚潮流眼镜 时尚时尚最时尚时尚潮流眼镜11111111111111111111111111</a></div>
+                                                <div class="product_store"><a class="sName" href="javascript:void(0);">美的眼镜旗舰店</a> <a class="proprietary" href="javascript:void(0);">自营</a></div>
+                                                <div class="product_sell clearfix"><span class="price pull-left">￥198.00</span><span class="sellsNum pull-right">销量：<b>9999</b></span></div>
+                                            </div>
+                                        </div>
+                                    </li>
+                                    <li>
+                                        <div class="product_box">
+                                            <div class="product_img"><a href="javascript:void(0);"><img src="http://iph.href.lu/220x220" alt=""></a></div>
+                                            <div class="product_info">
+                                                <div class="product_name"><a class="pName" href="javascript:void(0);">时尚潮流眼镜 时尚时尚最时尚时尚潮流眼镜时尚潮流眼镜 时尚时尚最时尚时尚潮流眼镜11111111111111111111111111</a></div>
+                                                <div class="product_store"><a class="sName" href="javascript:void(0);">美的眼镜旗舰店</a> <a class="proprietary" href="javascript:void(0);">自营</a></div>
+                                                <div class="product_sell clearfix"><span class="price pull-left">￥198.00</span><span class="sellsNum pull-right">销量：<b>9999</b></span></div>
+                                            </div>
+                                        </div>
+                                    </li>
+                                    <li>
+                                        <div class="product_box">
+                                            <div class="product_img"><a href="javascript:void(0);"><img src="http://iph.href.lu/220x220" alt=""></a></div>
+                                            <div class="product_info">
+                                                <div class="product_name"><a class="pName" href="javascript:void(0);">时尚潮流眼镜 时尚时尚最时尚时尚潮流眼镜时尚潮流眼镜 时尚时尚最时尚时尚潮流眼镜11111111111111111111111111</a></div>
+                                                <div class="product_store"><a class="sName" href="javascript:void(0);">美的眼镜旗舰店</a> <a class="proprietary" href="javascript:void(0);">自营</a></div>
+                                                <div class="product_sell clearfix"><span class="price pull-left">￥198.00</span><span class="sellsNum pull-right">销量：<b>9999</b></span></div>
+                                            </div>
+                                        </div>
+                                    </li>
+                                    <li>
+                                        <div class="product_box">
+                                            <div class="product_img"><a href="javascript:void(0);"><img src="http://iph.href.lu/220x220" alt=""></a></div>
+                                            <div class="product_info">
+                                                <div class="product_name"><a class="pName" href="javascript:void(0);">时尚潮流眼镜 时尚时尚最时尚时尚潮流眼镜时尚潮流眼镜 时尚时尚最时尚时尚潮流眼镜11111111111111111111111111</a></div>
+                                                <div class="product_store"><a class="sName" href="javascript:void(0);">美的眼镜旗舰店</a> <a class="proprietary" href="javascript:void(0);">自营</a></div>
+                                                <div class="product_sell clearfix"><span class="price pull-left">￥198.00</span><span class="sellsNum pull-right">销量：<b>9999</b></span></div>
+                                            </div>
+                                        </div>
+                                    </li>
+                                    <li>
+                                        <div class="product_box">
+                                            <div class="product_img"><a href="javascript:void(0);"><img src="http://iph.href.lu/220x220" alt=""></a></div>
+                                            <div class="product_info">
+                                                <div class="product_name"><a class="pName" href="javascript:void(0);">时尚潮流眼镜 时尚时尚最时尚时尚潮流眼镜时尚潮流眼镜 时尚时尚最时尚时尚潮流眼镜11111111111111111111111111</a></div>
+                                                <div class="product_store"><a class="sName" href="javascript:void(0);">美的眼镜旗舰店</a> <a class="proprietary" href="javascript:void(0);">自营</a></div>
+                                                <div class="product_sell clearfix"><span class="price pull-left">￥198.00</span><span class="sellsNum pull-right">销量：<b>9999</b></span></div>
+                                            </div>
+                                        </div>
+                                    </li>
+                                    <li>
+                                        <div class="product_box">
+                                            <div class="product_img"><a href="javascript:void(0);"><img src="http://iph.href.lu/220x220" alt=""></a></div>
+                                            <div class="product_info">
+                                                <div class="product_name"><a class="pName" href="javascript:void(0);">时尚潮流眼镜 时尚时尚最时尚时尚潮流眼镜时尚潮流眼镜 时尚时尚最时尚时尚潮流眼镜11111111111111111111111111</a></div>
+                                                <div class="product_store"><a class="sName" href="javascript:void(0);">美的眼镜旗舰店</a> <a class="proprietary" href="javascript:void(0);">自营</a></div>
+                                                <div class="product_sell clearfix"><span class="price pull-left">￥198.00</span><span class="sellsNum pull-right">销量：<b>9999</b></span></div>
+                                            </div>
+                                        </div>
+                                    </li>
+                                    <li>
+                                        <div class="product_box">
+                                            <div class="product_img"><a href="javascript:void(0);"><img src="http://iph.href.lu/220x220" alt=""></a></div>
+                                            <div class="product_info">
+                                                <div class="product_name"><a class="pName" href="javascript:void(0);">时尚潮流眼镜 时尚时尚最时尚时尚潮流眼镜时尚潮流眼镜 时尚时尚最时尚时尚潮流眼镜11111111111111111111111111</a></div>
+                                                <div class="product_store"><a class="sName" href="javascript:void(0);">美的眼镜旗舰店</a> <a class="proprietary" href="javascript:void(0);">自营</a></div>
+                                                <div class="product_sell clearfix"><span class="price pull-left">￥198.00</span><span class="sellsNum pull-right">销量：<b>9999</b></span></div>
+                                            </div>
+                                        </div>
+                                    </li>
+                                    <li>
+                                        <div class="product_box">
+                                            <div class="product_img"><a href="javascript:void(0);"><img src="http://iph.href.lu/220x220" alt=""></a></div>
+                                            <div class="product_info">
+                                                <div class="product_name"><a class="pName" href="javascript:void(0);">时尚潮流眼镜 时尚时尚最时尚时尚潮流眼镜时尚潮流眼镜 时尚时尚最时尚时尚潮流眼镜11111111111111111111111111</a></div>
+                                                <div class="product_store"><a class="sName" href="javascript:void(0);">美的眼镜旗舰店</a> <a class="proprietary" href="javascript:void(0);">自营</a></div>
+                                                <div class="product_sell clearfix"><span class="price pull-left">￥198.00</span><span class="sellsNum pull-right">销量：<b>9999</b></span></div>
+                                            </div>
+                                        </div>
+                                    </li>
+                                    <li>
+                                        <div class="product_box">
+                                            <div class="product_img"><a href="javascript:void(0);"><img src="http://iph.href.lu/220x220" alt=""></a></div>
+                                            <div class="product_info">
+                                                <div class="product_name"><a class="pName" href="javascript:void(0);">时尚潮流眼镜 时尚时尚最时尚时尚潮流眼镜时尚潮流眼镜 时尚时尚最时尚时尚潮流眼镜11111111111111111111111111</a></div>
+                                                <div class="product_store"><a class="sName" href="javascript:void(0);">美的眼镜旗舰店</a> <a class="proprietary" href="javascript:void(0);">自营</a></div>
+                                                <div class="product_sell clearfix"><span class="price pull-left">￥198.00</span><span class="sellsNum pull-right">销量：<b>9999</b></span></div>
+                                            </div>
+                                        </div>
+                                    </li>
+                                </ul>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+                <div class="visual-item ui-draggable lyrow"  data-mode="custom" data-purebox="cust" ectype="visualItme">
+                    <div class="drag ui-draggable-handle" data-html="not">
+                        <div class="pic">
+                            <img src="ADMIN_IMG/decorate/component/component3.png" alt="">
+                            <p class="txt">自定义区</p>
+                        </div>
+                        <div class="setup_box" data-html="not">
+                            <div class="barbg"></div>
+                            <a href="javascript:void(0);" class="move-edit"  ectype='model_edit'><i class="icon icon-edit"></i>编辑</a>
+                            <a href="javascript:void(0);" class="move-edit move-del"><i class="icon icon-delete"></i>删除</a>
+                        </div>
+                    </div>
+                    <div class="view">
+                        <div class="custom" data-type="range" data-lift="" {if $goods_style==1}style='width:auto;'{/if}>
+                            <div class="default ui-draggable ui-box-display"></div>
+
+                        </div>
+                    </div>
+                </div>
+                {if  $type=='shop_templates'}
+                <div class="visual-item ui-draggable lyrow" data-mode="service_mode" data-purebox="service" ectype="visualItme" data-length='7'>
+                    <div class="drag ui-draggable-handle" data-html="not">
+                        <div class="pic"><img src="ADMIN_IMG/decorate/component/component9.png" alt=""><p class="txt">客服中心</p></div>
+                        <div class="setup_box" data-html="not">
+                            <div class="barbg"></div>
+                            <a href="javascript:void(0);" class="move-edit"  ectype='model_edit'><i class="icon icon-edit"></i>编辑</a>
+                            <a href="javascript:void(0);" class="move-edit move-del"><i class="icon icon-delete"></i>删除</a>
+                        </div>
+                    </div>
+                    <div class="view">
+                        <div class="serviceCenter"  data-type="range">
+                            <div class="w w1200 clearfix">
+                                <div class="left pull-left">客服中心
+                                    <span class="desc">Service Center</span>
+                                </div>
+                                <div class="center pull-left clearfix">
+                                    <div class="pull-left beforeSell">售前客服</div>
+                                    <ul class="clearfix pull-left serviceList">
+                                        <li>
+                                            <a href="javascript:void(0);">
+                                                <div class="sells"><img src="http://iph.href.lu/62x62" alt=""></div>
+                                                <div class="sells-name">来来</div>
+                                            </a>
+                                        </li>
+                                        <li>
+                                            <a href="javascript:void(0);">
+                                                <div class="sells"><img src="http://iph.href.lu/62x62" alt=""></div>
+                                                <div class="sells-name">来来</div>
+                                            </a>
+                                        </li>
+                                        <li>
+                                            <a href="javascript:void(0);">
+                                                <div class="sells"><img src="http://iph.href.lu/62x62" alt=""></div>
+                                                <div class="sells-name">来来</div>
+                                            </a>
+                                        </li>
+                                        <li>
+                                            <a href="javascript:void(0);">
+                                                <div class="sells"><img src="http://iph.href.lu/62x62" alt=""></div>
+                                                <div class="sells-name">来来</div>
+                                            </a>
+                                        </li>
+                                        <li>
+                                            <a href="javascript:void(0);">
+                                                <div class="sells"><img src="http://iph.href.lu/62x62" alt=""></div>
+                                                <div class="sells-name">来来</div>
+                                            </a>
+                                        </li>
+                                        <li>
+                                            <a href="javascript:void(0);">
+                                                <div class="sells"><img src="http://iph.href.lu/62x62" alt=""></div>
+                                                <div class="sells-name">来来</div>
+                                            </a>
+                                        </li>
+                                        <li>
+                                            <a href="javascript:void(0);">
+                                                <div class="sells"><img src="http://iph.href.lu/62x62" alt=""></div>
+                                                <div class="sells-name">来来</div>
+                                            </a>
+                                        </li>
+                                    </ul>
+                                </div>
+                                <div class="right pull-left">工作时间:8:00到16:00</div>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+                {/if}
+                <div class="bottomWord">
+                    拖动组件到装修区域
+                </div>
+            </div>
+        </div>
+        <div id="tab2" class="tab_content" style="display: none; ">
+            <div class="shopStyle clearfix">
+                <div class="style-item {if $style=='default' || !$style} selected {/if}" data-style="default">
+                    <div class="style-pic">
+                        <img src="ADMIN_IMG/decorate/component/style11.png" alt="">
+                    </div>
+                    <p>默认</p>
+                    <i></i>
+                </div>
+                <div class="style-item {if $style=='style1'} selected {/if}" data-style="style1" >
+                    <div class="style-pic">
+                        <img src="ADMIN_IMG/decorate/component/style1.png" alt="">
+                    </div>
+                    <p>选用</p>
+                    <i></i>
+                </div>
+                <div class="style-item {if $style=='style2'} selected {/if}" data-style="style2">
+                    <div class="style-pic">
+                        <img src="ADMIN_IMG/decorate/component/style2.png" alt="">
+                    </div>
+                    <p>选用</p>
+                    <i></i>
+                </div>
+                <div class="style-item {if $style=='style3'} selected {/if}" data-style="style3">
+                    <div class="style-pic">
+                        <img src="ADMIN_IMG/decorate/component/style3.png" alt="">
+                    </div>
+                    <p>选用</p>
+                    <i></i>
+                </div>
+                <div class="style-item {if $style=='style4'} selected {/if}" data-style="style4">
+                    <div class="style-pic">
+                        <img src="ADMIN_IMG/decorate/component/style4.png" alt="">
+                    </div>
+                    <p>选用</p>
+                    <i></i>
+                </div>
+                <div class="style-item {if $style=='style5'} selected {/if}" data-style="style5">
+                    <div class="style-pic">
+                        <img src="ADMIN_IMG/decorate/component/style5.png" alt="">
+                    </div>
+                    <p>选用</p>
+                    <i></i>
+                </div>
+                <div class="style-item {if $style=='style6'} selected {/if}" data-style="style6">
+                    <div class="style-pic">
+                        <img src="ADMIN_IMG/decorate/component/style6.png" alt="">
+                    </div>
+                    <p>选用</p>
+                    <i></i>
+                </div>
+                <div class="style-item {if $style=='style7'} selected {/if}" data-style="style7">
+                    <div class="style-pic">
+                        <img src="ADMIN_IMG/decorate/component/style7.png" alt="">
+                    </div>
+                    <p>选用</p>
+                    <i></i>
+                </div>
+                <div class="style-item {if $style=='style8'} selected {/if}" data-style="style8">
+                    <div class="style-pic">
+                        <img src="ADMIN_IMG/decorate/component/style8.png" alt="">
+                    </div>
+                    <p>选用</p>
+                    <i></i>
+                </div>
+                <div class="style-item {if $style=='style9'} selected {/if}" data-style="style9">
+                    <div class="style-pic">
+                        <img src="ADMIN_IMG/decorate/component/style9.png" alt="">
+                    </div>
+                    <p>选用</p>
+                    <i></i>
+                </div>
+                <div class="style-item {if $style=='style10'} selected {/if}" data-style="style10">
+                    <div class="style-pic">
+                        <img src="ADMIN_IMG/decorate/component/style10.png" alt="">
+                    </div>
+                    <p>选用</p>
+                    <i></i>
+                </div>
+
+
+            </div>
+            <div class="bottomWord">
+                选择商城风格
+            </div>
+        </div>
+    </div>
+</div> 
+<div class="v-header">
+    <div class="v-header-box">
+        <div class="custom-header-box">
+                <div class="custom-header-list flex">
+                    <div class="v-logo-padding"><a class="v-logo-img" href="javascript:void(0);" title=""><img src="/public/platform/images/logo2.png" style="height: 27px;max-width: 400px;"></a></div>
+                    <div class="custom-header-list-warp flex-center-justify">
+                        <i class="icon icon-menu1"></i>
+                        <span class="name">{$shop_name}</span>
+                        <i class="icon icon-down-arrow"></i>
+                    </div>
+                    <div class="custom-header-list-box" style="display: none;">
+                        <div class="box-head flex-center-justify">
+                            <span>我的全部页面</span>
+                            <div class="">
+                                <a href="javascript:void(0)" class="btn btn-default btn-sm J-manage">管理页面</a>
+                            </div>
+                        </div>
+                        <div class="box-main">
+                            <div class="box-main-left">
+                                <div class="title">基础页</div>
+                                <ul class="list" id="jc-list">
+
+                                </ul>
+                            </div>
+                            <div class="box-main-right bg-f9">
+                                <div class="title">自定义页</div>
+                                <ul class="list" id="zd-list">
+
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="custom-header-operate">
+                    <a class="btn btn-save btn-success" href="{$yl_url}" target="_blank">预览</a>
+                    <a href="javascript:void(0);" class="J-back btn btn-info" {if $is_temp == 0} style="display:none" {/if}>还原</a>
+                    <a href="javascript:void(0);" class="J-download btn btn-primary">发布</a>
+                </div>
+            </div>
+
+            </div>
+        </div>
+    </div>
+</div>
+<input type="hidden" value="{$urlconst}" id="visual_url">
+<input type="hidden" class="logo-input-hidden" value="{$logo_pic}">
+<input type="hidden" id="downloadmodalUrl" value="{$downloadmodalUrl}">
+<input type="hidden" id="backmodalUrl" value="{$backmodalUrl}">
+<input type="hidden" id="deletepccustomtemplatetopUrl" value="{$deletepccustomtemplatetopUrl}">
+<input type="hidden" id="hotUrl" value="{$hotUrl}">
+<input type="hidden" id="homeAdvUrl" value="{$homeAdvUrl}">
+<input type="hidden" id="homefloorUrl" value="{$homefloorUrl}">
+<input type="hidden" id="customUrl" value="{$customUrl}">
+<input type="hidden" id="homeBannerUrl" value="{$homeBannerUrl}">
+<input type="hidden" id="bannerUrl" value="{$bannerUrl}">
+<input type="hidden" id="singlebannerUrl" value="{$singlebannerUrl}">
+<input type="hidden" id="navmodeUrl" value="{$navmodeUrl}">
+<input type="hidden" id="homeheadermodeUrl" value="{$homeheadermodeUrl}">
+<input type="hidden" id="helpmodeUrl" value="{$helpmodeUrl}">
+<input type="hidden" id="rightmodeUrl" value="{$rightmodeUrl}">
+<input type="hidden" id="linkmodeUrl" value="{$linkmodeUrl}">
+<input type="hidden" id="copymodeUrl" value="{$copymodeUrl}">
+<input type="hidden" id="goodsinfoUrl" value="{$goodsinfoUrl}">
+<input type="hidden" id="servicemodeUrl" value="{$servicemodeUrl}">
+<input type="hidden" id="shopheadermodeUrl" value="{$shopheadermodeUrl}">
+<input type="hidden" id="homeBannerResponseUrl" value="{$homeBannerResponseUrl}">
+<input type="hidden" id="navmodebackUrl" value="{$navmodebackUrl}">
+<input type="hidden" id="homeheadermodebackUrl" value="{$homeheadermodebackUrl}">
+<input type="hidden" id="addmoduleUrl" value="{$addmoduleUrl}">
+<input type="hidden" id="addsinglebannerUrl" value="{$addsinglebannerUrl}">
+<input type="hidden" id="homefloorresponseUrl" value="{$homefloorresponseUrl}">
+<input type="hidden" id="homeadvinsertUrl" value="{$homeadvinsertUrl}">
+<input type="hidden" id="homeshopUrl" value="{$homeshopUrl}">
+<input type="hidden" id="changedgoodsUrl" value="{$changedgoodsUrl}">
+<input type="hidden" id="servicemodebackUrl" value="{$servicemodebackUrl}">
+<input type="hidden" id="helpmodebackUrl" value="{$helpmodebackUrl}">
+<input type="hidden" id="linkmodebackUrl" value="{$linkmodebackUrl}">
+<input type="hidden" id="copymodebackUrl" value="{$copymodebackUrl}">
+<input type="hidden" id="rightmodebackUrl" value="{$rightmodebackUrl}">
+<input type="hidden" id="fileputvisualUrl" value="{$fileputvisualUrl}">
+<div class="yc_text_html" style="display: none;"></div>
+    <div class="pc-page pc-home" ectype="visualShell">
+        {if $pc_page['out']}
+        {$pc_page['out']}
+        {else}
+        {include file="template/platform/pcPage" /}
+        {/if}
+        {if $pc_page['bottom']}
+        {$pc_page['bottom']}
+        {else}
+        {include file="template/platform/pcPageFooter" /}
+        {/if}
+        <input type="hidden" value="{$code}" id="code">
+        <input type="hidden" value="{$type}" id="type">
+    </div>
+    {if $pc_page['shopbanner']}
+    <div class='J-banner' style='display:none;'>
+        {$pc_page['shopbanner']}
+    </div>
+    {/if}
+    <div style="display:none;">
+        <input type="hidden" name="suffix" value="{$pc_page['tem']}" data-section="{$vis_section}" data-type="{$type}"/>
+        <div id="preview-layout"></div>
+        <div id="homeheader-layout"></div>
+        <div id="head-layout"></div>
+        <div id="topBanner-layout"></div>
+        <div id="shopBanner-layout"></div>
+        <div id="bottom-layout"></div>
+    </div>
+<!-- 链接模态框（二级）（Modal） -->
+<div class="modal fade jump-dia" id="jump" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" style="z-index: 99999999">
+    <input type="hidden" class="modal-nav-status" >
+    <input type="hidden" class="modal-nav-id">
+    <input type="hidden" class="modal-nav-type">
+    <div class="modal-dialog" style="width: 800px;">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                <h4 class="modal-title" id="myModalLabel">选择链接</h4>
+            </div>
+            <div class="modal-body" style="padding-bottom: 0">
+                <div class="mb10">链接<input type="text" id="J-choosedLink" style="width: 90%;margin-left: 10px"></div>
+
+                <div class="infoTab">
+                    <ul id="myTab" class="nav nav-tabs">
+                        <li class="active"><a href="#storePage" data-toggle="tab">商场页面</a></li>
+                        <li><a href="#goodsSort" data-toggle="tab" onclick='select_cates()'>商品分类</a></li>
+                        <li><a href="#goods" data-toggle="tab" onclick='select_goods()'>商品</a></li>
+                    </ul>
+                    <div id="myTabContent" class="tab-content">
+                        <div class="tab-pane fade in active" id="storePage">
+                            <div>
+                                <p>请选择要跳转的页面</p>
+                            </div>
+                            <div class="jumpChoose">
+                                <div id="fe-tab-link-li-11" class="btn btn-default mylink-nav" onclick="chooseLink(this)" data-href="{:__URLS('SHOP_MAIN/index')}">商城首页</div>
+                                {if $shopStatus}
+                                <div id="fe-tab-link-li-30" class="btn btn-default mylink-nav" onclick="chooseLink(this)" data-href="{:__URLS('ADDONS_SHOP_MAIN','addons=shopStreet')}">店铺街</div>
+                                {/if}
+                                <div id="fe-tab-link-li-12" class="btn btn-default mylink-nav" onclick="chooseLink(this)" data-href="{:__URLS('SHOP_MAIN/goods/category')}">分类导航</div>
+                                <div id="fe-tab-link-li-13" class="btn btn-default mylink-nav" onclick="chooseLink(this)" data-href="{:__URLS('SHOP_MAIN/goods/goodslist')}">全部商品</div>
+                                <div id="fe-tab-link-li-21" class="btn btn-default mylink-nav" onclick="chooseLink(this)" data-href="{:__URLS('SHOP_MAIN/member/index')}">会员中心</div>
+                                <div id="fe-tab-link-li-22" class="btn btn-default mylink-nav" onclick="chooseLink(this)" data-href="{:__URLS('SHOP_MAIN/member/orderlist')}">我的订单</div>
+                                <div id="fe-tab-link-li-23" class="btn btn-default mylink-nav" onclick="chooseLink(this)" data-href="{:__URLS('SHOP_MAIN/goods/cart')}">我的购物车</div>
+                                <div id="fe-tab-link-li-24" class="btn btn-default mylink-nav" onclick="chooseLink(this)" data-href="{:__URLS('SHOP_MAIN/member/goodscollectionlist')}">我的收藏</div>
+                                <div id="fe-tab-link-li-27" class="btn btn-default mylink-nav" onclick="chooseLink(this)" data-href="{:__URLS('SHOP_MAIN/member/balancelist')}">余额明细</div>
+                                <div id="fe-tab-link-li-28" class="btn btn-default mylink-nav" onclick="chooseLink(this)" data-href="{:__URLS('SHOP_MAIN/member/balancewithdrawals')}">余额提现</div>
+                                <div id="fe-tab-link-li-29" class="btn btn-default mylink-nav" onclick="chooseLink(this)" data-href="{:__URLS('SHOP_MAIN/member/addresslist')}">我的收货地址</div>
+                            </div>
+                            <div class="jumpChoose">
+                                <p class="link-title">自定义装修页面</p>
+                                <div class="link-list J-custom-link">
+                                    <div class="btn btn-default mylink-nav" onclick="chooseLink(this)" data-href="{:__URLS('ADDONS_SHOP_MAIN','addons=shopIndex&shop_id='.$instance_id)}">店铺首页</div>
+                                    <div class="btn btn-default mylink-nav" onclick="chooseLink(this)" data-href="{:__URLS('ADDONS_SHOP_MAIN','addons=shopGoodList&shop_id='.$instance_id.'&goods_group_id=0')}">店铺商品列表</div>
+                                    <div id="fe-tab-link-li-21" class="btn btn-default mylink-nav" onclick="chooseLink(this)" data-href="{:__URLS('SHOP_MAIN/member/index')}">会员中心</div>
+                                    <div id="fe-tab-link-li-22" class="btn btn-default mylink-nav" onclick="chooseLink(this)" data-href="{:__URLS('SHOP_MAIN/member/orderlist')}">我的订单</div>
+                                    <div id="fe-tab-link-li-23" class="btn btn-default mylink-nav" onclick="chooseLink(this)" data-href="{:__URLS('SHOP_MAIN/goods/cart')}">我的购物车</div>
+                                    <div id="fe-tab-link-li-24" class="btn btn-default mylink-nav" onclick="chooseLink(this)" data-href="{:__URLS('SHOP_MAIN/member/goodscollectionlist')}">我的收藏</div>
+                                    <div id="fe-tab-link-li-27" class="btn btn-default mylink-nav" onclick="chooseLink(this)" data-href="{:__URLS('SHOP_MAIN/member/balancelist')}">余额明细</div>
+                                    <div id="fe-tab-link-li-28" class="btn btn-default mylink-nav" onclick="chooseLink(this)" data-href="{:__URLS('SHOP_MAIN/member/balancewithdrawals')}">余额提现</div>
+                                    <div id="fe-tab-link-li-29" class="btn btn-default mylink-nav" onclick="chooseLink(this)" data-href="{:__URLS('SHOP_MAIN/member/addresslist')}">我的收货地址</div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="tab-pane fade" id="goodsSort">
+                            <div>
+                                <p>请选择要跳转的分类</p>
+                            </div>
+                            <div class="clearfix" id="select_cates">
+                                <div class="sortMenu1 sortMenu">
+
+                                </div>
+                                <div class="sortMenu2 sortMenu">
+
+                                </div>
+                                <div class="sortMenu3 sortMenu">
+
+                                </div>
+                            </div>
+                        </div>
+                        <div class="tab-pane fade" id="goods">
+                            <div>
+                                <p>请选择要跳转的商品</p>
+                            </div>
+
+                            <div class="searchBorder clearfix">
+                                <div class="search pull-right" style="width: 200px">
+                                    <input type="text" class="searchs" name="keyword" id="select-good-kw" placeholder="请输入商品名称">
+                                    <button class="search_to" type="button" onclick="select_goods()">搜索</button>
+                                </div>
+                            </div>
+
+                            <div class="goodsDes"  id="select-goods">
+                                <div class="goods-item"></div>
+
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary" onclick="confirmLink()">确定</button>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+<script>
+    require(['utilAdmin', 'visualizationB'], function (utilAdmin, modal) {
+        $('.custom-header-list-warp').click(function(){
+            $('.custom-header-list-box').fadeToggle(150);
+        })
+
+        $(document).ready(function(){            
+            $('.v-nav').after($('.v-subnav'));    
+            $('.v-sidebar').after($('.v-header'));    
+        });
+        modal.init();
+        $('body').on('click', '.mylink-nav', function () {
+            $(this).siblings().removeClass('btn-primary');
+            $(this).addClass('btn-primary');
+        });
+        $('.J-manage').on('click', function () {
+            var url = "{$pageEditModalUrl}?code={$code}&template_type={$type}";
+            utilAdmin.confirm('编辑页面信息','url:'+url,function(){
+                var template_type = this.$content.find("select[name='template_type']").val();
+                var name = this.$content.find("input[name='name']").val();
+                var tem = this.$content.find("input[name='tem']").val();
+                if (name === "") {
+                    utilAdmin.message('模板名称不能为空','danger');
+                    return false;
+                }
+                if (template_type === '') {
+                    utilAdmin.message('请选择页面类型','danger');
+                    return false;
+                }
+                $.ajax({
+                    type: "post",
+                    url: "{$edittemUrl}",
+                    data: {"name": name, "template_type": template_type, "tem": tem},
+                    dataType: "json",
+                    async: true,
+                    success: function (data) {
+                        if (data.code === 1) {
+                            utilAdmin.message('操作成功', 'success', function () {
+                                getList(1);
+                                getList1(1);
+                                $('.J-name').html(name);
+                            });
+                        } else {
+                            utilAdmin.message(data.data, 'danger');
+                            return false;
+                        }
+                    }
+                });
+            });
+        });
+        getList(1);
+        function getList(page_index) {
+            $.ajax({
+                type: "post",
+                url: "{$pcCustomTemplateListUrl}",
+                async: true,
+                data: {
+                    "page_index": page_index, "is_page": 1
+                },
+                success: function (res) {
+                    var data = res['data'];
+                    var html = '';
+                    if (data.length > 0) {
+                        for (var i = 0; i < data.length; i++) {
+                            var curr = data[i];
+                            html += '<li class="item">';
+                            html += '<a href="' + __URL("ADDONS_ADMIN_MAINpcCustomTemplate&code=" + curr.code + "&type=" + curr.type) + '" title="' + curr.name + '">' + curr.name + '</a>';
+                            html += '</li>';
+                        }
+                    }
+                    $("#jc-list").html(html);
+                }
+            });
+        }
+        getList1(1);
+        function getList1(page_index) {
+            $.ajax({
+                type: "post",
+                url: "{$pcCustomTemplateListUrl}",
+                async: true,
+                data: {
+                    "page_index": page_index, "is_page": 1, "type": 'diy'
+                },
+                success: function (res) {
+                    var data = res['data'];
+                    var html = '';
+                    if (data.length > 0) {
+                        for (var i = 0; i < data.length; i++) {
+                            var curr = data[i];
+                            html += '<li class="item">';
+                            html += '<a href="' + __URL("ADDONS_ADMIN_MAINpcCustomTemplate&code=" + curr.code + "&type=" + curr.type) + '" title="' + curr.name + '">' + curr.name + '</a>';
+                            html += '</li>';
+                        }
+                    }
+                    $("#zd-list").html(html);
+                }
+            });
+        }
+        function toggleColor(element, dom, toggles) {
+            $(element).on("click", dom, function () {
+                $(this)
+                        .addClass(toggles)
+                        .siblings()
+                        .removeClass(toggles);
+            });
+        }
+        toggleColor(".search-tabs", "li", "active");
+        $('.style-item').click(function () {
+            var style = $(this).data('style');
+            if ($(this).hasClass('selected')) {
+                return;
+            }
+            layer.confirm('确定使用该风格？', {
+                btn: ['确定', '取消']//按钮
+            }, function (index) {
+                layer.close(index);
+                $.ajax({
+                    type: "post",
+                    data: {
+                        "style": style
+                    },
+                    url: "{$changestyleUrl}",
+                    success: function (data) {
+                        if (data.code == 1) {
+                            layer.msg('操作成功！', {icon: 1, time: 1000}, function () {
+                                window.location.reload();
+                            });
+                        } else {
+                            layer.msg('操作失败！', {icon: 2, time: 1000});
+                        }
+                    }
+                });
+            }, function (index) {
+                layer.close(index);
+            });
+        });
+
+        // 组件tab栏切换
+        $(".tab_content").hide();
+        $("ul.mall-component-title-ul li:first").addClass("active").show();
+        $(".tab_content:first").show();
+        $("ul.mall-component-title-ul li").click(function () {
+            $("ul.mall-component-title-ul li").removeClass("active");
+            $(this).addClass("active");
+            $(".tab_content").hide();
+            var activeTab = $(this)
+                    .find("a")
+                    .attr("href");
+            $(activeTab).fadeIn();
+            return false;
+        });
+        $('body').on('click','[data-toggle="selectUrlPc"]',function(){
+            var _this = $(this);
+            // var curlId = _this.data('input');
+            var elm = _this.siblings('input');
+            utilAdmin.linksDialogPc(function(data){
+                elm.val(data.params).change();
+            })
+        });
+
+        // B端装修图片空间1
+        $('body').on('click','[data-toggle="decoPicture1"]',function(){
+            var _this = $(this);
+            var cimg=_this.siblings('.ipt80');
+            var pimg=_this.closest('.form-horizontal').find('.pic_src0');
+            var input=_this.children('.J-pic');
+            utilAdmin.pictureDialog(_this,false,function(data){
+                var path = data.path[0];
+                cimg.val(path);
+                pimg.attr('src',path);
+                input.val(path);
+            })
+        });
+
+        // B端装修图片空间2表格1
+        $('body').on('click','[data-toggle="decoPicture2"]',function(){
+            var _this = $(this);
+            var cimg=_this.siblings('.ipt80');
+            var pimg=_this.parents('td').prev('td').find('img');
+            var input=_this.children('.J-pic');
+            utilAdmin.pictureDialog(_this,false,function(data){
+                var path = data.path[0];
+                cimg.val(path);
+                pimg.attr('src',path);
+                input.val(path);
+            })
+        });
+
+        // B端装修图片空间2表格3(独用)
+        $('body').on('click','[data-toggle="decoPicture3"]',function(){
+            var _this = $(this);
+            var cimg=_this.siblings('.ipt80');
+            var pimg=_this.parents('.entrance-imgAddress').siblings('.entrance-img').find('img');
+            var input=_this.children('.J-pic');
+            utilAdmin.pictureDialog(_this,false,function(data){
+                var path = data.path[0];
+                cimg.val(path);
+                pimg.attr('src',path);
+                input.val(path);
+            })
+        });
+        // B端装修图片空间2表格4
+        $('body').on('click','[data-toggle="decoPicture4"]',function(){
+            var _this = $(this);
+            var cimg=_this.siblings('.ipt80');
+            var pimg=_this.closest('div').prev().find('img');
+            var input=_this.children('.J-pic');
+            utilAdmin.pictureDialog(_this,false,function(data){
+                var path = data.path[0];
+                cimg.val(path);
+                pimg.attr('src',path);
+                input.val(path);
+            })
+        });
+        // B端装修图片空间2店招
+        $('body').on('click','[data-toggle="decoPicture5"]',function(){
+            var _this = $(this);
+            var pimg=_this.find('img');
+            // var input=_this.find('.J-pic');
+            utilAdmin.pictureDialog(_this,false,function(data){
+                var path = data.path[0];
+                var img = '<a href="javascript:;" class="close-box5"><i class="icon icon-danger" style="right: -10px" title="删除"></i><img src='+path+'></a><input type="hidden" id="bgimg" name="bgimg" class="J-pic" value="'+path+'">';
+                // pimg.attr('src',path);
+                _this.parent().html(img);
+                // input.val(path);
+            })
+        });
+
+        $('body').on('click','.close-box5 .icon',function(e){
+             var _this = $(this);
+             e && e.stopPropagation ? e.stopPropagation() : window.event.cancelBubble = true;
+             var img = '<a href="javascript:void(0);" class="plus-box" data-toggle="decoPicture5"><i class="icon icon-plus"></i><input type="hidden" id="bgimg" name="bgimg" class="J-pic" value=""></a>';
+             console.log(img);
+             $("#picture-list1").html(img);
+
+        })
+
+    })
+</script>

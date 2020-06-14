@@ -1,0 +1,38 @@
+<view class="live_shop">
+  <view class="header">
+    <view class="header_box">
+      <image class="bg" mode="widthFix" src="https://app.vslai.com.cn/wap/static/images/style/commission-head-01.png"></image>
+      <view class="liver_info">
+        <view class="liver_img">
+          <image src="{{user_headimg?user_headimg:'/images/no-user.png'}}"></image>
+        </view>
+        <view class="info">
+          <view class="name">{{liver_name}}</view>
+          <view class="room">房间号：{{room_no}}</view>
+        </view>
+      </view>
+    </view>
+    <view class="title">
+      <view class="">全部商品</view>
+      <view class="choose" bindtap="onChooseGoodsPage">挑选商品</view>
+    </view>
+  </view>
+  <view class="goods_b">
+    <view class="goods_list">
+      <view class='gooditem' wx:for="{{goodlist}}" wx:key='' data-id="{{item.goods_id}}">
+        <navigator url='/pages/goods/detail/index?goodsId={{item.goods_id}}'>
+          <view class='goodimg'>
+            <image mode='widthFix' src="{{item.pic_list[0].pic_cover}}"></image>
+          </view>
+          <view class='gooddetail'>
+            <view class='goodname'>{{item.goods_name}}</view>
+            <view>
+              <text class='goodprice'>¥{{item.price}}</text>
+            </view>
+          </view>
+        </navigator>
+      </view>
+    </view>
+    <view class="no_more">没有更多了</view>
+  </view>
+</view>

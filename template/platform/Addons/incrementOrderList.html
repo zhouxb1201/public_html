@@ -1,0 +1,242 @@
+{extend name="platform/new_base" /}
+{block name="resource"}
+<style>
+    .label-danger a {
+        padding-top: 5px;
+    }
+</style>
+{/block}
+{block name="main"}
+        <!-- page -->
+<!--<form action="" class="form clearfix">
+    <div class="form-group col-sm-4">
+        <label class="ol-control-label col-sm-4">订购状态</label>
+        <div class="col-sm-8">
+            <select class="form-control" id="order_status">
+                <option value="-1">全部</option>
+                <option value="0">未支付</option>
+                <option value="1">已支付</option>
+                <option value="2">已关闭</option>
+            </select>
+        </div>
+    </div>
+
+    <div class="form-group col-sm-6 tc">
+        <label class="pr-10">订购时间</label>
+        <span class="pr"><input type="text" id="orderStartDate" name="payTime" placeholder="开始时间" class="ol_datewidth">
+            <label for="orderStartDate"><i class="fa icon-calendar"></i></label>
+        </span>
+        <span>~</span>
+        <span class="pr">
+            <input type="text" id="orderEndDate" name="startDate" placeholder="结束时间" class="ol_datewidth">
+            <label for="orderEndDate"><i class="fa icon-calendar"></i></label>
+        </span>
+    </div>
+    <div class="v-form-inline flex-auto-center ">
+        <a class="btn btn-primary search"><i class="icon icon-search"></i> 搜索</a>
+    </div>
+</form>-->
+<form class="v-filter-container">
+    <div class="filter-fields-wrap">
+        <div class="filter-item clearfix">
+            <div class="filter-item__field">
+
+                <div class="v__control-group">
+                    <label class="v__control-label">订购状态</label>
+                    <div class="v__controls">
+                        <select class="v__control_input" id="order_status">
+                            <option value="-1">全部</option>
+                            <option value="0">未支付</option>
+                            <option value="2">已支付</option>
+                            <option value="1">已关闭</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="v__control-group">
+                    <label class="v__control-label">订购时间</label>
+                    <div class="v__controls v-date-input-control">
+                        <label for="orderTime">
+                            <input type="text" class="v__control_input pr-30" id="orderTime" placeholder="请选择时间" autocomplete="off" data-types="datetime">
+                            <i class="icon icon-calendar"></i>
+                            <input type="hidden" id="orderStartDate">
+                            <input type="hidden" id="orderEndDate">
+                        </label>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+        <div class="filter-item clearfix">
+            <div class="filter-item__field">
+                <div class="v__control-group">
+                    <label class="v__control-label"></label>
+                    <div class="v__controls">
+                        <a class="btn btn-primary search"><i class="icon icon-search"></i> 搜索</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</form>
+
+<div class="screen-title">
+    <span class="text">订购列表</span>
+</div>
+        <table class="table v-table table-auto-center mb-10">
+            <thead>
+            <tr>
+                <th class="col-md-4">订购服务</th>
+                <th class="col-md-1">数量</th>
+                <th class="col-md-1">单价</th>
+                <th class="col-md-2">实付</th>
+                <th class="col-md-1">订单状态</th>
+                <th class="col-md-2">操作</th>
+            </tr>
+            </thead>
+        </table>
+        <div class="tables" id="list">
+
+        </div>
+        <input type="hidden" id="page_index">
+        <nav aria-label="Page navigation" class="clearfix">
+            <ul id="page" class="pagination pull-right"></ul>
+        </nav>
+{/block}
+
+
+{block name="script"}
+<script type="text/javascript">
+    require(['util'], function (util) {
+        util.initPage(LoadingInfo(1));
+        // util.layDate('#orderStartDate');
+        // util.layDate('#orderEndDate');
+        util.layDate('#orderTime',true,function(value, date, endDate){
+            var h=date.hours<10 ?"0"+date.hours : date.hours;
+            var m=date.minutes<10 ?"0"+date.minutes : date.minutes;
+            var s=date.seconds<10 ?"0"+date.seconds : date.seconds;
+            var h1=endDate.hours<10 ?"0"+endDate.hours : endDate.hours;
+            var m1=endDate.minutes<10 ?"0"+endDate.minutes : endDate.minutes;
+            var s1=endDate.seconds<10 ?"0"+endDate.seconds : endDate.seconds;
+            var date1=date.year+'-'+date.month+'-'+date.date+' '+h+":"+m+":"+s;
+            var date2=endDate.year+'-'+endDate.month+'-'+endDate.date+' '+h1+":"+m1+":"+s1;
+
+            if(value){
+                $('#orderStartDate').val(date1);
+                $('#orderEndDate').val(date2);
+            }
+            else{
+                $('#orderStartDate').val('');
+                $('#orderEndDate').val('');
+            }
+
+        }); 
+
+        function LoadingInfo(page_index) {
+            $("#page_index").val(page_index);
+            var order_status = $("#order_status").val();
+            var start_create_date = $("#orderStartDate").val();
+            var end_create_date = $("#orderEndDate").val();
+            $.ajax({
+                type: "post",
+                url: "{:__URL('PLATFORM_MAIN/Addonslist/incrementOrderlist')}",
+                async: true,
+                data: {
+                    "page_index": page_index,
+                    "order_status": order_status,
+                    "start_create_date": start_create_date,
+                    "end_create_date": end_create_date
+                },
+                success: function (data) {
+                    var html = '';
+                    if (data['data'] == undefined || data['data'].length == 0) {
+                        html += '<table class="table v-table table-auto-center mb-10"><tbody><tr align="center"><td colspan="7">暂无符合条件的订单</td></tr></tbody></table>';
+                        $("#list").html(html);
+                        return true;
+                    }
+
+                    $.each(data['data'], function (k_order, v_order) {
+                        var order_id = v_order['order_id'];//订单id
+                        var order_no = v_order['order_no'];//订单编号
+                        var create_time = timeStampTurnTime(v_order['create_time']);//下单时间
+                        var order_money = v_order['order_money'];//订单金额
+                        var market_money = v_order['market_price']? '￥'+v_order['market_price']:'--';//原价
+                        var order_status = v_order['order_status'];
+                        var status_name = v_order['status_name'];
+                        var order_type = v_order['order_type'];
+                        var circle = v_order['time']?v_order['time']:'--';
+                        html += '<table class="table v-table table-auto-center mb-10"><tbody><tr>';
+                        html += '<td colspan="6" class="text-left bg-f9">';
+                        html += '<span class="mr-15">订单号：' + order_no + '</span>';
+                        html += '<span class="mr-15">下单时间：' + create_time + '</span>';
+                        html += '</td>';
+                        html += '<tr><td class="col-md-4">';
+                        html += '<div class="media text-left">';
+                        html += '<div class="media-left"><img src="' + __IMG(v_order['logo']) + '" width="60" height="60"  onerror=javascript:this.src="/public/platform/images/orderPlaceholder.png"></div>';
+
+                        html += '<div class="media-body break-word">';
+                        html += '<div class="line-2-ellipsis">';
+                        html += '<a href="javascript:;">' +v_order['title'] + '</a>';
+                        html += '</div>';
+                        html += '<div>';
+                        html += '</div>';
+                        html += '</div>';
+                        html += '</div></td>';
+                        html += '<td class="col-md-1">' + circle + '</td>';
+                        html += '<td class="col-md-1">' + market_money + '</td>';
+                        html += '<td class="col-md-2">￥' + order_money + '</td>';
+                        html += '<td class="col-md-1">';
+                        if (order_status == 2) {
+                            html += '<span class="label label-success">' + status_name + '</span>';
+                        } else {
+                            html += '<span class="label label-danger">' + status_name + '</span>';
+                        }
+                        html += '<a href="' + __URL('PLATFORM_MAIN/Addonslist/incrementOrderDetail&order_id=' + order_id) + '" class="text-primary block mt-04" target="_blank">订单详情</a>';
+                        html += '</td>';
+                        html += '<td class="col-md-2">';
+                        if(order_status == 0){
+                            html += '<a href=" '+__URL('PLATFORM_MAIN/pay/getPayValue&order_id=' + order_id)+'"  class="text-primary block">去付款</a>';
+                            html += '<a href="javascript:void(0);" data-id="' + order_id + '" class="text-primary block cancel">取消订单</a>';
+                        }
+                        if(order_status == 2){
+                            if(order_type == 1){
+                                html += '<a href="'+__URL('PLATFORM_MAIN/Addonslist/orderNow&time='+ v_order['circle_time']+'&addons_id=' +  v_order['addons_id'])+'"  class="text-primary block">重新购买</a>';
+                            }
+                        }
+                        html += '</td>';
+                        html += '</tr>';
+                        html +='</tbody></table>';
+                    })
+                    $('#page').paginator('option', {
+                        totalCounts: data['total_count']  // 动态修改总数
+                    });
+                    $("#list").html(html); 
+                }
+            });
+        }
+        $('.search').on('click', function () {
+            util.initPage(LoadingInfo);
+        });
+        $("#list").on('click', '.cancel', function () {
+            var order_id = $(this).data('id');
+            util.alert('确认取消订单', function () {
+                $.ajax({
+                    type: "post",
+                    url: "{:__URL('PLATFORM_MAIN/Addonslist/cancelOrder')}",
+                    data: {
+                        'order_id': order_id,
+                    },
+                    success: function (data) {
+                        if (data["code"] > 0) {
+                            util.message(data["message"], 'success', LoadingInfo($('#page_index').val()));
+                        } else {
+                            util.message(data["message"], 'danger');
+                        }
+                    }
+                });
+            })
+        })
+    })
+</script>
+
+{/block}

@@ -1,0 +1,340 @@
+{block name="main"}
+        <!-- page -->
+        <form class="form-horizontal pt-15 form-validate widthFixedForm">
+            <div class="screen-title">
+                <span class="text">规则设置</span>
+            </div>
+            <input type="hidden" name="group_id" id="group_id" value="{$group_id}">
+             <div class="form-group">
+                <label class="col-md-2 control-label">活动标签</label>
+                <div class="col-md-5">
+                    <input type="text" name="group_name" id="group_name" required maxlength="4" class="form-control" value="{$groupDetail['group_name']}">
+                    <div class="mb-0 help-block">最多四个字符</div>
+                </div>
+                
+            </div>
+             <div class="form-group">
+                <label class="col-md-2 control-label">成团人数</label>
+                <div class="col-md-5">
+                    <input type="number" name="group_num" id="group_num" min="2" max="10" required class="form-control" value="{$groupDetail['group_num']}">
+                    <div class="mb-0 help-block">满足成团人数后，参团成功</div>
+                </div>
+                
+            </div>
+             <div class="form-group">
+                <label class="col-md-2 control-label">成团时限</label>
+                <div class="col-md-5">
+                    <div class="input-group">
+                        <input class="form-control" type="number" name="group_time" id="group_time" value="{$groupDetail['group_time']}" required>
+                        <div class="input-group-addon">分钟</div>
+                    </div>
+                    <div class="mb-0 help-block">超时未成团，则订单自动执行退款</div>
+                </div>
+                
+            </div>
+            <div id="goods_info_box" class="form-group">
+                <label class="col-md-2 control-label"></label>
+                <div class="col-md-5">
+                    <div class="media text-left">
+                        <div class="media-left goods-img">
+                            <img  src="{:__IMG($groupDetail['goods']['pic_cover_mid'])}" onerror="this.src='http://iph.href.lu/60x60';" width="60" height="60">
+                        </div>
+                        <div class="media-body max-w-300">
+                            <div class="line-2-ellipsis goods-text">{$groupDetail['goods']['goods_name']}</div>
+                            <div class="line-1-ellipsis text-danger strong goods-price">{$groupDetail['goods']['price']}</div>
+                        </div>
+                    </div>
+                    <input type="hidden" name="goods_id" id="goods_id" value="{$groupDetail['goods_id']}">
+                </div>
+            </div>
+            <div id="product_sku">
+                <div class="form-group">
+                    <label class="col-md-2 control-label">活动库存 / 价格</label>
+                    <div class="col-md-9">
+                        <table class="table table-bordered table-auto-center" id="stock_table" required style="display: table;">
+
+                        </table>
+                    </div>
+                </div>
+            </div>
+            <div id="four-select" class="hidden">
+                <div class="form-group">
+                    <label class="col-md-2 control-label">拼团价</label>
+                    <div class="col-md-5">
+                        <div class="input-group">
+                            <input class="form-control" type="number" name="group_price" id="group_price" value="" required>
+                            <div class="input-group-addon">元</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-md-2 control-label">限购</label>
+                    <div class="col-md-5">
+                        <div class="input-group">
+                            <input class="form-control" min="1" type="number" name="group_limit_buy" id="group_limit_buy" value="" required>
+                            <div class="input-group-addon">件</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!--<div class="form-group">-->
+                <!--<label class="col-md-2 control-label">活动状态</label>-->
+                <!--<div class="col-md-5">-->
+                    <!--<label class="radio-inline">-->
+                        <!--<input type="radio" name="status" value="1" {if $groupDetail['status']=='1'} checked {/if}> 进行中-->
+                    <!--</label>-->
+                    <!--<label class="radio-inline">-->
+                        <!--<input type="radio" name="status" value="2" {if $groupDetail['status']=='2'} checked {/if}> 已结束-->
+                    <!--</label>-->
+                <!--</div>-->
+            <!--</div>-->
+             {if $groupDetail['status']!='2'}
+            <div id="sub_val">
+                <div class="form-group">
+                    <label class="col-md-2 control-label"></label>
+                    <div class="col-md-8">
+                        <button class="btn btn-primary-diy btn-primary" type="submit" id="submit">修改</button>
+                        <a href="javascript:history.go(-1);" class="btn btn-default-diy btn-default">返回</a>
+                    </div>
+                </div>
+            </div>
+             {/if}
+            <div id="sku_list" data-sku_list="{$groupDetail['sku_list']}"></div>
+            <input type='hidden' id="sku_id">
+            <input type='hidden' id="group_goods_id">
+        </form>
+        
+        <!-- page end -->
+{/block}
+{block name="script"}
+<script>
+    require(['util'], function (util) {
+        getSku();
+        function getSku(){
+            var goods_id = $('#goods_id').val();
+            var group_id = $('#group_id').val();
+            if(goods_id){
+                $.ajax({
+                    type: "post",
+                    url: "{$getSkuListUrl}",
+                    async: true,
+                    data: {
+                        "goods_id": goods_id,
+                        "group_id": group_id
+                    },
+                    success: function (data) {
+                        $('#sku_list').attr('data-sku_list', JSON.stringify(data));
+                        setSku($('#sku_list'));
+                    }
+                });
+            }
+        }
+        //添加秒杀活动
+        util.validate($('.form-validate'), function (form) {
+            //判断商品是否选择了
+            var goods_id = $('#goods_id').val();
+            if(goods_id == ''){
+                $('#sele_goods').addClass('has-error');
+                var info = '<span id="group-error" class="help-block-error">请选择商品</span>';
+                $('#selectGoods').after(info);
+                return;
+            }
+            if($('#product_sku').hasClass('hidden')){
+                var data = {};
+                var goods_info = {};
+            }else{
+                var data = {};
+            }
+            var status = $("input[name='status']:checked").val();
+            data.status = status;
+            var group_id = $('#group_id').val();
+            // 成团时限
+            var group_time = $('#group_time').val();
+            data.group_time = group_time;
+            //活动标签
+            var group_name = $('#group_name').val();
+            data.group_name = group_name;
+            //成团人数
+            var group_num = $('#group_num').val();
+            data.group_num = group_num;
+            //商品id
+            data.goods_id = goods_id;
+            //活动库存
+            if($('#product_sku').hasClass('hidden')){
+                //活动价格
+                var  group_price = $('#group_price').val();
+                //限购
+                var group_limit_buy = $('#group_limit_buy').val();
+                var group_goods_id = $('#group_goods_id').val();
+                //sku_id
+                var sku_id = $('#sku_id').val();
+                goods_info.group_price = group_price;
+                goods_info.group_limit_buy = group_limit_buy;
+                goods_info.group_goods_id = group_goods_id;
+                var temp = {};
+                temp[sku_id] = goods_info;
+                data.goods_info = temp;
+                data.group_id = group_id;
+                // console.log(data);return;
+            }else{
+                //这里是有sku的区间，先获取当前商品有多少个sku_id
+                var sku_obj = $('input[name=sku_id]');
+                var group_price_obj = $('input[name=group_price]');
+                var group_limit_buy_obj = $('input[name=group_limit_buy]');
+                var group_goods_id_obj = $('input[name=group_goods_id]');
+                var goods_info = {};
+                // console.log(sku_obj);return;
+                for(var i=0;i<sku_obj.length;i++){
+                    var sku_id = $(sku_obj[i]).val();
+                    goods_info[sku_id] = {};
+                    var group_price = $(group_price_obj[i]).val();
+                    var group_limit_buy = $(group_limit_buy_obj[i]).val();
+                    var group_goods_id = $(group_goods_id_obj[i]).val();
+                    goods_info[sku_id].group_price = group_price;
+                    goods_info[sku_id].group_limit_buy = group_limit_buy;
+                    goods_info[sku_id].group_goods_id = group_goods_id;
+                }
+                data.goods_info = goods_info;
+                data.group_id = group_id;
+            }
+            // console.log(data);return;
+            $.post('{$addGroupShoppingUrl}',
+                    data,
+                    function(res){
+                    if (res["code"] > 0) {
+                        util.message('修改成功', 'success', "{:__URL('ADDONS_MAINgroupShoppingList')}");
+                    } else {
+                        util.message(res["message"], 'danger');
+                    }
+            });
+        });
+
+        // 批量设置
+        $('#stock_table').on('click','.batchSet',function(){
+            var batch_text = $(this).text();
+            var batch_type = $(this).data('batch_type');
+            var html = '<form class="form-horizontal padding-15">';
+            html += '<div class="form-group"><label class="col-md-3 control-label">'+batch_text+'</label><div class="col-md-8">'
+            html += '<input type="number" min="0" oninput="if(value.length>9)value=value.slice(0,9)" name="batch_'+batch_type+'" class="form-control">'
+            html += '</div></div></form>';
+            util.confirm('批量修改'+batch_text,html,function(){
+                var val;
+                var maxNum = 9999999.99;
+                var currInput = $('#stock_table input[name="'+batch_type+'"]');
+                val = this.$content.find('input[name="batch_'+batch_type+'"]').val()
+                if(!val || val == ''){
+                    util.message(batch_text+'不能为空');
+                    return false;
+                }else if(val > maxNum && batch_type !== 'goods_code'){
+                    util.message('价格最大为 '+maxNum);
+                    return false;
+                }else if(val === '0' && batch_type !== 'goods_code'){
+                    util.message(batch_text+'不能为0');
+                    return false;
+                }
+                currInput.each(function(i,e){
+                    e.value = val;
+                })
+            })
+
+        });
+        
+        function setSku(obj){
+            var sku_list = obj.data('sku_list');
+            
+            $('#goods_info_box').removeClass('hidden');
+            $('#goods_info_box').addClass('show');
+            if(sku_list.length > 1){
+                $('#product_sku').removeClass('hidden');
+                $('#product_sku').addClass('show');
+                var html = '<thead>';
+                for(var sku_ids in sku_list){
+                    if(sku_ids == 0){
+                        var th_name_str = sku_list[sku_ids]['th_name_str'];
+                        var th_name_str_arr = th_name_str.split(' ');
+                        for(var th_id in th_name_str_arr){
+                            html += '<th class="vertical-middle">'+th_name_str_arr[th_id]+'</th>\n';
+                        }
+                    html += ' <th class="vertical-middle">售价</th>\n' +
+                        '<th class="vertical-middle">库存</th>\n' +
+                        '<th class="vertical-middle th-price">拼团价</th>\n' +
+                        '<th class="vertical-middle th-price">限购</th>\n';
+                        html += '</thead>\n';
+                        html += '<tbody>\n';
+                    }
+                    //处理规格
+                    var spec_val = sku_list[sku_ids]['new_im_str'];
+                    var spec_show_type = sku_list[sku_ids]['show_type_str'];
+                    var spec_arr = spec_val.split('§');
+                    var spec_show_arr = spec_show_type.split(' ');
+                    html += '<tr skuid="'+sku_list[sku_ids]['attr_value_items']+'" id="">\n';
+                    for(var spec_id in spec_arr){
+                        //判断展示类型是不是图片
+                        if(spec_show_arr[spec_id] == '3'){
+                            var spec_val_arr = spec_arr[spec_id].split('=');
+                            html +='<td skuchild="'+spec_val_arr[0]+'">'+spec_val_arr[1]+'</td>\n';
+//                            html +='<td skuchild="'+spec_val_arr[0]+'"><img src="'+spec_val_arr[1]+'" style="width:50px;height:50px;"></td>\n';
+                        }else{
+                            var spec_val_arr = spec_arr[spec_id].split('=');
+                            html +='<td skuchild="'+spec_val_arr[0]+'">'+spec_val_arr[1]+'</td>\n';
+                        }
+                    }
+                    html += '<td>'+sku_list[sku_ids]['price']+'</td>\n' +
+                        '<td>'+sku_list[sku_ids]['stock']+'</td>\n' +
+                        '<td><input type="number" min="0.01" name="group_price" class="form-control" value="'+ sku_list[sku_ids]['group_price'] +'"></td>\n' +
+                        '<td><input type="number" min="0" name="group_limit_buy" class="form-control" value="'+ sku_list[sku_ids]['group_limit_buy'] +'"></td>\n' +
+                        '<input type="hidden" name="group_goods_id" class="form-control" value="'+ sku_list[sku_ids]['group_goods_id'] +'">\n' +
+                        '<input type="hidden" name="sku_id" class="form-control" value="'+ sku_list[sku_ids]['sku_id'] +'">\n' +
+                        '</tr>\n';
+                }
+                html += '<tbody>\n';
+                html += '<tfoot>\n' +
+                        '<tr>\n' +
+                        '<td colspan="10" class="text-left">\n' +
+                        '批量修改：\n' +
+                        '<a href="javascript:;" class="text-primary batchSet" data-batch_type="group_price" required>拼团价</a>\n' +
+                        '<a href="javascript:;" class="text-primary batchSet" data-batch_type="group_limit_buy">限购</a>\n' +
+                        '</td>\n' +
+                        '</tr>\n' +
+                        '</tfoot>';
+                $('#stock_table').html(html);
+                // 合并单元格
+                merge_cell();
+                $('#product_sku').removeClass('hidden');
+                $('#product_sku').addClass('show');
+                $('#four-select').remove('show');
+                $('#four-select').addClass('hidden');
+            }else{
+                $('#sku_id').val(sku_list[0].sku_id);
+                $('#group_price').val(sku_list[0].group_price);
+                $('#group_limit_buy').val(sku_list[0].group_limit_buy);
+                $('#group_goods_id').val(sku_list[0].group_goods_id);
+                $('#product_sku').removeClass('show');
+                $('#product_sku').addClass('hidden');
+                $('#four-select').removeClass('hidden');
+                $('#four-select').addClass('show');
+            }
+            if($('#sele_goods').hasClass('has-error')){
+                $('#sele_goods').removeClass('has-error');
+                $('#sele_goods #group-error').remove();
+            }
+        }
+    });
+    //合并单元格
+    function merge_cell(){
+        var td = $(' #stock_table td');
+        for(var i=0;i<td.length;i++){
+            var td_skuchild = $(td[i]).attr('skuchild');
+            if(td_skuchild != undefined){
+                 var td_box = $('td[skuchild="'+td_skuchild+'"]');
+                 if(td_box.length>1){
+                     $(td_box[0]).attr('rowspan',td_box.length);
+                     for(var j=1;j<td_box.length;j++){
+                         td_box[j].remove();
+                     }
+                 }
+            }
+        }
+    }
+</script>
+{/block}

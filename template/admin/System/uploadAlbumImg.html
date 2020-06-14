@@ -1,0 +1,106 @@
+
+
+<!--<script src="__STATIC__/js/ajax_file_upload.js" type="text/javascript"></script> 
+<script type="text/javascript" src="__STATIC__/js/jquery.ui.widget.js" charset="utf-8"></script>
+<script type="text/javascript" src="__STATIC__/js/jquery.fileupload1.js" charset="utf-8"></script>-->
+<!--<div class="upload-con" id="uploader" style="display:none;overflow:auto;height:auto;width:100%">
+	<div class="js-file-msg"></div>
+	<div class="upload-pmgressbar js-file-loading"></div>
+	<div class="upload-txt"><span>支持Jpg、Png格式，大小不超过1024KB的图片上传；浏览文件时可以按住ctrl或shift键多选。</span></div>
+</div>-->
+<script type="text/javascript">
+require(['fileupload','utilAdmin','ajax_file_upload'], function (fileupload,utilAdmin,ajaxFileUpload) { 
+$(function() {
+	//鼠标触及区域li改变class
+	var album_id = $("#album_id").val();
+	var dataAlbum = {
+		"album_id" : album_id,
+		"type" : "1,2,3,4"
+	};
+	// // ajax 上传图片
+	
+    /**
+     * 上传文件
+     * @DateTime 2018-07-07
+     *
+     */
+     function imgUpload(url,file_url){
+            var options = {
+                url: url,                    //上传地址
+                autoUpload: true,                               //是否自动上传
+                acceptFileTypes: /(.|\/)(jpe?g|png)$/i,         //文件格式限制
+                maxNumberOfFiles: 1,                            //最大上传文件数目
+                maxFileSize: 5000000,                           //文件不超过5M
+                sequentialUploads: true,                        //是否队列上传
+                dataType: 'json',
+				formData:dataAlbum,                                //从服务器返回数据json类型
+            };
+            $('.fileupload').fileupload(options)
+                .bind('fileuploadadd', function (e, data) {
+                    $('.upload-box').fadeIn();
+                })
+                .bind('fileuploadsubmit', function (e, data) {
+                    // console.info('submit==>',$.support.fileInput)
+                })
+                .bind('fileuploaddone', function (e, data) {
+                    // 上传完成
+                    // console.log('done==>',data.result);
+                    // return
+					var param = JSON.parse(data.result);
+					console.log(param);
+					console.log(param.code);
+                    var flag = param.code !== '1' ? 'danger' : 'success';
+                    
+                    $('.upload-list').append('<p class="text-'+flag+'"><i class="icon icon-'+flag+'"></i>'+param.file_name+'</p>');
+                    if(flag == 'success'){
+						LoadingInfo(1);
+                        file_url(param)
+                    }else{
+						utilAdmin.message(param.message,'danger');
+                    }
+                    setTimeout(function(){
+                        $('.upload-box').fadeOut(500);
+                        removeHtml();
+                    },8000)
+                    function removeHtml(){
+                        setTimeout(function(){
+                            $('.upload-box').remove()
+                        },1e3)
+                    }
+
+
+                })
+                .bind('fileuploadprogressall', function (e, data) {
+                    // 上传进度情况
+                    var progress = parseInt(data.loaded / data.total * 100, 10);
+                    $('.upload-box .progress .progress-bar').css('width',progress+'%');
+                    if(progress == 100){
+                        setTimeout(function(){
+                            $('.upload-box .progress').fadeOut()
+                        },1000)
+                    }
+                })
+                .bind('fileuploadfail', function (e, data) {
+                    // 提示错误信息
+                    // data.errorThrown
+					utilAdmin.message("上传失败！",'danger');
+                    // console.warn(data)
+
+                })
+                .prop('disabled1', !$.support.fileInput).parent().addClass($.support.fileInput ? undefined : 'disabled1').click(function(){
+                if(!$('div').hasClass('upload-box')){
+                    var html = '<div class="upload-box"><div class="upload-head">上传情况</div><div class="upload-list"></div><div class="progress"><div class="progress-bar progress-bar-striped active" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" ></div></div></div>';
+                    $(document.body).append(html);
+                }
+            });
+
+
+    }
+	imgUpload("{:__URL('ADMIN_MAIN/upload/uploadFile')}",function(file_url){
+
+	});
+
+});
+
+})
+</script>

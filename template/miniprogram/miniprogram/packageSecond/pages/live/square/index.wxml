@@ -1,0 +1,56 @@
+<view class='square_box' wx:if='{{config_show == true}}'>
+  <view class="category" wx:if="{{category_list.length > 0}}">
+    <van-tabs active="{{ active }}" bind:change='categoryChange'>
+      <van-tab wx:for="{{category_list}}" wx:key="index" title="{{item.cate_name}}"></van-tab>
+    </van-tabs>
+  </view>
+  <view class="live_list">
+    <view class="live_item" wx:for="{{live_list}}" wx:key="index" data-liveid="{{item.live_id}}" data-status="{{item.status}}"  data-anchorid="{{item.anchor_id}}" bindtap="onLivePage">
+      <view class="live_box">
+        <image class="live_img" src="{{item.live_img?item.live_img:'/images/icon-bg-live.png'}}"></image>
+        <view class="opacity_shadow"></view>
+        <view class="font_level">
+          <view class="live_status">
+            <view class="status {{item.status == 2?'active':'alearly'}}">·{{item.status_name}}</view>
+            <view class="time" wx:if='{{item.status == 2}}'>{{item.online_num}} 观看</view>
+            <view class="time" wx:else>{{item.advance_date}}</view>
+          </view>
+          <view class="bottom">
+            <view class="title text-nowrap">{{item.live_title}}</view>
+            <view class="row">
+              <view class="anchor">
+                <view class="img">
+                  <image src="{{item.user_headimg?item.user_headimg:'/images/no-user.png'}}"></image>
+                </view>
+                <view class="name text-nowrap">{{item.uname}}</view>
+              </view>
+              <view class="look">
+                <view wx:if='{{item.status == 2}}'> <image class="like_icon" src="/images/like.png"></image> {{item.likes_num}}</view>
+                <view wx:else>{{item.wantsee_num}}想看</view>                
+              </view>
+            </view>
+          </view>
+        </view>
+      </view>
+    </view>
+
+  </view>
+  <view class="bottom_nav">
+    <view class="bottom_box">
+      <view class="nav_menu">
+        <view class="nav_item">广场</view>
+        <view class="nav_item" bindtap="onMyLivePage">我的</view>
+      </view>
+      <view class="in_live" bindtap="openLivePage" wx:if="{{is_anchor == 1}}">
+        <image src="/images/icon-open-live.png"></image>
+      </view>
+    </view>
+
+  </view>
+</view>
+<view class="addon_b" wx:else>
+  <view class="content">
+    <image mode="widthFix" src="/images/empty-data.png"></image>
+    <view class="tips_txt">直播购物应用没有开启</view>
+  </view>
+</view>

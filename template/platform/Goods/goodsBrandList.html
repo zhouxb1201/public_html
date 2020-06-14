@@ -1,0 +1,191 @@
+{extend name="platform/new_base" /}
+{block name="resource"}
+
+{/block}
+{block name="main"}
+<!-- page -->
+<div class="mb-20">
+    <a href="{:__URL('PLATFORM_MAIN/goods/addGoodsBrand')}" class="btn btn-primary"><i class="icon icon-add1"></i> 添加品牌</a>
+</div>
+
+<table class="table v-table table-auto-center">
+    <thead>
+        <tr>
+            <th>图片</th>
+            <th>品牌名称</th>
+            <th>首写字母</th>
+            <th>状态</th>
+            <th>排序</th>
+            <th class="col-md-2 pr-14 operationLeft">操作</th>
+        </tr>
+    </thead>
+    <tbody id="list">
+
+
+
+
+
+    </tbody>
+</table>
+<input type="hidden" id="pageIndex">
+<nav aria-label="Page navigation" class="clearfix">
+    <ul id="page" class="pagination pull-right"></ul>
+</nav>
+<!-- page end -->
+{/block}
+
+
+{block name="script"}
+
+<script>
+    require(['util'], function (util) {
+        util.initPage(LoadingInfo);
+
+        //加载信息
+        function LoadingInfo(pageIndex) {
+            $("#pageIndex").val(pageIndex);
+            var search_text = $("#search_text").val();
+            $.ajax({
+                type: "post",
+                url: "{:__URL('PLATFORM_MAIN/goods/goodsbrandlist')}",
+                async: true,
+                data: {
+                    "page_index": pageIndex, "search_text": search_text
+                },
+                success: function (data) {
+                    var html = '';
+                    if (data["data"].length > 0) {
+                        for (var i = 0; i < data["data"].length; i++) {
+                            html += '<tr>';
+                            html += '<td style="height:50px;">';
+                            html += '<img src="' + data["data"][i]["brand_pic"] + '" alt="" style="width:100px;height:50px;">';
+                            html += '</td>';
+                            html += '<td>';
+                            html += data["data"][i]["brand_name"];
+                            html += '</td>';
+                            html += '<td>';
+                            html += data["data"][i]["brand_initial"];
+                            html += '</td>';
+                            html += '<td>';
+                            if (data["data"][i]["brand_recommend"] == '1') {
+                                var state_name = "<a href='javascript:void(0)' class='label label-success outline'>开启</a>";
+                            } else {
+                                var state_name = "<a href='javascript:void(0)' class='label label-danger online'>关闭</a>";
+                            }
+                            html += state_name;
+                            html += '</td>';
+                            html += '<td><input type="text" class="form-control sort-form-control" data-brand_id="' + data["data"][i]["brand_id"] + '" value="' + data["data"][i]["sort"] + '"></td>';
+                            html += '<td class="operationLeft fs-0">';
+                            html += '<input type="hidden" name="brand_id" value="' + data["data"][i]["brand_id"] + '">';
+                            html += '<a class="btn-operation" href="' + __URL('PLATFORM_MAIN/Goods/updateGoodsBrand?brand_id=' + data["data"][i]["brand_id"]) + '">编辑</a><a class="btn-operation delete_brand text-red1" href="javascript:void(0);">删除</a>';
+
+                            html += '</td>';
+                            html += '</tr>';
+                        }
+                    } else {
+                        html += '<tr align="center"><td colspan="6" class="h-200">暂无符合条件的数据记录</td></tr>';
+                    }
+                    $('#page').paginator('option', {
+                        totalCounts: data['total_count']  // 动态修改总数
+                    });
+                    $("#list").html(html);
+                    util.tips();
+                    load_method();
+                }
+            });
+        }
+
+        function load_method() {
+            //删除分类
+            $('.delete_brand').on('click', function (id) {
+                var brand_id = $(this).siblings("input[name='brand_id']").val();
+                util.alert('确认删除此品牌吗 ？', function () {
+                    $.ajax({
+                        type: "post",
+                        url: "{:__URL('PLATFORM_MAIN/goods/deletegoodsbrand')}",
+                        data: {
+                            'brand_id': brand_id
+                        },
+                        success: function (data) {
+                            if (data["code"] > 0) {
+                                util.message(data["message"], 'success', LoadingInfo($('#pageIndex').val()));
+                            } else {
+                                util.message(data["message"], 'danger');
+                            }
+                        }
+                    })
+                })
+            })
+        }
+
+        $("body").on('click', '.online', function () {
+            var brand_id = $(this).parents('tr').find('input[name=brand_id]').val();
+
+            if (brand_id.length == 0) {
+                util.message('请选择需要开启的品牌', 'danger');
+                return false;
+            }
+            $.ajax({
+                type: "post",
+                url: "{:__URL('PLATFORM_MAIN/goods/closeoropenBrand')}",
+                data: {"brand_id": brand_id.toString(), "brand_recommend": 1},
+                dataType: "json",
+                async: true,
+                success: function (data) {
+                    if (data["code"] > 0) {
+                        util.message(data["message"], 'success', LoadingInfo($('#pageIndex').val()));
+                    } else {
+                        util.message(data["message"], 'danger', LoadingInfo($('#pageIndex').val()));
+                    }
+                }
+            })
+        })
+
+        $("body").on('click', '.outline', function () {
+            var brand_id = $(this).parents('tr').find('input[name=brand_id]').val();
+
+            if (brand_id.length == 0) {
+                util.message('请选择需要关闭的品牌', 'danger');
+                return false;
+            }
+            $.ajax({
+                type: "post",
+                url: "{:__URL('PLATFORM_MAIN/goods/closeoropenBrand')}",
+                data: {"brand_id": brand_id.toString(), "brand_recommend": 0},
+                dataType: "json",
+                async: true,
+                success: function (data) {
+                    if (data["code"] > 0) {
+                        util.message(data["message"], 'success', LoadingInfo($('#pageIndex').val()));
+                    } else {
+                        util.message(data["message"], 'danger', LoadingInfo($('#pageIndex').val()));
+                    }
+                }
+            })
+        })
+        $("body").on('change', '.sort-form-control', function () {
+            var brand_id = $(this).data('brand_id');
+            var sort_val = $(this).val();
+            // console.log(category_id);return;
+            $.ajax({
+                type: "post",
+                url: "{:__URL('PLATFORM_MAIN/Goods/changeGoodsBrandSort')}",
+                async: true,
+                data: {brand_id: brand_id, sort_val: sort_val},
+                success: function (data) {
+                    if (data["code"] > 0) {
+                        util.message(data["message"], 'success', LoadingInfo($('#pageIndex').val()));
+                    } else {
+                        util.message(data["message"], 'danger');
+                    }
+                }
+            })
+        })
+
+
+
+    })
+
+</script>
+
+{/block}

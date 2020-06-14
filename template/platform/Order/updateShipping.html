@@ -1,0 +1,140 @@
+<form class="form-horizontal padding-15" id="">
+    <ul class="nav nav-tabs v-nav-tabs" role="tablist">
+        {foreach name="order_info['goods_packet_list']" item='packet' key='i'}
+        <li role="presentation" {if $i===0}class="active"{/if} data-id="{$packet.express_id}">
+            <a href="#bg{$packet.express_id}" aria-controls="bg{$packet.express_id}" role="tab" data-toggle="tab" class="flex-auto-center">{$packet.packet_name}</a>
+        </li>
+        {/foreach}
+    </ul>
+    <table class="table v-table table-auto-center">
+        <thead>
+        <tr>
+            <th>商品</th>
+            <th>数量</th>
+            <th>物流单号</th>
+            <th>状态</th>
+        </tr>
+        </thead>
+        <tbody id="shipping_goods_list">
+        {foreach name="order_info['goods_packet_list']" item='packet' key='i'}
+        {if $i===0}
+        {foreach name='packet.order_goods_list' item='goods'}
+        <tr>
+            <td>
+                <div class="media text-left">
+                    <div class="media-left">
+                        <img src="{:getApiSrc($goods.picture_info.pic_cover_mid)}" alt="" width="60" height="60">
+                    </div>
+                    <div class="media-body max-w-300">
+                        <div class="line-2-ellipsis">{$goods.goods_name}</div>
+                        <div class="small-muted line-2-ellipsis">
+                            {foreach name='goods.spec' item='spec'}
+                            {$spec.spec_name.':'.$spec.spec_value_name.' '}
+                            {/foreach}
+                        </div>
+                    </div>
+                </div>
+            </td>
+            <td>
+                {$goods.num}
+            </td>
+            <td>
+                {$goods.express_info.express_no ?: ''}
+            </td>
+            <td>
+                <span class="text-danger">{$goods.shipping_status_name}</span>
+            </td>
+        </tr>
+        {/foreach}
+        {/if}
+        {/foreach}
+        </tbody>
+    </table>
+    <div class="form-group">
+        <label class="col-md-2 control-label">收货信息</label>
+        <div class="col-md-10">
+            <p class="form-control-static" id="shipping_receiver_info">
+                <span class="mr-15">{$order_info.receiver_name}</span>
+                <span class="mr-15">{$order_info.receiver_mobile}</span>
+                <span class="">{$order_info.address . ' ' . $order_info.receiver_address}</span>
+            </p>
+        </div>
+    </div>
+    {foreach name="order_info['goods_packet_list']" item='packet' key='i'}
+    {if $i===0}
+    <div class="form-group">
+        <label class="col-md-2 control-label">快递公司</label>
+        <div class="col-md-5">
+            <select class="form-control" id="shipping_express_company">
+                {foreach name='express_company_list' item='company'}
+                <option value="{$company.co_id}" {if $company.co_id == $packet.express_company_id} selected {/if}>{$company.company_name}</option>
+                {/foreach}
+            </select>
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="col-md-2 control-label">快递订单</label>
+        <div class="col-md-5">
+            <input type="text" class="form-control" id="update_shipping_express_no" value="{$packet.express_code}">
+            <p class="help-block">*发货后24小时内可以修改一次快递信息</p>
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="col-sm-2 control-label">备注</label>
+        <div class="col-sm-5">
+            <textarea class="form-control ta_resize" rows="4" id="update_shipping_seller_memo"
+                      placeholder="备注"></textarea>
+        </div>
+    </div>
+    {/if}
+    {/foreach}
+</form>
+
+<script>
+    $(function () {
+        $("ul[role='tablist']").on("click", "li", function () {
+            //$(this).addClass("active").siblings().removeClass("active");
+            switchPackageData($(this).attr('data-id'));
+        })
+    })
+
+    var package_list = {:json_encode($package_list)};
+    var order_info = {:json_encode($order_info)};
+    var express_company_list = {:json_encode($express_company_list)};
+    //切换包裹
+    function switchPackageData(express_id) {
+        var receiver_info = '<span>' + order_info['receiver_name'] + '</span> ' + '<span>' + order_info['receiver_mobile'] + '</span> ' + '<span>' + order_info['address'] + ' ' + order_info['receiver_address'] + '</span>';
+        $("#shipping_receiver_info").html(receiver_info);
+        var co_html = '<option value="0">请选择物流公司</option>';
+        $.each(express_company_list, function (k, company) {
+            if (company['is_enabled'] == '1') {
+                co_html += '<option value="' + company["co_id"] + '">' + company["company_name"] + '</option>';
+            }
+        })
+        $("#shipping_express_company").html(co_html);
+
+        $("#update_shipping_express_no").val(package_list[express_id]['express_code']);
+        $("#shipping_express_company").val(package_list[express_id]['express_company_id']);
+        var goods_list = '<tr>';
+        $.each(package_list[express_id]['order_goods_list'], function (i, goods) {
+            goods_list += '<td>';
+            goods_list += '<div class="media text-left"><div class="media-left">' + '<img src="' + __IMG(goods["picture_info"]['pic_cover_mid']) + '" alt="" width="60" height="60">' + '</div>';
+            goods_list += '<div class="media-body max-w-300">';
+            goods_list += '<div class="line-2-ellipsis">';
+            goods_list += '<a href="' + __URLS('SHOP_MAIN/goods/goodsinfo&goodsid=' + goods['goods_id']) + '" target="_blank">';
+            goods_list += goods['goods_name'];
+            goods_list += '</div>';
+            goods_list += '<div class="small-muted line-2-ellipsis">';
+            $.each(goods.spec, function (spec_k, spec_v) {
+                goods_list += spec_v['spec_name'] + ':' + spec_v['spec_value_name'] + ' ';
+            })
+            goods_list += '</div></div>';
+            goods_list += '</td>';
+            goods_list += '<td>' + goods['num'] + '</td>';
+            goods_list += '<td>' + goods['express_info']['express_no'] + '</td>';
+            goods_list += '<td>' + goods['shipping_status_name'] + '</td>';
+            goods_list += '</tr>';
+        })
+        $("#shipping_goods_list").html(goods_list);
+    }
+</script>

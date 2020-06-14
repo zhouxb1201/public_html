@@ -1,0 +1,29 @@
+<view class='header'>
+  <image mode="widthFix" class="bg" src="{{items.bgSrc}}"></image>
+  <view class='{{items.styletype == 2 || items.styletype == 3 ? "user_info" : "box"}} box-info'>
+    <view class='user_img'>
+      <image src='{{member_img?member_img:"/images/no-user.png"}}'></image>
+    </view>
+    
+    <view class='user_text' wx:if='{{isLogin}}'>
+      <view class='user_text_info'>
+        <view class='user_name' >{{user_name}}</view>         
+        <view class='level_name' wx:if="{{memberData.level_name != null}}">{{memberData.level_name}}</view>
+      </view>
+      <view class='user_code' wx:if="{{extend_code != ''}}" data-code='{{extend_code}}' bindtap='setClipboardData'>
+        <view class='user_code_text'>
+          <view class='code'>
+            推荐码：{{extend_code}}
+          </view>  
+          <view class='icon iconfont v-icon-copy'></view>            
+        </view>          
+      </view>        
+    </view>
+    <view class='login_text' wx:else bindtap="onLoginPage">点击授权登录</view>
+  </view>    
+  <view class='setting'>
+    <view class='set_nav' bindtap="onAccountPage">
+      <van-icon name="setting" color='#fff' size="20px"/>
+    </view>      
+  </view>
+</view>

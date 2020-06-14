@@ -1,0 +1,266 @@
+{extend name="platform/new_base" /}
+{block name="resources"/}
+<link rel="stylesheet" href="__STATIC__/lib/drag/layer.css">
+<link href="PLATFORM_CSS/express/freight_edit.css" rel="stylesheet" type="text/css"/>
+{/block}
+{block name="main"}
+<input type="hidden" id="hidden_co_id" value="{$co_id}"/>
+        <!-- page -->
+
+        <form class="form-horizontal form-validate pt-15 widthFixedForm" role="form" id="freight_template_form">
+            <div class="form-group">
+                <label class="col-md-2 control-label"><span class="text-bright">*</span>快递公司</label>
+                <div class="col-md-5">
+                    <select class="form-control" name="co_id" required title="请选择快递公司">
+                        <option value="">请选择</option>
+                        {foreach name="company_lists['data']" item="company" key="k"}
+                        <option value="{$company.co_id}" {if $company.co_id== $shipping_fee_detail.co_id}selected{/if}>{$company.company_name}</option>
+                        {/foreach}
+                    </select>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-md-2 control-label"><span class="text-bright">*</span> 模版名称</label>
+                <div class="col-md-5">
+                    <input class="form-control" id="shipping_fee_name" type="text" name="shipping_fee_name"
+                           value="{$shipping_fee_detail.shipping_fee_name}" required/>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-md-2 control-label"><span class="text-bright">*</span> 计费方式</label>
+                <div class="col-md-8">
+                    <label class="radio-inline">
+                        <input type="radio" name="calculate_type" id="calculate_weight" value="1" {if $shipping_fee_detail.calculate_type== 1 || empty($shipping_fee_detail.calculate_type)}checked{/if}> 按重计费（kg）
+                    </label>
+                    <label class="radio-inline">
+                        <input type="radio" name="calculate_type" id="calculate_num" value="2" {if $shipping_fee_detail.calculate_type== 2}checked{/if}> 按件计费（件）
+                    </label>
+                    <label class="radio-inline">
+                        <input type="radio" name="calculate_type" id="calculate_volume" value="3" {if $shipping_fee_detail.calculate_type== 3}checked{/if}> 按体积计费（m³）
+                    </label>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="col-md-2 control-label"><span class="text-bright">*</span> 配送区域设置</label>
+                <div class="col-md-8" style="width: 720px">
+                    <table class="table table-bordered table-auto-center mb-10" id="" >
+                        <tr>
+                            <th>配送至</th>
+                            <th id="main_level_num">{if $shipping_fee_detail.calculate_type == 1 || empty($shipping_fee_detail.calculate_type)}首重(kg){/if}{if $shipping_fee_detail.calculate_type == 2}首件(件){/if}{if $shipping_fee_detail.calculate_type == 3}首体积(m³){/if}</th>
+                            <th id="main_level_fee">{if $shipping_fee_detail.calculate_type == 1 || empty($shipping_fee_detail.calculate_type)}首重运费(元){/if}{if $shipping_fee_detail.calculate_type == 2}首件运费(元){/if}{if $shipping_fee_detail.calculate_type == 3}首体积运费(元){/if}</th>
+                            <th id="extra_level_num">{if $shipping_fee_detail.calculate_type == 1 || empty($shipping_fee_detail.calculate_type)}续重(kg){/if}{if $shipping_fee_detail.calculate_type == 2}续件(件){/if}{if $shipping_fee_detail.calculate_type == 3}续体积运费(m³){/if}</th>
+                            <th id="per_extra_level_fee">{if $shipping_fee_detail.calculate_type == 1 || empty($shipping_fee_detail.calculate_type)}续重运费(元){/if}{if $shipping_fee_detail.calculate_type == 2}续件运费(元){/if}{if $shipping_fee_detail.calculate_type == 3}续体积运费(元){/if}</th>
+                            <th style="width: 42px">操作</th>
+                        </tr>
+                        <tbody class="trs">
+                        {foreach name='$shipping_fee_detail.shipping_area' item='area' key='k'}
+                        <tr id="shipping_fee_area_id_{$area.shipping_fee_area_id}"
+                            data-shipping-fee-area-id="{$area.shipping_fee_area_id}"
+                            data-is-default="{$area.is_default_area}">
+                            <td>
+                                {if $area.is_default_area}
+                                默认地区
+                                {else}
+                                <span class="js-region-info region-info">{if condition="$area.province_name_array"}{:implode(',',$area.province_name_array)}{/if}</span>
+                                <a href="javascript:void(0);" class="text-primary js-select-city">编辑</a>
+                                {/if}
+                            </td>
+                            <td>
+                                {if $shipping_fee_detail.calculate_type == 2}
+                                <input type="number" name="main_level_num" int="true" step="1" min="0" value="{:intval($area.main_level_num)}"
+                                       class="form-control number-form-control" required>
+                                {else}
+                                <input type="number" name="main_level_num" min="0" value="{$area.main_level_num}"
+                                       class="form-control number-form-control" required>
+                                {/if}
+                            </td>
+
+                            <td>
+                                <input type="number" min="0" class="form-control number-form-control"
+                                       name="main_level_fee" value="{$area.main_level_fee}" required/>
+                            </td>
+
+                            <td>
+                                {if $shipping_fee_detail.calculate_type == 2}
+                                <input type="number" name="extra_level_num" step="1" min="1" value="{:intval($area.extra_level_num)}"
+                                       class="form-control number-form-control" required>
+                                {else}
+                                <input type="number" name="extra_level_num" min="0" value="{$area.extra_level_num}"
+                                       class="form-control number-form-control" required>
+                                {/if}
+                            </td>
+
+                            <td>
+                                <input type="number" min="0" class="form-control number-form-control"
+                                       name="per_extra_level_fee" value="{$area.per_extra_level_fee}" required/>
+                            </td>
+                            <td>
+                                {if !$area.is_default_area}
+                                <a href="javascript:void(0);" class="text-danger delete-area">删除</a>
+                                {/if}
+                            </td>
+                        </tr>
+                        {/foreach}
+                        <tr>
+                            <td colspan="6" class="text-left">
+                                <a href="javascript:void(0);" class="btn btn-primary" id="add-area">新增配送区域</a>
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
+                    <div class="help-block help-tips mb-0">根据重量计算运费，当物品不足《首重重量》时，按照《首重费用》计算，超过部分按照《续重重量》和《续重费用》乘积来计算</div>
+
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-md-2 control-label"><span class="text-bright">*</span> 是否生效</label>
+                <div class="col-md-5">
+                    <label class="radio-inline">
+                        <input type="radio" name="is_enabled" value="1" {if $shipping_fee_detail.is_enabled == 1}checked{/if}> 生效
+                    </label>
+                    <label class="radio-inline">
+                        <input type="radio" name="is_enabled" value="0" {if $shipping_fee_detail.is_enabled == 0}checked{/if} {if $use_count > 0}disabled{/if}> 失效 {if $use_count > 0}(已被使用不能设置失效){/if}
+                    </label>
+                </div>
+            </div>
+            {if $shipping_fee_detail.is_default == 0}
+            <div class="form-group">
+                <label class="col-md-2 control-label"><span class="text-bright">*</span> 是否为默认模板</label>
+                <div class="col-md-5">
+                    <label class="checkbox-inline">
+                        <input type="checkbox" name="is_default" {if $shipping_fee_detail.is_default== 1}checked{/if}/> 是
+                    </label>
+                </div>
+            </div>
+            {/if}
+
+            <div class="form-group"></div>
+            <div class="form-group">
+                <label class="col-md-2 control-label"></label>
+                <div class="col-md-8">
+                    <button class="btn btn-primary add" type="submit">保存</button>
+                    <a href="javascript:history.go(-1);" class="btn btn-default">返回</a>
+                </div>
+            </div>
+
+        </form>
+
+        <div id="select-region">
+            <div class="cont">
+                <div class="selectSub dialog-areas">
+                    <ul class="js-regions">
+                        <li>
+                            <div class="dcity clearfix">
+                                <!-- 省 -->
+                                <div class="province-list">
+                                    {foreach name="$province_lists" item="province" key="province_id"}
+                                    <div class="ecity">
+                                <span class="gareas">
+                                    <input data-second-parent-index data-province-id="{$province_id}"
+                                           id="province_{$province_id}" type="checkbox"
+                                           data-province-name="{$province}"
+                                           value="{$province_id}"/>
+                                    <label for="province_{$province_id}"
+                                           title="{$province}">{$province}</label>
+                                    <i class="icon icon-drop-down drop-down" data-level="province"></i>
+                                    <!-- 市 -->
+                                    <div class="citys">
+                                        {foreach name="$city_lists[$province_id]" item="city" key="city_id"}
+                                            <span class="areas">
+                                                <input data-third-parent-index
+                                                       data-province-id="{$province_id}"
+                                                       data-city-id="{$city_id}" value="{$city_id}"
+                                                       id="city_{$city_id}" type="checkbox"/>
+                                                <label for="city_{$city_id}"
+                                                       title="{$city}">{$city}</label>
+                                                {if condition="count($district_lists[$city_id])"}
+                                                <i class="icon icon-drop-down drop-down" data-level="city"></i>
+                                                {/if}
+
+                                                <!-- 区 -->
+                                                    <div class="district">
+                                                    {foreach name="$district_lists[$city_id]" item="district" key="district_id"}
+                                                    <span class="areas">
+                                                        <input data-four-parent-index
+                                                               data-province-id="{$province_id}"
+                                                               data-city-id="{$city_id}"
+                                                               value="{$district_id}"
+                                                               id="district_{$district_id}" type="checkbox"/>
+                                                        <label for="district_{$district_id}"
+                                                               title="{$district}">{$district}</label>
+                                                    </span>
+                                                    {/foreach}
+                                                    </div>
+                                            </span>
+                                        {/foreach}
+                                    </div>
+                                </span>
+                                    </div>
+                                    {/foreach}
+                                </div>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- page end -->
+{/block}
+{block name="script"}
+<script>
+    var shipping_fee_detail = {:json_encode($shipping_fee_detail)};
+    var area_tree = {};
+    area_tree['province'] =  {:json_encode($province_lists)};
+    area_tree['city'] =  {:json_encode($city_lists)};
+    area_tree['district'] =  {:json_encode($district_lists)};
+    require(['util', 'freight_edit', 'layer'], function (util) {
+        var flag = false;
+        window.legal = true;
+        util.validate($('.form-validate'),function(form){
+            if (flag) {
+                return false;
+            }
+            buildData();
+            if (!legal){
+                util.message('数目输入请输入正整数,金额为正数')
+                legal = true
+                return false;
+            }
+            flag = true;
+            $.ajax({
+                url: __URL(PLATFORMMAIN + "/express/freighttemplateedit"),
+                type: "post",
+                dataType: 'json',
+                data: {"data": JSON.stringify(shipping_fee_detail)},
+                success: function (res) {
+                    if (parseInt(res.code)) {
+                        util.message(res.message,"success", function () {
+                            window.location.href = __URL(PLATFORMMAIN + '/Express/freightTemplateList');
+                        })
+                    } else {
+                        util.message(res.message, "danger");
+                        flag = false;
+                    }
+                }
+            });
+        });
+
+        $('input[name="calculate_type"]').on('change',function(){
+            var value = $(this).val();
+            if(value==1){
+                $('.help-tips').html('根据重量计算运费，当物品不足《首重重量》时，按照《首重费用》计算，超过部分按照《续重重量》和《续重费用》乘积来计算');
+            }
+            if(value==2){
+                $('.help-tips').html('根据件数计算运费，当物品不足《首件数量》时，按照《首件费用》计算，超过部分按照《续件数量》和《续件费用》乘积来计算');
+            }
+            if(value==3){
+                $('.help-tips').html('根据体积计算运费，当物品不足《首体积》时，按照《首体积费用》计算，超过部分按照《续体积》和《续体积费用》乘积来计算');
+            }
+        })
+    })
+
+</script>
+
+{/block}

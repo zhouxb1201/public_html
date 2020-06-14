@@ -1,0 +1,9 @@
+<!-- 下拉框 -->
+    <view class='custom customSelect wx:if="{{customitem.required == true ? "custom_padd" : ""}}"'>
+      <picker bindchange="bindPickerChange" data-index="{{index}}" value="{{selectIndex}}" range="{{customitem.options}}"  >
+          <view class="picker"> 
+            <text class='label_text'><text class="star" wx:if='{{customitem.required == true}}'>*</text>{{customitem.label}}</text>
+            <view>{{customitem.options[selectIndex]}}</view>
+          </view>
+      </picker>
+    </view>

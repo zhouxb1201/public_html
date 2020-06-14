@@ -1,0 +1,17 @@
+<image mode="scaleToFill" src="{{publicUrl}}/wap/static/images/followgift-bg.jpg" class="bg"></image> 
+<view class="wrap">
+  <view class="main">
+    <view class="img">
+      <image mode="widthFix" src="{{info.prize_pic ? info.prize_pic : '/images/no-goods.png'}}" ></image>
+    </view>
+    <view class="txt">
+      <view class="h3">{{info.prize_name}}</view>
+      <view class="p-name">{{info.name}}</view>
+    </view>
+  </view>
+  <view class="tip">奖品已放置在列表当中</view>
+  <navigator url='../prize/list/list' class="jump">前往领取</navigator>
+</view>
+
+<!-- 登录组件 -->
+<login-component loginShow='{{loginShow}}' bind:request='requestLogin'></login-component>

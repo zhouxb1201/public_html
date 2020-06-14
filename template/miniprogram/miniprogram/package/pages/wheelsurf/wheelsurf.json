@@ -1,0 +1,13 @@
+{
+  "usingComponents": {
+    "login-component": "/pages/component/login/login",
+    "popupWinPrize": "/pages/component/popupWinPrize/popupWinPrize",
+    "popupNoPrize": "/pages/component/popupNoPrize/popupNoPrize",
+    "popupActivityEnd":"/pages/component/popupActivityEnd/popupActivityEnd",
+    "explain": "/pages/component/explain/explain",
+    "topnav-component": "/pages/component/topnav/topnav",
+    "phone-compoent": "/pages/component/phone/phonecom"
+    
+  },
+  "navigationBarTitleText": "幸运大转盘"
+}

@@ -1,0 +1,41 @@
+<view class='searchPage'>
+  <view class='searchTop'>
+    <view class='searchInput'>
+      <view class='icon iconfont v-icon-search'></view>
+      <input 
+        placeholder="请输入搜索关键字" 
+        placeholder-style="font-size:14px;color:#999" 
+        bindinput='searchValue' 
+        value ="{{inputValue}}"
+        focus='ture'>
+      </input>
+    </view>
+    <view class='searchbtn' bindtap='searchSubmit'>搜索</view>
+  </view>
+  <view wx:if="{{historyArray != ''}}">
+    <view class='history'>
+      <view class='historyTitle'>历史搜索</view>
+      <view class='historyList' wx:for="{{historyArray}}" wx:key="" data-value="{{item}}" bindtap='changeValue'>
+        <view class='historyItem'>
+          {{item}}
+        </view>
+        <!-- <navigator wx:if="{{searchKey == 'shop'}}" url="../shop/list/index?key={{item}}" open-type='switchTab'>
+          <view class='historyItem'>
+              {{item}}
+          </view>
+        </navigator>
+        <navigator wx:else url="../goodlist/index?key={{item}}">
+          <view class='historyItem'>
+              {{item}}
+          </view>
+        </navigator> -->
+        
+      </view>    
+    </view>
+    <button class='clearBtn' bindtap='clearSearch'>清空历史搜索</button>
+  </view>
+  <view class='no_search' wx:else>
+    暂无搜索记录
+  </view>
+  
+</view>

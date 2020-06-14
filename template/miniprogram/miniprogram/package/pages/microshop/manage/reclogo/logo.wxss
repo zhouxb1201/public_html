@@ -1,0 +1,28 @@
+page{
+  background-color: #f8f8f8;
+  font-size: 28rpx;
+}
+.head_img{
+  height: calc(100vh - 90px);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.img{
+  width: 260rpx;
+  height: 260rpx;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.upload_img_btn{
+  position: fixed;
+  bottom: 0;
+  width: 100%;
+  background-color: #f44;
+  text-align: center;
+  color: #fff;
+  height: 80rpx;
+  line-height: 80rpx;
+}

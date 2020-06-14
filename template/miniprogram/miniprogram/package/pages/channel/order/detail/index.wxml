@@ -1,0 +1,153 @@
+<view class='channle_detail_box'>
+
+  <!-- 收货地址 -->
+  <view class='address cell_group' wx:if="{{order_type == 'pickupgoods' || order_type == 'retail'}}">
+    <view class='cell_item'>
+      <view class='icon iconfont v-icon-location'></view>
+      <view class='text'>收货地址</view>
+    </view>
+    <view class='address_buy'>
+      <view class='buy_info'>
+        <view class='name'>{{detailData.receiver_name}}</view>
+        <view class='phone'>{{detailData.receiver_mobile}}</view>
+      </view>
+      <view class='address_info'>{{detailData.receiver_province}}{{detailData.receiver_city}}{{detailData.receiver_district}}{{detailData.receiver_address}}</view>
+    </view>
+  </view>
+
+  <!-- 物流 -->
+  <view class='logistics_group cell_group' wx:if="{{order_type == 'pickupgoods' || order_type == 'retail'}}">
+    <view class='logistics_no_message' wx:if='{{goods_packet_show == false }}'>暂无物流信息</view>
+    <view wx:else>
+      <view class='goods_packet_list' wx:for='{{detailData.goods_packet_list}}' wx:key='' wx:for-item='packageItem'>
+        <view class='logistics_title'>
+          <view class='logistics_name'>
+            <van-icon class='icon' name="logistics" />
+            <view>{{packageItem.shipping_info.expTextName}} {{packageItem.shipping_info.mailNo}}</view>
+          </view>
+          <view>更多</view>
+        </view>
+        <navigator url='/pages/order/logistics/index?orderId={{detailData.order_id}}'>
+          <view class='logistics_item'>
+            <view class='logistics_context'>{{packageItem.shipping_info.data[0].context}}</view>
+            <view class='logistics_time'>{{packageItem.shipping_info.data[0].time}}</view>
+          </view>
+        </navigator>
+      </view>
+    </view>
+  </view>
+
+  <!-- 商品信息 -->
+  <view class='cell_group'>
+    <view class='shop'>
+      <van-icon name="shop-o" />
+      <view class='icon iconfont v-icon-shop1'></view>
+      <view class='shop_name'>{{detailData.shop_name}}</view>
+      <view class='icon right iconfont v-icon-arrow-right'></view>
+    </view>
+    <view class='good_group' wx:for='{{detailData.order_goods}}' wx:key='' wx:for-item='gooditem'>
+      <view class='good_image'>
+        <image mode='aspectFit' src="{{gooditem.pic_cover != '' ? gooditem.pic_cover:'../../../images/rectangle-error.png'}}"></image>
+      </view>
+      <view class='good_info'>
+        <view class='good_name'>{{gooditem.goods_name}}</view>
+        <view class='purchase_user' wx:if="{{order_type == 'purchase'}}">采购于:{{gooditem.purchase_to}}</view>
+        <view class='price_num'>
+          <view class='money font_color'>
+            <text wx:if="{{gooditem.goods_point > 0 && gooditem.price > 0}}">¥ {{gooditem.price}} + {{gooditem.goods_point}}积分</text>
+            <text wx:elif="{{gooditem.goods_point > 0}}">{{gooditem.goods_point}}积分</text>
+            <text wx:else>¥ {{gooditem.price}}</text>
+            <view class='num'>X {{gooditem.num}}</view>
+          </view>
+        </view>
+      </view>
+    </view>
+  </view>
+
+   <!-- 买家留言 -->
+  <view class='cell_group' wx:if="{{order_type == 'pickupgoods' || order_type == 'retail'}}">
+    <view class='cell_item'>
+      <van-icon class='icon' name="edit" />
+      <view class='text'>买家留言</view>
+    </view>
+    <view class='cell_item user_say'>
+      <view class='text' wx:if="{{detailData.buyer_message == ''}}">该订单没有留言</view>
+      <view class='text' wx:else>{{detailData.buyer_message}}</view>
+    </view>
+  </view>
+
+  <!-- 订单信息 -->
+  <view class='cell_group'>
+    <view class='order_name'>
+      <view class='icon iconfont v-icon-form'></view>
+      <view class='name'>订单信息</view>
+    </view>
+    <view class='order_info'>
+      <view class='item'>
+        <view class='title' wx:if="{{order_type != 'output'}}">商家店铺</view>
+        <view class='text shopname'>{{detailData.shop_name}}</view>
+      </view>
+      <view class='item' wx:if="{{order_type == 'output'}}">
+        <view class='title'>采购代理</view>
+        <view class='text shopname'>{{detailData.who_purchase}}（{{detailData.who_purchase_grade}}）</view>
+      </view>
+      <view class='item'>
+        <view class='title'>订单编号</view>
+        <view class='text'>{{detailData.order_no}}</view>
+      </view>
+      <view class='item'>
+        <view class='title'>订单状态</view>
+        <view class='text'>
+          <text wx:if='{{detailData.order_status == 0}}'>待付款</text>
+          <text wx:if='{{detailData.order_status == 1}}'>待发货</text>
+          <text wx:if='{{detailData.order_status == 2}}'>已发货</text>
+          <text wx:if='{{detailData.order_status == 3}}'>已收货</text>
+          <text wx:if='{{detailData.order_status == 4}}'>已完成</text>
+          <text wx:if='{{detailData.order_status == 5}}'>已关闭</text>
+          <text wx:if='{{detailData.order_status == -1}}'>售后中</text>
+        </view>
+      </view>     
+    </view>
+  </view>
+
+
+  <view class='price_group cell_group'>    
+    <view class='price_item' wx:if="{{order_type == 'pickupgoods' || order_type == 'retail'}}">
+      <view>商品总价</view>
+      <view class='font_color'>¥ {{detailData.goods_money}}</view>
+    </view>    
+    <view class='price_item' wx:if="{{order_type == 'pickupgoods' || order_type == 'retail'}}">
+      <view>运费</view>
+      <view class='font_color'>¥ {{detailData.shipping_fee}}</view>
+    </view>
+    <view class='price_item'>
+      <view>实付</view>
+      <view class='font_color'>¥ {{detailData.order_money}}</view>
+    </view>
+  </view>
+
+  <form class='foot' >
+    <view class='btn_group'>
+      <block wx:for='{{detailData.member_operation}}' wx:key='' wx:for-item='memberitem'>
+        
+        <!-- 确认收货 -->
+        <view class='btn' 
+          wx:if="{{memberitem.no == 'getdelivery'}}" 
+          data-orderid='{{detailData.order_id}}' 
+          bindtap='orderTakeDelivery'>
+          {{memberitem.name}}
+        </view>
+        <!-- 查看物流 -->
+        <navigator class='btn' 
+          wx:if="{{memberitem.no == 'logistics'}}" 
+          url='/pages/order/logistics/index?orderId={{detailData.order_id}}'>
+          <view>
+            {{memberitem.name}}
+          </view>
+        </navigator>
+
+      </block>
+    </view>
+  </form>
+
+</view>

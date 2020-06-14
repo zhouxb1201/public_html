@@ -1,0 +1,27 @@
+<view class="category">
+  <view class='category_search'>
+    <view class='search_input'>
+      <navigator url='/pages/search/index?searchKey=integralgoods'>
+        <van-icon name="search" color='#999' class='icon-search' />
+        <view class='input-search'>请输入搜索关键词</view>
+      </navigator>
+    </view>
+  </view>
+
+  <view>
+    <scroll-view scroll-y style='height:{{clientHeight}}px;'>
+      <view class='item'>
+        <block wx:for="{{items}}" wx:key="" wx:for-item="item">
+          <view class='item-child'>
+            <navigator url="../goods/list/list?category_id={{item.category_id}}&category_name={{item.category_name}}" class='item-box '>
+              <view class='l_item_img'>
+                <image mode='scaleToFill' src="{{item.category_pic != '' ? item.category_pic :'/images/no-goods.png'}}"></image>
+              </view>
+              <text class='ov_h'>{{item.short_name != '' ? item.short_name:item.category_name}}</text>
+            </navigator>
+          </view>
+        </block>
+      </view>
+    </scroll-view>
+  </view>
+</view>

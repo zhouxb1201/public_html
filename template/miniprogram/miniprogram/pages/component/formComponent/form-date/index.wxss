@@ -1,0 +1,114 @@
+/* 自定义表单 */
+.custom{
+  background: #fff;
+  padding: 10px 15px;
+  box-sizing: border-box;
+  line-height: 24px;
+  color: #333;
+  font-size: 14px;
+  border-bottom: 1rpx solid #ebedf0;
+  display: flex;
+}
+.custom .label_text{
+  max-width: 90px;
+  min-width: 90px;
+  display: inline-block;
+  flex: 1;
+}
+.custom_padd{
+  padding: 10px 10px;
+}
+.picker{
+  display: flex;
+}
+.date_range{
+  display: flex;
+  display: -webkit-flex;
+}
+.custom .range_group{
+  margin: -20rpx;
+}
+.custom .range_group .range_group_cell{
+  display: flex;
+  align-items: center;
+  padding: 20rpx 30rpx;
+  line-height: 48rpx;  
+  position: relative;
+}
+.border_b{
+  border-bottom: 1px solid #ebedf0;
+}
+.custom .range_group .range_group_cell .range_title{
+  width: 180rpx;
+}
+.customDisplay .checkbox checkbox{
+  transform: scale(0.7);
+}
+.customDisplay .radio radio{
+  transform: scale(0.7);
+}
+.customDisplay{
+  display: flex;
+}
+.customTextarea{
+  height: 88rpx;
+}
+.customSelect picker{
+  width: 100%;
+}
+.customImg{
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+}
+.customImg .customImgItem{
+  width: 80rpx;
+  height: 80rpx;
+  margin: 10rpx;
+}
+.customImg .customImgItem image{
+  width: 100%;
+  height: 100%;
+}
+.customImg .customImg_btn{  
+  border: 1rpx dashed #ddd;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  width: 80rpx;
+  height: 80rpx;
+  margin: 10rpx;
+}
+.customImg .customImg_btn .customImg_num{
+  font-size: 24rpx;
+  line-height: 10rpx;
+}
+
+.listmenu{
+  background-color: #fff;
+  margin: 20rpx;
+  border-radius: 20rpx;
+  box-shadow: 0 0 10px 0 rgba(0,0,0,.05);
+  font-size: 28rpx;  
+
+}
+.listmenu .menu_group .menu_item{
+  border-bottom: 1rpx solid #ebedf0;
+  display: flex;
+  padding: 20rpx 30rpx; 
+}
+.listmenu .menu_group .menu_item .menu_item_l{
+  width: 50%;
+  display: flex;
+  align-items: center;
+}
+.listmenu .menu_group .menu_item .menu_item_r{
+  width: 50%;
+  display: flex;
+  justify-content: flex-end;
+}
+.star{
+  color: #f44;
+  padding-right: 5rpx;
+}

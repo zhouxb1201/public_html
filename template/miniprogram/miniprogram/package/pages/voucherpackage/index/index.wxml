@@ -1,0 +1,33 @@
+<view class="img-bg" wx:if="{{!isSuccess}}">
+  <image class="mb" mode='widthFix' src="{{publicUrl}}/wap/static/images/voucherpackage-bg-01.png"></image>
+  <view class="img">
+    <image mode='widthFix' src="{{publicUrl}}/wap/static/images/voucherpackage-bg-02.png"></image>
+    <view class="name">{{detail.voucher_package_name}}</view>
+    <view class="btn-box">
+      <button class="btn" bindtap="onReceive">领取</button>
+    </view>
+  </view>
+</view>
+<SuccessBox wx:else name="{{detail.voucher_package_name}}" couponList="{{couponList}}" giftList="{{giftList}}"></SuccessBox>
+
+<view class="cell-group">
+  <view class="cell">
+    <view class="tag">活动时间</view>
+    <view>{{filters.formatDate(detail.start_time,'s')}} ~ {{filters.formatDate(detail.end_time,'s')}}</view>
+  </view>
+  <view class="cell">
+    <view class="tag">活动说明</view>
+    <view>{{detail.desc}}</view>
+  </view>
+</view>
+
+<!-- 保留2小数 -->
+<wxs module="filters" src="../../../../utils/addmul.wxs"></wxs>
+
+<!-- 登录组件 -->
+<login-component loginShow='{{loginShow}}' bind:request='requestLogin'></login-component>
+
+<!-- 关联手机 -->
+<phone-compoent phoneShow='{{phoneShow}}' bind:phoneEven='phonereResult'></phone-compoent>
+
+<topnav-component></topnav-component>

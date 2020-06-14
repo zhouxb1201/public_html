@@ -1,0 +1,29 @@
+<!--顶部广告-->
+{if $topBanner}
+{$topBanner}
+{/if}
+<!--导航栏-->
+<div class="site-nav">
+    <div class="w w1200 clearfix">
+        <div class="fl J-logininfo">
+        </div>
+        <div class="fr">
+            <a href="{:__URL('SHOP_MAIN/goods/cart')}">购物车</a>
+            <a href="{:__URL('SHOP_MAIN/member/index')}">个人中心</a>
+            {if $shopStatus}
+            <a href="{$default_url}/admin/index/businessCenter?uid={$uid}&website_id={$website_id}">商家中心</a>
+            {/if}
+            <a href="javascript:void(0);" class="web-qrcode">
+                移动商城
+                <div class="wq-box">
+                    <span class="wq-arrow"></span>
+                    <div class="wq-img">
+                        <img src="{:__URL('SHOP_MAIN/index/getQrcode')}" alt="">
+                    </div>
+                </div>
+            </a>
+            {if $hasHelpcenter}<a href="{:__URL('SHOP_MAIN/helpcenter/index')}">帮助中心</a>{/if}
+        </div>
+    </div>
+</div>
+

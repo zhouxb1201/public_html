@@ -1,0 +1,315 @@
+<style>
+    .selected{
+        border: 1px solid #2c9cf0;
+    }
+    .Slimit{
+        font-size: 12px;
+        overflow:hidden;
+        text-overflow:ellipsis;
+        display:-webkit-box;
+        -webkit-box-orient:vertical;
+        -webkit-line-clamp:2;
+    }
+    .water{
+        height: 180px;
+        margin-bottom: 15px;
+        overflow: hidden;
+    }
+
+
+
+</style>
+<div class="material-dialog" >
+    <ul class="nav nav-tabs v-nav-tabs" role="tablist">
+        <li role="presentation" class="active"><a href="#news" aria-controls="news" data-type="news" role="tab" data-toggle="tab" class="flex-auto-center">图文</a></li>
+        <li role="presentation"><a href="#image" aria-controls="image" data-type="image" role="tab" data-toggle="tab" class="flex-auto-center">图片</a></li>
+        <li role="presentation"><a href="#voice" aria-controls="voice" data-type="voice" role="tab" data-toggle="tab" class="flex-auto-center">语音</a></li>
+        <li role="presentation"><a href="#video" aria-controls="video" data-type="video" role="tab" data-toggle="tab" class="flex-auto-center">视频</a></li>
+        <!--<li role="presentation"><a href="#text" aria-controls="text" data-type="text" role="tab" data-toggle="tab" class="flex-auto-center">文本</a></li>-->
+    </ul>
+    <div id="myTabContent" class="tab-content">
+        <div class="tab-pane fade in active" id="news">
+            <div class="panel panel-default clearfix">
+                <div class="panel-body">
+                    <div class="reply"  style="position: relative" id="lista">
+
+                    </div>
+                </div>
+                <nav aria-label="Page navigation" class="clearfix">
+                    <ul id="pagea" class="pagination pull-right"></ul>
+                </nav>
+            </div>
+        </div>
+        <div class="tab-pane fade" id="image">
+            <div class="panel panel-default clearfix">
+                <div class="panel-body" id="list1">
+
+                </div>
+            </div>
+            <nav aria-label="Page navigation" class="clearfix">
+                <ul id="page1" class="pagination pull-right"></ul>
+            </nav>
+        </div>
+        <div class="tab-pane fade" id="voice">
+
+            <div class="panel panel-default">
+                <div class="panel-body" id="list2">
+
+                </div>
+            </div>
+            <nav aria-label="Page navigation" class="clearfix">
+                <ul id="page2" class="pagination pull-right"></ul>
+            </nav>
+
+        </div>
+        <div class="tab-pane fade" id="video">
+
+            <div class="panel panel-default">
+                <div class="panel-body" id="list3">
+
+                </div>
+            </div>
+            <nav aria-label="Page navigation" class="clearfix">
+                <ul id="page3" class="pagination pull-right"></ul>
+            </nav>
+        </div>
+        <div class="tab-pane fade" id="text">
+
+            <div class="panel panel-default">
+                <div class="panel-body" id="list4">
+
+                </div>
+            </div>
+            <nav aria-label="Page navigation" class="clearfix">
+                <ul id="page4" class="pagination pull-right"></ul>
+            </nav>
+        </div>
+    </div>
+    <input type="hidden" id="mater_type" value="news">
+    <input type="hidden" id="page_index1" value="">
+    <input type="hidden" id="page_index2" value="">
+    <input type="hidden" id="page_index3" value="">
+    <input type="hidden" id="page_index4" value="">
+    <input type="hidden" id="page_index5" value="">
+    <input type="hidden" id="replay_key_id" value="">
+</div>
+<script>
+    require(['util'],function(util){
+        util.initPage(getList,"pagea");
+        util.initPage(getList1,"page1");
+        util.initPage(getList2,"page2");
+        util.initPage(getList3,"page3");
+        // util.initPage(getList4,"page4");
+        function getList(page_index){
+            $("#page_index1").val(page_index);
+            $.ajax({
+                type : "post",
+                url : "{:__URL('PLATFORM_MAIN/wchat/materialManagement')}",
+                async : true,
+                data : {
+                    "page_index" : page_index,"type":'news'
+                },
+                success : function(data) {
+                    var html = '';
+                    if (data["data"].length > 0) {
+                        for (var i = 0; i < data["data"].length; i++) {
+                            html += ' <div class="col-xs-12 col-sm-12 col-md-6 col-lg-3 water" >';
+                            html += '<div class="panel-group" >';
+                            for (var j = 0; j < data["data"][i]['items']['data'].length; j++) {
+                                if(j>0){
+                                    if (j == 0) {
+                                        html += '<div class="panel panel-default">';
+                                        html += '<div class="panel-body">';
+                                        html += '<div class="img">';
+                                        html += '<i class="default"></i>';
+                                        html += '<a href="javascript:;" ><img src="' + data["data"][i]['items']['data'][j]['thumb_url'] + '"></a>';
+                                        html += '<span class="text-left Slimit">' + data['data'][i]['items']['data'][j]['title'] + '</span>';
+                                        html += '</div></div>';
+                                    } else {
+                                        html += '<div class="panel-body">';
+                                        html += '<a href="' + data['data'][i]['items']['data'][j]['url'] + '" target="_blank">';
+                                        html += '<div class="text">';
+                                        html += '<h4>' + data['data'][i]['items']['data'][j]['title'] + '</h4>';
+                                        html += '</div>';
+                                        html += '<div class="img">';
+                                        html += '<img src="' + data["data"][i]['items']['data'][j]['thumb_url'] + '">';
+                                        html += '<i class="default">缩略图</i>';
+                                        html += '</div>';
+                                        html += '</a>';
+                                        html += '</div>';
+                                    }
+                                }else{
+                                    html += '<div class="panel panel-default">';
+                                    html += '<div class="panel-body">';
+                                    html += '<div class="img">';
+                                    html += '<i class="default"></i>';
+                                    html += '<a href="javascript:;" ><img src="' + data["data"][i]['items']['data'][j]['thumb_url'] + '"></a>';
+                                    html += '<span class="text-left Slimit">' + data['data'][i]['items']['data'][j]['title'] + '</span>';
+                                    html += '</div></div>';
+                                }
+                            }
+                            html += '</div>';
+                            html += '<div >';
+                            html += '<div >';
+                            html += '<div style="display: none" >';
+                            html += '<a href="javascript:;" class="media_id" data-mediaid="' + data["data"][i]['media_id'] + '" data-type="news">选取</a>';
+                            html += '</div></div></div>';
+                            html += '</div>';
+                            html += '</div>';
+                        }
+                    }
+                    $('#pagea').paginator('option', {
+                        totalCounts: data['total_count']  // 动态修改总数
+                    });
+                    $("#lista").html(html);
+                }
+            });
+        }
+        function getList1(page_index){
+            $("#page_index2").val(page_index);
+            $.ajax({
+                type : "post",
+                url : "{:__URL('PLATFORM_MAIN/wchat/materialManagement')}",
+                async : true,
+                data : {
+                    "page_index" : page_index,"type":'image'
+                },
+                success : function(data) {
+                    var html = '';
+                    if (data["data"].length > 0) {
+                        for (var i = 0; i < data["data"].length; i++) {
+                            html += '<div class="col-md-3 water">';
+                            html += '<div class="panel panel-default panel-image">';
+                            html += '<div class="panel-body">';
+                            html += '<div class="content" >';
+                            html += '<img src="'+data["data"][i]['attachment']+'" width="100%" height="160" alt="'+data["data"][i]['filename']+'">';
+                            html += '<span class="Slimit">'+data["data"][i]['filename']+'</span>';
+                            html += '</div>';
+                            html += '<div class="btn-group" style="display: none">';
+                            html += '<a href="javascript:;" class="media_id" data-mediaid="'+data["data"][i]['media_id']+'" data-type="image">选取</a>';
+                            html += '</div></div></div></div>';
+                        }
+                    }
+                    $('#page1').paginator('option', {
+                        totalCounts: data['total_count']  // 动态修改总数
+                    });
+                    $("#list1").html(html);
+                }
+            });
+        }
+        function getList2(page_index){
+            $("#page_index3").val(page_index);
+            $.ajax({
+                type : "post",
+                url : "{:__URL('PLATFORM_MAIN/wchat/materialManagement')}",
+                async : true,
+                data : {
+                    "page_index" : page_index,"type":'voice'
+                },
+                success : function(data) {
+                    var html = '';
+                    if (data["data"].length > 0) {
+                        for (var i = 0; i < data["data"].length; i++) {
+                            html += '<div class="col-md-3 water">';
+                            html += '<div class="panel panel-default panel-voice">';
+                            html += '<div class="panel-body">';
+                            html += '<div class="audio-msg">';
+                            html += '<div class="icon audio-player-play" data-attach="'+data["data"][i]['attachment']+'"><span><i class="fa fa-play"></i></span></div>';
+                            html += '<div class="audio-content">';
+                            html += '<div class="audio-title Slimit" >'+data["data"][i]['filename']+'</div>';
+                            html += '<div class="audio-date text-muted">创建于：'+data["data"][i]['createtime']+'</div>';
+                            html += '</div>';
+                            html += '</div>';
+                            html += '<div class="btn-group" style="display: none">';
+                            html += '<a href="javascript:;" class="media_id" data-mediaid="'+data["data"][i]['media_id']+'" data-type="voice">选取</a>';
+                            html += '</div></div></div></div>';
+                        }
+                    }
+                    $('#page2').paginator('option', {
+                        totalCounts: data['total_count']  // 动态修改总数
+                    });
+                    $("#list2").html(html);
+                }
+            });
+        }
+        function getList3(page_index){
+            $("#page_index4").val(page_index);
+            $.ajax({
+                type : "post",
+                url : "{:__URL('PLATFORM_MAIN/wchat/materialManagement')}",
+                async : true,
+                data : {
+                    "page_index" : page_index,"type":'video'
+                },
+                success : function(data) {
+                    var html = '';
+                    if (data["data"].length > 0) {
+                        for (var i = 0; i < data["data"].length; i++) {
+                            html += '<div class="col-md-3 water">';
+                            html += ' <div class="panel panel-default panel-video">';
+                            html += '<div class="panel-body">';
+                            html += '<div class="video-content">';
+                            html += '<h4 class="title text-muted Slimit">'+data["data"][i]['tag']['title']+'</h4>';
+                            html += '<div class="date text-muted Slimit">创建于：'+data["data"][i]['createtime']+'</div>';
+                            html += '<div class="video" >';
+                            html += '<img src="PLATFORM_STATIC/images/banner-bg.png" alt="" />';
+                            html += '</div>';
+                            html += ' <div class="abstract text-muted" style="overflow:hidden">'+data["data"][i]['tag']['introduction']+'</div></div>';
+                            html += '<div class="btn-group" style="display: none">';
+                            html += '<a class="media_id" href="javascript:;"  data-mediaid="'+data["data"][i]['media_id']+'" data-type="video">选取</a>';
+                            html += '</div></div></div></div>';
+                        }
+                    }
+                    $('#page3').paginator('option', {
+                        totalCounts: data['total_count']  // 动态修改总数
+                    });
+                    $("#list3").html(html);
+                }
+            });
+        }
+        // function getList4(page_index){
+        //     $("#page_index5").val(page_index);
+        //     $.ajax({
+        //         type : "post",
+        //         url : "{:__URL('PLATFORM_MAIN/wchat/materialManagements')}",
+        //         async : true,
+        //         data : {
+        //             "page_index" : page_index,"type":'text'
+        //         },
+        //         success : function(data) {
+        //
+        //             var html = '';
+        //             if (data["data"].length > 0) {
+        //                 for (var i = 0; i < data["data"].length; i++) {
+        //                     html += '<div class="col-md-3 water">';
+        //                     html += '<div class="panel panel-default panel-image">';
+        //                     html += '<div class="panel-body">';
+        //                     html += '<div class="content" >';
+        //                     html += '<span class="Slimit">'+data["data"][i]['attachment']+'</span>';
+        //                     html += '</div>';
+        //                     html += '<div class="btn-group" style="display: none">';
+        //                     html += '<a href="javascript:;" class="media_id" data-mediaid="'+data["data"][i]['id']+'" data-type="image">选取</a>';
+        //                     html += '</div></div></div></div>';
+        //                 }
+        //             }else{
+        //                 html += '<div class="flex-auto-center h-300 empty-box">暂无文本消息</div>';
+        //             }
+        //             $('#page4').paginator('option', {
+        //                 totalCounts: data['total_count']  // 动态修改总数
+        //             });
+        //             $("#list4").html(html);
+        //         }
+        //     });
+        // }
+        $('.nav-tabs a').on('click',function(){
+            var type = $(this).data('type');
+            $("#mater_type").val(type)
+        })
+        $('.tab-content').on('click',".water",function () {
+            $(this).addClass("selected").siblings().removeClass("selected");
+            $(this).parents(".tab-pane").siblings().find(".selected").removeClass("selected");
+            var id = $(this).find(".media_id").data('mediaid');
+            $("#replay_key_id").val(id);
+        })
+    })
+</script>

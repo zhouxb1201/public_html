@@ -1,0 +1,204 @@
+{block name="resource"}
+<style>
+    .label-danger a {
+        padding-top: 5px;
+    }
+</style>
+{/block}
+{block name="main"}
+<!-- page -->
+
+<div class="screen-title">
+    <span class="text">订单列表</span>
+</div>
+<div class="input-group search-input-group ml-10" style="float:right">
+    <input type="text" class="form-control" placeholder="商品名称" id="search_text" value="">
+    <span class="input-group-btn">
+                    <button class="btn btn-primary search" type="button">搜索</button>
+                </span>
+</div>
+<ul id="group_type" class="nav nav-tabs v-nav-tabs fs-12">
+    <li role="presentation" class="active" data-type=""><a href="javascript:void(0)" data-toggle="tab" class="flex-auto-center" aria-expanded="true">全部</a></li>
+    <li role="presentation" class="" data-type="1"><a href="javascript:void(0)" data-toggle="tab" class="flex-auto-center" aria-expanded="false">订购成功</a></li>
+    <li role="presentation" class="" data-type="2"><a href="javascript:void(0)" data-toggle="tab" class="flex-auto-center" aria-expanded="false">待付定金</a></li>
+    <li role="presentation" class="" data-type="3"><a href="javascript:void(0)" data-toggle="tab" class="flex-auto-center" aria-expanded="false">待付尾款</a></li>
+    <li role="presentation" class="" data-type="4"><a href="javascript:void(0)" data-toggle="tab" class="flex-auto-center" aria-expanded="false">订购失败</a></li>
+
+</ul>
+<table class="table v-table table-auto-center mb-10">
+    <thead>
+    <tr>
+        <th class="col-md-3">商品</th>
+        <th class="col-md-1">单价</th>
+        <th class="col-md-1">数量</th>
+        <th class="col-md-2">买家</th>
+        <th class="col-md-2 operationLeft">实收</th>
+        <th class="col-md-1">订单状态</th>
+        <th class="col-md-2 pr-14 operationLeft">操作</th>
+    </tr>
+    </thead>
+</table>
+<div class="tables" id="list">
+
+</div>
+
+<input type="hidden" id="page_index">
+<nav aria-label="Page navigation" class="clearfix">
+    <ul id="page" class="pagination pull-right"></ul>
+</nav>
+<!-- page end -->
+{/block}
+
+
+{block name="script"}
+<script type="text/javascript">
+    require(['util'], function (util) {
+        util.initPage(LoadingInfo);
+
+        $('#group_type').on('click','li',function(){
+            status = $(this).data('type');
+            LoadingInfo(1);
+        });
+
+        function LoadingInfo(page_index) {
+            var presell_id = {$presell_id};
+            var goods_name = $("#search_text").val();
+            $("#page_index").val(page_index);
+            $.ajax({
+                type: "post",
+                url: "{$orderrecord}",
+                async: true,
+                data: {
+                    "status":status,
+                    "page_index": page_index,
+                    "page_size": $("#showNumber").val(),
+                   // "order_status": order_status,
+                    "goods_name": goods_name,
+                    "presell_id":presell_id
+                },
+                success: function (data) {
+                    var html = '';
+                    if (data['data'] == undefined || data['data'].length == 0) {
+                        html += '<table class="table v-table table-auto-center mb-10"><tbody><tr align="center"><td class="h-200" colspan="7">暂无符合条件的数据记录</td></tr></tbody></table>';
+                        $("#list").html(html);
+                        return true;
+                    }
+
+                    $.each(data['data'], function (k_order, v_order) {
+                        var order_id = v_order['order_id'];//订单id
+                        var order_no = v_order['order_no'];//订单编号
+                        var create_time = timeStampTurnTime(v_order['create_time']);//下单时间
+                        var bonus = v_order['bonus'];
+                        var commission = v_order['commission'];
+                        var shipping_type_name = v_order['shipping_type_name'];//配送方式
+                        var order_money = v_order['order_money'];//订单金
+                        var order_status = v_order['order_status'];
+                        var status_name = v_order['status_name'];
+                        var operation = v_order['operation'];
+                        var receiver_name = v_order['receiver_name']; //买家姓名
+                        var receiver_mobile = v_order['receiver_mobile']; //买家电话
+                        var promotion_status = v_order['promotion_status'];// 标识售后订单是否整单进行售后
+
+                        html += '<table class="table v-table table-auto-center mb-10"><tbody><tr>';
+                        html += '<td colspan="7" class="text-left bg-f9">';
+                        html += '<span class="mr-15-oList">订单号：' + order_no + '</span>';
+                        html += '<span class="mr-15-oList">下单时间：' + create_time + '</span>';
+                        if (shipping_type_name) {
+                            html += '<span class="mr-15-oList">配送方式：' + shipping_type_name + ' </span>';
+                        }
+                        if (commission) {
+                            html += '<span class="label label-soft">分销佣金：' + commission + '元</span> &nbsp;&nbsp;';
+                        }
+                        if (bonus) {
+                            html += '<span class="label label-success">分红：' + bonus + '元</span>';
+                        }
+                        html += '</td>';
+
+                        var buyer_info = false;
+                        var row = v_order["order_item_list"].length;
+                        $.each(v_order['order_item_list'], function (k_order_goods, v_order_goods) {
+                            var order_goods_id = v_order_goods['order_goods_id'];
+                            var pic_cover_micro = v_order_goods['picture']['pic_cover_micro'];//商品图
+                            var goods_id = v_order_goods['goods_id'];//商品id
+                            var goods_name = v_order_goods['goods_name'];
+                            var price = v_order_goods['price'];//商品价格
+                            var num = v_order_goods['num'];//购买数量
+                            var spec_info = v_order_goods['spec'];
+                            var refund_status = v_order_goods['refund_status'];
+                            var new_refund_operation = v_order_goods['new_refund_operation'];
+
+                            html += '<tr><td class="col-md-3">';
+                            html += '<div class="media text-left">';
+                            html += '<div class="media-left"><img src="' + __IMG(pic_cover_micro) + '" width="60" height="60"></div>';
+                            html += '<div class="media-body max-w-300">';
+                            html += '<div class="line-2-ellipsis">';
+                            html += '<a href="' + __URLS('SHOP_MAIN/goods/goodsinfo&goodsid=' + goods_id) + '" target="_blank">' + goods_name + '</a>';
+                            html += '</div>';
+                            html += '<div class="small-muted line-2-ellipsis">';
+                            $.each(spec_info, function (spec_k, spec_v) {
+                                html += spec_v['spec_name'] + ':' + spec_v['spec_value_name'] + ' ';
+                            })
+                            html += '</div>';
+                            html += '<div>';
+                            if (refund_status != 0 && promotion_status != 1) {
+                                //售后
+                                $.each(new_refund_operation, function (k_op, v_op) {
+                                    html += '<a href="javascript:void(0);" data-order-id="' + order_id + '" data-order-goods-id="' + order_goods_id + '" class="text-primary block ' + v_op["no"] + '">' + v_op['name'] + '</a>';
+                                })
+                            }
+                            html += '</div>';
+                            html += '</div>';
+                            html += '</div></td>';
+                            html += '<td class="col-md-1">￥' + price + '</td>';
+                            html += '<td class="col-md-1">' + num + '</td>';
+                            if (buyer_info == false) {
+                                if (row > 1) {
+                                    html += '<td  rowspan="' + row + '" class="border-left col-md-2">';
+                                } else {
+                                    html += '<td  rowspan="' + row + '" class="col-md-2">';
+                                }
+                                if(v_order['shipping_type'] == '2'){
+                                    html += '' + v_order['user_name'] + '<br>' + v_order['user_tel'] + '';
+                                }else{
+                                    html += '' + receiver_name + '<br>' + receiver_mobile + '';
+                                }
+                                html += '</td>';
+                                html += '<td rowspan="' + row + '" class="col-md-2 text-right">';
+                                html += '￥' + order_money + '';
+                                html += '<div class="small-muted">(含运费)</div>';
+                                html += '</td>';
+                                html += '<td rowspan="' + row + '" class="col-md-1">';
+                                if (order_status == '3' || order_status == '4') {
+                                    html += '<span class="label label-success">' + status_name + '</span>';
+                                } else {
+                                    html += '<span class="label label-danger">' + status_name + '</span>';
+                                }
+
+                                html += '</td>';
+                                html += '<td class="col-md-2 operationLeft">';
+                                html += '<a href="' + __URL('PLATFORM_MAIN/order/orderdetail?order_id=' + order_id) + '" class="btn-operation" target="_blank">详情</a>';
+                                html += '</td>';
+                                html += '</tr>';
+                                buyer_info = true;
+                            } // end if buyer_info
+                        })// end order_goods each
+                    })// end data.data each
+                    html +='</tbody></table>';
+                    $('#page').paginator('option', {
+                        totalCounts: data['total_count']  // 动态修改总数
+                    });
+                    $("#list").html(html);
+                }
+            });
+        }
+
+        //搜索
+        $('.search').on('click',function(){
+            util.initPage(LoadingInfo);
+        });
+
+
+    })
+</script>
+
+{/block}

@@ -1,0 +1,25 @@
+<view class='message_list'>
+	<view class="box" wx:if="{{isShowThingcircle}}">
+		<view class="item" wx:for="{{items}}" wx:key="i" data-index="{{index}}" bindtap="toPath">
+			<view class="top">
+				<image class="img" src="{{item.imgUrl}}" />
+				<text class="dot" wx:if="{{item.badge}}"></text>
+			</view>
+			<view class="text">{{item.text}}</view>
+		</view>
+	</view>
+	<view class="chat_list">
+		<view class="item" wx:for='{{messageList}}' wx:key='index' wx:for-item='message' data-kefucode="{{message.kefu_code}}" bindtap="onChatPage">
+			<view class="item_left">
+				<image class="img" src="{{message.kefu_avatar}}"></image>
+			</view>
+			<view class="item_right">
+				<view class="title">
+					<view class="name">{{message.kefu_name}}</view>
+					<view class="time">{{message.chat_time}}</view>
+				</view>
+				<view class="text">{{message.chat_content}}</view>
+			</view>
+		</view>
+	</view>
+</view>

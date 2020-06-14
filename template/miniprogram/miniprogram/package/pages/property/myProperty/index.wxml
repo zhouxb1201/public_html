@@ -1,0 +1,41 @@
+<view class='myProperty'>
+  <view class='property_box card_group_box'>
+    <navigator url='../balance/index'>
+      <view class='property_row bottom_line'>
+        <view class='text_title'>余额</view>
+        <view class='text_value'>¥{{balance}}</view>
+        <van-icon name="arrow" class='r_icon' size="12px"/>
+      </view>
+    </navigator>
+    <navigator url='../points/index'>
+      <view class='property_row bottom_line'>
+        <view class='text_title'>积分</view>
+        <view class='text_value'>{{point}}</view>
+        <van-icon name="arrow" class='r_icon' size="12px"/>
+      </view>
+    </navigator>
+    <navigator url='../../coupon/list/index'>
+      <view class='property_row bottom_line'>
+        <view class='text_title'>优惠券</view>
+        <view class='text_value'>{{counNum}}张</view>
+        <van-icon name="arrow" class='r_icon' size="12px"/>
+      </view>
+    </navigator>
+    <navigator url='../../giftvoucher/list/index'>
+      <view class='property_row'>
+        <view class='text_title'>礼品卷</view>
+        <view class='text_value'>{{giftvoucher_num}}张</view>
+        <van-icon name="arrow" class='r_icon' size="12px"/>
+      </view>
+    </navigator>    
+  </view>
+  <view class='withdraw_cash card_group_box'>
+    <navigator url='../account/index'>
+      <view class='property_row'>
+        <view class='text_title'>提现账户</view>
+        <view class='text_value'></view>
+        <van-icon name="arrow" class='r_icon' size="12px"/>
+      </view>
+    </navigator>
+  </view>
+</view>

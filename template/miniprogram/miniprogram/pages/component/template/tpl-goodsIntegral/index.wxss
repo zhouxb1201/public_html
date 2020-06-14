@@ -1,0 +1,85 @@
+/************/
+.goodsIntegral{
+  position: relative;
+  overflow: hidden;
+}
+.goodsIntegral .row-1 .item{
+  width: calc(100% - 2rpx);
+}
+.goodsIntegral .row-3 .item{
+  width: calc(33.33334% - 2rpx);
+}
+.goodsIntegral .row-2 .item{
+  width: calc(50% - 2rpx);
+}
+.goodsIntegral .item{
+  display: block;
+  float: left;
+  height: auto;  
+}
+.goodsIntegral .row-1 .item .goodsImg{
+  height: 718rpx;
+  overflow: hidden;
+}
+.goodsIntegral .row-2 .item .goodsImg{
+  height: 351rpx;
+  overflow: hidden;
+}
+.goodsIntegral .row-3 .item .goodsImg{
+  height: 228rpx;
+  overflow: hidden;
+}
+.goodsIntegral .item .goodsImg .image{
+  width: 100%;
+}
+.goodsIntegral .itemBox{
+  box-sizing: border-box;
+  margin: 10rpx;
+  background:#fff;
+  border-radius: 20rpx;
+  overflow: hidden;
+  box-shadow:0 0 10px 0 rgba(0,0,0,.05);
+  
+}
+
+.gooddetail {
+  padding: 10rpx;
+}
+.goodname {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.tag {
+  color: #fff;
+  font-size: 24rpx;
+  padding: 4rpx 8rpx;
+  line-height: normal;
+  border-radius: 4rpx;
+  display: inline-block;
+  background-color: rgb(255, 68, 68);
+  margin-right: 8rpx;
+}
+
+.tags {
+  display: flex;
+  overflow: hidden;
+  white-space: nowrap;
+  font-size: 26rpx;
+  padding-top:4rpx;
+}
+
+.tags .info .strong {
+  color: #ff454e;
+  font-weight: 800;
+  margin-right: 2rpx;
+}
+
+.tags .info .txt {
+  color: #666;
+  font-size: 24rpx;
+}
+
+.tags .info .symbol {
+  padding: 0 8rpx;
+}

@@ -1,0 +1,69 @@
+page{
+  background-color: #f8f8f8;
+  font-size: 28rpx;
+}
+
+.good_box{
+  background-color: #fff;
+  padding: 20rpx 30rpx;
+  margin: 20rpx 0;
+}
+.good_box .good_name{
+  font-size: 32rpx;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: -webkit-box;
+  -webkit-line-clamp:2;
+  flex: auto;
+  height: 86rpx;
+}
+.good_box .price{
+  color: #f44;
+  font-weight: 800;
+}
+.good_box .price .market{
+  font-weight: 400;
+  color: #999;
+  font-size: 24rpx;
+  margin-left: 20rpx;
+  text-decoration: line-through;
+}
+.tips{
+  background-color: #fff;
+  padding: 20rpx 30rpx;
+  line-height: 50rpx;
+  padding-bottom: 150rpx;
+}
+.foot{
+  position: fixed;
+  bottom: 0;
+  background-color: #fff;
+  left: 0;
+  right: 0;
+  border-top: 1px solid #ebedf0;
+}
+.foot_box{
+  display: flex;
+  align-items: center;
+  padding: 30rpx;
+  justify-content: space-around;  
+}
+
+.foot_box button{
+  border: none;
+  outline: none;
+  background: transparent;
+  margin: 0;
+  padding: 0;
+  line-height: 1;
+  font-size: 28rpx;
+}
+button::after{
+  border: none;
+}
+
+.img_content{
+  height: 830rpx;
+  background-color: #fff;
+  overflow: hidden;
+}

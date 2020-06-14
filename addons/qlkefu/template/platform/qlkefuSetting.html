@@ -1,0 +1,231 @@
+{block name="main"}
+        <!-- page -->
+        {if($info['seller_code'])}
+        <div class="screen-title">
+            <span class="text">基本设置</span>
+        </div>
+        <form class="form-validate">
+        <div class="form-horizontal pt-15">
+            <div class="form-group">
+                <label class="col-md-2 control-label"><span class="text-bright">*</span>客服系统</label>
+                <div class="col-md-5">
+                    <div class="switch-inline">
+                        <input type="checkbox" name="is_use" id="is_use" {if $info['is_use']==1}checked{/if}>
+                        <label for="is_use" class=""></label>
+                    </div>
+                    <p class="help-block">关闭后，会员将无法使用客服系统与客服沟通</p>
+                </div>
+            </div>
+            
+            <div class="form-group">
+				<label class="col-md-2 control-label">接入域名</label>
+				<div class="col-md-5">
+					<div class="input-group item">
+						<input type="text" class="form-control item" name="domain" value="{$info['domain']}" readonly="readonly">
+						<span class="input-group-btn"><a href="javascript:void(0);" class="btn btn-default copy" data-clipboard-text="{$info['domain']}">复制链接</a></span>
+					</div>
+					<p class="help-block">在使用客服系统过程中更换域名，需要把新的接入域名重新填写至客服平台。</p>
+				</div>
+			</div>
+			
+			<div class="form-group">
+                <label class="col-md-2 control-label"><span class="text-bright">*</span>客服标识</label>
+                <div class="col-md-5">
+                    <input type="text" id="seller_code" class="form-control" name="seller_code" required value="{$info['seller_code']}">
+                    <p class="help-block">注册成功后，在 客服系统  》系统设置 里找到客服标识，并填写至该位置，填写错误会导致客服功能无法正常使用。</p>
+                </div>
+            </div>
+        </div>
+        <div class="screen-title">
+            <span class="text">客服端口</span>
+        </div>
+        <div class="form-horizontal pt-15">
+            <div class="form-group">
+				<label class="col-md-2 control-label">客服平台</label>
+				<div class="col-md-5">
+					<div class="input-group item">
+						<input type="text" class="form-control item" name="seller_url" value="{$info['seller_url']}" readonly="readonly">
+						<span class="input-group-btn">
+							<a href="javascript:void(0);" class="btn btn-default copy" data-clipboard-text="{$info['seller_url']}">复制链接</a>
+							<a href="{$info['seller_url']}" class="btn btn-default" target="_blank">前往访问</a>
+						</span>
+					</div>
+					<p class="help-block">客服平台用于管理客服，查看客服数据等。</p>
+				</div>
+			</div>
+            
+            <div class="form-group">
+				<label class="col-md-2 control-label">客服工作端</label>
+				<div class="col-md-5">
+					<div class="input-group item">
+						<input type="text" class="form-control item" name="service_url" value="{$info['service_url']}" readonly="readonly">
+						<span class="input-group-btn">
+							<a href="javascript:void(0);" class="btn btn-default copy" data-clipboard-text="{$info['service_url']}">复制链接</a>
+							<a href="{$info['service_url']}" class="btn btn-default" target="_blank">前往访问</a>
+						</span>
+					</div>
+					<p class="help-block">客服账户需要前往“客服平台”添加或管理，用于客服与会员之间的聊天沟通。</p>
+				</div>
+			</div>
+            
+            <div class="form-group"></div>
+            <div class="form-group">
+                <label class="col-md-2 control-label"></label>
+                <div class="col-md-8">
+                    <button class="btn btn-primary" type="submit">保存</button>
+                </div>
+            </div>
+        </div>
+        </form>
+		{/if}
+		{if(empty($info['seller_code']))}
+  		<div class="realm_1 page1">
+            <div class="domainName">客服系统须知</div>
+            <ul class="domain-ul">
+                <li>1、先前往<a href="{$info['seller_url']}" class="text-primary" target="_blank"> 企聊客服 </a>注册账号。</li>
+                <li>2、登录客服系统，把商城分配的<span class="red"> 接入域名 </span>填写至“客服系统 -> 系统设置”里的<span class="red"> 接入域名 </span>输入框里并保存。</li>
+                <li>3、将“客服系统 -> 系统设置”里的<span class="red"> 客服标识 </span>复制并填写至商城客服配置。</li>
+                <li>4、如已了解清楚，请点击下方按钮配置客服系统。</li>
+            </ul>
+            <div class="toDomain" style="margin-top: 40px;">
+                <a href="javascript:void(0);" class="btn btn-primary" onclick="javascript:step(1);">我已了解，去配置</a>
+            </div>
+        </div>
+        <div class="page2" style="display: none">
+			<div class="stepItems">
+			    <ul class="part3-steps">
+			     <li class="part3-step current">注册客服平台账号</li>
+			     <li class="part3-step">填写客服标识</li>
+			    </ul>
+			</div>
+            <form class="form-horizontal">
+	            <div class="form-group">
+					<label class="col-md-2 control-label"><span class="text-bright">*</span>客服平台</label>
+					<div class="col-md-5">
+						<div class="input-group item">
+							<input type="text" class="form-control item" value="{$info['seller_url']}" readonly="readonly">
+							<span class="input-group-btn">
+								<a href="javascript:void(0);" class="btn btn-default copy" data-clipboard-text="{$info['seller_url']}">复制链接</a>
+								<a href="{$info['seller_url']}" class="btn btn-default" target="_blank">前往访问</a>
+							</span>
+						</div>
+						<p class="help-block">初次使用请前往客服平台注册属于自己的账号</p>
+					</div>
+				</div>
+	            <div class="form-group">
+					<label class="col-md-2 control-label"><span class="text-bright">*</span>接入域名</label>
+					<div class="col-md-5">
+						<div class="input-group item">
+							<input type="text" class="form-control item" value="{$info['domain']}" readonly="readonly">
+							<span class="input-group-btn">
+								<a href="javascript:void(0);" class="btn btn-default copy" data-clipboard-text="{$info['domain']}">复制链接</a>
+							</span>
+						</div>
+						<p class="help-block">把该域名填写至<span class="red"> 客服系统  -> 系统设置 </span>里的<span class="red"> 接入域名 </span>输入框里并保存。</p>
+					</div>
+				</div>
+                <div class="form-group">
+                    <label class="col-md-2 control-label"></label>
+                    <div class="col-md-8">
+                        <a href="javascript:void(0);"  class="btn btn-default mr-10" onclick="javascript:returnstep(2);">上一步</a>
+                        <a href="javascript:void(0);" class="btn btn-primary" onclick="javascript:step(2);">下一步</a>
+                    </div>
+                </div>
+            </form>
+        </div>
+        <div class="page3" style="display: none">
+			<div class="stepItems">
+			    <ul class="part3-steps">
+			     <li class="part3-step current">注册客服平台账号</li>
+			     <li class="part3-step current">填写客服标识</li>
+			    </ul>
+			</div>
+            <form class="form-horizontal form-validate2">
+	            <div class="form-group">
+	                <label class="col-md-2 control-label"><span class="text-bright">*</span>客服标识</label>
+	                <div class="col-md-5">
+	                    <input type="text" id="seller_code" class="form-control" name="seller_code" required value="">
+	                    <p class="help-block">将<span class="red"> 客服系统  -> 系统设置 </span>里的<span class="red"> 客服标识 </span>复制并输入该输入框并保存。</p>
+	                </div>
+	            </div>
+                <div class="form-group">
+                    <label class="col-md-2 control-label"></label>
+                    <div class="col-md-8">
+                        <a href="javascript:void(0);"  class="btn btn-default mr-10" onclick="javascript:returnstep(3);">上一步</a>
+                        <button class="btn btn-primary" type="submit">保存</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+		{/if}
+        <!-- page end -->
+{/block}
+{block name="script"}
+<script>
+    require(['util'],function(util){
+    	util.copy();
+        //提交数据
+        var flag = false;
+        {if($info['seller_code'])}
+        util.validate($('.form-validate'), function (form) {
+        	var is_use = $("input[name='is_use']").is(':checked')?1:0;
+        	var seller_code = $("#seller_code").val();
+            if (flag)return;
+        	var data = {};
+            flag = true;
+        	data.is_use = is_use;
+        	data.seller_code = seller_code;
+            $.ajax({
+                type: "post",
+                url:'{$saveSettingUrl}',
+                data: data,
+                success:function (data) {
+                    if (data['code'] > 0) {
+                        util.message(data["message"], 'success',function(){
+                        	flag = false;
+        				});
+                    } else {
+                        util.message(data["message"], 'danger',function(){
+                        	flag = false;
+        				});
+                    }
+                }
+            });
+        });
+        {/if}
+        {if(empty($info['seller_code']))}
+        util.validate($('.form-validate2'), function (form) {
+        	var seller_code = $("#seller_code").val();
+            if (flag)return;
+        	var data = {};
+            flag = true;
+        	data.seller_code = seller_code;
+            $.ajax({
+                type: "post",
+                url:'{$addQlkefuUrl}',
+                data: data,
+                success:function (data) {
+                    if (data['code'] > 0) {
+                        util.message(data["message"], 'success',function(){
+                        	window.location.href="{:__URL('ADDONS_MAINqlkefuSetting')}";
+        				});
+                    } else {
+                        util.message(data["message"], 'danger',function(){
+                        	flag = false;
+        				});
+                    }
+                }
+            });
+        });
+        {/if}
+    })
+    function step(n){
+    	$(".page"+n).hide();
+    	$(".page"+(n+1)).show();
+    }
+    function returnstep(n){
+    	$(".page"+n).hide();
+    	$(".page"+(n-1)).show();
+    }
+</script>
+{/block}

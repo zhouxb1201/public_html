@@ -1,0 +1,51 @@
+{if condition="$error_message == ''"}
+<div class="goods-dialog">
+    <div class="dialog-box tab-content">
+        <table class="table v-table table-auto-center">
+            <thead>
+            <tr>
+                <th>用户唯一标示</th>
+                <th>操作</th>
+            </tr>
+            </thead>
+            <tbody id="tester_list">
+            {volist name='list' id='vo'}
+            <tr>
+                <td>{$vo.user_str}</td>
+                <td><a href="javascript:void(0)" data-str="{$vo.user_str}" class="text-primary J-unbind">解除绑定</a></td>
+            </tr>
+            {/volist}
+            </tbody>
+        </table>
+    </div>
+</div>
+{else /}
+<h1>{$error_message}</h1>
+{/if}
+<script>
+    require(['util'], function (util) {
+        $("#tester_list").on('click', '.J-unbind', function () {
+            var user_str = $(this).data('str');
+            var $this = $(this);
+            if (user_str) {
+                $.ajax({
+                    type: 'POST',
+                    url: '{$unBindTesterUrl}',
+                    data: {
+                        'user_str': user_str
+                    },
+                    success: function (data) {
+                        if (data.code > 0) {
+                            $this.parents('tr').remove();
+                            util.message(data.message, 'success');
+                        } else {
+                            util.message(data.message);
+                        }
+                    }
+                })
+            } else {
+                util.message('空的体验者标识');
+            }
+        })
+    })
+</script>

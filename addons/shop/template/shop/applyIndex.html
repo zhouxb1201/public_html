@@ -1,0 +1,83 @@
+
+<!--头部-->
+<div class="header J-header" style='display:none'>
+    <div class="w w1200 clearfix">
+        <div class="fl oneItem">
+            <div class="logo">
+                <a href="{:__URL('SHOP_MAIN')}" class="logo_a"><img src="{if $pc_info['logo']}{$pc_info['logo']}{else}https://pic.vslai.com.cn/upload/default/20190404165128.png{/if}" alt=""></a>
+            </div>
+        </div>
+    </div>
+</div>
+{block name="main"}
+<div class="v-layout mJoin">
+    
+    <div class="join-banner bg-full">
+        <div class="w1200">
+            <div class="user-box">
+                <div class="user-joinin">
+                    <h3>亲爱的：{$member_info.user_name}</h3>
+                    <dl>
+                        <dt>欢迎来到 {$web_info['title']}</dt>
+                        <dd> 若您还没有填写入驻申请资料<br> 请点击“
+                            <a href="{:__URL('ADDONS_SHOP_MAIN','addons=applyFristAgreement')}">我要入驻</a>”进行入驻资料填写</dd>
+                        <dd>若您的店铺还未开通<br> 请通过“
+                            <a href="{:__URL('ADDONS_SHOP_MAIN','addons=applySecondCompanyInfo')}">查看入驻进度</a>”了解店铺开通的最新状况 </dd>
+                    </dl>
+                    <div class="bottom">
+                        {if condition="$apply_state eq 'is_system' "}
+                        <a href="{:__URL('ADMIN_MAIN/index/businessCenter')}">进入商家管理中心</a>
+                        {elseif condition="$apply_state eq 'apply' "/}
+                                <a href="{:__URL('ADDONS_SHOP_MAIN','addons=applyFristAgreement')}">我要入驻</a>
+                        {elseif condition="$apply_state eq 'is_apply' or $apply_state eq 'refuse_apply' "/}
+                                <a href="{:__URL('ADDONS_SHOP_MAIN','addons=applySecondCompanyInfo')}">查看入驻进度</a>
+                        {/if}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="indextip">
+        <div class="w1200">
+            <div class="title"><i></i><h3>贴心提示</h3></div>
+            <span class="content">【{$web_info['title']}】平台提供各类专业管家服务，协助您开通店铺、运营店铺、组织营销活动及分析运营数据，悉心为您解答各类疑问，引导您按相关规则展开运营；我们将竭尽全力，为您的店铺保驾护航。</span>
+        </div>
+    </div>
+
+    <div class="join-process">
+        <h2 class="join-title">入驻流程</h2>
+        <div class="joinin-index-step">
+            <img src="/template/shop/new/public/image/商家入驻/店铺开通.png" alt="">
+        </div>
+    </div>
+
+    <div class="join-guide">
+        <h2 class="join-title">入驻指南</h2>
+        <ul class="clearfix w1200 tabs">
+            <li class="active"><a href="#tab1">{$shopProtocol['direction']['title']}</a></li>
+            <li><a href="#tab2">{$shopProtocol['standard']['title']}</a></li>
+            <li><a href="#tab3">{$shopProtocol['demand']['title']}</a></li>
+            <li><a href="#tab4">{$shopProtocol['cost']['title']}</a></li>
+        </ul>
+        <div class="tab_container w1100">
+            <div id="tab1" class="tab_content" >
+                {$shopProtocol["direction"]["content"]}
+            </div>
+            <div id="tab2" class="tab_content" >{$shopProtocol["standard"]["content"]}</div>
+            <div id="tab3" class="tab_content" >{$shopProtocol["demand"]["content"]}</div>
+            <div id="tab4" class="tab_content" >{$shopProtocol["cost"]["content"]}</div>
+        </div>
+    </div>
+
+</div>
+{/block}
+{block name="javascript"}
+<script>
+    require(['common','dialog'], function (common,dialog) {
+        common.tabToggle();
+        dialog.applyOpration();
+        dialog.isLogin();
+    });
+</script>
+{/block}

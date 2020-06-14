@@ -1,0 +1,479 @@
+/*----reset-----*/
+*{margin:0;padding:0;border:0;outline:0;box-sizing: border-box;background-repeat: no-repeat;background-position: center center;font-weight: lighter;}
+body{background: #FFF;max-width: 16rem;font-size: .65rem;}
+html{font-size: 40px;}
+ul,li{list-style: none;}
+body{max-width: 640px;margin: 0 auto;font-family: 'Microsoft Yahei';}
+a{text-decoration: none;color: #333333;opacity: 1;font-family: 'Microsoft Yahei';}
+img{width: 100%;border:none;display: block;}
+em{font-style: normal;}
+p{opacity: 1;color: #333;color: rgb(64,64,64);}
+input[type="button"], input[type="submit"], input[type="reset"] {-webkit-appearance: none;}
+textarea { -webkit-appearance: none;}
+.fl{float: left;}
+.fr{float: right;}
+.clearfix {*zoom: 1;}
+.clearfix:after {display: block;content: " ";height: 0;visibility: hidden;clear: both;}
+.light{color: #ef6816;font-style: normal;}
+.flex_box{display: flex;display: -webkit-flex;}
+.flex_box_center{display: flex;display: -webkit-flex;align-items: center;justify-content: center;}
+.flex_1{flex: 1;-webkit-flex: 1;}
+.flex_auto{flex: auto;-webkit-flex: auto;}
+.ai_c{align-items: center;}
+.jc_sb{justify-content: space-between;}
+.mr-5{margin-right: -.5rem;}
+.ml-5{margin-left: -.5rem;}
+.mb-20{margin-bottom: 2rem;}
+.mb-8{margin-bottom: .8rem;}
+.mt-20{margin-top: 2rem;}
+.pd-5{padding: .5rem;}
+.fs-5{font-size: .5rem;}
+.fs-6{font-size: .6rem;}
+.fs-7{font-size: .7rem ;}
+.fs-8{font-size: .8rem !important;}
+.c-333{color: #333;}
+.c-666{color: #666;}
+.c-fff{color: #fff;}
+.ws-no{white-space: nowrap;}
+.ta-c{text-align: center;}
+.bor-b-5{height: .5rem;background: #ebebeb;}
+/*----reset end-----*/
+.head .top {
+    height: 2rem;
+    padding: .4rem;
+    background-color: rgba(22, 100, 182, 0.9);
+}
+.flex_box {
+    display: flex;
+    display: -webkit-flex;
+}
+.jc_sb {
+    justify-content: space-between;
+}
+.head .top .h_logo {
+    height: 100%;
+    z-index: 90;
+    position: relative;
+}
+img {
+    width: 100%;
+    border: none;
+    display: block;
+}
+.head {
+    position: fixed;
+    width: 100%;
+    z-index: 10;
+    top: 0;
+}
+.head .top .h_logo img {
+    width: auto;
+    height: 100%;
+}
+.head .h_menu {
+    z-index: 20;
+}
+.head .top .top-icon {
+    display: block;
+    width: 1.4rem;
+    height: 1.4rem;
+    background-size: 1rem;
+    z-index: 90;
+    position: relative;
+}
+.top-tel {
+    background: url("../static/registerM/h_icon_tel.png") no-repeat center;
+    margin-right: .2rem;
+}
+.res_page h1 {
+    font-size: .8rem;
+    text-align: center;
+    color: #0D85D5;
+    padding-top: 1.3rem;
+    line-height: 2rem;
+}
+.res_copyright {
+    text-align: center;
+    font-size: .5rem;
+    padding-top: 2rem;
+    letter-spacing: .05rem;
+}
+.res_copyright p{
+    color: #999
+}
+.all_r {
+    position: fixed;
+    right: .5rem;
+    bottom: 20%;
+    width: 2rem;
+}
+.all_r a {
+    display: block;
+    width: 2rem;
+    height: 2rem;
+    background-size: 2rem;
+    margin-bottom: .4rem;
+}
+.all_r a:nth-child(2) {
+    background-image: url("../static/registerM/icons_02.png");
+}
+
+    .res_page {
+        padding: 0 .8rem;
+        background: none; 
+        height: 100%;
+    }
+    .register_center{
+        width: 100%;
+        background: #fff;
+        overflow: hidden;
+        border: none; 
+        border-radius: 0; 
+        box-shadow: none; 
+        padding: .5rem;
+        border-radius: .5rem;
+    }
+    .register_infor {
+        height: 2rem;
+        overflow: hidden;
+        position: relative;
+        /*margin-top: .4rem;*/
+        border-bottom: 1px solid #ddd;
+    }
+    .register_infor .left_tt {
+        width: 2rem;
+        height: 100%;
+        display: inline-block;
+        float: left;
+        line-height: 2.5rem;
+        text-align: center;
+        color: #333;
+        font-size: .6rem;
+        position: relative;
+    }
+    .register_infor .left_tt.mobile_bp{background-position: -10px -15px;}
+    .register_infor .left_tt.realname_bp{background-position: -10px -70px;}
+    .register_infor .left_tt.password_bp{background-position: -10px -124px;}
+    .register_infor .left_tt.telcoe_bp{background-position: -10px -176px;}
+    .register_infor .input {
+        width: 100%;
+        float: left;
+        margin-left: -2rem;
+        height: 100%;
+        padding: .4rem;
+        padding-left: 2.5rem;
+        font-size: .6rem;
+    }
+    input::-webkit-input-placeholder { /* WebKit browsers*/ 
+    　　color:rgb(204, 204, 204);
+        font-size:.5rem;
+    }
+    input::input-placeholder { /* WebKit browsers*/ 
+    　　color:rgb(204, 204, 204);
+        font-size:.5rem;
+    }
+    .register_infor .input.min {
+        width: 100%; 
+    }
+    .setpwd_but {
+        font-size: .5rem;
+        padding: .48rem .6rem;
+        background: #2c9cf0;
+        border: none;
+        height: 92%;
+        color: #fff;
+        line-height: 1.5;
+        float: none;
+        display: block;
+        position: absolute;
+        right: 2px;
+        top: 2px;
+    }
+    .setpwd_but.ccc{
+        background: #ccc;
+    }
+    .register_but {
+        margin-top: 1.1rem;
+        margin-bottom: .6rem;
+        padding-top: 0;
+        width: 100%;
+        height: auto; 
+        text-align: center;
+    }
+    .register_but a {
+        display: inline-block;
+        width: 90%;
+        background: #029bdb;
+        line-height: 2rem;
+        color: #fff;
+        font-size: .6rem;
+        overflow: hidden;
+        border-radius: 1rem;
+        border: 0;
+    }
+.tips_page .p {
+    padding: 20px;
+    background: #ddd;
+    color: #333;
+    margin: 1rem;
+    font-size: .65rem;
+    line-height: 2;
+    letter-spacing: 1px;
+}
+.tips_page {
+    padding-top: 2rem;
+    padding-bottom: 3rem;
+}
+.tips_page .tips {
+    text-align: center;
+    padding: 1rem 0;
+    width: 100%;
+}
+.tips_page .tips img {
+    width: 100px;
+    height: 100px;
+    margin: 0 auto;
+}
+.tips_page .tips p {
+    color: #ea3737;
+    font-weight: 800;
+    font-size: 16px;
+    padding-top: 10px;
+}
+.tips_page .p span {
+    color: #0d85d5;
+}
+
+.show_msg{
+    width:100%;
+    height:35px;
+    text-align:center;
+    position:fixed;
+    left: 0;
+    z-index: 999;
+}
+.show_span{
+    display: inline-block;
+    height: 35px;
+    padding: 0 15px;
+    line-height: 35px;
+    background:rgba(0,0,0,0.8);
+    border-radius: 50px;
+    color: #fff;
+    font-size: .65rem;
+}
+.f_bottom {
+    display: flex;
+    justify-content: space-between;
+    z-index: 999;
+    position: fixed;
+    border-top: 1px solid #c6c6c6;
+    background: #FFF;
+    width: 100%;
+    bottom: 0;
+}
+.f_bottom a {
+    display: block;
+    float: left;
+    text-align: center;
+    color: #000000;
+    font-size: .45rem;
+    width: 3.15rem;
+    height: 2.45rem;
+    padding-top: 1.5rem;
+    background-position-y: .3rem;
+    background-size: 1.25rem;
+}
+.f_bottom a {
+    margin-left: 0.8rem !important;
+}
+.f_bottom a:nth-child(1) {
+    background-image: url("../static/registerM/bot_i_1.png");
+}
+.f_bottom a:nth-child(2) {
+    background-image: url("../static/registerM/bot_i_2.png");
+}
+.f_bottom a:nth-child(3) {
+    background-image: url("../static/registerM/bot_i_3.png");
+}
+.f_bottom a:nth-child(4) {
+    width: 6.55rem;
+    line-height: 2.45rem;
+    font-size: .75rem;
+    color: #FFF;
+    background: #0D85D5;
+    padding-top: 0;
+}
+/*移动端登录css*/
+    .stage {
+    position: relative;
+    margin-top: .6rem;
+    height: 55px;
+    }
+    .slider {
+    position: absolute;
+    height: 52px;
+    box-shadow: 0 0 3px #999;
+    background-color: #ddd;
+    left: 1px;
+    right: 1px;
+    }
+    .label {
+    background: -webkit-gradient(
+        linear,
+        left top,
+        right top,
+        color-stop(0, #4d4d4d),
+        color-stop(0.4, #4d4d4d),
+        color-stop(0.5, white),
+        color-stop(0.6, #4d4d4d),
+        color-stop(1, #4d4d4d)
+    );
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    -webkit-animation: slidetounlock 3s infinite;
+    -webkit-text-size-adjust: none;
+    line-height: 52px;
+    height: 52px;
+    text-align: center;
+    font-size: 16px;
+    width: 100%;
+    color: #aaa;
+    }
+    @keyframes slidetounlock {
+    0% {
+        background-position: -200px 0;
+    }
+    100% {
+        background-position: 200px 0;
+    }
+    }
+    @-webkit-keyframes slidetounlock {
+    0% {
+        background-position: -200px 0;
+    }
+    100% {
+        background-position: 200px 0;
+    }
+    }
+    .button {
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 52px;
+    height: 52px;
+    background-color: #fff;
+    transition: left 0s;
+    -webkit-transition: left 0s;
+    }
+    .button-on {
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 52px;
+    height: 52px;
+    background-color: #fff;
+    transition: left 1s;
+    -webkit-transition: left 0.5s;
+    }
+    .track {
+    position: absolute;
+    left: 0;
+    top: 0;
+    height: 100%;
+    width: 0;
+    overflow: hidden;
+    transition: width 0s;
+    -webkit-transition: width 0s;
+    }
+    .track-on {
+    position: absolute;
+    left: 0;
+    top: 0;
+    height: 100%;
+    width: 0;
+    overflow: hidden;
+    transition: width 1s;
+    -webkit-transition: width 0.5s;
+    }
+    .icon {
+    width: 32px;
+    height: 32px;
+    position: relative;
+    top: 10px;
+    left: 20px;
+    font-family: sans-serif;
+    }
+    .icon:before {
+    content: ">>";
+    color: #ccc;
+    line-height: 32px;
+    }
+    .spinner {
+    width: 32px;
+    height: 32px;
+    background: url("../static/registerM/ok.png") no-repeat;
+    position: relative;
+    top: 10px;
+    left: 10px;
+    display: none;
+    }
+    @-webkit-keyframes bouncedelay {
+    0%,
+    80%,
+    100% {
+        -webkit-transform: scale(0);
+    }
+    40% {
+        -webkit-transform: scale(1);
+    }
+    }
+    @keyframes bouncedelay {
+    0%,
+    80%,
+    100% {
+        transform: scale(0);
+        -webkit-transform: scale(0);
+    }
+    40% {
+        transform: scale(1);
+        -webkit-transform: scale(1);
+    }
+    }
+    .bg-green {
+    line-height: 52px;
+    height: 52px;
+    text-align: center;
+    font-size: 16px;
+    background-color: #78c430;
+    }
+    .disaleds{
+        background-color: #e4e4e4 !important;
+        pointer-events:none;
+    }
+/*移动端登录css*/
+/*12.13修改*/
+body {
+    background: url('../images/registerMobile/bg.png') top center no-repeat;
+    background-size: cover;
+    position: relative;
+}
+.res_page h1 .logo1{
+    width: 6rem;
+    display: inline-block;
+}
+.res_page h1 .logo2{
+    width: 7rem;
+    display: inline-block;
+}
+.register_infor .left_tt img{
+    width: .6rem;
+    display: inline-block;
+}
+.setpwd_but_new{
+    border-radius: 1rem;
+    background: linear-gradient(to right, #7AE690, #6DCBA8);
+    height: 75%;
+    padding: .38rem .8rem;
+}
+/*12.13修改*/

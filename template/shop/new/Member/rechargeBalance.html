@@ -1,0 +1,191 @@
+
+{extend name="shop/new/base" /}
+
+{block name="head"}
+<!--头部-->
+<div class="header">
+    <div class="w w1200 clearfix">
+        <div class="fl">
+            <div class="logo">
+                <a href="{:__URL('SHOP_MAIN')}"><img src="{$pc_info['logo']}" width="162px" height="50px" alt=""></a>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="navs" style="min-height: 10px;"></div>
+{/block}
+
+{block name="main"}
+
+<div class="v-main" style=" background-color: #eee;padding-bottom: 26px;">
+    <div class="v-main-content  w1000">
+        <div class="pay-info">
+            <dl class="clearfix">
+                <dt>支付流水号：</dt>
+                <dd >{$pay_no}</dd>
+                <input type="hidden" id="trade_no" value="{$pay_no}">
+            </dl>
+            <dl class="clearfix">
+                <dt>充值账号：</dt>
+                <dd>{if $member_info.user_info.user_name}{$member_info.user_info.user_name}{else}{$member_info.user_info.nick_name}{/if}</dd>
+            </dl>
+            <dl class="clearfix">
+                <dt>充值金额：</dt>
+                <dd>
+                    <p><input type="text" class="account-recharge-amount" id="money"> 元</p>
+                    <p class="amount-tips hovers">
+                        <i class="icon-success icon"></i>
+                        <!--<i class="icon-danger icon"></i>-->
+                        <span class="msg">充值<b class="amount"> 1234.00 </b>元</span>
+                    </p>
+                </dd>
+            </dl>
+        </div>
+
+        <div class="pay-method">
+            <div class="tabs-container">
+                <ul class="tabs clearfix" style="background-color: #fff;border-bottom: 1px solid #e4e4e4">
+                    <li class=""><a href="#tab1">第三方平台</a></li>
+                    <!--<li class=""><a href="#tab2">银行卡</a></li>-->
+                </ul>
+                <div class="tab_container topUp-tc">
+
+                    <div id="tab1" class="tab_content" style="display: none; ">
+                        <div class="threePlatform">
+                            {if $wxpay==1}
+                            <a href="javascript:void(0);" class="selected" data-type=2>
+                                <img src="__TEMP__/shop/new/public/image/wechat.png" alt="">
+                                <i></i>
+                            </a>
+                            {/if}
+                            {if $alipay==1}
+                            <a href="javascript:void(0);" class="" data-type=3>
+                                <img src="__TEMP__/shop/new/public/image/alipay.png" alt="">
+                                <i></i>
+                            </a>
+                            {/if}
+                        </div>
+                    </div>
+
+                    <!--<div id="tab2" class="tab_content" style="display: none; ">-->
+                        <!--<div class="threePlatform">-->
+                            <!--<a href="javascript:void(0);" class="selected">-->
+                                <!--<img src="../../public/image/会员中心/中国银行.png" alt="">-->
+                                <!--<i></i>-->
+                            <!--</a>-->
+                            <!--<a href="javascript:void(0);">-->
+                                <!--<img src="../../public/image/会员中心/中国银行.png" alt="">-->
+                                <!--<i></i>-->
+                            <!--</a>-->
+                            <!--<a href="javascript:void(0);">-->
+                                <!--<img src="../../public/image/会员中心/中国银行.png" alt="">-->
+                                <!--<i></i>-->
+                            <!--</a>-->
+                            <!--<a href="javascript:void(0);">-->
+                                <!--<img src="../../public/image/会员中心/中国银行.png" alt="">-->
+                            <!--</a>-->
+                            <!--<a href="javascript:void(0);">-->
+                                <!--<img src="../../public/image/会员中心/中国银行.png" alt="">-->
+                            <!--</a>-->
+                            <!--<a href="javascript:void(0);">-->
+                                <!--<img src="../../public/image/会员中心/中国银行.png" alt="">-->
+                            <!--</a>-->
+                            <!--<a href="javascript:void(0);">-->
+                                <!--<img src="../../public/image/会员中心/中国银行.png" alt="">-->
+                            <!--</a>-->
+                            <!--<a href="javascript:void(0);">-->
+                                <!--<img src="../../public/image/会员中心/中国银行.png" alt="">-->
+                            <!--</a>-->
+                            <!--<a href="javascript:void(0);">-->
+                                <!--<img src="../../public/image/会员中心/中国银行.png" alt="">-->
+                            <!--</a>-->
+                            <!--<a href="javascript:void(0);">-->
+                                <!--<img src="../../public/image/会员中心/中国银行.png" alt="">-->
+                            <!--</a>-->
+                            <!--<a href="javascript:void(0);">-->
+                                <!--<img src="../../public/image/会员中心/中国银行.png" alt="">-->
+                            <!--</a>-->
+                            <!--<a href="javascript:void(0);" class="more">更多银行 <b class="icon-dir-down icon"></b></a>-->
+                        <!--</div>-->
+                    <!--</div>-->
+
+
+
+                </div>
+            </div>
+        </div>
+        <div class="toPay">
+            <a href="javascript:void(0);" class="border btnSave">前往支付</a>
+        </div>
+
+    </div>
+</div>
+
+{/block}
+{block name="bottom"}
+{/block}
+{block name="javascript"}
+    <script>
+        require(['common','dialog'], function (common,Dialog) {
+            common.tabToggle();
+            Dialog.withAccount(".threePlatform", "a", "selected");
+            $(".account-recharge-amount").blur(function() {
+                var obj = $(this);
+                var reg = /^\d+((.{0,1})\d{0,2})$/;
+                if(obj.val()==""){
+                    obj.parents().siblings().children("i").addClass("icon-danger").removeClass("icon-success");
+                    obj.parents().siblings().children(".msg").html("充值金额不能为空");
+                }
+                else{
+                    if (!reg.test(obj.val())) {
+                        obj.parents().siblings(".amount-tips").removeClass("hovers");
+                        obj.parents().siblings().children("i").addClass("icon-danger").removeClass("icon-success");
+                        obj.parents().siblings().children(".msg").html("请输入正确金额");
+                        obj.val(1);
+                    }
+                    else{
+                        obj.parents().siblings(".amount-tips").removeClass("hovers");
+                        obj.parents().siblings().children("i").addClass("icon-success").removeClass("icon-danger");
+                        obj.parents().siblings().children(".msg").html("充值<b class='amount'>" +obj.val()+ "</b>元");
+                    }
+                }
+            })
+            $('.btnSave').on('click',function(){
+                var c_type = $(".selected").data('type');
+                var out_trade_no = $.trim($("#trade_no").val());
+                var cash = $.trim($("#money").val());
+                if(c_type == null || c_type == ""){
+                    layer.msg('请选择充值平台');
+                    return false;
+                }
+                if(cash==''){
+                    layer.msg('请填写充值金额');
+                    $("#money").focus();
+                    return false;
+                }
+                $.ajax({
+                    type: "post",
+                    url:  __URL(SHOPMAIN + "/member/createRechargeOrder"),
+                    data: {
+                        "out_trade_no":out_trade_no,
+                        "recharge_money":cash
+                    },
+                    success: function (data) {
+                        if(data['code']>0){
+                            var url='';
+                            if(c_type==2){
+                                url = __URL(SHOPMAIN+'/pay/wchatRechargePay?no='+out_trade_no);
+                            }
+                            if(c_type==3){
+                                url = __URL(SHOPMAIN+'/pay/aliRechargePay?no='+out_trade_no);
+                            }
+                            window.location.href = url;
+                        }else{
+                            layer.msg('创建充值订单失败');
+                        }
+                    }
+                })
+            })
+        });
+    </script>
+{/block}

@@ -1,0 +1,143 @@
+
+<!--头部-->
+{if $ntype=='shop' && $shopStatus}
+<div class="shopIndex-main">
+<div class="header shopHeader">
+    <div class="w w1200 clearfix">
+        <div class="fl">
+            <div class="logo">
+                <a href="{:__URL('SHOP_MAIN')}"><img src="{if $pc_info['logo']}{$pc_info['logo']}{else}https://pic.vslai.com.cn/upload/default/20190404165128.png{/if}" alt="{$shop_info['base_info']['shop_name']}"></a>
+            </div>
+            <div class="shop">店铺:
+                <span>{$shop_info['base_info']['shop_name']}</span>
+                <a href="{:__URL('ADDONS_SHOP_MAIN','addons=shopIndex&shop_id='.$shop_id)}" class="enterShop">进入店铺</a>
+                <span class="desc">
+                    <span>[描述 <b class="red shu">{$shop_info['base_info']['shop_evaluate']['shop_desc']}</b></span>
+                    <span>服务 <b class="red shu">{$shop_info['base_info']['shop_evaluate']['shop_service']}</b></span>
+                    <span>物流 <b class="red">{$shop_info['base_info']['shop_evaluate']['shop_stic']}</b>]</span>
+                </span>
+<!--                <a href="javascript:void(0);"><i class="icon icon-sub"></i></a>-->
+            </div>
+        </div>
+        <div class="fr">
+            <div class="search">
+                <input type="text" class="search_input J-keyword" placeholder="" value="{$keyword}">
+                <button type="button" class="search_store J-shop_goods">搜店铺</button>
+                <button type="button" class="search_web J-platform_goods">搜全站</button>
+            </div>
+            <div class="collect_code">
+                {if condition="$is_member_fav_shop eq 0"}
+                        <a href="javascript:void(0);" class='J-collectShop' data-id="{$shop_id}"><i class="icon icon-collectioned"></i><span class="J-collectWord">收藏店铺</span></a>
+                {elseif condition="$is_member_fav_shop eq -1"}
+                        <a href="{:__URL('SHOP_MAIN/login/index')}"><i class="icon icon-collectioned"></i><span>收藏店铺</span></a>
+                {else/}
+                <a href="javascript:void(0);"  class='J-cancelCollectShop' data-id="{$shop_id}"><i class="icon icon-collection"></i><span class="J-collectWord">取消收藏</span></a>
+                {/if}
+                <a href="javascript:void(0);" class="prs">
+                   <i class="icon icon-stretch2"></i>
+                   用手机逛本店
+                   <div class="qr-codes"><img src="../../public/image/店铺首页/qr.png" alt=""></div>
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+<!--店名-->
+{if $shopBanner && $ntype=='shop'}
+{$shopBanner}
+{/if}
+<!--导航栏-->
+<div class="navs">
+    <div class="w w1200">
+        <div class="nav_main">
+            <ul class="clearfix">
+            {foreach $navigator_list as $nav}
+            <li><a {if $nav['opennew']} target="_blank" {/if} href="{$nav['url']}" {if $nav['active'] == 1} class="curr" {/if} title="{$nav['name']}">{$nav['name']}</a></li>
+            {/foreach}
+            </ul>
+        </div>
+    </div>
+</div>
+</div>
+{else}
+<div class="header shopHeader">
+    <div class="w w1200 clearfix">
+
+        <div class="fl oneItem">
+            <div class="logo">
+                <a href="{:__URL('SHOP_MAIN')}" class="logo_a"><img src="{if $pc_info['logo']}{$pc_info['logo']}{else}https://pic.vslai.com.cn/upload/default/20190404165128.png{/if}" alt=""></a>
+            </div>
+        </div>
+
+        <div class="fl twoItem">
+            <ul class="search-tabs clearfix">
+                <li class="active" data-type="goods">商品</li>
+                {if $shopStatus}
+                <li data-type="shop">店铺</li>
+                {/if}
+            </ul>
+            <div class="search">
+                <input type="text" class="search_input J-keyword" placeholder="{$default_keywords}" value="{if condition="$keyword !=''"}{$keyword}{/if}">
+                <button type="button" class="searchs J-search">搜索</button>
+            </div>
+            <div class="quickSearch">
+                {$keywordList}
+            </div>
+        </div>
+
+        <div class="fl threeItem">
+            <div class="carBorder">
+                <a href="{:__URL('SHOP_MAIN/goods/cart')}" class="mScar J-cart"><i class="icon-cart icon carsIcon"></i> 我的购物车</a>
+                <div class="circle">1</div>
+                <div class="dorpdown-layer">
+                    <h5>最新加入的商品</h5>
+                    <div class="dorpdown-layer-box  J-cartList">
+                    </div>
+                    <div class="dorpdown-layer-footer clearfix">
+                        <span class="fl total J-allMoney">共一种商品，总金额258.00元</span>
+                        <a href="{:__URL('SHOP_MAIN/goods/cart')}" class="fr">去购物车结算</a>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>
+<!--导航-->
+<div class="navs">
+    <div class="w1200 clearfix pr">
+        <ul class="fl clearfix">
+            {if $navSet['showcat']}
+            <li class="allGoodSort navitems-group {if $navSet['slide']} active{/if}">
+                <a href="{:__URL('SHOP_MAIN/goods/category')}" class="fore">全部分类</a>
+                <div class="nav-con {if !$navSet['slide']} hovers{/if}">
+                    <ul class="normal-nav J-category">
+                        {foreach $goods_category_one as $key=>$cat}
+                        <li class="pr navitems-group" data-id="{$cat['category_id']}"><a class="fore" href="{:__URL('SHOP_MAIN/goods/goodslist','category_id='.$cat['category_id'])}" target="_blank" title="{$cat['category_name'] ? : $cat['short_name']}">{$cat['category_name'] ? : $cat['short_name']}<span class="pa0"><b class="icon-right-arrow icon-dir-right3"></b></span></a> </li>
+                        {/foreach}
+                    </ul>
+                    <div class="index-sort-detail">
+                        <div class="cate-list">
+                            <div class="sort-two-item J-childcategory">
+                                <!--标题-->
+                                <div class="sort-two-item-title">
+                                    <h4><a href="javascript:void(0);">女装</a></h4>
+                                    <a class="more" href="javascript:void(0);">更多></a>
+                                </div>
+                                <!--三级分类-->
+                                <div class="sort-three-item">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </li>
+            {/if}
+            {foreach $navigator_list as $nav}
+            <li class="navitems-group"><a class="fore" {if $nav['opennew']} target="_blank" {/if} href="{$nav['url']}" {if $nav['active'] == 1} class="curr" {/if} title="{$nav['name']}">{$nav['name']}</a></li>
+            {/foreach}
+        </ul>
+    </div>
+</div>
+{/if}

@@ -1,0 +1,102 @@
+{block name="main"}
+<div class="col-md-12 padding-15 bg-f5 mb-20">
+    <div class="media text-left ">
+        <div class="media-left">
+            <p><img src="{:__IMG($giftDetail['picture_detail']['pic_cover_mid'])}" style="width:60px;height:60px;"></p>
+        </div>
+        <div class="media-body max-w-300 ">
+            <div class="line-2-ellipsis line-title">
+                商品名称：{$giftDetail['gift_name']}
+            </div>
+            <div class="line-2-ellipsis line-title">
+                售价：￥{$giftDetail['price']}
+            </div>
+            <div class="line-2-ellipsis line-title">
+                已赠：{$giftDetail['sended']}
+            </div>
+            <div class="line-2-ellipsis line-title">
+                剩余库存：{$giftDetail['stock']}
+            </div>
+        </div>
+    </div>
+</div>
+<table class="table v-table table-auto-center">
+    <thead>
+        <tr>
+            <th>订单号</th>
+            <th>赠送方式</th>
+            <th>赠送用户</th>
+            <th>赠送数量</th>
+            <th>赠送时间</th>
+        </tr>
+    </thead>
+    <tbody id="gift_shopping_list">
+    </tbody>
+</table>
+<input type="hidden" id="page_index">
+<input type="hidden" id="gift_id" value="{$giftDetail['promotion_gift_id']}">
+<nav aria-label="Page navigation" class="clearfix">
+    <ul id="page" class="pagination pull-right"></ul>
+</nav>
+{/block}
+{block name="script"}
+<script id="shop_curr_list" type="text/html">
+    <%each data as item index%>
+    <tr>
+        <td><%item.no%></td>
+         <td>
+            <%if item.type==1%>
+            <span class="text-success">满减送</span>
+            <%else if item.type==2%>
+            <span class="text-success">注册营销</span>
+            <%else if item.type==3%>
+            <span class="text-success">礼品券</span>
+            <%else%>
+            <span class="text-success">其他</span>
+            <%/if%>
+        </td>
+        <td><%item.user_tel%></td>
+        <td><%item.num%></td>
+        <td><%item.create_time%></td>
+    </tr>
+    <%/each%>
+</script>
+<script>
+    require(['util', 'tpl'], function (util, tpl) {
+        util.initPage(LoadingInfo);
+        function LoadingInfo(page_index) {
+            $("#page_index").val(page_index);
+            var gift_id = $('#gift_id').val();
+            if(!gift_id){
+                return;
+            }
+            $.ajax({
+                type: "post",
+                url: "{$giftRecordUrl}",
+                data: {
+                    "page_index": page_index,
+                    "gift_id": gift_id
+
+                },
+                success: function (data) {
+                    var html = '<tr><td class="h-200" colspan="5">暂无符合条件的数据记录</td></tr>';
+                    if (data.data) {
+                        if (tpl('shop_curr_list', data)) {
+                            $("#gift_shopping_list").html(tpl('shop_curr_list', data));
+                        } else {
+                            $("#gift_shopping_list").html(html);
+                        }
+                        $('#page').paginator('option', {
+                            totalCounts: data['total_count']  // 动态修改总数
+                        });
+                    } else {
+                        $("#gift_shopping_list").html(html);
+                    }
+                }
+            });
+        }
+    })
+
+
+</script>
+{/block}

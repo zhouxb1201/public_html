@@ -1,0 +1,131 @@
+{block name="resource"}
+<style>
+    .label-danger a{padding-top:5px;}
+</style>
+{/block}
+{block name="main"}
+<!-- page -->
+<form class="form-horizontal pt-15 form-validate widthFixedForm">
+
+    <div class="form-group">
+        <label class="col-md-2 control-label">分类名称</label>
+        <div class="col-md-5">
+            <input type="text" class="form-control" id="category_name" name="category_name" required value="{$integral_cate_list.category_name}">
+            <input type="hidden" name="category_id" value="{$integral_cate_list.integral_category_id}" id="category_id">
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="col-md-2 control-label">分类简称</label>
+        <div class="col-md-5">
+            <input type="text" class="form-control" id="short_name" name="short_name" value="{$integral_cate_list.short_name}">
+            <div class="mb-0 help-block">用于移动端</div>
+        </div>
+        
+    </div>
+    <div class="form-group">
+        <label class="col-md-2 control-label">商品品类</label>
+        <div class="col-md-5">
+            <select class="form-control" id="attr_id">
+                <option value="">选择类型</option>
+                {volist name="goodsAttributeList" id="vo"}
+                <option value="{$vo.attr_id}" {if $integral_cate_list['attr_id'] == $vo.attr_id} selected {/if}>{$vo.attr_name}</option>
+                {/volist}
+            </select>
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="col-md-2 control-label">是否可见</label>
+        <div class="col-md-5">
+            <div class="switch-inline">
+                <input type="checkbox" id="is_visible" name="is_visible" {if $integral_cate_list.is_visible == 1}checked{/if}>
+                <label for="is_visible" class=""></label>
+            </div>
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="col-md-2 control-label">排序</label>
+        <div class="col-md-5">
+            <input type="text" class="form-control" id="sort" name="sort" min="0" value="{$integral_cate_list.sort}">
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="col-md-2 control-label">分类图片</label>
+        <div class="col-md-5">
+            {if $integral_cate_list.category_pic}
+                <div class="picture-list" id="pictureList">
+                    <a href="javascript:;" class="close-box"><i class="icon icon-danger" data-id="1091" style="margin-right:10px;" title="删除"></i>
+                        <img src="{$integral_cate_list.category_pic}">
+                    </a>
+                </div>
+            {else}
+                <div class="picture-list" id="pictureList">
+                    <a href="javascript:void(0);" class="plus-box" data-toggle="singlePicture"><i class="icon icon-plus"></i></a>
+                </div>
+            {/if}
+            <p class="help-block">建议100 * 100，支持JPG\GIF\PNG格式，用于移动端</p>
+        </div>
+        
+    </div>
+
+    <div class="form-group">
+        <label class="col-md-2 control-label"></label>
+        <div class="col-md-8">
+            <button href="javascript:void(0);" class="btn btn-primary" id="add_category" type="submit">添加</button>
+            <a href="javascript:history.go(-1);" class="btn btn-default">返回</a>
+        </div>
+    </div>
+
+</form>
+<!-- page end -->
+{/block}
+{block name="script"}
+<script>
+    require(['util'],function(util){
+        var flag = false;
+        util.validate($('.form-validate'),function(form) {
+            var category_id = $('#category_id').val();
+            var category_name = $("#category_name").val();
+            var short_name = $("#short_name").val();
+            var sort = $("#sort").val();
+            if ($("#is_visible").prop("checked")) {
+                var is_visible = 1;
+            } else {
+                var is_visible = 0;
+            }
+            var category_pic = $('.picture-list img').attr("src");
+            var attr_id = $("#attr_id").val();//商品品类
+            if (attr_id.length > 0) {
+                var attr_name = $("#attr_id").find("option:selected").text();
+            } else {
+                var attr_name = '';
+            }
+            if(flag){
+                return false;
+            }
+            flag = true;
+            $.ajax({
+                type: "post",
+                url: "{$addIntegralCategory}",
+                data: {
+                    'category_id':category_id,
+                    'category_name': category_name,
+                    'sort': sort,
+                    'is_visible': is_visible,
+                    'category_pic': category_pic,
+                    "short_name": short_name,
+                    "attr_id": attr_id,
+                    "attr_name": attr_name
+                },
+                async: true,
+                success: function (data) {
+                    if (data["code"] > 0) {
+                        util.message(data["message"], 'success', "{:__URL('platform/Menu/addonmenu?addons=integralCategory')}");
+                    } else {
+                        util.message(data["message"], 'danger');
+                    }
+                }
+            });
+        })
+    })
+</script>
+{/block}

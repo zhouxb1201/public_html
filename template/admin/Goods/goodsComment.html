@@ -1,0 +1,434 @@
+{extend name="admin/base" /}
+{block name="resources"/}
+<!--<link rel="stylesheet" href="__STATIC__/lib/bootstrap-daterangepicker-master/daterangepicker.css">-->
+{/block}
+{block name="main"}
+
+<div class="row evalbox">
+    <div class="col-sm-4">
+        <div class="item">
+            <div class="num">{$evaluate_count.praise_count}</div>
+            <div class="evaluation">好评</div>
+        </div>
+    </div>
+    <div class="col-sm-4">
+        <div class="item">
+            <div class="num">{$evaluate_count.center_count}</div>
+            <div class="evaluation">中评</div>
+        </div>
+    </div>
+    <div class="col-sm-4">
+        <div class="item">
+            <div class="num">{$evaluate_count.bad_count}</div>
+            <div class="evaluation">差评</div>
+        </div>
+    </div>
+</div>
+
+<!--<div class="evalNav">
+    <span>评价时间：</span>
+    <span class="pr">
+        <input type="text" id="startDate" name="startDate" placeholder="开始时间" style="width: 150px;display: inline-block" class="form-control">
+        <label for="startDate"><i class="fa icon-calendar"></i></label>
+    </span>
+    <span>~</span>
+    <span class="pr">
+        <input type="text" id="endDate" name="endDate" placeholder="结束时间" style="width: 150px;display: inline-block" class="form-control">
+        <label for="endDate"><i class="fa icon-calendar"></i></label>
+    </span>
+    <span class="pr10">评价用户：</span>
+    <span><input type="text" placeholder="用户名称" id="member_name" class="form-control" style="display: inline-block;vertical-align: middle;width: 150px"></span>
+    <span class="pr10">评价类型：</span>
+    <span>
+        <select id="explain_type" class="form-control" style="display: inline-block;vertical-align: middle;width: 150px">
+            <option value="0">全部</option>
+            <option value="1">好评</option>
+            <option value="2">中评</option>
+            <option value="3">差评</option>
+        </select>
+    </span>
+    <span class="btn btn-primary search_to">搜索</span>
+</div>-->
+<form class="v-filter-container">
+    <div class="filter-fields-wrap">
+        <div class="filter-item clearfix">
+            <div class="filter-item__field">
+
+                <div class="v__control-group">
+                    <label class="v__control-label">评价时间</label>
+                    <div class="v__controls v-date-input-control">
+                        <label for="orderTime">
+                            <input type="text" class="v__control_input pr-30" id="orderTime" placeholder="请选择时间" autocomplete="off" data-types="datetime">
+                            <i class="icon icon-calendar"></i>
+                            <input type="hidden" id="startDate">
+                            <input type="hidden" id="endDate">
+                        </label>
+                    </div>
+                </div>
+
+                <div class="v__control-group">
+                    <label class="v__control-label">评价用户</label>
+                    <div class="v__controls">
+                        <input type="text" id="member_name" class="v__control_input" placeholder="用户名称" autocomplete="off">
+                    </div>
+                </div>
+
+                <div class="v__control-group">
+                    <label class="v__control-label">评价类型</label>
+                    <div class="v__controls">
+                        <select class="v__control_input" id="explain_type">
+                            <option value="">全部</option>
+                            <option value="5">好评</option>
+                            <option value="3">中评</option>
+                            <option value="1">差评</option>
+                        </select>
+                    </div>
+                </div>
+
+
+
+            </div>
+        </div>
+        <div class="filter-item clearfix">
+            <div class="filter-item__field">
+                <div class="v__control-group">
+                    <label class="v__control-label"></label>
+                    <div class="v__controls">
+                        <a class="btn btn-primary search_to"><i class="icon icon-search"></i> 搜索</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</form>
+
+<!--表格-->
+<table class="table v-table evalTable">
+    <thead>
+        <tr>
+            <th style='width:15%;'>评价信息</th>
+            <th style='width:30%'>评论</th>
+            <th style='width:10%'>评价人</th>
+            <th style='width:30%;'>商品信息</th>
+            <th style='width:30%;'>操作</th>
+        </tr>
+    </thead>
+    <tbody id='productTbody'>
+
+    </tbody>
+</table>
+<div class="page clearfix">
+    <div class="M-box3 m-style fr">
+    </div>
+</div>
+<input type="hidden" id="type">
+<input type="hidden" id="replyType">
+<!-- 回复模态框（Modal） -->
+<div class="modal fade" id="evaluate" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                <h4 class="modal-title" id="myModalLabel">回复评价</h4>
+            </div>
+            <div class="modal-body">
+                <form class="form-horizontal" role="form">
+                    <div class="form-group">
+                        <div class="col-sm-1"></div>
+                        <label class="col-sm-3 control-label" id="myModaltype">评价内容</label>
+                        <div class="col-sm-6">
+                            <p class="form-control-static" id="evaluate_content"></p>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <div class="col-sm-1"></div>
+                        <label for="evaluate_reply" class="col-sm-3 control-label">回复内容</label>
+                        <div class="col-sm-6">
+                            <textarea id="evaluate_reply" class="form-control ta_resize" rows="4"></textarea>
+                        </div>
+                    </div>
+
+                </form>
+            </div>
+            <div class="modal-footer">
+                <input type="hidden" id="evaluate_id">
+                <button type="button" class="btn btn-primary add1">确定</button>
+                <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
+            </div>
+        </div>
+
+    </div>
+</div>
+<!-- /.modal -->
+<!-- page end -->
+{/block}
+{block name="script"}
+<script>
+require(['utilAdmin','util'], function (utilAdmin,util) { 
+    $(function () {
+        util.layDate('#orderTime',true,function(value, date, endDate){
+            var h=date.hours<10 ?"0"+date.hours : date.hours;
+            var m=date.minutes<10 ?"0"+date.minutes : date.minutes;
+            var s=date.seconds<10 ?"0"+date.seconds : date.seconds;
+            var h1=endDate.hours<10 ?"0"+endDate.hours : endDate.hours;
+            var m1=endDate.minutes<10 ?"0"+endDate.minutes : endDate.minutes;
+            var s1=endDate.seconds<10 ?"0"+endDate.seconds : endDate.seconds;
+            var date1=date.year+'-'+date.month+'-'+date.date+' '+h+":"+m+":"+s;
+            var date2=endDate.year+'-'+endDate.month+'-'+endDate.date+' '+h1+":"+m1+":"+s1;
+
+            if(value){
+                $('#startDate').val(date1);
+                $('#endDate').val(date2);
+            }
+            else{
+                $('#startDate').val('');
+                $('#endDate').val('');
+            }
+        });
+        LoadingInfo(1);
+    });
+    function LoadingInfo(page_index) {
+        $('#page_index').val(page_index ? page_index : '1');
+	var member_name = $("#member_name").val();
+	var start_date = $("#startDate").val();
+	var end_date = $("#endDate").val();
+	var explain_type = $("#explain_type").val();
+	$.ajax({
+		type : "post",
+		url : "{:__URL('ADMIN_MAIN/goods/goodscomment')}",
+		data : {
+			"page_index" : page_index,
+			'page_size' : $("#showNumber").val(),
+			"start_date":start_date,
+			"end_date":end_date,
+			"member_name" : member_name,
+			"explain_type" : explain_type
+		},
+		success : function(data) {
+			var html = '';
+			if (data["data"].length > 0) {
+				for (var i = 0; i < data["data"].length; i++) {
+                                    html += '<tr>';
+
+                    html +='<td class="vertical-top">';
+                                    switch(data["data"][i]["explain_type"]){
+                        case 5:
+                            html += '好评';
+                                                break;
+                        case 3:
+                            html += '中评';
+                                                break;
+                        case 1:
+                            html += '差评';
+                                        break;
+                    }
+                    html +='</td>';
+                    html +='<td class="text-left w-300">';
+                    html +='<div>';
+                    html +='<a class="reply_content">'+data['data'][i]['content']+'</a>';
+
+                    if(data['data'][i]['image']!='') {
+                        html +='<br/>';
+                        var imgs_arr = data['data'][i]['image'].split(',');
+                        for (var key in imgs_arr) {
+                            // html += '<li data-src="' + __IMG(imgs_arr[key]) + '"> <img src="' + __IMG(imgs_arr[key]) + '"> <b class="tm-photos-arrow"></b></li>';
+                            html += '<img src="' + __IMG(imgs_arr[key]) + '" style="width:50px;height:50px;">&nbsp;';
+                        }
+                    }
+                    html +='</div>';
+                    html +='<div class="small-muted">['+timeStampTurnTime(data["data"][i]["addtime"])+']</div>';
+                    html +='<div class="bg-f5" >';
+                    if(data['data'][i]['explain_first']!='') {
+                        html += '<span class="">[卖家回复]：</span><span class="text-buffing">' + data['data'][i]['explain_first'] + '</span>';
+                    }
+                    html +='</div>';
+                    if(data['data'][i]['explain_first']=='') {
+                        html +='<a href="javascript:void(0)" class="text-primary reply"><br/>回复</a>';
+                        html +='<input type="hidden" name="evaluate_id" value="'+data["data"][i]["id"]+'">';
+                        html +='<input type="hidden" name="replyType" value="1">';
+                    }
+                    if(data['data'][i]['again_content']!='') {
+                        html +='<div>';
+                        html +='[追评内容]：<a class="reply_content">'+data['data'][i]['again_content']+'</a>';
+                        if(data['data'][i]['again_image']!='') {
+                            html +='<br/>';
+                            var imgs_arr = data['data'][i]['again_image'].split(',');
+                            for (var key in imgs_arr) {
+                                // html += '<li data-src="' + __IMG(imgs_arr[key]) + '"> <img src="' + __IMG(imgs_arr[key]) + '"> <b class="tm-photos-arrow"></b></li>';
+                                html += '<img src="' + __IMG(imgs_arr[key]) + '" style="width:50px;height:50px;">&nbsp;';
+                            }
+                        }
+                        html +='</div>';
+                        html +='<div class="small-muted">['+timeStampTurnTime(data["data"][i]["again_addtime"])+']</div>';
+                    }
+                    if(data['data'][i]['again_explain']!='') {
+                        html += '<span class="">[追评回复]：</span><span class="text-buffing reply_content">' + data['data'][i]['again_explain'] + '</span>';
+                    }
+
+                    if(data['data'][i]['again_explain']==''&& data['data'][i]['again_content']!='') {
+                        html +='<a></a>';
+                        html +='<a href="javascript:void(0)" class="text-primary reply"><br/>追平回复</a>';
+                        html +='<input type="hidden" name="evaluate_id" value="'+data["data"][i]["id"]+'">';
+                        html +='<input type="hidden" name="replyType" value="2">';
+                    }
+                    html +='</td>';
+                    html +='<td class="vertical-top">';
+                    if(data["data"][i]["user_name"]){
+                        html += data["data"][i]["user_name"];
+                    }else if(data["data"][i]["nick_name"]){
+                        html += data["data"][i]["nick_name"];
+                    }else{
+                        html += data["data"][i]["user_tel"];
+                    }
+                    html +='</td>';
+                    html +='<td class="w-300">';
+                    html += '<p><img src="'+ __IMG(data["data"][i]["goods_image"])+'" style="width:60px;height:60px;"></p>';
+                    html += data["data"][i]["goods_name"];
+                    html +='<div class="text-bright">'+data["data"][i]["goods_price"]+' 元</div>';
+                    html +='</td>';
+
+                    html += '<td>';
+                    html +='<a class="btn-operation deleteEvaluate text-red1" data-id="' + data["data"][i]["id"] + '" href="javascript:void(0)">删除</a>';
+                    html += '</td>';
+                    html +='</tr>';
+				}
+			}else {
+				html += '<tr align="center"><td colspan="4" class="h-200">暂无符合条件的数据记录</td></tr>';
+			}
+			$("#productTbody").html(html);
+                        utilAdmin.page(".M-box3", data['total_count'], data["page_count"], page_index, LoadingInfo);
+		}
+	});
+}
+
+
+//回复 弹出框
+function replyevaluate(evaluate_id, event){
+	var evaluate_content = $(event).parents('tr').find('.evaluate_content').html();
+	var evaluate_reply = $(event).parents('tr').find('.sellerReply').html();
+	if(evaluate_reply == undefined){
+		evaluate_reply = '';
+	}
+	$("#replyType").val(1);
+	$("#myModalLabel").text("评价回复");
+	$("#myModaltype").text("评价内容：");
+	$("#evaluate").modal('show');
+	$("#evaluate_id").val(evaluate_id);
+	$("#evaluate_content").html(evaluate_content);
+	$("#evaluate_reply").text(evaluate_reply);
+}
+
+function replyevaluateAgain(evaluate_id, event){
+	var evaluate_content = $(event).parents('tr').find('.guestReply').html();
+	var evaluate_reply = $(event).parents('tr').find('.sellerReplyAgain').html();
+	if(evaluate_reply == undefined){
+		evaluate_reply = '';
+	}
+	$("#replyType").val(2);
+	$("#myModalLabel").text("追评回复");
+	$("#myModaltype").text("追评内容：");
+	$("#evaluate").modal('show');
+	$("#evaluate_id").val(evaluate_id);
+	$("#evaluate_content").html(evaluate_content);
+	$("#evaluate_reply").text(evaluate_reply);
+}
+
+// 回复提交
+function replyevaluateAjax(){
+	var evaluate_id = $("#evaluate_id").val();
+	var evaluate_reply = $("#evaluate_reply").val();
+	var replyType = $("#replyType").val(); //1为评价回复 2为追评回复
+	$.ajax({
+		type : "post",
+		url : "{:__URL('ADMIN_MAIN/goods/replyevaluateajax')}",
+		data : {
+			"evaluate_id" : evaluate_id, 
+			"evaluate_reply" : evaluate_reply,
+			"replyType" : replyType
+		},
+		success : function(data) {
+			if(data['code'] > 0){
+                            location.href = "{:__URL('ADMIN_MAIN/goods/goodscomment')}";
+                            utilAdmin.message(data["message"],"success",function(){
+                    location.reload();
+                            });
+			}else{
+                            utilAdmin.message(data["message"], "danger");
+			}
+		}
+	});
+}
+
+
+document.onkeydown = function(e){ 
+	var ev = document.all ? window.event : e;
+	if(ev.keyCode==13) {
+		LoadingInfo(1);
+	}
+}
+
+$('body').on('click','.search_to',function(){
+    LoadingInfo(1);
+})
+$('body').on('click','.add1',function(){
+    replyevaluateAjax();
+})
+$('body').on('click','.add2',function(){
+    var id=$(this).attr('data-id');
+    var _this=$(this);
+    replyevaluate(id,_this);
+})
+$('body').on('click','.add3',function(){
+    var id=$(this).attr('data-id');
+    var _this=$(this);
+    replyevaluateAgain(id,_this);
+})
+
+    // 删除
+    $("body").on('click', '.deleteEvaluate', function () {
+        var evaluate_id = $(this).data('id');
+        utilAdmin.alert('是否删除该评价？', function () {
+            $.ajax({
+                url: "{:__URL('ADMIN_MAIN/goods/deleteGoodscomment')}",
+                type: 'POST',
+                dataType: "json",
+                data:{"evaluate_id":evaluate_id},
+                success:function (data) {
+                    if (data['code'] > 0) {
+                        utilAdmin.message(data['message'],'success', function(){
+                            location.reload();
+                        });
+                    } else {
+                        utilAdmin.message("删除失败",'danger');
+                    }
+                }
+            });
+        })
+    })
+    //时间戳转时间类型
+    function timeStampTurnTime(timeStamp){
+        if(timeStamp > 0){
+            var date = new Date();
+            date.setTime(timeStamp * 1000);
+            var y = date.getFullYear();
+            var m = date.getMonth() + 1;
+            m = m < 10 ? ('0' + m) : m;
+            var d = date.getDate();
+            d = d < 10 ? ('0' + d) : d;
+            var h = date.getHours();
+            h = h < 10 ? ('0' + h) : h;
+            var minute = date.getMinutes();
+            var second = date.getSeconds();
+            minute = minute < 10 ? ('0' + minute) : minute;
+            second = second < 10 ? ('0' + second) : second;
+            return y + '-' + m + '-' + d+' '+h+':'+minute+':'+second;
+        }else{
+            return "";
+        }
+
+        //return new Date(parseInt(time_stamp) * 1000).toLocaleString().replace(/年|月/g, "/").replace(/日/g, " ");
+    }
+})
+</script>
+{/block}

@@ -1,0 +1,83 @@
+<view class="head">
+  <view class="info">
+    <view class="img">
+      <image mode="widthFix" src="{{shopkeeperInfo.user_headimg}}"></image>
+    </view>
+    <view class="text">
+      <view>{{shopkeeperInfo.member_name}}</view>
+      <view>等级：{{shopkeeperInfo.shopkeeper_level_name}}</view>
+      <view>加入时间：{{shopkeeperInfo.become_shopkeeper_time}}</view>
+    </view>
+  </view>
+</view>
+
+<!--等级-->
+<view class="van-cell cell-panel" bindtap="toGrade">
+  <view class="van-cell__title">
+    <text>等级中心</text>
+  </view>
+  <view class="van-cell__value">
+    <text>{{shopkeeperInfo.shopkeeper_level_time == '无期限' ? shopkeeperInfo.shopkeeper_level_time : shopkeeperInfo.shopkeeper_level_time+ '到期'}}</text>
+  </view>
+  <view class='icon iconfont v-icon-arrow-right'></view>
+</view>
+
+
+<view class='distribution group'>
+  <view class='top'>
+    <view>微店收益</view>
+    <view class='btn_group'>
+      <view class='btn {{ incomelist.profit > 0 ? " " : "abled" }}' bindtap='onWithdrawPage'>提现</view>
+      <view class='btn' bindtap="toProfitDeatail">详情</view>
+    </view>
+  </view>
+  <view class='cell_card'>
+    <view class='card_item item_line_r item_cel_3'>
+      <view class='card_title'>可提现</view>
+      <view class='card_text'>{{filters.toFix(incomelist.profit ? incomelist.profit : 0.00)}}</view>
+    </view>
+    <view class='card_item item_line_r item_cel_3'>
+      <view class='card_title'>成功提现</view>
+      <view class='card_text'>{{filters.toFix(incomelist.withdrawals ? incomelist.withdrawals : 0.00)}}</view>
+    </view>
+    <view class='card_item item_cel_3'>
+      <view class='card_title'>累计收益</view>
+      <view class='card_text'>{{filters.toFix(incomelist.total_profit ? incomelist.total_profit : 0.00)}}</view>
+    </view>
+  </view>
+</view>
+
+<view class="cell-group card-group-box">
+  <van-cell title="常用"></van-cell>
+  <view class="cell_card">
+    <view class="item e-handle" bindtap="toManageSet">
+      <view class="box-icon iconfont v-icon-manage"></view>
+      <view class="title">微店管理</view>
+    </view>
+    <view class="item e-handle" bindtap="toChooseGoods">
+      <view class="box-icon iconfont v-icon-take"></view>
+      <view class="title">挑选商品</view>
+    </view>
+    <view class="item e-handle" bindtap="toPreviewIndex">
+      <view class="box-icon iconfont v-icon-stock"></view>
+      <view class="title">预览微店</view>
+    </view>
+    <view class="item e-handle" bindtap="toQrcode">
+      <view class="box-icon iconfont v-icon-qr"></view>
+      <view class="title">分享微店</view>
+    </view>
+  </view>
+  <view class="cell_card">
+    <view class="item e-handle" bindtap="toCredentialCode">
+      <view class="box-icon iconfont v-icon-guarantee"></view>
+      <view class="title">授权证书</view>
+    </view>
+  </view>
+</view>
+
+
+<!-- 保留2小数 -->
+<wxs module="filters" src="../../../../../utils/addmul.wxs"></wxs>
+
+
+<topnav-component></topnav-component>

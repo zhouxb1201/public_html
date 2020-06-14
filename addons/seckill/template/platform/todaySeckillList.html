@@ -1,0 +1,253 @@
+
+
+        <div class="screen-title" data-id="t2"><span class="text">商品列表</span></div>
+        <div class="mb-10 flex flex-pack-justify">
+            <div class="">
+                <button class="btn btn-danger" id="batch_remove">批量移除</button>
+            </div>
+            <div class="input-group search-input-group">
+                <input type="text" class="form-control" placeholder="商品名称" id="search_text">
+                <span class="input-group-btn"><a class="btn btn-primary search">搜索</a></span>
+            </div>
+        </div>
+        <table class="table v-table table-auto-center">
+            <thead>
+            <tr>
+                <th><input type="checkbox" name="select_all" id="select_all"></th>
+                <th>商品信息</th>
+                <!--<th>店铺</th>-->
+                <th>秒杀价</th>
+                <th>活动库存(剩余/总)</th>
+                <th>限购量</th>
+                <th>场次</th>
+                <th>操作</th>
+            </tr>
+            </thead>
+            <tbody id="today_goods_list">
+            </tbody>
+        </table>
+        <input type="hidden" id="page_index">
+        <nav aria-label="Page navigation" class="clearfix">
+            <ul id="page" class="pagination pull-right"></ul>
+        </nav>
+
+    <script id="shop_curr_list" type="text/html">
+        <%each data as item index%>
+        <tr>
+            <td><input type="checkbox" name="slect_goods" data-goods_id="<%item.goods_id%>" value="<%item.seckill_id%>" data-goods_type="<%item.goods_type%>"></td>
+            <td>
+                <div class="media text-left">
+                    <div class="media-left">
+                        <!--http://iph.href.lu/60x60-->
+                        <img src="<%item.pic_cover_big%>" onerror="this.src='';" width="60" height="60">
+                    </div>
+                    <div class="media-body max-w-300">
+                        <div class="line-2-ellipsis"><%item.goods_name%></div>
+                        <div class="line-1-ellipsis text-danger strong"><%item.shop_name%>旗舰店</div>
+                    </div>
+                </div>
+            </td>
+            <!--<td><%item.shop_name%>旗舰店</td>-->
+            <% if item.sku_name == '' %>
+            <td><%item.seckill_price%>元</td>
+            <td><%item.remain_num%>件/<%item.seckill_num%>件</td>
+            <td><%item.seckill_limit_buy%>件</td>
+            <% else %>
+            <td colspan="3">
+                <a href="javascript:;" class="a-color goods_sku_info" data-seckill_id="<%item.seckill_id%>" data-goods_id="<%item.goods_id%>" data-goods_name="<%item.goods_name%>">详情</a>
+            </td>
+            <% /if %>
+            <td><br><%item.seckill_date%><br /><%item.seckill_name%>点场</td>
+            <td><button class="btn btn-danger remove" data-goods_id="<%item.goods_id%>" data-seckill_id="<%item.seckill_id%>" data-goods_type="<%item.goods_type%>" data-goods_name="<%item.goods_name%>">移除</button></td>
+        </tr>
+        <%/each%>
+    </script>
+
+    <script>
+        require(['util', 'tpl'], function (util, tpl) {
+            util.initPage(LoadingInfo);
+            tpl.helper("timeStamp", function (timeStamp) {
+                if (timeStamp > 0) {
+                    var date = new Date();
+                    date.setTime(timeStamp * 1000);
+                    var y = date.getFullYear();
+                    var m = date.getMonth() + 1;
+                    m = m < 10 ? ('0' + m) : m;
+                    var d = date.getDate();
+                    d = d < 10 ? ('0' + d) : d;
+                    var h = date.getHours();
+                    h = h < 10 ? ('0' + h) : h;
+                    var minute = date.getMinutes();
+                    var second = date.getSeconds();
+                    minute = minute < 10 ? ('0' + minute) : minute;
+                    second = second < 10 ? ('0' + second) : second;
+                    return y + '-' + m + '-' + d + ' ' + h + ':' + minute + ':' + second;
+                } else {
+                    return "";
+                }
+            });
+
+            function LoadingInfo(page_index) {
+                var seckill_name = '{$seckill_name}';
+                $("#page_index").val(page_index);
+                $.ajax({
+                    type: "post",
+                    url: "{$todaySeckillList}",
+                    data: {
+                        "page_index": page_index,
+                        "seckill_name": seckill_name,
+                        "search_text": $("#search_text").val(),
+                        'website_id': '{$website_id}',
+                        'instance_id': '{$instance_id}'
+                    },
+                    success: function (data) {
+                        html ='';
+                        html += '<tr><td class="h-200" colspan="7">暂无符合条件的数据记录</td></tr>';
+                        if(data.data.length != 0){
+                            $("#today_goods_list").html(tpl('shop_curr_list', data));
+                        }else{
+                            $("#today_goods_list").html(html);
+                        }
+                        $('#page').paginator('option', {
+                            totalCounts: data['total_count']  // 动态修改总数
+                        });
+                    }
+                });
+            }
+            //商品详情弹框
+            $('#today_goods_list').on('click','.goods_sku_info',function(){
+                var goods_name = $(this).data('goods_name');
+                var seckill_id = $(this).data('seckill_id');
+                //当前商品的id
+                var goods_id = $(this).data('goods_id');
+                util.seckillGoodsSkuDialog('url:{$seckillGoodsDetailDialog}?&goods_id='+goods_id+'&seckill_id='+seckill_id,goods_name,function(data){
+                    })
+            });
+            // 搜索
+            $('.search').on('click',function(){
+                LoadingInfo(1)
+            })
+            //复选框的全选
+            $('#select_all').change(function(){
+                //获取所有的input复选框
+                var input_checkbox = $('input[type=checkbox]');
+                //当当前的复选框选中，就选中全部
+                if($(this).is(':checked')){
+                    input_checkbox.prop('checked',true);
+                }else{
+                    input_checkbox.prop('checked',false);
+                }
+            })
+            //移除单个活动商品
+            $('#today_goods_list').on('click', '.remove', function(){
+                    //0为商家店铺商品 1为全平台的商品
+                    var goods_type = $(this).data('goods_type');
+                    goods_type = parseInt(goods_type);
+                    var goods_id = $(this).data('goods_id');
+                    var goods_name = $(this).data('goods_name');
+                    var seckill_name = '{$seckill_name}';
+                    var seckill_id = $(this).data('seckill_id');
+                    var act = '{$act}';
+                    if(goods_type === 0){
+                        util.seckillDelGoodsInfoDialog('url:'+'{$modalSeckillDelGoodsRecord}', function(){
+                            var content = $('#del_goods_info').val();
+                            //将错误信息保存到表中
+                            $.post(
+                                '{$delSeckillGoods}',
+                                {goods_id:goods_id,goods_name:goods_name,content:content,seckill_name:seckill_name,seckill_id:seckill_id},
+                                function(data){
+                                    if (data["code"] > 0) {
+                                        // util.message(data["message"], 'success', __URL('ADDONS_MAINtodaySeckillList&seckill_name=' + seckill_name +'&seckill_id=' + seckill_id));
+                                        util.message(data["message"], 'success', LoadingInfo($('#page_index').val()));
+                                    } else {
+                                        util.message(data['message']);
+                                    }
+                                }
+                            )
+                        });
+                    }else{
+                        obj = this;
+                        util.alert('确认移除：'+ goods_name +' ？', function () {
+                            var seckill_name = '{$seckill_name}';
+                            var goods_id = $(obj).data('goods_id');
+                            $.post(
+                                '{$delSeckillGoods}',
+                                {
+                                    goods_id:goods_id,
+                                    seckill_name:seckill_name,
+                                    seckill_id:seckill_id
+                                },
+                                function(data){
+                                    if (data["code"] > 0) {
+                                        util.message(data["message"], 'success', LoadingInfo($('#page_index').val()));
+                                    } else {
+                                        util.message(data['message']);
+                                    }
+                                }
+                            )
+                        })
+                    }
+            })
+            //批量移除活动商品
+            $('#batch_remove').on('click',function(){
+                //0为商家店铺商品 1为全平台的商品
+                //批量移除的时候，判断是否有店铺的商品
+                var seckill_name = '{$seckill_name}';
+                //获取所有tr的checkbox
+                var all_check_box = $('tr input[name=slect_goods]:checked');
+                // console.log(all_check_box.length);return;
+                var seckill_id_str = '';
+                var goods_id_str = '';
+                var goods_type_str = '';
+                for(var i=0;i<all_check_box.length;i++){
+                    var seckill_id = $(all_check_box[i]).val();
+                    var goods_id = $(all_check_box[i]).data('goods_id');
+                    var goods_type = $(all_check_box[i]).data('goods_type');
+                    seckill_id_str =  seckill_id_str + seckill_id + ',';
+                    goods_id_str =  goods_id_str + goods_id + ',';
+                    goods_type_str =  goods_type_str + goods_type + ',';
+                }
+                seckill_id_str = seckill_id_str.substr(0,seckill_id_str.length-1);
+                goods_id_str = goods_id_str.substr(0,goods_id_str.length-1);
+                if(goods_id_str != ''){
+                    //1是全平台商品，若未找到0，则为全平台
+                    if( goods_type_str.indexOf('0') !== -1 ){
+                        util.seckillDelGoodsInfoDialog('url:'+'{$modalSeckillDelGoodsRecord}', function(){
+                            var content = $('#del_goods_info').val();
+                            //将错误信息保存到表中
+                            $.post(
+                                '{$delSeckillGoods}',
+                                {goods_id:goods_id_str,content:content,seckill_name:seckill_name,seckill_id:seckill_id_str},
+                                function(data){
+                                    if (data["code"] > 0) {
+                                        util.message(data["message"], 'success', __URL('ADDONS_MAINtodaySeckillList&seckill_name=' + seckill_name +'&seckill_id=' + seckill_id));
+                                    } else {
+                                        util.message(data['message']);
+                                    }
+                                }
+                            )
+                        });
+                    }else{
+                        util.alert('确认移除所选商品？', function (){
+                            $.post(
+                                '{$delSeckillGoods}',
+                                {goods_id:goods_id_str,seckill_name:seckill_name,seckill_id:seckill_id_str},
+                                function(data){
+                                    if (data["code"] > 0) {
+                                        util.message(data["message"], 'success', __URL('ADDONS_MAINtodaySeckillList&seckill_name=' + seckill_name +'&seckill_id=' + seckill_id));
+                                    } else {
+                                        util.message(data['message']);
+                                    }
+                                }
+                            )
+                        })
+                    }
+                }else{
+                    util.message('请先勾选需要移除的商品');
+                }
+            })
+
+        })
+
+
+    </script>

@@ -1,0 +1,858 @@
+{extend name="platform/new_base" /} {block name="resource"} {/block} {block name="main"}
+<!-- page -->
+<form class="form-horizontal form-validate pt-15 widthFixedForm">
+    <div class="form-group">
+        <label class="col-md-2 control-label"><span class="text-bright">*</span>品类名称</label>
+        <div class="col-md-5">
+            <input type="text" class="form-control" id="attr_name" name="attr_name" required>
+            <div class="mb-0 help-block">品类用于给不同商品类型制定规格、品牌、属性模版，如：衣服、裤子、鞋子等。品类最终需要与分类进行关联绑定使用。</div>
+        </div>
+    </div>
+    <!--关联分类-->
+    <div class="form-group">
+        <label class="col-md-2 control-label">关联分类</label>
+        <div class="col-md-5" style="width: 740px">
+            <div class="transfer-box">
+
+                <div class="item" style="width: 664px">
+                    <div class="transfer-title">
+                        <div class="checkbox line-1-ellipsis flex flex-pack-justify">
+                            <div>分类列表</div>
+                            <div>
+                                <label class="checkbox-inline" style="padding-top: 0"><input type="checkbox" name="goods_labels" checked disabled>当前品类已关联</label>
+                                <label class="checkbox-inline" style="padding-top: 0"><input type="checkbox" name="goods_labels" class="bgcccc" checked disabled>其他品类已关联</label>
+                                <label class="checkbox-inline" style="padding-top: 0"><input type="checkbox" name="goods_labels" disabled>未关联品类</label>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="transfer-search">
+                        <div class="transfer-search-div padding-10" style="padding-bottom: 0">
+                            <input type="text" class="form-control" placeholder="请输入分类名称" id="category_txt_selected">
+                            <i class="icon icon-custom-search"></i>
+                        </div>
+                    </div>
+                    <div id="category_id" class="heights tree-checkbox-group">
+                        {if $goodsCategoryList} 
+                        {foreach name="goodsCategoryList" item="v"}
+                        <div class="item_chek">
+                            <div class="checkbox checkbox_first">
+                                <i class="icon icon-drop-down mr-04"></i><label for="{$v.category_id}"> <input type="checkbox" value="{$v.category_id}" id="{$v.category_id}" name="module_chek" class="checkOne {if $v.attr_id > 0}bgccc{/if}" data-name="{$v.category_name}">{$v.category_name}</label>
+                            </div>
+                            {if condition="$v['child_list'] neq ''"}
+                            {volist name="v['child_list']" id="two"}
+                            <div class="checkbox_seconds">
+                                <!--复选框二级选框-->
+                                 <i class="icon icon-drop-down checkbox_seconds_icon"></i><label for="{$two.category_id}" class="checkbox-inline"><input type="checkbox" id="{$two.category_id}" value="{$two.category_id}" name="module_chek" class="checkTwo {if $two.attr_id > 0}bgccc{/if}" data-name="{$two.category_name}">{$two.category_name}</label>
+                                 <div class="checkbox_three item_content">
+                                {if condition="$two['child_list'] neq '' "}
+                                {volist name="two['child_list']" id="three"}
+                                    <label for="{$three.category_id}" class="checkbox-inline"><input type="checkbox" name="module_chek" id="{$three.category_id}" value="{$three.category_id}" class="checkThree {if $three.attr_id > 0}bgccc{/if}" data-name="{$three.category_name}">{$three.category_name}</label>
+                                {/volist}
+                                {/if}
+                                 </div>
+                            </div>
+                            {/volist}
+                            {/if}
+                        </div>
+                        {/foreach}
+                        {/if}
+
+                    </div>
+                </div>
+
+            </div>
+            <div class="mb-0 help-block">品类需要关联分类使用，发布商品选择分类后自动获取所关联品类的“规格、品牌、属性”等。</div>
+        </div>
+    </div>
+
+    <!--规格-->
+    <div class="form-group">
+        <label class="col-md-2 control-label">关联规格</label>
+        <div class="col-md-8" style="width: 740px">
+            <div class="transfer-box">
+                <div class="item">
+                    <div class="transfer-title">
+                        <div class="checkbox line-1-ellipsis">
+                            <label><input type="checkbox" name="specificationAllCheck" value="">未选规格</label>
+                        </div>
+                    </div>
+                    <div class="transfer-search">
+                        <div class="transfer-search-div padding-10" style="padding-bottom: 0">
+                            <input type="text" class="form-control" placeholder="请输入规格名称" id="spec_txt">
+                            <i class="icon icon-custom-search search_button" id="search_button"></i>
+                        </div>
+                    </div>
+                    <div id="unspec_id" class="heights">
+                        {if $goodsguige['data']} {foreach name="goodsguige['data']" item="v"}
+                        <div class="checkbox line-1-ellipsis"><label><input type="checkbox" name="un_specid" value="{$v.spec_id}" data_name="{$v.spec_name}">{$v.spec_name}</label></div>
+                        {/foreach} {else}
+                        <p class="help-block">没有规格?去<a href="{:__URL('PLATFORM_MAIN/Goods/addGoodsSpec')}" target="_blank" class="text-primary">新建</a>，新建完点
+                            <a href="" class="text-primary">刷新</a> 重新加载数据</p>
+                        {/if}
+                    </div>
+                </div>
+                <div class="item">
+                    <div class="transfer-title">
+                        <div class="checkbox line-1-ellipsis">
+                            已选规格
+                        </div>
+                    </div>
+                    <div class="transfer-search">
+                        <div class="transfer-search-div padding-10" style="padding-bottom: 0">
+                            <input type="text" class="form-control" placeholder="请输入规格名称" id="spec_txt2">
+                            <i class="icon icon-custom-search"></i>
+                        </div>
+                    </div>
+                    <div id="spec_id" class="heights">
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <!--品牌-->
+    <div class="form-group">
+        <label class="col-md-2 control-label">关联品牌</label>
+        <div class="col-md-8" style="width: 740px">
+            <div class="transfer-box">
+                <div class="item">
+                    <div class="transfer-title">
+                        <div class="checkbox line-1-ellipsis">
+                            <label><input type="checkbox" name="brandAllCheck" value="">未选品牌</label>
+                        </div>
+                    </div>
+                    <div class="transfer-search">
+                        <div class="transfer-search-div padding-10" style="padding-bottom: 0">
+                            <input type="text" class="form-control" placeholder="请输入品牌名称" id="brand_txt">
+                            <i class="icon icon-custom-search search_button" id="brand_search"></i>
+                        </div>
+                    </div>
+                    <div id="unbrand_id" class="heights">
+                        {if $brand_list['data']} {foreach name="brand_list['data']" item="v"}
+                        <div class="checkbox line-1-ellipsis"><label><input type="checkbox" name="un_brandid" value="{$v.brand_id}" data_name="{$v.brand_name}">{$v.brand_name}</label></div>
+                        {/foreach} {else}
+                        <p class="help-block">没有品牌?去<a href="{:__URL('PLATFORM_MAIN/goods/addGoodsBrand')}" target="_blank" class="text-primary">新建</a>，新建完点
+                            <a href="" class="text-primary">刷新</a> 重新加载数据</p>
+                        {/if}
+                    </div>
+                </div>
+                <div class="item">
+                    <div class="transfer-title">
+                        <div class="checkbox line-1-ellipsis">
+                            已选品牌
+                        </div>
+                    </div>
+                    <div class="transfer-search">
+                        <div class="transfer-search-div padding-10" style="padding-bottom: 0">
+                            <input type="text" class="form-control" placeholder="请输入品牌名称" id="brand_txt_selected">
+                            <i class="icon icon-custom-search search_button_selected"></i>
+                        </div>
+                    </div>
+                    <div id="brand_id" class="heights">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!--商品属性-->
+    <div class="form-group">
+        <label class="col-md-2 control-label">商品属性</label>
+        <div class="col-md-9" style="width: 695px;">
+            <table class="table v-table table-auto-center" id="attributeItemList">
+                <thead>
+                    <tr>
+                        <th class="col-sm-2">排序</th>
+                        <th class="col-sm-2">属性名称</th>
+                        <th class="col-sm-4 break-word">属性值</th>
+                        <th class="col-sm-2">输入类型</th>
+                        <th class="col-md-2 pr-14 operationLeft">操作</th>
+                    </tr>
+                </thead>
+                <tbody>
+
+                    <!--<tr class="attributeItem value_data" curr_num="0">
+                        <td>1</td>
+                        <td>生产日期</td>
+                        <td>纯棉,尼龙</td>
+                        <td>单选框</td>
+                        <td class="operationLeft fs-0">
+                            <a href="javascript:void(0);" class="btn-operation editAttributeItem" data-sort="1" data-name="生产日期" data-value="纯棉,尼龙" data-type="1" >编辑</a>
+                            <a href="javascript:void(0);" class="btn-operation text-red1">删除</a>
+                        </td>
+                    </tr>-->
+
+                    <tr>
+                        <td colspan="5" class="text-left"><a href="javascript:void(0);" class="text-primary" id="addAttributeItem" data-title="add"> +添加属性</a></td>
+                    </tr>
+                </tbody>
+
+
+            </table>
+
+        </div>
+    </div>
+
+    <div class="form-group">
+        <label class="col-md-2 control-label">排序</label>
+        <div class="col-md-5">
+            <input type="number" class="form-control w-100" id="sort" name="sort">
+            <p class="help-block">品类排序，数字越大越靠前。</p>
+        </div>
+    </div>
+
+    <div class="form-group">
+        <label class="col-md-2 control-label"><span class="text-bright">*</span>是否启用</label>
+        <div class="col-md-5">
+            <div class="switch-inline">
+                <input id="is_visible" type="checkbox">
+                <label for="is_visible" class=""></label>
+            </div>
+            <p class="help-block">关闭后，商品分类无法关联该品类。</p>
+        </div>
+    </div>
+
+    <div class="form-group">
+        <label class="col-md-2 control-label"></label>
+        <div class="col-md-8">
+            <button class="btn btn-primary submit" type="submit">添加</button>
+            <a href="javascript:history.go(-1);" class="btn btn-default">返回</a>
+        </div>
+    </div>
+
+</form>
+<div style="display: none;" id="attributeDialog">
+    <form class="form-horizontal padding-15" id="">
+        <div class="form-group">
+            <label class="col-md-3 control-label"><span class="text-bright">*</span>属性名称</label>
+            <div class="col-md-8"><input type="text" class="form-control" id="attributeName" value=""></div>
+        </div>
+        <div class="form-group">
+            <label class="col-md-3 control-label"><span class="text-bright">*</span>输入类型</label>
+            <div class="col-md-8">
+                <label class="radio-inline"><input type="radio" name="push_type" id="" value="1" checked> 输入框</label>
+                <label class="radio-inline"><input type="radio" name="push_type" id="" value="2"> 单选框</label>
+                <label class="radio-inline"><input type="radio" name="push_type" id="" value="3"> 复选框</label>
+            </div>
+        </div>
+        <div class="form-group attributeType" style="display: none">
+            <label class="col-md-3 control-label"><span class="text-bright">*</span>属性值</label>
+            <div class="col-md-8">
+                <textarea name="content" id="content" rows="6" class="form-control"></textarea>
+                <div class="help-block mb-0">一行代表一个属性值，多个属性值回车换行添加</div>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-md-3 control-label">排序</label>
+            <div class="col-md-8"><input type="number" class="form-control" id="edit_sort" value=""></div>
+        </div>
+
+    </form>
+</div>
+
+<!-- page end -->
+{/block} {block name="script"}
+<script>
+    require(['util'], function (util) {
+        var specSelected = []; //已选规格的集合
+        var specSelect = []; //未选规格的集合
+        var brandSelect = []; //未选品牌的集合
+        var brandSelected = []; //已选品牌的集合
+        // 获取未选规格数组
+        $("input[name='un_specid']").each(function () {
+            var val = $(this).val();
+            var name = $(this).attr('data_name');
+            var obj = {};
+            obj.value = val;
+            obj.name = name;
+            specSelect.push(obj);
+        });
+        // 获取未选品牌数组
+        $("input[name='un_brandid']").each(function () {
+            var val = $(this).val();
+            var name = $(this).attr('data_name');
+            var obj = {};
+            obj.value = val;
+            obj.name = name;
+            brandSelect.push(obj);
+        })
+        // 添加属性
+        $("#addAttributeItem").on('click', function () {
+            var html = $("#attributeDialog").html();
+            var _this = $(this);
+            util.confirm('添加属性', html, function () {
+                var attributeName = this.$content.find('#attributeName').val();
+                var push_type = this.$content.find('input[name="push_type"]:checked').val();
+                if(push_type==2 || push_type==3){
+                    var arr = this.$content.find("#content").val().split(/[(\r\n)\r\n]+/);
+                    var contents = '';
+                    for(var i = 0; i < arr.length; i++){
+                        if(arr[i]){
+                            contents += ',' + arr[i];
+                        }
+                    }
+                    contents = contents.substr(1);
+                }else{
+                    var contents ='-';
+                }
+                var edit_sort = this.$content.find("#edit_sort").val();
+
+                // 增加验证
+                if(attributeName==''){
+                    util.message('请输入属性名称','danger');
+                    return false;
+                }
+                if(push_type==2 || push_type==3){
+                    if(contents==''){
+                        util.message('请输入属性值','danger');
+                        return false;
+                    }
+                }
+                var data_obj = $(".value_data");
+                var data_obj_arr = [];
+
+                data_obj.each(function (i) {
+                    if (data_obj.eq(i) != '') {
+                        data_obj_arr.push($(this).find('.editAttributeItem').data('name').toString());
+                    }
+                });
+                if($.inArray(attributeName,data_obj_arr) != '-1'){
+                    util.message('属性名称重复，请重新填写','danger');
+                    return false;
+                }
+                 if(push_type==1){
+                     var push_type_text = '输入框';
+                 }else if(push_type==2){
+                     var push_type_text = '单选框';
+                 }else{
+                     var push_type_text = '复选框';
+                 }
+                
+                var tpl = '';
+
+                tpl += '<tr class="attributeItem value_data">';
+                tpl += '<td>'+edit_sort+'</td>';
+                tpl += '<td>'+attributeName+'</td>';
+                tpl += '<td class="break-word">'+contents+'</td>';
+                tpl += '<td>'+push_type_text+'</td>';
+                tpl += '<td class="operationLeft fs-0"><a href="javascript:void(0);" class="btn-operation editAttributeItem" data-sort="'+edit_sort+'" data-name="'+attributeName+'" data-value="'+contents+'" data-type="'+push_type+'" data-type-text="'+push_type_text+'">编辑</a><a href="javascript:void(0);" class="btn-operation text-red1">删除</a></td>';
+                tpl += '</tr>';
+                _this.parents('tr').before(tpl);
+                $('.attributeType').hide();
+            }, 'large');
+        });
+        // 编辑属性
+        $('body').on('click','.editAttributeItem',function(){
+            var _this=$(this);
+            var sort=_this.attr('data-sort');
+            var name=_this.attr('data-name');
+            var value=_this.attr('data-value');
+            value = value.replace(/,/g,"\n");
+            var type=_this.attr('data-type');
+            var html='';
+            html+='<form class="form-horizontal padding-15" id="">';
+            html+='<div class="form-group"><label class="col-md-3 control-label"><span class="text-bright">*</span>属性名称</label><div class="col-md-8"><input type="text" class="form-control" id="attributeName" value="'+name+'"></div></div>';
+            html+='<div class="form-group"><label class="col-md-3 control-label"><span class="text-bright">*</span>输入类型</label>';
+            if(type==1){
+                html+='<div class="col-md-8"><label class="radio-inline"><input type="radio" name="push_type" id="" value="1" checked> 输入框</label><label class="radio-inline"><input type="radio" name="push_type" id="" value="2"> 单选框</label><label class="radio-inline"><input type="radio" name="push_type" id="" value="3"> 复选框</label></div>';
+            }else if(type==2){
+                html+='<div class="col-md-8"><label class="radio-inline"><input type="radio" name="push_type" id="" value="1"> 输入框</label><label class="radio-inline"><input type="radio" name="push_type" id="" value="2" checked> 单选框</label><label class="radio-inline"><input type="radio" name="push_type" id="" value="3"> 复选框</label></div>';
+            }else{
+                html+='<div class="col-md-8"><label class="radio-inline"><input type="radio" name="push_type" id="" value="1"> 输入框</label><label class="radio-inline"><input type="radio" name="push_type" id="" value="2"> 单选框</label><label class="radio-inline"><input type="radio" name="push_type" id="" value="3" checked> 复选框</label></div>';
+            }
+            html+='</div>';
+            if(type==1){
+                html+='<div class="form-group attributeType" style="display: none"><label class="col-md-3 control-label"><span class="text-bright">*</span>属性值</label>';
+                html+='<div class="col-md-8"><textarea name="content" id="content" rows="6" class="form-control"></textarea><div class="help-block mb-0">一行代表一个属性值，多个属性值回车换行添加</div></div>';
+                html+='</div>';
+            }else{
+                html+='<div class="form-group attributeType"><label class="col-md-3 control-label"><span class="text-bright">*</span>属性值</label>';
+                html+='<div class="col-md-8"><textarea name="content" id="content" rows="6" class="form-control">'+value+'</textarea><div class="help-block mb-0">一行代表一个属性值，多个属性值回车换行添加</div></div>';
+                html+='</div>'; 
+            }
+            html+='<div class="form-group"><label class="col-md-3 control-label">排序</label><div class="col-md-8"><input type="number" class="form-control" id="edit_sort" value="'+sort+'"></div></div>';
+            html+='</form>';
+
+            util.confirm('编辑属性', html, function () {
+                var attributeName = this.$content.find('#attributeName').val();
+                var push_type = this.$content.find('input[name="push_type"]:checked').val();
+                if(push_type==2 || push_type==3){
+                    var arr = this.$content.find("#content").val().split(/[(\r\n)\r\n]+/);
+                    var contents = '';
+                    for(var i = 0; i < arr.length; i++){
+                        if(arr[i]){
+                            contents += ',' + arr[i];
+                        }
+                    }
+                    contents = contents.substr(1);
+                }else{
+                    var contents ='-';
+                }
+                var edit_sort = this.$content.find("#edit_sort").val();
+
+                // 增加验证
+                if(attributeName==''){
+                    util.message('请输入属性名称','danger');
+                    return false;
+                }
+                if(push_type==2 || push_type==3){
+                    if(contents==''){
+                        util.message('请输入属性值','danger');
+                        return false;
+                    }
+                }
+                var data_obj = $(".value_data");
+                var data_obj_arr = [];
+
+                data_obj.each(function (i) {
+                    if (data_obj.eq(i) != '') {
+                        data_obj_arr.push($(this).find('.editAttributeItem').data('name').toString());
+                    }
+                });
+
+                for(var i=0;i<data_obj_arr.length;i++){
+                    if(data_obj_arr[i]==name){
+                        data_obj_arr.splice(i, 1);
+                    }
+                }
+
+                if($.inArray(attributeName,data_obj_arr) != '-1'){
+                    util.message('属性名称重复，请重新填写','danger');
+                    return false;
+                }
+                 if(push_type==1){
+                     var push_type_text = '输入框';
+                 }else if(push_type==2){
+                     var push_type_text = '单选框';
+                 }else{
+                     var push_type_text = '复选框';
+                 }
+                
+                var tpl = '';
+                tpl += '<td>'+edit_sort+'</td>';
+                tpl += '<td>'+attributeName+'</td>';
+                tpl += '<td>'+contents+'</td>';
+                tpl += '<td>'+push_type_text+'</td>';
+                tpl += '<td class="operationLeft fs-0"><a href="javascript:void(0);" class="btn-operation editAttributeItem" data-sort="'+edit_sort+'" data-name="'+attributeName+'" data-value="'+contents+'" data-type="'+push_type+'" data-type-text="'+push_type_text+'">编辑</a><a href="javascript:void(0);" class="btn-operation text-red1">删除</a></td>';
+
+                _this.parents('tr').html(tpl);
+                $('.attributeType').hide();
+            }, 'large')
+        })
+        // 删除属性
+        $('body').on('click','.text-red1',function(){
+            var _this=$(this);
+            util.alert('确定删除该属性吗？',function(){
+                _this.parents('tr').remove();
+            })
+        })
+
+        $('body').on('change', 'input[name="push_type"]', function () {
+            var val = $(this).val();
+            if (val == 1) {
+                $('.attributeType').hide();
+            } else {
+                $('.attributeType').show();
+            }
+        })
+
+        //规格添加移除效果
+        //选择
+        $("body").on("click", "input[name='un_specid']", function () {
+            $(this).parent().parent().remove(); //移动左边
+            var val = $(this).val();
+            var name = $(this).attr('data_name');
+            var html =
+                '<div class="checkbox line-1-ellipsis"><label><input type="checkbox" name="select_specid[]" value="' +
+                val + '" data_name="' + name + '" checked>' + name + '</label></div>';
+            $("#spec_id").append(html); //添加到右边
+            // 已选规格数组增加
+            var obj = {};
+            obj.value = val;
+            obj.name = name;
+            specSelected.push(obj);
+            //未选规格数组减少
+            for (var i = 0; i < specSelect.length; i++) {
+                if (val == specSelect[i].value) {
+                    specSelect.splice(i, 1);
+                }
+            }
+
+        });
+        //取消
+        $("body").on('click', "input[name='select_specid[]']", function () {
+            $(this).parent().parent().remove(); //移动左边
+            var val = $(this).val();
+            var name = $(this).attr('data_name');
+            var html =
+                '<div class="checkbox line-1-ellipsis"><label><input type="checkbox" name="un_specid" value="' +
+                val + '" data_name="' + name + '">' + name + '</label></div>';
+            $("#unspec_id").append(html); //添加到右边
+            //已选规格数组减少
+            for (var i = 0; i < specSelected.length; i++) {
+                if (val == specSelected[i].value) {
+                    specSelected.splice(i, 1);
+                }
+            }
+            // 未选规格数组增加
+            var obj = {};
+            obj.value = val;
+            obj.name = name;
+            specSelect.push(obj);
+
+
+        });
+        // 规格全选
+        $('input[name="specificationAllCheck"]').on('change', function () {
+            if ($(this).is(':checked')) {
+                $('input[name="un_specid"]').each(function () {
+                    $(this).parent().parent().remove(); //移动左边
+                    var val = $(this).val();
+                    var name = $(this).attr('data_name');
+                    var html =
+                        '<div class="checkbox line-1-ellipsis"><label><input type="checkbox" name="select_specid[]" value="' +
+                        val + '" data_name="' + name + '" checked>' + name + '</label></div>';
+                    $("#spec_id").append(html); //添加到右边
+                    // 已选规格数组增加
+                    var obj = {};
+                    obj.value = val;
+                    obj.name = name;
+                    specSelected.push(obj);
+                    //未选规格数组减少
+                    for (var i = 0; i < specSelect.length; i++) {
+                        if (val == specSelect[i].value) {
+                            specSelect.splice(i, 1);
+                        }
+                    }
+                })
+            } else {
+                $('input[name="select_specid[]"]').each(function () {
+                    $(this).parent().parent().remove(); //移动左边
+                    var val = $(this).val();
+                    var name = $(this).attr('data_name');
+                    var html =
+                        '<div class="checkbox line-1-ellipsis"><label><input type="checkbox" name="un_specid" value="' +
+                        val + '" data_name="' + name + '">' + name + '</label></div>';
+                    $("#unspec_id").append(html); //添加到右边
+                    //已选规格数组减少
+                    for (var i = 0; i < specSelected.length; i++) {
+                        if (val == specSelected[i].value) {
+                            specSelected.splice(i, 1);
+                        }
+                    }
+                    // 未选规格数组增加
+                    var obj = {};
+                    obj.value = val;
+                    obj.name = name;
+                    specSelect.push(obj);
+
+                })
+            }
+        })
+
+        //  已选规格搜索
+        $("#spec_txt2").on('keyup', function () {
+            var val = $(this).val();
+            var html = '';
+            for (var i = 0; i < specSelected.length; i++) {
+                var names = specSelected[i].name;
+                if (names.indexOf(val) != -1) {
+                    html +=
+                        '<div class="checkbox line-1-ellipsis"><label><input type="checkbox" name="select_specid[]" value="' +
+                        specSelected[i].value + '" data_name="' + specSelected[i].name + '" checked>' +
+                        specSelected[i].name + '</label></div>';
+                }
+            }
+            //  if(html==''){
+            //      html='搜索不到规格值';
+            //  }
+            $("#spec_id").html(html);
+        });
+        //  未选规格搜索
+        $("#spec_txt").on('keyup', function () {
+            var val = $(this).val();
+            var html = '';
+            for (var i = 0; i < specSelect.length; i++) {
+                var names = specSelect[i].name;
+                if (names.indexOf(val) != -1) {
+                    html +=
+                        '<div class="checkbox line-1-ellipsis"><label><input type="checkbox" name="un_specid" value="' +
+                        specSelect[i].value + '" data_name="' + specSelect[i].name + '">' + specSelect[
+                            i].name + '</label></div>';
+                }
+            }
+            //  if(html==''){
+            //      html='搜索不到规格值';
+            //  }
+            $("#unspec_id").html(html);
+            if (specSelect.length > 0) {
+                $("input[name='specificationAllCheck']").attr('checked', false);
+            } else {
+                $("input[name='specificationAllCheck']").attr('checked', true);
+            }
+        })
+
+        //  未选品牌搜索
+        $("#brand_txt").on('keyup', function () {
+            var val = $(this).val();
+            var html = '';
+            for (var i = 0; i < brandSelect.length; i++) {
+                var names = brandSelect[i].name;
+                if (names.indexOf(val) != -1) {
+                    html +=
+                        '<div class="checkbox line-1-ellipsis"><label><input type="checkbox" name="un_brandid" value="' +
+                        brandSelect[i].value + '" data_name="' + brandSelect[i].name + '">' +
+                        brandSelect[i].name + '</label></div>';
+                }
+            }
+            //  if(html==''){
+            //      html='搜索不到品牌';
+            //  }
+            $("#unbrand_id").html(html);
+            if (brandSelect.length > 0) {
+                $("input[name='brandAllCheck']").attr('checked', false);
+            } else {
+                $("input[name='brandAllCheck']").attr('checked', true);
+            }
+        })
+        //  已选品牌搜索
+        $("#brand_txt_selected").on('keyup', function () {
+            var val = $(this).val();
+            var html = '';
+            for (var i = 0; i < brandSelected.length; i++) {
+                var names = brandSelected[i].name;
+                if (names.indexOf(val) != -1) {
+                    html +=
+                        '<div class="checkbox line-1-ellipsis"><label><input type="checkbox" name="select_brand[]" value="' +
+                        brandSelected[i].value + '" data_name="' + brandSelected[i].name + '" checked>' +
+                        brandSelected[i].name + '</label></div>';
+                }
+            }
+            //  if(html==''){
+            //      html='搜索不到品牌';
+            //  }
+            $("#brand_id").html(html);
+        })
+
+
+
+
+        //品牌
+        $("body").on("click", "input[name='un_brandid']", function () {
+            $(this).parent().parent().remove(); //移动左边
+            var val = $(this).val();
+            var name = $(this).attr('data_name');
+            var html =
+                '<div class="checkbox line-1-ellipsis"><label><input type="checkbox" name="select_brand[]" value="' +
+                val + '" data_name="' + name + '" checked>' + name + '</label></div>';
+            $("#brand_id").append(html); //添加到右边
+            // 已选品牌数组增加
+            var obj = {};
+            obj.value = val;
+            obj.name = name;
+            brandSelected.push(obj);
+            //未选品牌数组减少
+            for (var i = 0; i < brandSelect.length; i++) {
+                if (val == brandSelect[i].value) {
+                    brandSelect.splice(i, 1);
+                }
+            }
+        });
+        //取消
+        $("body").on('click', "input[name='select_brand[]']", function () {
+            $(this).parent().parent().remove(); //移动左边
+            var val = $(this).val();
+            var name = $(this).attr('data_name');
+            var html =
+                '<div class="checkbox line-1-ellipsis"><label><input type="checkbox" name="un_brandid" value="' +
+                val + '" data_name="' + name + '">' + name + '</label></div>';
+            $("#unbrand_id").append(html); //添加到右边
+            //已选品牌数组减少
+            for (var i = 0; i < brandSelected.length; i++) {
+                if (val == brandSelected[i].value) {
+                    brandSelected.splice(i, 1);
+                }
+            }
+            // 未选品牌数组增加
+            var obj = {};
+            obj.value = val;
+            obj.name = name;
+            brandSelect.push(obj);
+        });
+        // 品牌全选
+        $('input[name="brandAllCheck"]').on('change', function () {
+            if ($(this).is(':checked')) {
+                $('input[name="un_brandid"]').each(function () {
+                    $(this).parent().parent().remove(); //移动左边
+                    var val = $(this).val();
+                    var name = $(this).attr('data_name');
+                    var html =
+                        '<div class="checkbox line-1-ellipsis"><label><input type="checkbox" name="select_brand[]" value="' +
+                        val + '" data_name="' + name + '" checked>' + name + '</label></div>';
+                    $("#brand_id").append(html); //添加到右边
+                    // 已选品牌数组增加
+                    var obj = {};
+                    obj.value = val;
+                    obj.name = name;
+                    brandSelected.push(obj);
+                    //未选品牌数组减少
+                    for (var i = 0; i < brandSelect.length; i++) {
+                        if (val == brandSelect[i].value) {
+                            brandSelect.splice(i, 1);
+                        }
+                    }
+
+                })
+            } else {
+                $('input[name="select_brand[]"]').each(function () {
+                    $(this).parent().parent().remove(); //移动左边
+                    var val = $(this).val();
+                    var name = $(this).attr('data_name');
+                    var html =
+                        '<div class="checkbox line-1-ellipsis"><label><input type="checkbox" name="un_brandid" value="' +
+                        val + '" data_name="' + name + '">' + name + '</label></div>';
+                    $("#unbrand_id").append(html); //添加到右边
+                    //已选品牌数组减少
+                    for (var i = 0; i < brandSelected.length; i++) {
+                        if (val == brandSelected[i].value) {
+                            brandSelected.splice(i, 1);
+                        }
+                    }
+                    // 未选品牌数组增加
+                    var obj = {};
+                    obj.value = val;
+                    obj.name = name;
+                    brandSelect.push(obj);
+
+                })
+            }
+        });
+
+        // 分类名称搜索
+        $("#category_txt_selected").on('keyup', function () {
+            var val = $(this).val();
+            if(val==''){
+                $('.item_chek').removeClass('hide');
+                $('.checkbox_first').removeClass('hide');
+                $('.checkbox_seconds').removeClass('hide');
+                $('.checkbox_three').removeClass('hide');
+            }else{
+                $('.item_chek').addClass('hide');
+                $('.checkbox_first').addClass('hide');
+                $('.checkbox_seconds').addClass('hide');
+                $('.checkbox_three').addClass('hide');
+                $('.checkOne').each(function(i,e){
+                    var name0 = $(this).data('name')+ '';
+                    if (name0.indexOf(val) != -1) {
+                        $(e).parents('.item_chek').removeClass('hide');
+                        $(e).parents('.checkbox_first').removeClass('hide');
+                    }
+                });
+                $('.checkTwo').each(function(i,e){
+                    var name1 = $(this).data('name')+ '';
+                    if (name1.indexOf(val) != -1) {
+                        $(e).parents('.item_chek').removeClass('hide');
+                        $(e).parents('.checkbox_seconds').removeClass('hide');
+                        $(e).parents('.checkbox_seconds').siblings('.checkbox_first').removeClass('hide');
+                    }
+                });
+                $('.checkThree').each(function(i,e){
+                    var name2 = $(this).data('name')+ '';
+                    if (name2.indexOf(val) != -1) {
+                        $(e).parents('.item_chek').removeClass('hide');
+                        $(e).parents('.checkbox_three').removeClass('hide');
+                        $(e).parents('.checkbox_seconds').removeClass('hide');
+                        $(e).parents('.checkbox_seconds').siblings('.checkbox_first').removeClass('hide');
+                    }
+                });
+            }
+
+        })
+
+
+        var flag = false; //防止重复提交
+        util.validate($('.form-validate'), function (form) {
+            var attr_name = $.trim($("#attr_name").val());
+            var sort = $("#sort").val();
+            if ($("#is_visible").prop("checked")) {
+                var is_visible = 1;
+            } else {
+                var is_visible = 0;
+            }
+
+            //获取品牌ID
+            var brand_id_arr = [];
+            for (var i = 0; i < brandSelected.length; i++) {
+                brand_id_arr.push(brandSelected[i].value);
+            }
+            var brand_id = brand_id_arr.join(",");
+
+            var spec_id_arr = [];
+            for (var i = 0; i < specSelected.length; i++) {
+                spec_id_arr.push(specSelected[i].value);
+            }
+            var spec_id = spec_id_arr.join(",");
+
+
+            var data_obj = $(".value_data");
+            var data_obj_str = '';
+
+            data_obj.each(function (i) {
+                if (data_obj.eq(i) != '') {
+                    var value_sort = $(this).find('.editAttributeItem').data('sort');
+                    var value_name = $(this).find('.editAttributeItem').data('name');
+                    var type = $(this).find('.editAttributeItem').data('type');
+                    var value = $(this).find('.editAttributeItem').data('value');
+                    if (type > 1) {
+                        if (value == '') {
+                            $(this).find('.editAttributeItem').focus();
+                            util.message("类型为单选框或复选框时，属性值不能为空");
+                            return false;
+                        }
+                    }
+                    var new_str = '';
+                    new_str = value_name + '|' + type + '|' + value_sort + '|1|' + value;
+                    data_obj_str = data_obj_str + ';' + new_str;
+                }
+            });
+            data_obj_str = data_obj_str.substr(1);
+            var data_obj_arr = data_obj_str.split('|');
+            if (data_obj_arr[0] == '') {
+                util.message("商品品类属性名称或属性值不能为空！");
+                return false;
+            }
+            var cate_obj = $('input[name=module_chek]:checked');
+            var cate_obj_arr = [];
+            cate_obj.each(function(i){
+                cate_obj_arr.push($(this).val());
+            });
+            if (flag) {
+                return false;
+            }
+            flag = true;
+            $.ajax({
+                type: "post",
+                url: "{:__URL('PLATFORM_MAIN/goods/addattributeservice')}",
+                data: {
+                    'attr_name': attr_name,
+                    'sort': sort,
+                    'is_visible': is_visible,
+                    'spec_id': spec_id,
+                    "brand_id": brand_id,
+                    'data_obj_str': data_obj_str,
+                    'cate_obj_arr': cate_obj_arr
+                },
+                success: function (data) {
+                    if (data["code"] > 0) {
+                        util.message("添加成功", 'success',
+                            "{:__URL('PLATFORM_MAIN/goods/attributelist')}");
+                    } else {
+                        util.message(data['message'], 'danger');
+                        flag = false;
+                    }
+                }
+            });
+        })
+    })
+</script>
+{/block}

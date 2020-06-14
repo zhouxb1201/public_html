@@ -1,0 +1,3 @@
+<!-- 单行文本 -->
+<van-field value="{{customitem.value}}" data-index="{{index}}" required="{{customitem.required}}" clearable label="{{customitem.label}}" icon="question-o"  placeholder="{{customitem.placeholder}}"  bind:input="onInputValue" /> 
+

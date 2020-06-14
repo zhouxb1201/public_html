@@ -1,0 +1,40 @@
+<import src="/common/wxParse/wxParse.wxml"/>
+<view class='shop_centre'>
+  <view class='banner'>
+    <image mode='widthFix' src='{{publicUrl}}/wap/static/images/shop-join-adv.png'></image>
+  </view>
+  <view class='cell'>
+    <view class='van_call'>
+      <view class='foot_btn' wx:if="{{status == 'apply'}}" bindtap='onAgreementPage'>申请入驻</view>
+      <view class='foot_btn' wx:else bindtap='onResultPage'>查看进度</view>
+    </view>
+  </view>
+  <view class='tabs'>
+    <van-tabs active="{{ active }}">
+    <van-tab title="{{shop_protocol[0].title}}">
+      <view class='content' wx:if="{{shop_protocol[0].content != ''}}">
+        <template is="wxParse" data="{{wxParseData:description.nodes}}" />
+      </view>
+      <view class='no_Agreement' wx:else>暂无协议</view>      
+    </van-tab>
+    <van-tab title="{{shop_protocol[1].title}}">
+      <view class='content' wx:if="{{shop_protocol[1].content != ''}}">
+        <template is="wxParse" data="{{wxParseData:standard.nodes}}" />
+      </view>
+      <view class='no_Agreement' wx:else>暂无协议</view>
+    </van-tab>
+    <van-tab title="{{shop_protocol[2].title}}">
+      <view class='content' wx:if="{{shop_protocol[2].content != ''}}">
+        <template is="wxParse" data="{{wxParseData:require.nodes}}" />
+      </view>
+      <view class='no_Agreement' wx:else>暂无协议</view>
+    </van-tab>
+    <van-tab title="{{shop_protocol[3].title}}">
+      <view class='content' wx:if="{{shop_protocol[3].content != ''}}">
+        <template is="wxParse" data="{{wxParseData:postage.nodes}}" />
+      </view>
+      <view class='no_Agreement' wx:else>暂无协议</view>
+    </van-tab>
+  </van-tabs>
+  </view>
+</view>

@@ -1,0 +1,22 @@
+<view class="commodity_screen2" bindtap='closePoste'  style='opacity: 0.8;' wx:if="{{showpost}}" catchtouchmove="ture"></view>
+<view class='poste_box' hidden='{{!showpost}}' catchtouchmove="ture">
+  <view class='poste_content' id='canvas-container' >    
+    <view class='img_content' wx:if='{{configposter == 0}}'>
+      <canvas canvas-id="myCanvas" style="width:100%;height:{{imgHeight}}px;" />
+    </view>    
+    <view class='img_content' wx:else>
+      <image class='image' src='{{posterimg}}'></image>
+    </view>    
+    <view class='foot_content'>
+      <view class='tip'>
+        <button class='share' open-type="share" hover-class="other-button-hover">链接分享</button>
+        <!-- <view class='text'>长按图片可保存图片</view>   -->
+        <button class='share' bindtap='saveImg' hidden='{{saveImgBtnHidden}}'>保存图片</button> 
+        <button type='primary' class='openSetting' open-type="openSetting"
+bindopensetting='handleSetting' hidden='{{openSettingBtnHidden}}'>前往授权</button>  
+      </view>      
+    </view>    
+  </view>
+</view>
+
+

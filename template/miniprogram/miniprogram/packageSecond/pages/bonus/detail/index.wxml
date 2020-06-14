@@ -1,0 +1,59 @@
+<view class='bonus_amount'>
+  <view class='group_box'>
+    <view class='bonus_amount_group'>
+      <view class='amount_cell'>
+        <view class='head_total_cell white_line_b'>
+          <view class='top_text'>{{txt_withdrawals_bonus}}</view>
+          <view class='put_total_num'>
+            <view class='num'>¥ <text>{{myBonusData.grant_bonus}}</text></view>
+            <view class='log_btn' bindtap='onLogPage'>查看明细</view>
+          </view>
+        </view>
+        <view class='foot_cell'>
+          <view class='wait item white_line_r'>
+            <view>{{txt_withdrawal_bonus}}</view>
+            <view>¥ <text>{{myBonusData.ungrant_bonus}}</text></view>
+            <view>{{txt_withdrawal_bonus}}</view>
+          </view>
+          <view class='freeze item'>
+            <view>{{txt_frozen_bonus}}</view>
+            <view>¥ <text>{{myBonusData.freezing_bonus}}</text></view>
+            <view>{{txt_frozen_bonus}}</view>
+          </view>
+        </view>
+      </view>
+      
+    </view>
+  </view>
+  
+  <view class='group_box'>
+    <view class='nav_buttom'>
+      <van-tabs active="{{ active }}" bind:change="onBonusChange">
+        <van-tab title="{{txt_global_agreement}}"></van-tab>
+        <van-tab title="{{txt_area_agreement}}"></van-tab>
+        <van-tab title="{{txt_team_agreement}}"></van-tab>
+      </van-tabs>
+    </view>
+    <view class='amount_cell'>
+        <view class='head_cell gray_line_b'>
+          <view class='top_text'>{{txt_withdrawals_detail_bonus}}</view>
+          <view class='put_num'>
+            <view class='num'>¥ <text>{{typeBonusData.grant_bonus}}</text></view>
+          </view>
+        </view>
+        <view class='foot_cell'>
+          <view class='wait item gray_line_r'>
+            <view>{{txt_withdrawal_detail_bonus}}</view>
+            <view class='money'>¥ <text>{{typeBonusData.ungrant_bonus}}</text></view>
+            <view class='text'>{{txt_withdrawal_detail_bonus}}</view>
+          </view>
+          <view class='freeze item'>
+            <view>{{txt_frozen_detail_bonus}}</view>
+            <view class='money'>¥ <text>{{typeBonusData.freezing_bonus}}</text></view>
+            <view class='text'>{{txt_frozen_detail_bonus}}</view>
+          </view>
+        </view>
+      </view>
+  </view>
+
+</view>

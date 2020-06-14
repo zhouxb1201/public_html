@@ -1,0 +1,76 @@
+<view wx:if='{{pageShow}}'>
+  <view class='banner'>
+    <image mode='widthFix' src="{{baseURL}}/wap/static/images/wheelsurf-bg.png"></image>
+  </view>
+  <view class="right-tag">
+    <view class="menu" bindtap='openExplain'>活动说明</view>
+    <view class="menu" bindtap='toPrize'>我的奖品</view>
+  </view>
+  <!--大转盘-->
+  <view class='wheel-wrap'>
+    <view class='wheel-main'>
+      <!--转盘背景以及商品-->
+      <view class='wheel-bg' style='transform:{{rotateAngle}};transition:transform 5s ease-in-out'>
+        <image mode='widthFix' src="{{info.background_pic != '' ? info.background_pic : palaceBgImg}}" class='palace'></image>
+        <view class='rotate-wrap'>
+          <view class='ul'>
+            <block wx:for='{{info.prize}}' wx:for-index="index" wx:for-item="item" wx:key="">
+              <view class='li' style='transform:rotate({{index * deg}}deg);width:{{rotateWidth}};left:{{rotateleft}}'>
+                <image src="{{item.prize_pic != '' ? item.prize_pic : defaultImg[index]}}"></image>
+                <text>{{item.prize_name}}</text>
+              </view>
+            </block>
+          </view>
+        </view>
+      </view>
+      <!--指针-->
+      <view class='wheel-pointer-box'>
+        <view class='wheel-pointer' bindtap='onRotateHandle'>
+          <image mode='widthFix' src="{{info.pointer_pic != '' ? info.pointer_pic : pointerImg}}"></image>
+        </view>
+      </view>
+    </view>
+  </view>
+
+  <view class="wheel-chance" v-if="{{frequency !== (-9999)}}">
+    剩余抽奖次数：
+    <text>{{frequency}}</text>次
+  </view>
+
+  <!--中奖名单-->
+  <view class='prize-wrap'>
+    <text class='prize-title'>幸运大转盘中奖记录</text>
+    <view class='prize-list-wrap'>
+      <view class='item-ul' style='position:relative;top:{{scrollY}}rpx;'>
+        <view class='item-li' wx:for="{{listData}}" wx:key="">
+          <text class='title'>{{filter.telvague(item.user_tel)}}</text>
+          <text class='date'>{{item.term_name}}</text>
+        </view>
+      </view>
+    </view>
+  </view>
+
+
+</view>
+
+<wxs src='../../../utils/addmul.wxs' module='filter' />
+<!--中奖弹框-->
+<popupWinPrize isShow="{{winPrize}}" termname="{{termname}}" prizename="{{prizename}}"></popupWinPrize>
+
+<!--未中奖弹框-->
+<popupNoPrize isShow="{{noPrize}}"></popupNoPrize>
+
+<!--活动结束弹框-->
+<popupActivityEnd isShow="{{activity}}"></popupActivityEnd>
+
+<!--活动说明-->
+<explain isShow="{{isExplain}}" info="{{info}}" bind:explainClose="closeExplain"></explain>
+
+<topnav-component></topnav-component>
+
+
+<!-- 登录组件 -->
+<login-component loginShow='{{loginShow}}' bind:request='requestLogin'></login-component>
+
+<!-- 关联手机 -->
+<phone-compoent phoneShow='{{phoneShow}}' bind:phoneEven='phonereResult'></phone-compoent>

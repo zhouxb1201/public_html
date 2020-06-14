@@ -1,0 +1,770 @@
+<import src="/common/wxParse/wxParse.wxml" />
+<view wx:if='{{is_allow_browse == false}}'>
+  <view class='no_data'>
+    <view class='no_data_box'>
+      <view class='img'>
+        <image src='{{dataUrl}}/template/wap/static/images/empty-cart.png' mode='widthFix'></image>
+      </view>
+      <view class='no_data_text'>您自身等级无权限浏览该商品</view>
+    </view>
+  </view>
+
+</view>
+<view wx:else>
+  <view class="goodDetail" wx:if='{{pageShow}}'>
+    <view class='goodDetail_box'>
+      <swiper indicator-dots="{{indicatorDots}}" vertical="{{vertical}}" autoplay="{{autoplay}}" duration="{{duration}}" interval='{{interval}}' circular="{{circular}}" style="height:{{imgheights[imgcurrent] > 750 ? 750 : imgheights[imgcurrent]}}rpx;">
+        <block wx:for='{{imgList}}' wx:key="{{index}}">
+          <swiper-item>
+            <image src="{{item != '' ? item : '/images/no-goods.png'}}" data-id='{{index}}' class="slide-image" mode="widthFix" lazy-load="true" bindload="imageLoad" binderror='imgError' />
+          </swiper-item>
+        </block>
+      </swiper>
+      <view class='share' bindtap='getSharePoster'>
+        <van-icon name="qr" color='#fff' size='16px' />
+      </view>
+    </view>
+
+    <!-- 预售 -->
+    <view class="presell {{presell_list.state == 1 ? 'presell_going' : 'presell_unstart'}}" wx:if='{{is_presell == 1}}'>
+      <view class='presell_price'>
+        <view class='price_cell'>
+          <view class='price_box'>
+            <text>定金</text>
+            <text class='price letter-price'>¥{{presell_first_money}}</text>
+          </view>
+          <view class='price_box'>
+            <text>总价</text>
+            <text class='all_price letter-price'>¥{{presell_all_money}}</text>
+          </view>
+        </view>
+        <view class='price_cell'>
+          <text class='stock-box' wx:if='{{presell_list.state == 1}}'>仅剩{{presell_list.presellnum}}件</text>
+          <text class='stock-box' wx:else>限量{{presell_list.maxbuy}}件</text>
+        </view>
+      </view>
+
+      <!-- 预售已开启 -->
+      <view class='presell_time_going' wx:if="{{presell_list.state == '1'}}">
+        <view class='presell_time_title'>距结束剩余</view>
+        <view>
+          <text>{{oDay}}</text> :
+          <text>{{oHours}}</text> :
+          <text>{{oMinutes}}</text> :
+          <text>{{oSeconds}}</text>
+        </view>
+      </view>
+      <!-- 预售还未到时间开启 -->
+      <view class='presell_time_unstart' wx:elif="{{presell_list.state == '2'}}">
+        <view class='presell_time_title_unstart'>距开始剩余</view>
+        <view>
+          <text>{{oDay}}</text> :
+          <text>{{oHours}}</text> :
+          <text>{{oMinutes}}</text> :
+          <text>{{oSeconds}}</text>
+        </view>
+      </view>
+
+    </view>
+
+    <!-- 秒杀 -->
+    <view class="seckill {{seckillStatus == 'going' ? 'seckill_going' : 'seckill_unstart'}}" wx:if="{{seckillShow}}">
+
+      <view class='seckill_price'>
+        <view class='normall_price'>¥{{goodPrice}}</view>
+        <view>
+          <view class='min_price'>¥{{goodDetail.min_market_price}}</view>
+          <view class='surplus_num' wx:if="{{seckillStatus == 'going'}}">仅剩{{seckillList.remain_num}}件</view>
+          <view class='' wx:elif="{{seckillStatus == 'unstart'}}">限量{{seckillList.seckill_num}}件</view>
+        </view>
+      </view>
+      <!-- 秒杀已开启 -->
+      <view class='seckill_time_going' wx:if="{{seckillStatus == 'going'}}">
+        <view class='seckill_time_title'>距结束剩余</view>
+        <view>
+          <text>{{oDay}}</text> :
+          <text>{{oHours}}</text> :
+          <text>{{oMinutes}}</text> :
+          <text>{{oSeconds}}</text>
+        </view>
+      </view>
+      <!-- 秒杀未还未到时间开启 -->
+      <view class='seckill_time_unstart' wx:elif="{{seckillStatus == 'unstart'}}">
+        <view class='seckill_time_title_unstart'>{{seckillList.seckill_day}} {{seckillList.seckill_time}} 开始</view>
+        <view>
+          <text>距开抢 </text>
+          <text>{{oDay}}</text> :
+          <text>{{oHours}}</text> :
+          <text>{{oMinutes}}</text> :
+          <text>{{oSeconds}}</text>
+        </view>
+      </view>
+
+    </view>
+
+    <!-- 砍价 -->
+    <view class="bargain {{bargain_list.status == '1' ? 'bargain_going' : 'bargain_unstart'}}" wx:if="{{bargainShow}}">
+
+      <view class='bargain_price'>
+        <view class='normall_price'>¥{{goodPrice}}</view>
+        <view>
+          <view class='min_price'>¥{{goodDetail.min_market_price}}</view>
+          <view class='surplus_num' wx:if="{{bargain_list.status == '1'}}">仅剩{{bargain_list.bargain_stock}}件</view>
+          <view class='' wx:elif="{{bargain_list.status == '0'}}">限量{{bargain_list.bargain_method}}件</view>
+        </view>
+      </view>
+
+      <!-- 砍价已开启 -->
+      <view class='bargain_time_going' wx:if="{{bargain_list.status == '1'}}">
+        <view class='bargain_time_title'>距结束剩余</view>
+        <view>
+          <text>{{oDay}}</text> :
+          <text>{{oHours}}</text> :
+          <text>{{oMinutes}}</text> :
+          <text>{{oSeconds}}</text>
+        </view>
+      </view>
+      <!-- 砍价还未到时间开启 -->
+      <view class='bargain_time_unstart' wx:elif="{{bargain_list.status == '0'}}">
+        <view class='bargain_time_title_unstart'>距开始剩余</view>
+        <view>
+          <text>{{oDay}}</text> :
+          <text>{{oHours}}</text> :
+          <text>{{oMinutes}}</text> :
+          <text>{{oSeconds}}</text>
+        </view>
+      </view>
+
+    </view>
+
+    <view class='name_price' wx:if='{{is_presell == 0}}'>
+      <view class='goodName'>
+        <view class='goodNametext'>{{goodName}}</view>
+      </view>
+      <view class='goodPrice' wx:if="{{publicPriceShow == true}}">
+        <text class='minPrice'>¥{{goodPrice}}</text>
+        <text class='discount_tip' wx:if="{{discount_tip}}">折扣价</text>
+        <text class='marketPrice'>¥{{goodDetail.min_market_price}}</text>
+      </view>
+      <view class='bargainPrice' wx:if='{{bargainShow == true}}'>
+        最低砍至：¥{{bargain_list.lowest_money}}
+      </view>
+    </view>
+
+    <!-- 预售价格 -->
+    <view class='presell_name_price' wx:if='{{is_presell == 1}}'>
+      <van-tag type="danger" size='medium'>{{presell_list.name}}</van-tag>
+      <view class='good_name'>{{goodName}}</view>
+    </view>
+
+    <!-- 运费/销量 -->
+    <view class='fs-text'>
+      <view class='textBox'>
+        <view class='textBox' wx:if="{{goodDetail.goods_type !== 4}}">
+          <text class='freight'>运费：{{goodDetail.shipping_fee}}</text>
+          <text class='saleNum'>销量：{{goodDetail.sales}}</text>
+        </view>
+        <view class="textBox" wx:else>
+          <text class='freight'>{{goodDetail.sales}}人学习</text>
+        </view>
+      </view>
+    </view>
+
+    <!-- 预售定金尾款限购 -->
+    <view class='cell_group' wx:if='{{is_presell == 1}}'>
+      <view class='cell'>
+        <van-tag class='tag' type="primary" size='medium'>限购</van-tag>
+        <view>每人 {{presell_list.maxbuy}}件</view>
+      </view>
+      <view class='cell'>
+        <van-tag class='tag' type="primary" size='medium'>款项</van-tag>
+        <view>定金 ¥ {{presell_first_money}} + 尾款 ¥ {{tail_money}}</view>
+      </view>
+      <view class='cell tab' bindtap='presellRuleShow'>
+        <view class='title'>
+          <text class='a_link'>查看预售规则</text>
+        </view>
+        <text class='icon iconfont v-icon-arrow-right'></text>
+      </view>
+    </view>
+
+
+    <view class='cell_group' wx:if='{{is_presell == 0}}'>
+      <!-- 选择促销(满减) -->
+      <view class='full_cut_list' wx:if="{{full_cut_list != ''}}" bindtap='fullCutShowOnShow'>
+        <view class='tag_box'>
+          <van-tag class='tag' type="primary" size='medium'>店铺 | 促销</van-tag>
+          <view class='tag_name'>
+            <text wx:for='{{full_cut_list[0].rules_array}}' wx:key='' wx:for-item='ruleItem' style="padding-right:15rpx;">{{ruleItem}}</text>
+          </view>
+        </view>
+
+        <text class='icon iconfont v-icon-arrow-right'></text>
+      </view>
+
+      <!-- 选择优惠券 -->
+      <view class='coupon_list' wx:if="{{couponData != ''}}" bindtap='couponShow'>
+        <view class='tag_box'>
+          <van-tag class='tag' type="danger" size='medium'>店铺 | 优惠券</van-tag>
+          <view class='tag_name'>
+            <text wx:if="{{couponData[0].coupon_genre == 1}}">无门槛{{couponData[0].money}}元</text>
+            <text wx:elif="{{couponData[0].coupon_genre == 2}}">满{{couponData[0].at_least}}减{{couponData[0].money}}元</text>
+            <text wx:elif="{{couponData[0].coupon_genre == 3}}">满{{couponData[0].at_least}}打{{couponData[0].discount}}折</text>
+          </view>
+        </view>
+        <text class='icon iconfont v-icon-arrow-right'></text>
+      </view>
+
+      <!-- 返佣金 -->
+      <view class='cell' wx:if="{{commission}}">
+        <van-tag class='tag' color="#7232dd" size='medium'>返{{txt_commission}}</van-tag>
+        <view>{{commission}}{{txt_commission}}
+          <text wx:if="{{dis_point != ''}}">+{{dis_point}}积分</text>
+        </view>
+      </view>
+
+      <!-- 积分 -->
+      <view class='cell' wx:if='{{give_point.is_point == 1}}'>
+        <van-tag class='tag' type="success" size='medium'>返积分</van-tag>
+        <view>购买可得{{give_point.point}}积分</view>
+      </view>
+
+    </view>
+
+
+    <!-- 选择规格 -->
+    <block wx:if="{{goodDetail.goods_type !== 4}}">
+      <view class='choose' bindtap="skuBtnShow" wx:if='{{skuBtnchoose}}'>
+        <view class='chosen' wx:if="{{specName != ''}}">已选：{{specName}}</view>
+        <view class='chosen' wx:else>请选择规格</view>
+        <text class='icon iconfont v-icon-arrow-right'></text>
+      </view>
+    </block>
+
+    <!-- 拼团 -->
+    <view class='group_list_box' wx:if="{{group_list != 0}}">
+      <view class='group_title' bindtap='onGroupListShow' wx:if="{{group_list.group_record_list.length != 0}}">
+        <text>{{group_list.group_record_count}}人在拼单，可直接参与</text>
+        <text>查看更多>></text>
+      </view>
+      <view class='group_item_box'>
+        <view class='group_item' wx:for='{{group_record_list}}' wx:key='' wx:for-item='groupItem' wx:for-index='groupIndex'>
+          <view class='group_l'>
+            <view class='user_logo'>
+              <image src="{{groupItem.user_headimg !=''?groupItem.user_headimg : '../../../images/no-avatar.png'}}"></image>
+            </view>
+            <view class='user_name'>{{groupItem.user_name}}</view>
+          </view>
+          <view class='group_r'>
+            <view class='group_time'>
+              <view>还差
+                <text class='d_red'>{{groupItem.group_num-groupItem.now_num}}人</text> 拼成</view>
+              <view class='time'>剩余{{groupItem.end_time}}</view>
+            </view>
+            <view class='group_btn' data-groupindex='{{groupIndex}}' bindtap='onGroupCenterShow'>去拼单</view>
+          </view>
+        </view>
+      </view>
+    </view>
+
+    <!-- 店铺 -->
+    <navigator class='shop_box' url='../../shop/home/index?shopId={{goodDetail.shop_id}}' wx:if="{{addons_shop == 1}}">
+      <view class='shop_name'>
+        <text class='icon iconfont v-icon-shop2'></text>{{goodDetail.shop_name}}</view>
+      <view class='shop_text'>进入店铺
+        <text class='icon iconfont v-icon-arrow-right'></text>
+      </view>
+    </navigator>
+
+    <view class='navTab'>
+      <view class='topTab'>
+        <van-tabs active="{{ 0 }}" z-index='0' bind:change="checkCurrent">
+          <van-tab title="详情"></van-tab>
+          <van-tab title="属性" wx:if="{{goodDetail.goods_type !== 4}}"></van-tab>
+          <van-tab title="目录" wx:else></van-tab>
+          <van-tab title="评价"></van-tab>
+        </van-tabs>
+      </view>
+      <view class='tabDetail'>
+        <view wx:if="{{currentnum == 0}}">
+          <template is="wxParse" data="{{wxParseData:description.nodes}}" />
+          <view class='no_detail' wx:if="{{goodDetail.description == ''}}">
+            <text>暂无详情</text>
+          </view>
+        </view>
+        <view wx:if="{{currentnum == 1}}">
+          <block wx:if="{{goodDetail.goods_type !== 4}}">
+            <view class='goods_attr' wx:if="{{goodDetail.goods_attribute_list != ''}}">
+              <van-row class='attr_item' wx:for="{{goodDetail.goods_attribute_list}}" wx:key=''>
+                <van-col span="8">{{item.attr_value}}</van-col>
+                <van-col span="16">{{item.attr_value_name}}</van-col>
+              </van-row>
+            </view>
+            <view class='no_detail' wx:else>
+              <text>暂无属性</text>
+            </view>
+          </block>
+          <block wx:else>
+            <view class="van-cell-group" wx:if="{{source != ''}}">
+              <view class="cell" wx:for="{{source}}" wx:key="" wx:for-item="item">
+                <view class="cell__value" bindtap="onTryStudy" data-cid="{{item.knowledge_payment_id}}">
+                  <view class="col col--18">{{item.knowledge_payment_name}}</view>
+                  <view class="col col--6" wx:if="{{!is_buy}}">
+                    <text class="tag" wx:if="{{item.knowledge_payment_is_see == -1}}">付费浏览</text>
+                    <text class="tag" wx:if="{{item.knowledge_payment_is_see > 0}}">试学</text>
+                  </view>
+                </view>
+              </view>
+            </view>
+            <view class='no_detail' wx:else>
+              <text>暂无目录</text>
+            </view>
+          </block>
+        </view>
+        <view wx:if="{{currentnum == 2}}">
+          <view class='evaluate'>
+            <view class='evaluateTab'>
+              <view class='tab {{evaluatenum == 0 ? "tabactive" : ""}}' data-current="0" bindtap='checkEvaluate'>
+                <text>全部({{evaluateData.evaluate_count}})</text>
+              </view>
+              <view class='tab {{evaluatenum == 1 ? "tabactive" : ""}}' data-current="1" bindtap='checkEvaluate'>
+                <text>图片({{evaluateData.imgs_count}})</text>
+              </view>
+              <view class='tab {{evaluatenum == 2 ? "tabactive" : ""}}' data-current="2" bindtap='checkEvaluate'>
+                <text>好评({{evaluateData.praise_count}})</text>
+              </view>
+              <view class='tab {{evaluatenum == 3 ? "tabactive" : ""}}' data-current="3" bindtap='checkEvaluate'>
+                <text>中评({{evaluateData.center_count}})</text>
+              </view>
+              <view class='tab {{evaluatenum == 4 ? "tabactive" : ""}}' data-current="4" bindtap='checkEvaluate'>
+                <text>差评({{evaluateData.bad_count}})</text>
+              </view>
+            </view>
+            <view class='evaluate_detail'>
+              <view class='evaluate_cell' wx:for='{{evaluateData.review_list}}' wx:key='' wx:for-item='evalItem'>
+                <view class='head'>
+                  <view class='head_info'>
+                    <view class='img'>
+                      <image src="{{evalItem.user_headimg != '' &&  evalItem.nick_name != null ?evalItem.user_headimg:'/images/no-avatar.png'}}">
+                      </image>
+                    </view>
+                    <view class='user'>
+                      <view class='name'>{{evalItem.nick_name != '' && evalItem.nick_name != null ? evalItem.nick_name : '匿名'}}</view>
+                      <view class='score' wx:if='{{evalItem.explain_type == 1}}'>差评</view>
+                      <view class='score' wx:elif='{{evalItem.explain_type == 3}}'>中评</view>
+                      <view class='score' wx:else>好评</view>
+                    </view>
+                  </view>
+                  <view class='time'>{{evalItem.addtime}}</view>
+                </view>
+                <view class='content_item'>
+                  <view class='content'>{{evalItem.content}}</view>
+                </view>
+                <view class='imgs'>
+                  <view class='img_group'>
+                    <view class='img_item' wx:for='{{evalItem.images}}' wx:key='' wx:for-item='imgItem' data-imglist='{{evalItem.images}}' bindtap='previewImg'>
+                      <image mode='widthFix' src='{{imgItem}}'></image>
+                    </view>
+                  </view>
+                </view>
+                <view class='business_explain' wx:if='{{evalItem.explain_time != 0}}'>
+                  <view class='title'>[商家回复]：</view>
+                  <view class='content'>{{evalItem.explain_first}}</view>
+                </view>
+                <view class='again_explain' wx:if='{{evalItem.again_addtime != 0}}'>
+                  <view class='title'>追评：</view>
+                  <view class='content'>{{evalItem.again_content}}</view>
+                  <view class='again_img'>
+                    <view class='img_group'>
+                      <view class='img_item' wx:for='{{evalItem.again_images}}' wx:key='' wx:for-item='againImgItem' data-imglist='{{evalItem.again_images}}' bindtap='previewImg'>
+                        <image mode='widthFix' src='{{againImgItem}}'></image>
+                      </view>
+                    </view>
+                  </view>
+                </view>
+                <view class='again_explain' wx:if='{{evalItem.again_explain_time != 0}}'>
+                  <view class='title'>[追评回复]：</view>
+                  <view class='content'>{{evalItem.again_explain}}</view>
+                </view>
+              </view>
+            </view>
+          </view>
+          <view class='no_detail' wx:if="{{evaluateData.review_list.length == 0}}">
+            <text>暂无评论</text>
+          </view>
+        </view>
+      </view>
+
+
+    </view>
+
+    <tem-component wx:if="{{temData != ''}}" temData='{{temData}}'></tem-component>
+
+    <!-- 底部菜单 -->
+    <view wx:if='{{is_allow_buy == false}}'>
+      <!-- 无权限购买的底部菜单 -->
+      <van-goods-action>
+        <van-goods-action-icon icon="shop" text="店铺" wx:if="{{addons_shop == 1}}" />
+        <van-goods-action-icon icon="cart" text="购物车" info="5" bindtap='onShopCart' />
+        <view class='collect_box' bindtap='collectGoods'>
+          <van-icon class='icon_like' name="{{like}}" color="{{like == 'like'? '#f44' :''}}" size='20px' />
+          <view>收藏</view>
+        </view>
+        <view class='type_btn'>
+          <view class='goods_type_btn'>
+            <button class='fun_btn' disabled='true'>无权限购买</button>
+          </view>
+        </view>
+      </van-goods-action>
+    </view>
+    <view wx:elif='{{exceed_max_buy == -1}}'>
+      <!-- 已超出最大限购量的底部菜单 -->
+      <van-goods-action>
+        <van-goods-action-icon icon="shop" text="店铺" wx:if="{{addons_shop == 1}}" />
+        <van-goods-action-icon icon="cart" text="购物车" info="5" bindtap='onShopCart' />
+        <view class='collect_box' bindtap='collectGoods'>
+          <van-icon class='icon_like' name="{{like}}" color="{{like == 'like'? '#f44' :''}}" size='20px' />
+          <view>收藏</view>
+        </view>
+        <view class='type_btn'>
+          <view class='goods_type_btn'>
+            <button class='fun_btn' disabled='true'>已超出最大限购量</button>
+          </view>
+        </view>
+      </van-goods-action>
+    </view>
+    <view wx:else>
+      <view class='foot_manu' wx:if="{{stockNum != 0}}">
+        <van-goods-action>
+          <van-goods-action-icon icon="shop" text="店铺" bindtap='onShop' wx:if="{{addons_shop == 1}}" />
+          <van-goods-action-icon icon="chat" text="客服" bindtap='onChat' wx:if='{{kefuShow}}' />
+          <van-goods-action-icon icon="cart" text="购物车" bindtap='onShopCart' wx:else/>
+
+          <view class='collect_box' bindtap='collectGoods'>
+            <van-icon class='icon_like' name="{{like}}" color="{{like == 'like'? '#f44' :''}}" size='20px' />
+            <view>收藏</view>
+          </view>
+
+          <view class='presell_btn' wx:if='{{is_presell == 1}}'>
+            <button wx:if='{{presell_list.presellnum != 0}}' class='presell_now_btn' disabled="{{presell_list.state == 2 ? true : ''}}" bindtap='onOrderBtn'>
+              立即预定
+            </button>
+            <button wx:else class='presell_now_btn' disabled="true">商品已售罄</button>
+
+          </view>
+          <view class='presell_btn' wx:else>
+
+            <!-- 拼团 -->
+            <view class='type_btn' wx:if="{{groupStatus == 'groupStart'}}">
+              <view class='fun_btn groupbtn onebuy' bindtap='onGroupOnebuybtn'>
+                <text>¥{{goodPrice}}</text>
+                <text>单独购买</text>
+              </view>
+              <view class='fun_btn groupbtn' bindtap='onGroupbuybtn'>
+                <text>¥{{groupPrice}}</text>
+                <text>发起拼团</text>
+              </view>
+            </view>
+
+            <!-- 秒杀 -->
+            <view class='type_btn' wx:elif="{{seckillStatus == 'going' || seckillStatus == 'unstart'}}">
+              <!--goods_type 实物或虚拟商品标志 1实物商品 0 虚拟商品 -->
+              <view class='goods_type_btn' wx:if='{{goodDetail.goods_type == 0}}'>
+                <button class='fun_btn' bindtap='onOrderBtn' wx:if="{{seckillStatus == 'going'}}">马上抢</button>
+                <button class='fun_btn' disabled='true' wx:if="{{seckillStatus == 'unstart'}}">即将开抢</button>
+              </view>
+              <view class='goods_type_btn' wx:else>
+                <button class='fun_btn cart_btn' bindtap='addcartBtn'>加入购物车</button>
+                <button class='fun_btn' bindtap='onOrderBtn' wx:if="{{seckillStatus == 'going'}}">马上抢</button>
+                <button class='fun_btn' disabled='true' wx:if="{{seckillStatus == 'unstart'}}">即将开抢</button>
+              </view>
+            </view>
+
+            <!-- 砍价 -->
+            <view class='type_btn' wx:elif="{{bargain_list.status == 1 || bargain_list.status == 0}}">
+              <view class='goods_type_btn'>
+                <view class='fun_btn bargain_btn disable' wx:if="{{bargain_list.status == 0}}">我要砍价</view>
+                <button class='fun_btn bargain_btn bargain_go' wx:if="{{bargain_list.status == 1 && bargain_list.is_join_bargain == false}}" data-bargainid='{{bargain_list.bargain_id}}' data-goodsid='{{goodDetail.goods_id}}' data-bargainuid='{{bargain_list.bargain_uid}}'
+                  bindtap='bargainbtn'>
+                  我要砍价
+                </button>
+                <button class='fun_btn bargain_btn bargain_go' wx:if="{{bargain_list.status == 1 && bargain_list.is_join_bargain == true}}" data-bargainid='{{bargain_list.bargain_id}}' data-goodsid='{{goodDetail.goods_id}}' data-bargainuid='{{bargain_list.bargain_uid}}'
+                  bindtap='bargainbtn'>
+                  邀请砍价
+                </button>
+              </view>
+              <view class='goods_type_btn'>
+                <button class='fun_btn' bindtap='onOrderBtn'>立即购买</button>
+              </view>
+            </view>
+
+            <!-- 普通 -->
+            <view class='type_btn' wx:else>
+              <!--goods_type 实物或虚拟商品标志 1实物商品 0 虚拟商品 4 知识付费-->
+              <view class='goods_type_btn' wx:if='{{goodDetail.goods_type == 0}}'>
+                <button class='fun_btn' bindtap='onOrderBtn'>立即购买</button>
+              </view>
+              <view class='goods_type_btn' wx:elif='{{goodDetail.goods_type == 4 && goodDetail.is_buy == false}}'>
+                <button class='fun_btn' bindtap='onOrderBtn'>立即购买</button>
+              </view>
+              <view class='goods_type_btn' wx:elif='{{goodDetail.goods_type == 4 && goodDetail.is_buy == true}}'>
+                <button class='fun_btn' bindtap='onStudy'>前往学习</button>
+              </view>
+              <view class='goods_type_btn' wx:else>
+                <button class='fun_btn cart_btn' bindtap='addcartBtn'>加入购物车</button>
+                <button class='fun_btn' bindtap='onOrderBtn'>立即购买</button>
+              </view>
+            </view>
+
+          </view>
+
+
+
+        </van-goods-action>
+      </view>
+      <view wx:else>
+        <van-goods-action>
+          <van-goods-action-icon icon="shop" text="店铺" wx:if="{{addons_shop == 1}}" />
+          <van-goods-action-icon icon="cart" text="购物车" info="5" bindtap='onShopCart' />
+          <view class='collect_box' bindtap='collectGoods'>
+            <van-icon class='icon_like' name="{{like}}" color="{{like == 'like'? '#f44' :''}}" size='20px' />
+            <view>收藏</view>
+          </view>
+          <van-goods-action-button text="商品已售罄" disabled='true' style='background:#ccc' />
+        </van-goods-action>
+      </view>
+    </view>
+
+
+  </view>
+</view>
+
+
+<!-- 预售规则 -->
+<van-popup show="{{ presellRuleShow }}" position="bottom" custom-style="border-radius:30rpx 30rpx 0 0;" bind:close="onPresellRuleClose">
+  <view class='presell_box'>
+    <view class='box_title'>预售规则</view>
+    <view class='box_presell_info'>
+      <view class='item'>
+        <view class='title'>定金</view>
+        <view class='text'>定金支付：{{presell_list.start_time}}至{{presell_list.end_time}}支付定金¥ {{presell_list.firstmoney}}，下单后请在{{presell_list.pay_limit_time}}分钟内支付，超时将自动取消订单。</view>
+      </view>
+      <view class='item'>
+        <view class='title'>尾款</view>
+        <view class='text'>尾款支付：{{presell_list.pay_start_time}}至{{presell_list.pay_end_time}}支付尾款，超时订单关闭，且定金不予退还。</view>
+      </view>
+      <view class='item'>
+        <view class='title'>发货</view>
+        <view class='text'>发货时间：{{presell_list.send_goods_time}}开始发货。</view>
+      </view>
+    </view>
+  </view>
+  <view class='close'>
+    <button class='closebtn' bindtap='onPresellRuleClose'>关闭</button>
+  </view>
+</van-popup>
+
+<!-- 参与拼团中部弹框 -->
+<van-popup show="{{ groupCenterShow }}" bind:close="onGroupCenterClose">
+  <view class='group_center'>
+    <view class='group_popup-box'>
+      <view class='title'>参与{{group_record_list[groupIndex].user_name}}的拼单</view>
+      <view class='tips'>仅剩
+        <text class='num'>{{group_record_list[groupIndex].group_num-group_record_list[groupIndex].now_num}}</text> 个名额，{{group_record_list[groupIndex].end_time}}后结束</view>
+      <view class='logo_group'>
+        <view class='img'>
+          <view class='leader'>团长</view>
+          <image src="{{group_record_list[groupIndex].user_headimg != ''? group_record_list[groupIndex].user_headimg : '../../../images/no-avatar.png'}}"></image>
+        </view>
+        <view class='help'>?</view>
+      </view>
+      <view class='join_btn' data-recordid='{{group_record_list[groupIndex].record_id}}' bindtap='joinGroup'>参加拼单</view>
+    </view>
+  </view>
+</van-popup>
+
+<!-- 拼团底部弹框列表 -->
+<van-popup show="{{ groupListShow }}" position="bottom" custom-style="border-radius:30rpx 30rpx 0 0;" bind:close="onGroupListClose">
+  <view class='group_list' wx:if="{{group_list.group_record_list.length != 0}}">
+    <view class='group_list_title'>正在拼团</view>
+    <view class='group_item_box'>
+      <view class='group_item' wx:for='{{group_record_list}}' wx:key='' wx:for-item='groupItem' wx:for-index='groupIndex'>
+        <view class='group_l'>
+          <view class='user_logo'>
+            <image src="{{groupItem.user_headimg !=''?groupItem.user_headimg : '/images/no-avatar.png'}}"></image>
+          </view>
+          <view class='user_name'>{{groupItem.user_name}}</view>
+        </view>
+        <view class='group_r'>
+          <view class='group_time'>
+            <view>还差
+              <text class='d_red'>{{groupItem.group_num-groupItem.now_num}}人</text> 拼成</view>
+            <view class='time'>剩余{{groupItem.end_time}}</view>
+          </view>
+          <view class='group_btn' data-groupindex='{{groupIndex}}' bindtap='onGroupCenterShow'>去拼单</view>
+        </view>
+      </view>
+    </view>
+  </view>
+  <view class='close_btn' bindtap='onGroupListClose'>关闭</view>
+</van-popup>
+
+<!-- 满减送弹框 -->
+<van-popup show="{{ fullCutShow }}" position="bottom" bind:click-overlay="fullCutShowOnclose" custom-style="border-radius:30rpx 30rpx 0 0;">
+  <view class='full_cut_box'>
+    <view class='box_title'>{{goodDetail.shop_name}}</view>
+    <view class='box_info'>
+      <view class='info_item' wx:for='{{full_cut_list}}' wx:key='' wx:for-item='fullcutItem'>
+        <view class='item_title'>{{fullcutItem.mansong_name}}</view>
+        <view class='item_content'>
+          <text class='cell_text' wx:for='{{fullcutItem.rules_array}}' wx:key='' wx:for-item='ruleItem'>{{index+1}}、{{ruleItem}};    </text>
+        </view>
+        <view class='time'>使用期限 {{fullcutItem.start_time}} ~ {{fullcutItem.end_time}}</view>
+      </view>
+    </view>
+  </view>
+  <view class='close'>
+    <button class='closebtn' bindtap='fullCutShowOnclose'>关闭</button>
+  </view>
+
+</van-popup>
+
+<!-- 优惠券弹出框 -->
+<van-popup show="{{ couponShow }}" position="bottom" bind:click-overlay="couponOnclose" custom-style="border-radius:30rpx 30rpx 0 0;">
+  <view class='couponPup'>
+    <view class='couponList' wx:for="{{couponData}}" wx:key="">
+      <view class='couponItem'>
+        <view class='couponTitle'>{{item.coupon_genre == 3 ? item.discount : item.money}}{{item.coupon_genre == 3 ? "折" : "元"}}</view>
+        <view>
+          <text class='couponName'>{{item.coupon_name}}</text>
+          <text wx:if="{{item.coupon_genre == 1}}">无门槛{{item.money}}元</text>
+          <text wx:elif="{{item.coupon_genre == 2}}">满{{item.at_least}}减{{item.money}}元</text>
+          <text wx:elif="{{item.coupon_genre == 3}}">满{{item.at_least}}打{{item.discount}}折</text>
+        </view>
+        <view class='useDate'>
+          使用期限：{{item.start_time}} ~ {{item.end_time}}
+        </view>
+      </view>
+      <button class='getBtn' data-couponid="{{item.coupon_type_id}}" bindtap='getuserCoupon'>领取</button>
+    </view>
+  </view>
+  <view class='close'>
+    <button class='closebtn' bindtap='couponOnclose'>关闭</button>
+  </view>
+</van-popup>
+
+<!-- 规格弹出框 -->
+<van-popup show="{{ skuShow }}" position="bottom" custom-style="border-radius:30rpx 30rpx 0 0;" bind:click-overlay="skuOnclose">
+  <view class='goods_sku'>
+    <view class='goodHeader'>
+      <view class='goodHeaderImg'>
+        <image src='{{imgList[0]}}'></image>
+      </view>
+      <view class='goodHeaderTop'>
+        <view class='goodTitle'>
+          <view class='goods_name'>{{goodName}}</view>
+          <!-- 预售金额已开启 -->
+          <view class='price' wx:if='{{is_presell == 1}}'>
+            <view class='presell_sku_price'>
+              <text class='text_title'>定金</text>
+              <text>¥{{presell_first_money}}</text>
+            </view>
+            <view class='presell_sku_price'>
+              <text class='text_title'>总价</text>
+              <text>¥{{presell_all_money}}</text>
+            </view>
+          </view>
+          <view class='price' wx:else>
+            ¥{{groupPrice !='' && buyType == 'groupBuy' ? groupPrice : goodPrice}}
+            <text class='groupPriceTip' wx:if="{{groupStatus == 'groupStart' && buyType == 'groupBuy'}}">拼团价</text>
+            <text class='groupPriceTip' wx:elif="{{seckillStatus == 'going' || seckillStatus == 'unstart'}}">秒杀价</text>
+            <text class='groupPriceTip' wx:elif='{{discount_tip}}'>折扣价</text>
+          </view>
+        </view>
+        <view class='icon_closeBtn'>
+          <van-icon name='close' color='#969799' size='20px' bindtap='skuOnclose' />
+        </view>
+      </view>
+    </view>
+    <view class="{{sku.tree.length != 0 ? 'goods_sku_tree' :''}} ">
+      <view class='goods_sku_tree_item' wx:for="{{sku.tree}}" wx:key='' wx:for-index='group_idx'>
+        <view class='goods_sku_tree_key'>{{item.k}}:</view>
+
+        <view wx:for="{{item.v}}" class="goods_sku_tree_value {{i.isSelect == 'true' ? 'active_value':''}}" wx:for-item='i' wx:for-index='index' data-attr-index="{{index}}" data-select-index="{{group_idx}}" data-attr-id="{{i.id}}" wx:key='item' catchtap="clickMenu"
+          data-isSelect="{{i.isSelect}}">
+          <text>{{i.name}}</text>
+        </view>
+
+      </view>
+    </view>
+    <view class='stock_num'>
+      <view class='buy_num'>
+        <view>购买数量：</view>
+        <van-stepper wx:if="{{sureBtn == 'oneOrderGroup'}}" v-model="value" class='v_stepper' value="{{buyNum}}" max="{{stockNum}}" bind:change="changeBuynum" />
+        <van-stepper wx:else v-model="value" class='v_stepper' value="{{buyNum}}" max="{{maxBuy != ''?maxBuy:stockNum}}" bind:change="changeBuynum" />
+      </view>
+      <view class='surplus_num'>剩余{{stockNum}}件
+        <text class='maxbuy' wx:if="{{maxBuy != ''}}">每次限购{{maxBuy}}件</text> </view>
+    </view>
+  </view>
+
+  <!-- 没有该商品的购买权限 -->
+  <view wx:if='{{is_allow_buy == false}}'>
+    <view class='nocartbtn'>无权限购买</view>
+  </view>
+  <view wx:elif='{{exceed_max_buy == -1}}'>
+    <view class='nocartbtn'>已超出最大购买数量</view>
+  </view>
+  <view wx:else>
+    <view class='bottomBtn' wx:if="{{stockNum != 0}}">
+      <view wx:if="{{sku_btn}}">
+        <!-- 预售 -->
+        <view wx:if='{{is_presell == 1}}'>
+          <view class='buyOn' wx:if='{{presell_list.presellnum != 0}}' bindtap='buyNowOrder'>立即购买</view>
+          <view class='buyOn' wx:else>商品已售罄</view>
+        </view>
+        <!-- 秒杀 -->
+        <view wx:elif="{{seckillStatus == 'going' || seckillStatus == 'unstart'}}">
+          <view class='buyOn' bindtap='buyNowOrder'>立即购买</view>
+        </view>
+        <!-- 砍价 -->
+        <view wx:elif="{{bargain_list.status == 1 || bargain_list.status == 0}}">
+          <view class='buyOn' bindtap='buyNowOrder'>立即购买</view>
+        </view>
+        <!--goods_type 实物或虚拟商品标志 1实物商品 0 虚拟商品 -->
+        <view wx:elif='{{goodDetail.goods_type == 0}}'>
+          <view class='buyOn' bindtap='buyNowOrder'>立即购买</view>
+        </view>
+        <view class='sku_btn' wx:else>
+          <view class='addCart' bindtap='addCart'>加入购物车</view>
+          <view class='buyOn' bindtap='buyNowOrder'>立即购买</view>
+        </view>
+      </view>
+      <view wx:else>
+        <view class='buyOn' bindtap='buyNowOrder' wx:if="{{sureBtn == 'order'}}">立即购买</view>
+        <view class='addCart' bindtap='onOrderInfoPage' wx:if="{{sureBtn == 'oneOrderGroup'}}">立即购买</view>
+        <view class='addCart' bindtap='addCart' wx:if="{{sureBtn == 'addcart'}}">加入购物车</view>
+      </view>
+    </view>
+    <view class='nocartbottom' wx:else>
+      <view class='nocartbtn'>商品已售罄</view>
+    </view>
+  </view>
+
+</van-popup>
+
+<!-- 关联手机 -->
+<phone-compoent phoneShow='{{phoneShow}}' bind:phoneEven='phonereResult'></phone-compoent>
+
+<!-- 登录组件 -->
+<login-component loginShow='{{loginShow}}'></login-component>
+
+<!-- canvas广告二维码 -->
+<my-poster id="getPoster" bindmyevent="myEventListener" avater="{{goodDetail.goods_image_yun}}" codeimg="{{code_img}}" price="{{goodDetail.min_price}}" marketprice='{{goodDetail.min_market_price}}' productname="{{goodName}}" configposter="{{config_poster}}"
+  posterimg="{{poster_img}}">
+</my-poster>
+
+<!-- 滚动条返回到顶部 -->
+<backtop-component backTopValue='{{backTopValue}}'></backtop-component>
+
+<topnav-component wx:if='{{topNavValue}}'></topnav-component>

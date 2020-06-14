@@ -1,0 +1,86 @@
+page{
+  background-color: #f8f8f8;
+  font-size: 28rpx;
+}
+
+.list_box .item{
+  display: flex;
+  padding: 20rpx 30rpx;
+  border-bottom: 1px solid #ebedf0; 
+  background-color: #fff; 
+}
+.list_box .item .text_group{
+  width: 70%;
+}
+.list_box .item .text_group .name{
+  font-weight: 800;
+  color: #323233;
+}
+.list_box .item .text_group .rule .text{
+  line-height: 1.6;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  color: #606266;
+}
+.list_box .item .text_group .rule .text text{
+  color: #ff454e;
+  padding: 0 8rpx;
+  max-width: 160px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  vertical-align: middle;
+}
+.list_box .item .text_group .a_link{
+  color: #008aff;
+}
+.list_box .item .right_group{
+  width: 30%;
+  text-align: center;
+}
+.list_box .item .right_group .btn{
+  background-color: #f44;
+  border: 1px solid #f44;
+  color: #fff;
+  padding: 0 16rpx;
+  height: 60rpx;
+  min-width: 120rpx;
+  font-size: 24rpx;
+  line-height: 56rpx;
+  border-radius: 50rpx;
+}
+
+
+.no_more{
+  padding: 40rpx;
+  color: #606266;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.no_data{
+  position: absolute;
+  top: 88rpx;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  padding: 0;
+  z-index: 10;
+  display: flex;
+  align-items: center;
+  justify-content: center;  
+  background-color: #fff;
+}
+.no_data_box{
+  width: 100%;
+  text-align: center;
+}
+.no_data_box .img{
+  max-width: 65%;
+  margin: 0 auto;
+}
+.no_data_box .no_data_text{
+  margin-top: 30rpx;
+}

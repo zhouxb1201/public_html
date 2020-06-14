@@ -1,0 +1,256 @@
+{extend name="admin/base" /}
+
+{block name="main"}
+<!-- page -->
+<form class="form-horizontal widthFixedForm" role="form">
+    <!--规格名称-->
+    <div class="form-group">
+        <label for="specificationsName" class="col-md-2 control-label"><span class="text-bright">*</span>规格名称</label>
+        <div class="col-md-5">
+            <input type="text" class="form-control" id="spec_name" name='spec_name' value="{$info['spec_name']}" {if $info['shop_id'] === 0} disabled title='商家规格不能编辑' {/if} autocomplete="off">
+            <p class="help-block mb-0">例如：颜色丶尺寸丶型号等，若是系统规格则不能编辑</p>
+        </div>
+    </div>
+    <div class="form-group">
+
+        <label class="col-md-2 control-label"><span class="text-bright">*</span>规格值</label>
+        {if $info['is_platform']}
+        <div class="col-md-5">
+            <textarea class="form-control valid" disabled rows="8" id="spec_item_platform" aria-invalid="false" required>{$info['spec_value_name_list_platform']}</textarea>
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="col-md-2 control-label"></label>
+        {/if}
+        <div class="col-md-5">
+            <textarea class="form-control valid" rows="8" id="spec_item" aria-invalid="false" required>{$info['spec_value_name_list']}</textarea>
+            <p class="help-block">一行代表一个规格值，多个规格值回车换行添加，若是系统规格则不能编辑系统值，且添加值不能与系统值重复</p>
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="col-md-2 control-label">关联品类</label>
+        <div class="col-md-5">
+            <div class="checkbox_three">
+                {volist name="attribute_list" id="vo"}
+                {notempty name="vo['categorys']"}
+                <label class="checkbox-inline category-pr">
+                    <input type="checkbox" name="attr_id" id="{$vo.attr_id}" {if $info['shop_id'] === 0} disabled title='商家规格不能编辑'{/if}  value="{$vo.attr_id}" {if $vo['checked'] eq '1'} checked="checked" {/if}>{$vo.attr_name}
+                    <div class="category-pos">
+                        <div class="category-arrow">
+                            <p>对应分类：</p>
+                            {volist name="vo['categorys']" id="v1"}
+                            <p>{$v1['category_names']}</p>
+                            {/volist}
+                        </div>
+                    </div>
+                </label>
+                {/notempty}
+                {/volist}
+
+            </div>
+        </div>
+    </div>
+    <!--规格排序-->
+    <div class="form-group">
+        <label for="sorts" class="col-md-2 control-label">规格排序</label>
+        <div class="col-md-5">
+            <input id="sort" type="text" value="{$info['sort']}" onkeyup='this.value = this.value.replace(/\D/gi, "")' {if $info['shop_id'] === 0} disabled title='商家规格不能编辑' {/if} class="form-control" autocomplete="off">
+                   <p class="help-block mb-0">规格排序，数字越大越靠前，若是系统规格则不能编辑</p>
+        </div>
+    </div>
+    <!--是否启用-->
+    <div class="form-group">
+        <label class="col-md-2 control-label">是否启用</label>
+        <div class="col-md-5">
+            <!--<label><input id="is_visible" class="mui-switch mui-switch-animbg" {eq name="info['is_visible']" value="1"} checked="checked" {/eq} type="checkbox" style="outline: none;"> </label>-->
+            <div class="switch-inline">
+                <input type="checkbox" id="is_visible" {if $info['shop_id'] === 0} disabled {/if} {eq name="info['is_visible']" value="1"} checked="checked" {/eq}>
+                       <label for="is_visible" class="" {if $info['shop_id'] === 0}  title='商家规格不能编辑' {/if}></label>
+            </div>
+            <p class="help-block mb-0">若是系统规格则不能编辑</p>
+        </div>
+    </div>
+    <!--添加返回-->
+    <input type="hidden" id="spec_id" name="spec_id" value="{$info['spec_id']}">
+     <input type="hidden" name="seleted_attr" value="{$info['goods_attr_id']}">
+    <div class="form-group">
+        <label class="col-md-2 control-label"></label>
+        <div class="col-md-5">
+            {if $info['spec_id']}
+            <a href="javascript:void(0);" class="btn btn-primary add3">提交</a>
+            {else}
+            <a href="javascript:void(0);" class="btn btn-primary add4">添加</a>
+            {/if}
+            <a href="{:__URL('ADMIN_MAIN/goods/goodsspeclist')}" class="btn btn-default">返回</a>
+        </div>
+    </div>
+</form>
+<!-- page end -->
+{/block}
+{block name="script"}      
+<script>
+    require(['utilAdmin', 'util'], function (utilAdmin, util) {
+        //修改单个字段
+        var flag = false;//防止重复提交
+        function checkRepeat(arr) {
+            var hash = {};
+            for (var i in arr) {
+                if (hash[arr[i]])
+                    return true;
+                hash[arr[i]] = true;
+            }
+            return false;
+        }
+        function addGoodsSpec() {
+            var spec_item = $('#spec_item').val();
+            var arr = spec_item.split(/[(\r\n)\r\n]+/);
+            if (checkRepeat(arr))
+            {
+                util.message('规格值不能重复！', 'danger');
+                return false;
+            }
+            if (arr.length == 0) {
+                util.message('请填写规格值！', 'danger');
+                return false;
+            }
+            var spec_value_str = '';
+            for (var i = 0; i < arr.length; i++) {
+                if(arr[i]){
+                    spec_value_str += ',' + arr[i];
+                }
+            }
+            spec_value_str = spec_value_str.substr(1);
+            var spec_name = $("input[name='spec_name']").val();
+            var attr_id =[];    
+            $('input[name="attr_id"]:checked').each(function(){    
+                attr_id.push($(this).val());    
+            });
+            var sort = $("input[name='sort']").val();
+            if ($("#is_visible").prop("checked")) {
+                var is_visible = 1;
+            } else {
+                var is_visible = 0;
+            }
+
+            if (spec_name == '') {
+                utilAdmin.message('规格名称不能为空！');
+                return false;
+            }
+            if (spec_value_str == '') {
+                utilAdmin.message('请填写规格值！');
+                return false;
+            }
+            if (flag) {
+                return;
+            }
+            flag = true;
+            $.ajax({
+                type: "post",
+                url: "{:__URL('ADMIN_MAIN/goods/addgoodsspec')}",
+                data: {
+                    'spec_name': spec_name,
+                    'sort': sort,
+                    'is_visible': is_visible,
+                    'spec_value_str': spec_value_str,
+                    'attr_id': attr_id
+                },
+                dataType: "json",
+                success: function (data) {
+                    if (data["code"] > 0) {
+                        utilAdmin.message("添加成功", "success", function () {
+                            location.href = "{:__URL('ADMIN_MAIN/goods/goodsspeclist')}";
+                        });
+                    } else {
+                        utilAdmin.message('添加失败！' + data["message"], "danger");
+                        flag = false;
+                    }
+                }
+            });
+        }
+        function updateGoodsSpec() {
+            var spec_item_platform = $('#spec_item_platform').val();
+            if(!spec_item_platform){
+                spec_item_platform = '';
+            }
+            var spec_item = $('#spec_item').val();
+            if(!spec_item){
+                util.message('请填写规格值！', 'danger');
+                return false;
+            }
+            var arr = spec_item.split(/[(\r\n)\r\n]+/);
+            var arr_platform = spec_item_platform.split(/[(\r\n)\r\n]+/);
+            arr_platform.push.apply(arr_platform,arr);
+            if (arr.length == 0) {
+                util.message('请填写规格值！', 'danger');
+                return false;
+            }
+            if (checkRepeat(arr_platform))
+            {
+                util.message('规格值不能重复！', 'danger');
+                return false;
+            }
+            
+            var spec_value_str = '';
+            for (var i = 0; i < arr.length; i++) {
+                if(arr[i]){
+                    spec_value_str += ',' + arr[i];
+                }
+            }
+            spec_value_str = spec_value_str.substr(1);
+            var spec_name = $("input[name='spec_name']").val();
+            var attr_id =[];    
+            $('input[name="attr_id"]:checked').each(function(){    
+                attr_id.push($(this).val());    
+            });
+            var sort = $("#sort").val();
+            var spec_id = $("input[name='spec_id']").val();
+            var seleted_attr = $("input[name='seleted_attr']").val();
+            if ($("#is_visible").prop("checked")) {
+                var is_visible = 1;
+            } else {
+                var is_visible = 0;
+            }
+            if (spec_name == '') {
+                utilAdmin.message('规格名称不能为空！');
+                $('#spec_name').focus();
+                return false;
+            }
+            if (flag) {
+                return;
+            }
+            flag = true;
+            $.ajax({
+                type: "post",
+                url: "{:__URL('ADMIN_MAIN/goods/updategoodsspec')}",
+                data: {
+                    'spec_id': spec_id,
+                    'spec_name': spec_name,
+                    'sort': sort,
+                    'is_visible': is_visible,
+                    'spec_value_str': spec_value_str,
+                    'attr_id': attr_id,
+                    'seleted_attr': seleted_attr
+                },
+                dataType: "json",
+                success: function (data) {
+                    if (data["code"] > 0) {
+                        utilAdmin.message("修改成功", "success", function () {
+                            location.href = "{:__URL('ADMIN_MAIN/goods/goodsspeclist')}";
+                        });
+                    } else {
+                        utilAdmin.message('修改失败！' + data["message"], "danger");
+                        flag = false;
+                    }
+                }
+            });
+        }
+        $('body').on('click', '.add3', function () {
+            updateGoodsSpec();
+        });
+        $('body').on('click', '.add4', function () {
+            addGoodsSpec();
+        });
+
+    })
+</script>
+{/block}

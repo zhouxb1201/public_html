@@ -1,0 +1,97 @@
+<div class="goods-dialog" id="goods-dialog">
+    <ul class="nav nav-tabs v-nav-tabs pt-15" role="tablist">
+        <li role="presentation" class="active"><a href="#list" aria-controls="list" role="tab" data-toggle="tab" class="flex-auto-center">商品列表</a></li>
+        <div class="input-group search-input-group pull-right">
+            <input type="text" class="form-control" name="name" placeholder="商品名称">
+            <span class="input-group-btn"><button class="btn search search-color" >搜索</button></span>
+        </div>
+    </ul>
+    <div class="dialog-box tab-content">
+        <div role="tabpanel" class="tab-pane fade in active" id="list">
+            <table class="table v-table table-auto-center">
+                <thead>
+                <tr>
+                    <th>商品</th>
+                    <th width="150">操作</th>
+                </tr>
+                </thead>
+                <tbody id="content"></tbody>
+            </table>
+            <nav aria-label="Page navigation" class="clearfix">
+                <ul id="page_goods" class="pagination pull-right"></ul>
+            </nav>
+        </div>
+    </div>
+    <input type="hidden" id="selectedData">
+</div>
+<script id='goods_tpl_content' type='text/html'>
+    <%each data as item itemid%>
+    <tr>
+        <td>
+            <div class="media text-left">
+                <div class="media-left">
+                    <img src="<%item.pic_cover%>" onerror="this.src='http://iph.href.lu/60x60';" width="60" height="60">
+                </div>
+                <div class="media-body max-w-300">
+                    <div class="line-2-ellipsis"><%if item.promotion_type%><span class="btn btn-sm btn-danger" style="padding:2px 5px"><%item.promotion_name%></span>&nbsp;<%/if%><%item.goods_name%></div>
+                    <div class="line-1-ellipsis text-danger strong"><%item.price%></div>
+                </div>
+            </div>
+        </td>
+        <td>
+            <a href="javascript:;" class="text-primary selec_btn" data-img="<%item.pic_cover%>" data-goods_name="<%item.goods_name%>" data-price="<%item.price%>" data-sku_list="<%item.sku_list%>" data-goods_id="<%item.goods_id%>" >选择</a>
+        </td>
+    </tr>
+    <%/each%>
+</script>
+<script>
+    require(['util','tpl'],function(util,tpl){
+        //$('.btn-primary').hide();
+        //$('.btn-default').hide();
+        var page_index = 1;
+        var all_data = {};
+        util.initPage(LoadingInfo,'page_goods')
+        function LoadingInfo(page_index){
+            var val = $('input[name="name"]').val();
+            $.ajax({
+                type: "post",
+                url: "{$selectGoodsList}",
+                async: true,
+                data: {
+                    "page_index": page_index,
+                    "search_text": val
+                },
+                success: function (data) {
+                    all_data = data;
+                    $('#goods-dialog #content').html(tpl('goods_tpl_content',all_data));
+                    $('#page_goods').paginator('option', {
+                        totalCounts: data.total_count
+                    });
+                }
+            });
+        }
+        // 搜索
+        $('.search').on('click',function(){
+            LoadingInfo(1);
+        });
+        // 选择
+        $('#goods-dialog').on('click','.selec_btn',function(){
+            var goods_id = $(this).data('goods_id');
+            var goods_name = $(this).data('goods_name');
+            var price = $(this).data('price');
+            var pic_cover = $(this).data('img');
+
+            var html = '';
+            html += '<tr>';
+            html += '<input type="hidden" name="goods_id" id="goods_id" value="' + goods_id +'">';
+            html += '<td><a href="javascript:;" class="fl picture-list1-pic" data-id="' + goods_id +'">';
+            html += '<i class="icon icon-danger" style="right:10px;" title="删除"></i>';
+            html += '<div><img src="'+__IMG(pic_cover)+'" style="width: 80px;height: 80px"></div>';
+            html += '<div class="line-1-ellipsis">'+ goods_name +'</div>';
+            html += '</a></td>';
+            html += '</tr>';
+            $("#picture-list1").html(html);
+            $('.jconfirm-closeIcon').click();
+        });
+    })
+</script>

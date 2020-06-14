@@ -1,0 +1,190 @@
+
+{block name="main"} 
+               <!-- page -->
+                <!--<form action="" class="form">
+                    <div class="v-form-inline">
+                        <div class="form-group">
+                            <label class="control-label">商品名称</label>
+                            <input type="text" id="goods_name" class="form-control">
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label">店铺类型</label>
+                            <select class="form-control" id="shop_type">
+                                <option value="">全部</option>
+                                <option value="1">自营店</option>
+                                {if $shopStatus}
+                                <option value="2">入驻店</option>
+                                {/if}
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label">排序方式</label>
+                            <div class="inline-control">
+                                <label class="radio-inline">
+                                  <input type="radio" name="sort" checked value="1"> 按销量
+                                </label>
+                                <label class="radio-inline">
+                                  <input type="radio" name="sort"  value="2"> 按销售额
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="v-form-inline">
+                        <div class="form-group date-form-group">
+                            <label class="control-label">下单时间</label>
+                            <div class="date-input-group" >
+                                <div class="date-input-control">
+                                    <input type="text" class="form-control" id="startDate" placeholder="开始时间" value=""><i class="icon icon-calendar"></i>
+                                </div>
+                                <span class="date-input-group-addon">~</span>
+                                <div class="date-input-control">
+                                    <input type="text" class="form-control" id="endDate" placeholder="结束时间" value=""><i class="icon icon-calendar"></i>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <a class="btn btn-primary search"><i class="icon icon-search"></i> 搜索</a>
+                        </div>
+                    </div>
+                </form>-->
+<form class="v-filter-container">
+    <div class="filter-fields-wrap">
+        <div class="filter-item clearfix">
+            <div class="filter-item__field">
+                <div class="v__control-group">
+                    <label class="v__control-label">榜单类型</label>
+                    <div class="v__controls">
+                        <select class="v__control_input" id="types" name="types">
+                            <option value="1">推荐榜</option>
+                            <option value="2">佣金榜</option>
+                            <option value="3">积分榜</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="v__control-group">
+                    <label class="v__control-label">榜单粒度</label>
+                    <div class="v__controls">
+                        <select class="v__control_input" id="times"  name="times">
+                            <option value="month">月榜</option>
+                            <option value="year">年榜</option>
+                            <option value="">总榜</option>
+                        </select>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+        <div class="filter-item clearfix">
+            <div class="filter-item__field">
+                <div class="v__control-group">
+                    <label class="v__control-label"></label>
+                    <div class="v__controls">
+                        <a class="btn btn-primary search"><i class="icon icon-search"></i> 搜索</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</form>
+
+                <div class="screen-title">
+                    <span class="text">数据列表</span>
+                </div>
+               
+                <table class="table v-table table-auto-center">
+                    <thead>
+                        <tr>
+                            <th>排行</th>
+                            <th class="col-md-6">会员</th>
+                            <th>推荐人数</th>
+                            <th>累计佣金</th>
+                            <th>可用积分</th>
+                        </tr>
+                    </thead>
+                    <tbody id="list">
+                    </tbody>
+                </table>
+                <!-- <nav aria-label="Page navigation" class="clearfix">
+                    <ul id="page" class="pagination pull-right"></ul>
+                </nav> -->
+                <!-- page end -->
+{/block}
+{block name="script"}
+<script>
+require(['util'],function(util){
+    util.initPage(LoadingInfo(1,1,'month'));
+    
+    function LoadingInfo(page_index,types,times) {
+        
+        console.log('types',types);
+        console.log('times',times);
+        
+        $.ajax({
+            type: "post",
+            url: "{$distributionRankingUrl}",
+            async: true, 
+            data: {
+                "page_index": page_index,
+                "types": types,
+                "operation": 1,
+                "times": times
+            },
+            success: function (data) {
+                console.log('data',data);
+                
+                var html = '';
+                // $("#account_money").html(data['account'][0]);
+                // $("#account_sum").html(data['account'][1]);
+                // $("#account_goods").html(data['account'][2]);
+                // $("#total_count_num").text(data["total_count"]);
+                // $("#page_count_num").text(data["page_count"]);
+                // $("#page_count").val(data["page_count"]);
+                // $("#pageNumber a").remove();
+                if (data["data"]['rankinglists'].length > 0) {
+                    for (var i = 0; i < data["data"]['rankinglists'].length; i++) {
+                        html +='<tr>';
+                        html +='<td>';
+                        if (i == 0) {
+                            html +='<div class="ranking placed">' + (i + 1) + '</div>';
+                        } else if (i == 1) {
+                            html +='<div class="ranking placed">' + (i + 1) + '</div>';
+                        } else if (i == 2) {
+                            html +='<div class="ranking placed">' + (i + 1) + '</div>';
+                        }else{
+                            html +='<div class="ranking">' + (i + 1) + '</div>';
+                        }
+                        html +='</td>';
+                        html +='<td>';
+                        html +='<div class="media text-left">';
+                        html +='<div class="media-left" >';
+                        html +='<img width="60px" height="60px" src="' + __IMG(data["data"]['rankinglists'][i]["user_headimg"]) + '">';
+                        html +='</div>';
+                        html +='<div class="media-body break-word"><div class="line-2-ellipsis">' + data["data"]['rankinglists'][i]["nick_name"]+ '</div>';
+                        html +='</div>';
+                        html +='</div>';
+                        html +='</td>';
+                        html +='<td>' + data["data"]['rankinglists'][i]['total'] + '</td>';
+                        html +='<td>'+data["data"]['rankinglists'][i]['commissions'] + '</td>';
+                        html +='<td>'+data["data"]['rankinglists'][i]['points'] + '</td>';
+                        html +='</tr>';
+                    }
+                } else {
+                    html += '<tr><td colspan="4" class="h-200">暂无符合条件的数据记录</td></tr>';
+                };
+                // console.log(data['data']['total_count'])
+                // $('#page').paginator('option', {
+                //     totalCounts: data['data']['data']['total_count']  // 动态修改总数
+                // });
+                $("#list").html(html)
+            }
+        });
+    }
+    $('.search').on('click',function(){
+        //获取选中信息
+        var types = $("select[name='types']").val();
+        var times = $("select[name='times']").val();
+        util.initPage(LoadingInfo(1,types,times));
+    });
+})
+</script>
+{/block}

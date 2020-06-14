@@ -1,0 +1,132 @@
+{extend name="platform/new_base" /}
+{block name="resources"/}
+{/block}
+{block name="main"}
+                <!-- page -->
+                <ul class="nav nav-tabs v-nav-tabs" role="tablist">
+                    <li role="presentation" class="active"><a href="#all" data-id="0" aria-controls="all" role="tab" data-toggle="tab" class="flex-auto-center">全部</a></li>
+                    <!--<li role="presentation" ><a href="#text" data-id="1"  aria-controls="text" role="tab" data-toggle="tab" class="flex-auto-center">文本</a></li>-->
+                    <li role="presentation" ><a href="#imageText" data-id="2" aria-controls="imageText" role="tab" data-toggle="tab" class="flex-auto-center">单图文</a></li>
+                    <li role="presentation" ><a href="#imagesTexts"  data-id="3" aria-controls="imagesTexts" role="tab" data-toggle="tab" class="flex-auto-center">多图文</a></li>
+                </ul>
+                <div class="flex flex-pack-justify mb-10">
+                    <a href="{:__URL('PLATFORM_MAIN/wchat/addMedia')}" class="btn btn-primary"><i class="icon icon-add1"></i> 添加素材</a>
+                    <div class="input-group search-input-group">
+                        <input type="text" class="form-control" placeholder="请输入素材名称"  id="search_text">
+                        <span class="input-group-btn">
+                            <a class="btn btn-primary search" type="button">搜索</a>
+                        </span>
+                    </div>
+                </div>
+                    
+                
+                <table class="table v-table table-auto-center">
+                    <thead>
+                        <tr>
+                            <th>标题</th>
+                            <th>创建时间</th>
+                            <th>操作</th>
+                        </tr>
+                    </thead>
+                    <tbody id="list">
+
+                    </tbody>
+                </table>
+                <input type="hidden" id="page_index">
+                <nav aria-label="Page navigation" class="clearfix">
+                    <ul id="page" class="pagination pull-right"></ul>
+                </nav>
+                <!-- page end -->
+                <input type="hidden" id="type" value="{$type}">
+{/block}
+{block name="script"}
+<script>
+require(['util'],function(util){
+    $('.nav-tabs a').click(function(){
+       var type = $(this).data('id');
+       $("#type").val(type);
+        getList();
+    });
+    util.initPage(getList);
+    function getList(page_index){
+        $("#page_index").val(page_index);
+        var search_text = $("#search_text").val();
+        var type = $("#type").val();
+        $.ajax({
+            type : "post",
+            url : "{:__URL('PLATFORM_MAIN/wchat/materialMessage')}",
+            async : true,
+            data : {
+                "page_index" : page_index, "search_text" : search_text, "type" : type
+            },
+            success : function(data) {
+                var html = '';
+                if (data["data"].length > 0) {
+                    for (var i = 0; i < data["data"].length; i++) {
+                        if(data['data'][i]['type'] == 1){
+                            var type_name = '文本 ';
+                        }else if(data['data'][i]['type'] == 2){
+                            var type_name = '单图文 ';
+                        }else if(data['data'][i]['type'] == 3){
+                            var type_name = '多图文 ';
+                        }
+                        html+= '<tr>';
+                        html+= '<td>';
+
+                        for(var l=0; l<data['data'][i]['item_list'].length; l++) {
+                            html+= '<div class="media text-left">';
+                            var k = l + 1;
+                            html+= '<div class="media-left">';
+                            html+= '<label class="label label-info">'+ type_name + k+' </label>';
+                            html+= '</div>';
+                            html+= '<div class="media-body max-w-300">';
+                            html += '<div class="line-2-ellipsis lh-24">' + data['data'][i]['item_list'][l]['title'] + '</div>';
+                            html+= '</div>';
+                            html+= '</div>';
+                        }
+
+                        html+= '</td>';
+                        html+= '<td>' + data["data"][i]["create_time"]+ '</td>';
+                        html+= '<td><a href="'+__URL('PLATFORM_MAIN/Wchat/updateMedia?media_id=' + data["data"][i]["media_id"])+'" class="text-primary">修改</a>  <a href="javascript:void(0);" data-id="' + data["data"][i]["media_id"] + '" class="text-danger del">删除</a></td>';
+                        html+= '</tr>';
+                    }
+                } else {
+                    html += '<tr><td class="h-200" colspan="3">暂无符合条件的数据记录</td></tr>';
+                }
+                $('#page').paginator('option', {
+                    totalCounts: data['total_count']  // 动态修改总数
+                });
+                $("#list").html(html);
+                del();
+            }
+        });
+    }
+    $('.search').on('click',function(){
+        util.initPage(getList);
+    });
+    // 删除
+    function del(){
+        $('.del').on('click',function(){
+            var media_id = $(this).data('id');
+            util.alert('是否删除？',function(){
+                $.ajax({
+                    type : "post",
+                    url : "{:__URL('PLATFORM_MAIN/wchat/deleteWeiXinMedia')}",
+                    async : true,
+                    data : {
+                        "media_id" : media_id
+                    },
+                    success : function(data) {
+                        if (data["code"] > 0) {
+                            util.message('删除成功','success',getList($('#page_index').val()));
+                        }else{
+                            util.message('删除失败','danger');
+                        }
+                    }
+                });
+            })
+        })
+    }
+})
+</script>
+{/block}

@@ -1,0 +1,341 @@
+{extend name="platform/new_base" /}
+{block name="resources"}
+
+{/block}
+{block name="main"}
+
+<input type="hidden" id="album_id" value="{$album_id}" />
+                <!-- page -->
+                <div class="mb-10 flex flex-pack-justify">
+                    <div class="">
+                        <a class="btn btn-default">
+                            <label class="checkbox-inline">
+                                <input type="checkbox" id="checkAll">全选
+                            </label>
+                        </a>
+                        <button class="btn btn-default" id="checkInvert">反选</button>
+                        <button class="btn btn-default batchOperate" operate-type="del">批量删除</button>
+                        <button class="btn btn-default batchOperate" operate-type="change">移动素材</button>
+                        <span class="btn btn-info btn-file fileupload">上传图片<input type="file" name="file_upload" multiple></span>
+                        <span class="btn btn-info btn-file fileupload" data-is_video="1">上传视频<input type="file" name="file_upload"></span>
+                    </div>
+                    <div class="flex">
+                        <div class="input-group search-input-group ml-10">
+                            <input type="text" class="form-control" placeholder="素材名称" name="pic_name">
+                            <span class="input-group-btn">
+                                <a class="btn btn-primary search">搜索</a>
+                            </span>
+                        </div>
+                    </div>
+                </div>
+                <div class="row picture" id="pictureList">
+
+                </div>
+                <!-- page end -->
+                <input type="hidden" id="pageIndex">
+                <nav aria-label="Page navigation" class="clearfix">
+                    <ul id="page" class="pagination pull-right"></ul>
+                </nav>
+{/block}
+
+{block name="script"}
+<script>
+require(['util'],function(util){
+    $(function(){
+
+    $('.search').on('click',function(){
+        util.initPage(LoadingInfo);
+    });
+    util.initPage(LoadingInfo);
+    //加载信息
+    function LoadingInfo(page_index) {
+        var album_id = $("#album_id").val();
+        var pic_name = $("input[name='pic_name']").val();
+        $("#pageIndex").val(page_index);
+        $.ajax({
+            type: "post",
+            url: "{:__URL('PLATFORM_MAIN/system/albumPictureList')}",
+            async: true,
+            data: {
+                "page_index": page_index,
+                "album_id": album_id,
+                "pic_name": pic_name
+            },
+            success: function (data) {
+                var html = '';
+                if (data["data"].length > 0) {
+                    for (var i = 0; i < data["data"].length; i++) {
+                        html +='<div class="thumbnail">';
+                        html +='<label class="img selectPic">';
+                        html +='<input type="checkbox" value="' + data["data"][i]["pic_id"] + '" name="id[]" value="' + data["data"][i]["pic_id"] + '">';
+                        if(data["data"][i]["is_wide"]){
+
+                            html += '<video width="100%" height="100%" id="img_' + data["data"][i]["pic_id"] + '" src="' + __IMG(data["data"][i]["pic_cover"]) + '"></video>';
+                        }else{
+                            html += '<img id="img_' + data["data"][i]["pic_id"] + '" src="' + __IMG(data["data"][i]["pic_cover"] ? data["data"][i]["pic_cover"] : data["data"][i]["pic_cover_mid"]) + '">';
+                        }
+                        html +='</label>';
+                        html +='<p class="name" id="pic_name"><span class="line-1-ellipsis pic_name">' + data["data"][i]["pic_name"] + '</span><i class="icon icon-edit editChange" title="修改名称"></i>';
+                        html +='<input type="hidden" name="picid" value="' + data["data"][i]["pic_id"] + '">';
+                        html += '<input class="editTextarea edit_name" value="'+data["data"][i]["pic_name"]+'" style="margin-left:6px;width: 140px;display: none"></p>';
+                        html +='<div class="operation">';
+                        if (!data["data"][i]["is_wide"]) {
+                            html +='<a class="btn btn-sm btn-info btn-file fileupload" data-is_video="'+data["data"][i]["is_wide"]+'">替换上传<input type="file" name="file_upload"></a>';
+                        }
+                        html +='<a href="javascript:void(0);" class="btn btn-sm btn-default changePic" data-picid="1">移动素材</a>';
+                        if(!data['data'][i]['is_wide']){
+                            html +='<a href="javascript:void(0);" class="btn btn-sm btn-default cover">设为封面</a>';
+                        }
+                        html +='<a href="javascript:void(0);" class="btn btn-sm btn-default delPic" data-picid="' + data["data"][i]["pic_id"] + '">删除素材</a>';
+                        html +='<a href="javascript:void(0);" class="btn btn-sm btn-default copy" data-clipboard-text="' + __IMG(data["data"][i]["pic_cover"]) + '">复制链接</a>';
+                        html +='<input type="hidden" name="pic_id" value="' + data["data"][i]["pic_id"] + '">';
+                        html +='</div>';
+                        html +='</div>';
+                    }
+                    
+                    util.copy();
+                } else {
+                    html += '<div class="empty-box">暂无符合条件的数据记录</div>';
+                }
+                $("#pictureList").html(html);
+
+                $('#page').paginator('option', {
+                    totalCounts: data['total_count']  // 动态修改总数
+                });
+            }
+        });
+    }
+
+    //修改图片名
+    $("body").on("click",'.editChange',function(){
+        // $(this).parent().next().next().show();
+        // $(this).prev().hide();
+        // $(this).hide();
+        $(this).siblings(".pic_name").hide();
+        $(this).siblings(".edit_name").show();
+        $(this).siblings(".edit_name").focus();
+
+    });
+    $("body").on("blur",".edit_name",function(){
+        var id = $(this).prev().val();
+        var name = $(this).val();
+
+        $.ajax({
+            type: "post",
+            data:{
+                "id":id,
+                "name":name,
+            },
+            url: "{:__URL('PLATFORM_MAIN/system/update_pic_name')}",
+            success: function (data) {
+                if(data['code']>0){
+                    util.message("修改成功","success",LoadingInfo($('#pageIndex').val()));
+                    // $(this).hide();
+                    // $(this).parent().find('.pic_name').html(name);
+                    // $(this).parent().find('.pic_name').show();
+                    // $(this).parent().find('.editChange').show();
+                }else{
+                    util.message(data['message'],"danger");
+                }
+
+            }
+        })
+        $(this).prev().html(name);
+    })
+
+    //全选
+    $("#checkAll").on('click',function(){
+        $("#pictureList input[type = 'checkbox']").prop("checked", this.checked);
+    })
+    //反选
+    $("#checkInvert").on('click',function(){
+        $("#pictureList input[type = 'checkbox']").each(function(){
+            $(this).prop("checked",!$(this).prop("checked"));
+        });
+    })
+    // 批量操作
+    $('.batchOperate').on('click',function(){
+        var type = $(this).attr('operate-type');
+        var id = [];
+        $("#pictureList input[type ='checkbox']").each(function(){
+            if($(this).prop("checked")){
+                id.push($(this).val())
+            }
+        })
+
+        if(!util.isEmpty(id)){
+            id = id.join(',');
+            if(type=='del'){
+                delPic(id)
+            }
+            if(type=='change'){
+                util.confirm('移动素材', 'url:{:__URL(\'PLATFORM_MAIN/system/move_pic\')}', function () {
+                    var album_id = $("#album_list").val();
+                    $.ajax({
+                        type: "post",
+                        url: "{:__URL('PLATFORM_MAIN/system/modifyAlbumPictureClass')}",
+                        async: true,
+                        data: {
+                            "album_id":album_id,
+                            "pic_id":id
+                        },
+                        success: function (data) {
+                            if (data["code"] > 0) {
+                                util.message(data["message"], 'success', LoadingInfo($('#pageIndex').val()));
+                            } else {
+                                util.message(data["message"], 'danger', LoadingInfo($('#pageIndex').val()));
+                            }
+                        }
+                    })
+                })
+            }
+        }else{
+            util.message('请选择素材！')
+        }
+
+
+    })
+
+    // 删除图片
+    $('body').on('click','.delPic',function(){
+        var id = $(this).data('picid');
+        delPic(id)
+    })
+
+    function delPic(picid){
+        util.alert('确定删除素材吗？',function(){
+            $.ajax({
+                type: "post",
+                url: "{:__URL('PLATFORM_MAIN/system/deletepicture')}",
+                data: {"pic_id_array": picid},
+                dataType: "json",
+                success: function (data) {
+                    if (data['code'] > 0) {
+                        util.message(data["message"],'success',LoadingInfo($('#pageIndex').val()));
+                    } else {
+                        util.message("素材使用中，无法删除!",'danger',LoadingInfo($('#pageIndex').val()));
+                    }
+                }
+            });
+        })
+    }
+
+        //设为封面
+        $('body').on('click','.cover',function(){
+            var pic_id = $(this).nextAll('input[name=pic_id]').val();
+            util.alert('确定设为封面吗',function(){
+                var album_id = $("#album_id").val();
+                $.ajax({
+                    type: "post",
+                    url: "{:__URL('PLATFORM_MAIN/system/modifyalbumclasscover')}",
+                    data: {"pic_id": pic_id, "album_id": album_id},
+                    dataType: "json",
+                    success: function (data) {
+                        if (data["code"] > 0) {
+                            util.message(data["message"],'success',LoadingInfo($('#pageIndex').val()));
+                        } else {
+                            util.message(data["message"],'danger',LoadingInfo($('#pageIndex').val()));
+                        }
+                    }
+                });
+            })
+        })
+
+        //移动图片
+        $('body').on('click','.changePic',function () {
+            var pic_id = $(this).nextAll('input[name=pic_id]').val();
+            if(!pic_id){
+                util.message('参数错误', 'danger');
+                return;
+            }
+            util.confirm('移动素材', 'url:{:__URL(\'PLATFORM_MAIN/system/move_pic\')}', function () {
+                var album_id = $("#album_list").val();
+
+                $.ajax({
+                    type: "post",
+                    url: "{:__URL('PLATFORM_MAIN/system/modifyAlbumPictureClass')}",
+                    async: true,
+                    data: {
+                        "album_id":album_id,
+                        "pic_id":pic_id
+                    },
+                    success: function (data) {
+                        if (data["code"] > 0) {
+                            util.message(data["message"], 'success', LoadingInfo($('#pageIndex').val()));
+                        } else {
+                            util.message(data["message"], 'danger', LoadingInfo($('#pageIndex').val()));
+                        }
+                    }
+                })
+            })
+        })
+
+
+        $('body').on('click','.fileupload',function(){
+            var pic_id = $(this).nextAll('input[name=pic_id]').val();
+            var is_video = $(this).data('is_video');
+            //上传到相册
+            if(pic_id=='undefined' || pic_id==''){
+                var album_id = $("#album_id").val();
+                
+                var dataAlbum = {
+                    "album_id" : album_id,
+                    "type" : "1,2,3,4",
+                    "file_type" : 0
+                };
+                if(is_video){
+                    dataAlbum = {
+                        "album_id" : album_id,
+                        "type" : "",
+                        "file_type" : 1
+                    };
+                }
+                var path = "{:__URL('PLATFORM_MAIN/upload/uploadFile')}";
+                util.fileupload(path,dataAlbum,function (data) {
+                    if(data.state=='1') {
+                        var id = data.file_id;
+                        var html = '<img src="' + data.file_name + '" id="img_' + id + '">';
+                        $('#img_'+id).html(html);
+                        util.message(data.message, 'success',LoadingInfo($('#pageIndex').val()));
+                    }else{
+                        util.message(data.message, 'danger');
+                    }
+                })
+            }else{
+                var album_id = $("#album_id").val();
+                var dataAlbum = {
+                    "album_id" : album_id,
+                    "type" : "1,2,3,4",
+                    "file_type" : 0,
+                    "pic_id" :pic_id
+                };
+                if(is_video){
+                    dataAlbum = {
+                        "album_id" : album_id,
+                        "type" : "",
+                        "file_type" : 1,
+                        "pic_id" :pic_id
+                    };
+                }
+                console.log(dataAlbum);
+                var path = "{:__URL('PLATFORM_MAIN/upload/uploadFile')}";
+                util.fileupload(path, dataAlbum, function (data) {
+                    if(data.state=='1') {
+                        var id = data.file_id;
+                        var html = '<img src="' + data.file_name + '" id="img_' + id + '">';
+                        $('#img_'+id).html(html);
+                        util.message(data.message, 'success',LoadingInfo($('#pageIndex').val()));
+                    }else{
+                        util.message(data.message, 'danger');
+                    }
+                })
+            }
+
+
+        })
+
+
+    })
+})
+</script>
+{/block}

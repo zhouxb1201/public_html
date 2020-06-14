@@ -1,0 +1,9 @@
+{
+  "usingComponents": {
+    "SuccessBox": "../component/successbox/successbox",
+    "login-component": "/pages/component/login/login",
+    "topnav-component": "/pages/component/topnav/topnav",
+    "phone-compoent": "/pages/component/phone/phonecom"
+  },
+  "navigationBarTitleText": "券包详情"
+}

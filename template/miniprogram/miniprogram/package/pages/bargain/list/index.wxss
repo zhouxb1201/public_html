@@ -1,0 +1,75 @@
+page{
+  background-color: #f8f8f8;
+  font-size: 24rpx;
+}
+
+.group{
+  margin: 20rpx;
+}
+
+.group .item{
+  padding: 20rpx 30rpx;
+  background-color: #fff;
+  display: flex;
+  border-radius: 20rpx;
+
+}
+.group .item .img{
+  width: 180rpx;
+  height: 180rpx;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: #f9f9f9;
+}
+
+.group .item .info{
+  margin-left: 20rpx;
+  flex: 1;
+  position: relative;
+}
+.group .item .info .good_name{
+  display: -webkit-box; 
+  -webkit-box-orient: vertical; 
+  -webkit-line-clamp: 2; 
+  overflow: hidden;
+  height: 80rpx;
+  font-weight: 600;
+}
+.group .item .info .price{
+  color: #ff454e;
+  font-size: 24rpx;
+  position: absolute;
+  bottom: 0;
+}
+.group .item .info .bargain_time .time{
+  display: flex;
+  background-color: #f1f1f1;
+  border-radius: 25rpx;  
+  font-size: 24rpx;
+  margin-top: 5rpx;
+  overflow: hidden;
+  align-items: center;
+}
+.group .item .info .bargain_time .time .end_time{
+  background-color: #FF9900;
+  padding: 4rpx 20rpx;
+  color: #fff;
+  border-radius: 25rpx;  
+  margin-right: 15rpx;
+}
+.group .item .info .bargain_time .time .start_time{
+  background-color: #28B400;
+  padding: 4rpx 20rpx;
+  color: #fff;
+  border-radius: 25rpx;  
+  margin-right: 15rpx;
+}
+
+.foot{
+  padding: 40rpx 20rpx;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: #969799;
+}

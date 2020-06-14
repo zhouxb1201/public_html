@@ -1,0 +1,28 @@
+/* 修改商品操作按钮 */
+.goods-action-group {
+  background: #fff;
+}
+
+.goods-action-group .action-btn {
+  font-size: 14px;
+  height: 40px;
+  line-height: 38px;
+  margin: 5px;
+  border-radius: 8px;
+}
+
+/* .goods-action-group .action-btn:first-of-type {
+  border-top-right-radius: 0;
+  border-bottom-right-radius: 0;
+  margin-left: 5px;
+}
+
+.goods-action-group .action-btn:last-of-type {
+  border-top-left-radius: 0;
+  border-bottom-left-radius: 0;
+  margin-right: 5px;
+} */
+
+/* .sku-action-group {}
+
+.sku-action-group .action-btn {} */

@@ -1,0 +1,139 @@
+{block name="main"}
+<div class="mb-20 bg-info border-info">
+    <div class="padding-15">
+    	<p class="mb-04">活动名称：{$info['festivalcare_name']}</p>
+    	<p>活动时间：{php}echo date('Y-m-d H:i:s',$info['start_time']){/php}</p>
+    </div>
+</div>
+<ul id="records_tab" class="nav nav-tabs v-nav-tabs fs-12">
+    <li role="presentation" class="active"><a href="javascript:void(0)" data-toggle="tab" class="flex-auto-center" aria-expanded="true" data-state="1" id="num-not">未领奖<br>(0)</a></li>
+    <li role="presentation"><a href="javascript:void(0)" data-toggle="tab" class="flex-auto-center" aria-expanded="false" data-state="2" id="num-already">已领奖<br>(0)</a></li>
+    <li role="presentation"><a href="javascript:void(0)" data-toggle="tab" class="flex-auto-center" aria-expanded="false" data-state="3" id="num-overdue">已过期<br>(0)</a></li>
+    <input type="hidden" name="state" value="1" id="state" autocomplete="off">
+	<div class="input-group" style="float:right;width: 100px;">
+	    <span class="input-group-btn">
+	        <button id="search" class="btn btn-primary" type="button" style="float:right;">搜索</button>
+	    </span>
+	</div>
+	<div style="float:right">
+     	<div class="date-input-group">
+            <div class="date-input-control">
+                <input type="text" class="form-control" id="start_time" placeholder="时间区间" value=""
+                       autocomplete="off" name="start_time" required><i class="icon icon-calendar"></i>
+            </div>
+            <span class="date-input-group-addon">~</span>
+            <div class="date-input-control">
+                <input type="text" class="form-control" id="end_time" placeholder="时间区间" value=""
+                       autocomplete="off" name="end_time" required><i class="icon icon-calendar"></i>
+            </div>
+        </div>
+	</div>
+</ul>
+<table class="table v-table table-auto-center">
+    <thead>
+    <tr>
+        <th>中奖用户</th>
+        <th>奖品</th>
+        <th>状态</th>
+        <th>中奖时间</th>
+    </tr>
+    </thead>
+    <tbody id="records_list">
+    </tbody>
+</table>
+<nav aria-label="Page navigation" class="clearfix">
+    <ul id="page" class="pagination pull-right"></ul>
+</nav>
+{/block}
+{block name="script"}
+<script id="tpl_records_list" type="text/html">
+    <%each data as item index%>
+    <tr>
+		<%if item.nick_name %>
+			<td><%item.nick_name%></td>
+		<%else if item.user_name %>
+			<td><%item.user_name%></td>
+		<%else if item.user_tel == 2 %>
+			<td><%item.user_tel%></td>
+		<%else if item.uid == 2 %>
+			<td><%item.uid%></td>
+		<%/if%>
+        <td><%item.prize_name%></td>
+        <td>
+			<%if item.state == 1 %>
+        	<p style="color: #f0ad4e;">未领取</p>
+        	<%else if item.state == 2 %>
+			<p style="color: #5cb85c;">已领取</p>
+			<%else if item.state == 3 %>
+			<p style="color:#d9534f;">已过期</p>
+			<%/if%>
+		</td>
+        <td><%timeStamp(item.prize_time)%></td>
+    </tr>
+    <%/each%>
+</script>
+<script>
+    require(['util', 'tpl'], function (util, tpl) {
+        util.initPage(LoadingInfo);
+    	util.layDate("#start_time");
+    	util.layDate("#end_time");
+        tpl.helper("timeStamp", function (timeStamp) {
+            if (timeStamp > 0) {
+                var date = new Date();
+                date.setTime(timeStamp * 1000);
+                var y = date.getFullYear();
+                var m = date.getMonth() + 1;
+                m = m < 10 ? ('0' + m) : m;
+                var d = date.getDate();
+                d = d < 10 ? ('0' + d) : d;
+                var h = date.getHours();
+                h = h < 10 ? ('0' + h) : h;
+                var minute = date.getMinutes();
+                var second = date.getSeconds();
+                minute = minute < 10 ? ('0' + minute) : minute;
+                second = second < 10 ? ('0' + second) : second;
+                return y + '-' + m + '-' + d + ' ' + h + ':' + minute + ':' + second;
+            } else {
+                return "";
+            }
+        });
+
+        $("#search").on('click', function () {
+            LoadingInfo(1);
+        });
+
+        function LoadingInfo(page_index) {
+            $('#page_index').val(page_index ? page_index : 1);
+            $.ajax({
+                type: "post",
+                url: '{$historyFestivalcareUrl}' + '?festival_care_id=' + {$info.festival_care_id},
+                data: {
+                    'page_index': page_index,
+                    "state": $("#state").val(),
+                    'start_time': $("#start_time").val(),
+                    'end_time': $("#end_time").val(),
+                },
+                success: function (data) {
+                    html ='';
+                    html += '<tr><th colspan="4">暂无符合条件的数据记录</th></tr>';
+                    if(tpl('tpl_records_list', data)){
+                        $("#records_list").html(tpl('tpl_records_list', data))
+                        $('#page').paginator('option', {
+                            totalCounts: data['total_count']  // 动态修改总数
+                        });
+                    }else{
+                        $("#records_list").html(html);
+                    }
+                    $("#num-not").html('未领奖<br>('+data.count.not+')');
+                    $("#num-already").html('已领奖<br>('+data.count.already+')');
+                    $("#num-overdue").html('已过期<br>('+data.count.overdue+')');
+                }
+            });
+        }
+        $('#records_tab').on('click', '.flex-auto-center', function () {
+        	$('#state').val($(this).data('state'));
+        	LoadingInfo(1);
+        })
+    })
+</script>
+{/block}

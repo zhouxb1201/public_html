@@ -1,0 +1,47 @@
+<view class='group_detail'>
+  <view class='group_content' wx:if="{{finish_status == 'false'}}" wx:key=''>
+    <view class='group_good'>
+      <view class='good_img'>
+        <image src="{{groupData.goods.pic_cover != ''?groupData.goods.pic_cover:'/images/rectangle-error.png'}}"></image>
+      </view>
+      <view class='good_info'>
+        <view class='good_name'>{{groupData.goods.goods_name}}</view>
+        <view class='good_price'><text class='red_price'>¥{{groupData.goods.group_price}}</text><text class='normal_price'>¥ {{groupData.goods.price}}</text></view>
+        <view class='end_time'>
+          <view class='reset_time'>
+            <text class='time'>{{oDay}}</text>
+            <text>:</text>
+            <text class='time'>{{oHours}}</text>
+            <text>:</text>
+            <text class='time'>{{oMinutes}}</text>
+            <text>:</text>
+            <text class='time'>{{oSeconds}}</text>
+          </view>          
+          <text>拼团失败</text>          
+        </view>
+      </view>
+    </view>
+
+    <view class='group_user'>
+      <view class='user_box'>
+        <view class='user_box_title'>成功拼团好友</view>
+        <view class='user_img_list'>
+          <view class='user_img' wx:for='{{buyer_list}}' wx:key='' wx:for-item='buyerItem'>
+            <image src="{{buyerItem.user_headimg !=''?buyerItem.user_headimg:'/images/no-avatar.png'}}"></image>
+          </view>
+          <view class='help'>?</view>
+        </view>
+        <view class='tips_text'>再邀请{{groupData.group_num-groupData.now_num}}位朋友下单即可开团成功</view>
+      </view>
+      
+      <button class='join_btn' bindtap='onGoodsDetail'>参与拼团</button>
+      <button open-type='share' class='invite_friend_btn'>邀请朋友</button>
+      <view class='order_detail' bindtap='onOrderDetail'>查看订单详情 ></view>
+    </view>
+  </view>
+
+  <view class='group_end' wx:elif="{{finish_status == 'true'}}">
+    <van-icon name="more" color='rgb(25, 137, 250)' size='4em'/>
+      <view class='end_text'>拼团已结束</view>    
+  </view>
+</view>

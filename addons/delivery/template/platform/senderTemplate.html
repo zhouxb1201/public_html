@@ -1,0 +1,216 @@
+{block name="main"}
+<form class="form-horizontal form-validate widthFixedForm">
+    <div class="form-group">
+        <label class="col-md-2 control-label"><span class="text-bright">*</span>发货人</label>
+        <div class="col-md-5">
+            <input type="text" id="sender" class="form-control" name="sender" required autocomplete="off">
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="col-md-2 control-label"><span class="text-bright">*</span>电话</label>
+        <div class="col-md-5">
+            <input type="text" id="mobile" class="form-control" name="mobile" required>
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="col-md-2 control-label">发货人签名</label>
+        <div class="col-md-5">
+            <input type="text" id="sign" name="sign" class="form-control">
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="col-md-2 control-label">发货地邮编</label>
+        <div class="col-md-5">
+            <input type="text" id="zip_code" name="zip_code" class="form-control">
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="col-md-2 control-label"><span class="text-bright">*</span>发货地区</label>
+        <div class="col-md-5">
+            <div class="area-form-group">
+                <select name="province" id="province" class="form-control">
+                    <option value="-1">请选择省</option>
+                </select>
+                <select name="city" id="city" class="form-control">
+                    <option value="-1">请选择市</option>
+                </select>
+                <select name="district" id="district" class="form-control">
+                    <option value="-1">请选择区</option>
+                </select>
+            </div>
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="col-md-2 control-label"><span class="text-bright">*</span>详细地址</label>
+        <div class="col-md-5">
+            <textarea class="form-control" name="address" id="address" rows="4"></textarea>
+        </div>
+    </div>
+    <div class="form-group" id="default_group">
+        <label class="col-md-2 control-label"><span class="text-bright">*</span>是否默认</label>
+        <div class="col-md-5">
+            <!--<label class="radio-inline">
+                <input type="radio" name="is_default" id="is_default_1" value="1"> 是
+            </label>
+            <label class="radio-inline">
+                <input type="radio" name="is_default" id="is_default_0" value="0" checked> 否
+            </label>-->
+            <div class="switch-inline">
+                <input type="checkbox" name="is_default" id="is_default">
+                <label for="is_default" class=""></label>
+            </div>
+        </div>
+    </div>
+
+    <div class="form-group"></div>
+    <div class="form-group">
+        <label class="col-md-2 control-label"></label>
+        <div class="col-md-8">
+            <button class="btn btn-primary" type="submit">保存</button>
+            <a href="javascript:history.go(-1);" class="btn btn-default">返回</a>
+        </div>
+    </div>
+</form>
+{/block}
+{block name="script"}
+
+<script id="tpl_province" type="text/html">
+    <%each data as item index%>
+    <option value="<%index%>"><%item%></option>
+    <%/each%>
+</script>
+<script id="tpl_city" type="text/html">
+    <%each data as item index%>
+    <option value="<%index%>"><%item%></option>
+    <%/each%>
+</script>
+<script id="tpl_district" type="text/html">
+    <%each data as item index%>
+    <option value="<%index%>"><%item%></option>
+    <%/each%>
+</script>
+
+<script>
+    require(['util', 'tpl'], function (util, tpl) {
+
+        // 省市区
+        var province_list = {}
+        var city_list = {}
+        var district_list = {}
+        $.ajax({
+            type: 'post',
+            url: '{$areaUrl}',
+            async: false,
+            success: function (data) {
+                province_list = data.province
+                city_list = data.city
+                district_list = data.district
+            }
+        })
+
+        var id = '{$id}';
+        if (id) {
+            // 获取详情内容
+            $.ajax({
+                type: 'post',
+                url: '{$senderTemplateDetailUrl}',
+                data: {
+                    'id': id
+                },
+                success: function (data) {
+                    $("#sender").val(data.sender);
+                    $("#mobile").val(data.mobile)
+                    $("#sign").val(data.sign)
+                    $("#zip_code").val(data.zip_code)
+                    $("#address").val(data.address)
+
+                    // $("#is_default_" + data.is_default).prop('checked', true);
+                    if (data.is_default == 1) {
+                        $("#default_group").hide();
+                        $("#is_default").prop('checked', true);
+                    }
+                    province(data.province_id)
+                    city(data.province_id, data.city_id)
+                    district(data.city_id, data.district_id)
+                }
+            })
+        } else {
+            $("button[type=submit]").html('添加')
+            province()
+            city()
+            district()
+        }
+
+        $("#province").on('change', function () {
+            city($(this).val())
+            district()
+        })
+        $("#city").on('change', function () {
+            district($(this).val())
+        })
+
+        function province(province_id) {
+            $("#province").html(tpl('tpl_province', {data: province_list}))
+            $("#province").val(province_id ? province_id : $("#province option:first").val())
+        }
+
+        function city(province_id, city_id) {
+            if (province_id === undefined) {
+                province_id = $("#province option:first").val();
+            }
+            $("#city").html(tpl('tpl_city', {data: city_list[province_id]}))
+            $("#city").val(city_id ? city_id : $("#city option:first").val())
+        }
+
+        function district(city_id, district_id) {
+            if (city_id === undefined) {
+                city_id = $("#city option:first").val();
+            }
+            $("#district").html(tpl('tpl_district', {data: district_list[city_id]}))
+            $("#district").val(district_id ? district_id : $("#district option:first").val())
+        }
+
+        var flag = true;
+        util.validate($('.form-validate'), function (form) {
+
+            var template_name = $("#template_name").val();
+            var sender = $("#sender").val();
+            var mobile = $("#mobile").val();
+            var sign = $("#sign").val();
+            var zip_code = $("#zip_code").val();
+            var province_id = $("#province").val();
+            var city_id = $("#city").val();
+            var district_id = $("#district").val();
+            var address = $("#address").val();
+            var is_default = $("input[name='is_default']").is(':checked')?1:0;
+            if (flag){
+                flag = false
+                $.ajax({
+                    type: 'post',
+                    url: '{$saveSenderTemplateUrl}',
+                    data: {
+                        'sender_template_id': '{$id}',
+                        'template_name': template_name,
+                        'sender': sender,
+                        'mobile': mobile,
+                        'sign': sign,
+                        'zip_code': zip_code,
+                        'province_id': province_id,
+                        'city_id': city_id,
+                        'district_id': district_id,
+                        'address': address,
+                        'is_default': is_default,
+                    },
+                    success: function (data) {
+                        if (data.code > 0) {
+                            util.message('保存成功', 'success', "{:__URL('ADDONS_MAINformList')}")
+                        } else {
+                            util.message(data.message)
+                        }
+                    }
+                })
+            }
+        })
+    });
+</script>
+{/block}

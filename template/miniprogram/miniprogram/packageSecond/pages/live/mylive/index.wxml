@@ -1,0 +1,72 @@
+<view class='my_live'>
+  <view class="header">
+    <view class="header_box">
+      <view class="user_img">
+        <image src="{{userInfo.user_headimg}}"></image>
+      </view>
+      <view class="user_info">
+        <view class="user_name">{{userInfo.uname}}</view>
+        <view class="home_box" wx:if="{{userInfo.room_no}}">
+          <view class="home_no">房号：{{userInfo.room_no}}</view>
+        </view>
+      </view>
+    </view>
+    <view class="header_row">
+      <view bindtap="onFocusPage">关注
+        <text class="strong">{{userInfo.focus_num}}</text>
+      </view>
+      <view bindtap="onFansPage" class="fans">粉丝
+        <text class="strong">{{userInfo.fans_num}}</text>
+      </view>
+    </view>
+
+  </view>
+
+  <view class="profit_box" wx:if='{{userInfo.is_anchor == true}}'>
+    <view class="title">
+      <view>带货分成</view>
+      <view bindtap="profitTips"><text class="iconfont v-icon-help"></text></view>
+    </view>
+    <view class="profit_list">
+      <view class="item">
+        <view class="lable">已分成</view>
+        <view>{{userInfo.unfreeze_earnings}}</view>
+      </view>
+      <view class="item">
+        <view class="lable">冻结分成</view>
+        <view>{{userInfo.freeze_earnings}}</view>
+      </view>
+      <view class="item">
+        <view class="lable">累计分成</view>
+        <view>{{userInfo.total_earnings}}</view>
+      </view>
+    </view>
+  </view>
+
+  <view class="van_group">
+    <view class="row" bindtap="onApplyAnchor" wx:if='{{page_status != 0}}'>
+      <view class="left">
+        <text>{{anchor_txt}}</text>
+      </view>
+      <view class="right">
+        <view class="iconfont v-icon-arrow-right icon_r"></view>
+      </view>
+    </view>
+    <view class="row" bindtap="onLiveShop">
+      <view class="left">
+        <text>主播小店</text>
+      </view>
+      <view class="right">
+        <view class="iconfont v-icon-arrow-right icon_r"></view>
+      </view>
+    </view>
+    <view class="row" bindtap="onHistory">
+      <view class="left">
+        <text>观看历史</text>
+      </view>
+      <view class="right">
+        <view class="iconfont v-icon-arrow-right icon_r"></view>
+      </view>
+    </view>
+  </view>
+</view>

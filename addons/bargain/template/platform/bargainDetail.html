@@ -1,0 +1,135 @@
+{block name="main"}
+
+        <form class="form-horizontal pt-15 form-validate">
+            <div class="col-md-10">
+            <table class="table v-table table-auto-center table-bordered">
+                <tbody>
+                    <tr>
+                        <td class="col-md-3 bg-f5">
+                            <div class="padding-15">
+                                <p>活动标签</p>
+                            </div>
+                        </td>
+                        <td class="text-left">
+                            <p>{$bargain_detail['bargain_name']}</p>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="col-md-3 bg-f5">
+                            <div class="padding-15">
+                                <p>活动时间</p>
+                            </div>
+                        </td>
+                        <td class="text-left">
+                            <p>{$bargain_detail['start_bargain_time_format']} ~ {$bargain_detail['end_bargain_time_format']}</p>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="col-md-3 bg-f5">
+                            <div class="padding-15">
+                                <p>活动商品</p>
+                            </div>
+                        </td>
+                        <td class="text-left">
+                            <div class="media text-left">
+                                <div class="media-left goods-img">
+                                    <img  src="{:__IMG($bargain_detail['pic_cover'])}" onerror="this.src='http://iph.href.lu/60x60';" width="60" height="60">
+                                </div>
+                                <div class="media-body max-w-300">
+                                    <div class="line-2-ellipsis goods-text">{$bargain_detail['goods_name']}</div>
+                                    <!--<div class="line-1-ellipsis text-danger strong goods-price">{$bargain_detail['start_money']}</div>-->
+                                </div>
+                            </div>
+                        </td>
+                    </tr>
+                    <tr class="no_sku">
+                        <td class="col-md-3 bg-f5">
+                            <div class="padding-15">
+                                <p>初始金额</p>
+                            </div>
+                        </td>
+                        <td class="text-left">
+                            <p id="start_money">{$bargain_detail['start_money']}</p>
+                        </td>
+                    </tr>
+                    <tr class="no_sku">
+                        <td class="col-md-3 bg-f5">
+                            <div class="padding-15">
+                                <p>最低砍至金额</p>
+                            </div>
+                        </td>
+                        <td class="text-left">
+                            <p id="lowest_money">{$bargain_detail['lowest_money']}</p>
+                        </td>
+                    </tr>
+                    <tr class="no_sku">
+                        <td class="col-md-3 bg-f5">
+                            <div class="padding-15">
+                                <p>第一刀砍价</p>
+                            </div>
+                        </td>
+                        <td class="text-left">
+                            <p id="first_bargain_money">{$bargain_detail['first_bargain_money']}</p>
+                        </td>
+                    </tr>
+                    <tr class="no_sku">
+                        <td class="col-md-3 bg-f5">
+                            <div class="padding-15">
+                                <p>单次砍价金额</p>
+                            </div>
+                        </td>
+                        <td class="text-left">
+                            <p id="bargain_method">{if $bargain_detail['bargain_method'] == 1}{$bargain_detail['fix_money']}
+                                {else}{$bargain_detail['rand_lowest_money']} ~ {$bargain_detail['rand_highest_money']}{/if}</p>
+                        </td>
+                    </tr>
+                    <tr class="no_sku">
+                        <td class="col-md-3 bg-f5">
+                            <div class="padding-15">
+                                <p>活动库存</p>
+                            </div>
+                        </td>
+                        <td class="text-left">
+                            <p id="bargain_stock">{$bargain_detail['bargain_stock']}</p>
+                        </td>
+                    </tr>
+                    <tr class="no_sku">
+                        <td class="col-md-3 bg-f5">
+                            <div class="padding-15">
+                                <p>限购</p>
+                            </div>
+                        </td>
+                        <td class="text-left">
+                            <p id="limit_buy">{$bargain_detail['limit_buy']}</p>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="col-md-3 bg-f5">
+                            <div class="padding-15">
+                                <p>活动状态</p>
+                            </div>
+                        </td>
+                        <td class="text-left">
+                            <p>{if $bargain_detail['bargain_status'] == 1}待开始{elseif $bargain_detail['bargain_status']==2}进行中{else}已结束{/if}</p>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+            </div>
+            <input type="hidden" name="goods_id" id="goods_id" value="{$bargain_detail['goods_id']}">
+            <div class="form-group"></div>
+            <div class="form-group">
+                <label class="col-md-2 control-label"></label>
+                <div class="col-md-8">
+                    <a href="javascript:history.go(-1);" class="btn btn-default">返回</a>
+                </div>
+            </div>
+        </form>
+{/block}
+{block name="script"}
+<script>
+    require(['util'], function (util) {
+
+    })
+</script>
+{/block}

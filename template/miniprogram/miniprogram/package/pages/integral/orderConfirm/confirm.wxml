@@ -1,0 +1,115 @@
+<view class='useraddress' wx:if="{{goodsType == 0}}">
+  <view class='cart_bottom_bg' bindtap='addressListShow'>
+    <view class='no_address' wx:if="{{!addressShow}}">
+      <van-icon class='icon_add' name="add-o" size='24px' />
+      <text class='adress_text'>添加收货地址</text>
+      <van-icon class='icon_arrow' name="arrow" />
+    </view>
+    <view wx:else class='has_address'>
+      <van-icon class='icon_location' name="location" size='24px' />
+      <view class='address_box'>
+        <view>
+          <text class='consigner'>{{items.address.consigner}}</text>
+          <text class='mobile'>{{items.address.mobile}}</text>
+        </view>
+        <view class='address_text'>
+          {{items.address.province_name}}{{items.address.city_name}}{{items.address.district_name}}{{items.address.address_detail}}
+        </view>
+      </view>
+      <van-icon class='icon_arrow' name="arrow" />
+    </view>
+  </view>
+</view>
+
+<view class='shop_box'>
+  <view class='shop' wx:for="{{items.shop}}" wx:key=''>
+    <view class='shopGood clear' wx:for="{{item.goods_list}}" wx:key="" wx:for-item="i">
+      <view class='goodImg'>
+        <image mode='widthFix' src='{{i.goods_pic}}'></image>
+      </view>
+      <view class='good_box'>
+        <view class='good_l'>
+          <view class='goodname'>{{i.goods_name}}</view>
+          <text class='goodspec' wx:for="{{i.spec}}" wx:key="" wx:for-item="n">
+                <text class='specname'>{{n.spec_name}}</text>
+          <text class='specvalue'>{{n.spec_value_name}}</text>
+          </text>
+          <text class='goodspec' wx:if="{{i.goods_exchange_type == 1}}">
+            {{i.coupon.coupon_name}}
+          </text>
+          <text class='goodspec' wx:if="{{i.goods_exchange_type == 2}}">
+            {{i.gift_voucher.gift_voucher_name}}
+          </text>
+          <text class='goodspec' wx:if="{{i.goods_exchange_type == 3}}">
+            {{i.balance}}
+          </text>
+        </view>
+        <view class='good_r'>
+          <view class='text good_price' wx:if="{{i.price > 0 && i.point_exchange}}">¥ {{i.price}} + {{i.point_exchange}}积分</view>
+          <view class='text good_price' wx:else>{{i.point_exchange}}积分</view>
+          <van-stepper class='stepper' value="{{ i.num }}" max="{{ i.max_buy === 0 ? i.stock : i.stock > i.max_buy ? i.max_buy : i.stock}}" step="1" bind:change="onChange" />
+        </view>
+      </view>
+    </view>
+
+    <!-- 配送方式 -->
+    <view class='address'>
+      <view class='addressText_l'>配送方式</view>
+      <view class='addressText_r'>
+        <view wx:if="{{item.shipping_fee == 0}}">快递 包邮</view>
+        <view wx:elif="{{item.shipping_fee > 0}}">邮费{{item.shipping_fee}}元</view>
+        <view wx:else>未选择收货地址</view>
+      </view>
+    </view>
+
+
+    <!-- 小计 -->
+    <view class='goodsnum'>
+      <view>共 {{item.goods_list.length}} 件商品</view>
+      <view class='amount'>小计：
+        <text wx:if="{{item.total_point  && item.total_amount > 0}}">{{item.total_point}}积分 + ¥ {{filters.toFix(item.total_amount)}}</text>
+        <text wx:else> {{item.total_point}}积分</text>
+      </view>
+    </view>
+  </view>
+</view>
+
+
+
+
+<!-- 地址列表弹框 -->
+<van-popup show="{{ addressListShow }}" position="bottom" custom-style="height:100%;" bind:click-overlay="addressListClose">
+  <view class='popup_title'>
+    <view class='addressClose' bindtap='addressListClose'>
+      <text class='icon_left iconfont v-icon-arrow-left2'></text>
+      返回
+    </view>
+    <view class='addressTitle'>收货地址</view> 
+  </view>
+  <view class='popup_info'>
+    <view class='item' wx:for="{{address_list}}" wx:key='' wx:for-item="addressItem" data-addressid='{{addressItem.id}}' bindtap='addressSelect'>
+      <icon wx:if="{{addressItem.id == addressid}}" type="success" color="red" size='20' />
+      <icon wx:else type="circle" size='20' />
+      <view class='item_info'>
+        <view class='cell'><text>{{addressItem.consigner}}</text>，<text>{{addressItem.mobile}}</text></view>
+        <view class='cell'><text>{{addressItem.province_name}}</text> <text>{{addressItem.address}}</text> </view>
+        <view></view>
+      </view>
+    </view>
+  </view>
+  <view class='close'>
+    <button class='closeBtn' bindtap='onAddressPage'>新增地址</button>
+  </view>
+</van-popup>
+
+
+<view class="submit-pay-wrap">
+  <view class="btn-submit-pay">
+    <view class="btn-submit-pay-wrap">
+      <button class='action-btn' bindtap='onPay'>立即支付</button>
+    </view>
+  </view>
+</view>
+
+<!-- 保留2小数 -->
+<wxs module="filters" src="../../../../utils/addmul.wxs"></wxs>

@@ -1,0 +1,73 @@
+<view class='account_set'>
+  <view class='group'>
+    <navigator url='../headimg/index' hover-class='none'>
+      <view class='cell'>
+        <view class='cell_l'>头像</view>
+        <view class='cell_r'>
+          <view class='user_img'>
+            <image src="{{userBaseInfo.avatar !=''?userBaseInfo.avatar:'../../../images/no-avatar.png'}}"></image>
+          </view>
+          <view class='icon iconfont v-icon-arrow-right'></view>
+        </view>
+      </view>    
+    </navigator>
+    <navigator url='../info/index' hover-class='none'>
+      <view class='cell'>
+        <view class='cell_l'>基本资料</view>
+        <view class='cell_r'>
+          <view class='icon iconfont v-icon-arrow-right'></view>
+        </view>
+      </view>    
+    </navigator>    
+  </view>
+
+  <view class='group'>    
+    <navigator url='../post/index?sign=1' hover-class='none'>
+      <view class='cell'>
+        <view class='cell_l'>修改登录密码</view>
+        <view class='cell_r'>
+          <view class='icon iconfont v-icon-arrow-right'></view>
+        </view>
+      </view>    
+    </navigator>
+    <navigator url='../post/index?sign=2' hover-class='none'>
+      <view class='cell'>
+        <view class='cell_l'>设置支付密码</view>
+        <view class='cell_r'>
+          <view class='icon iconfont v-icon-arrow-right'></view>
+        </view>
+      </view>    
+    </navigator>
+    <navigator  url='../post/index?sign=3' hover-class='none'>
+      <view class='cell'>
+        <view class='cell_l'>修改关联手机</view>
+        <view class='cell_r'>
+          <view class='icon iconfont v-icon-arrow-right'></view>
+        </view>
+      </view>    
+    </navigator>
+    <navigator  url='../post/index?sign=4' hover-class='none'>
+      <view class='cell'>
+        <view class='cell_l'>绑定电子邮箱</view>
+        <view class='cell_r'>
+          <view class='icon iconfont v-icon-arrow-right'></view>
+        </view>
+      </view>    
+    </navigator>    
+  </view>
+
+  <view class='group'>
+    <navigator url='../../address/addresslist/index?order_tag=setting' hover-class='none'>
+      <view class='cell'>
+        <view class='cell_l'>收货地址管理</view>
+        <view class='cell_r'>
+          <view class='icon iconfont v-icon-arrow-right'></view>
+        </view>
+      </view>    
+    </navigator>       
+  </view>
+
+  <!-- <view class='foot'>
+    <view class='foot_btn' bindtap='loginOut'>注销</view>
+  </view> -->
+</view>

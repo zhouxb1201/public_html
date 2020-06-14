@@ -1,0 +1,6 @@
+{
+  "navigationBarTitleText": "订单",
+  "usingComponents": {
+    "login-component": "/pages/component/login/login"
+  }
+}

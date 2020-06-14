@@ -1,0 +1,44 @@
+<view class="category">
+
+  <view class='category_search'>
+    <view class='search_input'>      
+      <van-icon name="search" color='#999' style='position:absolute;top:10px;left:10px;'/>
+      <input placeholder="请输入搜索关键词" placeholder-style="font-size:12px;color:#999" style='border:1rpx solid #fff;color:#999;padding-left:30px;font-size:25rpx;' bindconfirm='searchFun'></input>      
+    </view>      
+  </view>
+
+  <view class='category_list'>
+    <view class='r_first_category' style='width:160rpx'>
+      <scroll-view scroll-y style='height:{{clientHeight}}px;'>
+        <view class="r_item {{itemIndex === index ? 'item_active':'' }}" wx:for="{{category_list}}" wx:key="" data-id="{{item.category_id}}"  data-index="{{index}}" bindtap='navChange'>
+          {{item.short_name =='' ? item.category_name:item.short_name}}
+        </view>
+      </scroll-view>
+    </view>
+    <view style='width:590rpx'>
+      <scroll-view scroll-y style='height:{{clientHeight}}px;'>
+        <view class='list' wx:for="{{goods_list}}" wx:key="" wx:for-item="goodItem">
+          <view class='item'>
+            <view class='img'>
+              <image src='{{goodItem.img_src}}'></image>
+            </view>
+            <view class='info'>
+              <view class='good_name'>{{goodItem.goods_name}}</view>              
+              <view class='cell_price'>
+                <view class='price'>¥ {{goodItem.price}}</view>
+                <view class="btn" wx:if="{{goodItem.is_picked}}" data-goodsid="{{goodItem.goods_id}}" bindtap="canclePickGoods">取消</view>
+                <view class="btn" wx:else data-goodsid="{{goodItem.goods_id}}" bindtap="actPickGoods">挑选</view>
+              </view>
+            </view>
+          </view>            
+        </view>
+        <view class='no_more'>没有更多了</view>        
+      </scroll-view>
+    </view>
+  </view>  
+</view>
+
+
+
+
+

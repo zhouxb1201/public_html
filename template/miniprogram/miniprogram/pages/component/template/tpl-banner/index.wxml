@@ -1,0 +1,11 @@
+<view class='banner'>
+  <swiper class='swiper' indicator-dots="true" autoplay="true" interval="5000" indicator-color="#fff" style="height:{{imgheights[current]}}rpx;" bindchange="bindImgchange">
+    <block wx:for="{{temDataitem.data}}" wx:key="index">
+      <swiper-item>        
+        <nav-components type='1' url="{{item.linkurl ? item.linkurl : ''}}" param='' class='banner_pic'>
+          <image class='image' src="{{item.imgurl}}" data-id='{{index}}' mode='widthFix' class="slide-image" bindload="imageLoad"/>
+        </nav-components>
+      </swiper-item>
+    </block>
+  </swiper>
+</view>

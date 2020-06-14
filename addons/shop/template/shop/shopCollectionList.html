@@ -1,0 +1,92 @@
+
+{block name="main"}
+<div class="v-main-right fl">
+                    <div class="v-container" style="padding: 20px 14px 60px;">
+                        <!--page-->
+                        <div class="pic-box">
+                            <ul class="clearfix j-body">
+
+                            </ul>
+                            <div class="page clearfix">
+                                <div class="M-box3 m-style fr"></div>
+                            </div>
+                        </div>
+                        <!--page-->
+                    </div>
+                </div>
+<input type="hidden" id="page_index">
+{/block}
+{block name="javascript"}
+    <script>
+        require(['common','dialog'], function (common, dialog) {
+            LoadingInfo(1);
+            function LoadingInfo(page_index) {
+                $("#page_index").val(page_index);
+                $.ajax({
+                        type: "post",
+                        url:  "{$shopCollectionListUrl}",
+                        data: {
+                            "page_index": page_index
+                        },
+                        success: function (data) {
+                            var html = '';
+                            if (data["data"].length > 0) {
+                                for (var i = 0; i < data["data"].length; i++) {
+                                    html+='<li>';
+                                    html+='<a target="_blank" href="' + __URL('ADDONS_SHOP_MAINaddons=shopIndex&shop_id=' + data["data"][i]['shop_id']) + '">';
+                                    html+='<img src="'+__IMG(data["data"][i]['shop_logo'])+'" alt="">';
+                                    html+='</a>';
+                                    html+='<div class="pic-info clearfix">';
+                                    html+='<div class="price fl">'+data["data"][i]['shop_name']+'</div>';
+                                    html+='<div class="cancel fr"><a href="javascript:;" class="cancelCollection" data-id="'+data["data"][i]['shop_id']+'" data-type="shop">取消收藏</a></div>';
+                                    html+='</div>';
+                                    html+='</li>';
+                                }
+                            }else{
+                                $(".pic-box").css('display','none');
+                                html1 = '';
+                                html1 += '<div class="no-fav-result clearfix">';
+                                html1 +='<div class="no-pic">';
+                                html1 +='<img src="__TEMP__/shop/new/public/image/membercenter/Notcollect.png" alt="">';
+                                html1 +='</div>';
+                                html1 +='<div class="no-result-tips">';
+                                html1 +='<p class="big-font">你还没收藏过店铺哦</p>';
+                                html1 +='<p><a target="_blank" href="{:__URL(\'SHOP_MAIN/index/index\')}" class="blue">去随便逛逛吧</a>，看看有没有喜欢的</p>';
+                                html1 +='</div>';
+                                html1 +='</div>';
+                                $('.v-container').html(html1);
+                            }
+                            $(".j-body").html(html);
+                            common.Pages('.M-box3', data['total_count'], data["page_count"], page_index, LoadingInfo);
+                        }
+                    }
+                );
+            }
+            $('.j-body').on('click','.cancelCollection',function(){
+                var fav_id = $(this).data('id');
+                var  fav_type = $(this).data('type');
+                layer.confirm('你确定取消该店铺的收藏？', {
+                    btn: ['确定', '取消']//按钮
+                }, function (index) {
+                    layer.close(index);
+                    $.ajax({
+                        url :"{$cancelCollGoodsOrShopUrl}",
+                        type : "post",
+                        data : {
+                            "fav_id" : fav_id,
+                            "fav_type" : fav_type
+                        },
+                        success : function(data) {
+                            if (data["code"] > 0) {
+                                layer.msg('取消成功',{icon: 1, time: 2000}, LoadingInfo($('#page_index').val()));
+                            }else{
+                                layer.msg('取消失败');
+                            }
+                        }
+                    });
+                });
+
+            });
+        });
+    </script>
+{/block}

@@ -1,0 +1,235 @@
+<div class="form-control-static"></div>
+<div class="mb-10 flex flex-pack-justify">
+    <input type="hidden" id="uid" value="{$uid}">
+    <input type="hidden" id="referee_id" value="">
+    <input type="hidden" id="referee_name" value="">
+
+    
+    <div class="area_agent_status" >
+            <div class="form-horizontal form-validate widthFixedForm"  style="display: none;">
+                    <div class="form-group"  style="display: flex;justify-content: start; margin-left: 10px;">
+                        <label class="control-label " style="margin-right: 20px;">区域代理等级</label>
+                        <div class="">
+                            <select name="" class="form-control" id="area_agent" style="width: 300px;">
+                            {foreach name="agent_info['area']" item="value"}
+                            <option value="{$value.id}" >{$value.level_name}</option>
+                            {/foreach}
+                            </select>
+                        </div>
+            
+                    </div>
+                </div>
+        <div class="form-horizontal form-validate widthFixedForm">
+            <div class="form-group" style="display: flex;justify-content: start; margin-left: 10px;">
+                <label class="control-label " style="margin-right: 20px;width: 20%;">代理区域</label>
+                <div class="" >
+                    <select name="" class="form-control" id="area_type" style="width: 300px;">
+                        <option value="3" {if $info['area_type']==3}selected{/if}>区级代理</option>
+                        <option value="2" {if $info['area_type']==2}selected{/if}>市级代理</option>
+                        <option value="1" {if $info['area_type']==1}selected{/if}>省级代理</option>
+                    </select>
+                </div>
+
+            </div>
+
+        </div>
+        <div class="form-horizontal form-validate widthFixedForm">
+        <div class="form-group"  style="display: flex;justify-content: start; margin-left: 10px;">
+                <label class="control-label " style="margin-right: 20px;width: 20%;" >代理地区</label>
+                <div class=" " >
+                    <select name="province" id="selProvinces"  class="form-control getProvince" style="width: 300px;margin-bottom: 20px;">
+                        <option value="-1">请选择省...</option>
+                    </select>
+                    <span class="selCities">
+                    <select name="city" id="selCities"  class="form-control getSelCity" style="width: 300px;margin-bottom: 20px;">
+                        <option value="-1">请选择市...</option>
+                    </select>
+                    </span>
+                    <span class="selDistricts">
+                    <select name="district" id="selDistricts" class="form-control" style="width: 300px;">
+                        <option value="-1">请选择区...</option>
+                    </select>
+                    </span>
+                </div>
+            </div>
+        </div>
+    </div>
+    <input type="hidden" id="pid">
+    <input type="hidden" id="cid">
+    <input type="hidden" id="aid">
+</div>
+
+<script>
+    require(['util'],function(util){
+        $('#area_type').on('change', function () {
+			var id = $('#area_type').val();
+			if(id==1){
+				$(".selCities").hide();
+				$(".selDistricts").hide();
+			}
+			if(id==2){
+				$(".selCities").show();
+				$(".selDistricts").hide();
+			}
+			if(id==3){
+				$(".selCities").show();
+				$(".selDistricts").show();
+			}
+        })
+        initProvince("#selProvinces");
+        function initProvince(obj){
+            pid = $('#pid').val();
+            console.log('pid',pid)
+            $.ajax({
+                type : "post",
+                url : "{$getProvinceUrl}",
+                dataType : "json",
+                success : function(data) {
+                    if (data != null && data.length > 0) {
+                        var str = "";
+                        for (var i = 0; i < data.length; i++) {
+                            if(pid == data[i].province_id){
+                                str += '<option selected value="'+data[i].province_id+'">'+data[i].province_name+'</option>';
+                            }else{
+                                str += '<option value="'+data[i].province_id+'">'+data[i].province_name+'</option>';
+                            }
+                        }
+                        $(obj).append(str);
+                    }
+                }
+            });
+        }
+        getProvince();
+        //选择省份弹出市区
+        $('.getProvince').on('change', function () {
+            var id = $('#selProvinces').val();
+            if(id==-1){
+                id = pid;
+            }
+            cid = $('#cid').val();
+            $.ajax({
+                type : "post",
+                url :"{$getCityUrl}",
+                dataType : "json",
+                data : {
+                    "province_id" : id
+                },
+                success : function(data) {
+                    if (data != null && data.length > 0) {
+                        var str = "<option value='-1'>请选择市</option>";
+                        for (var i = 0; i < data.length; i++) {
+                            if(cid == data[i].city_id) {
+                                str += '<option selected value="' + data[i].city_id + '">' + data[i].city_name + '</option>';
+                            }else{
+                                str += '<option  value="' + data[i].city_id + '">' + data[i].city_name + '</option>';
+                            }
+                        }
+                        $('#selCities').html(str);
+                    }
+                }
+            });
+        })
+        function getProvince() {
+            var id = $('#selProvinces').val();
+            if(id==-1){
+                id = pid;
+            }
+            cid = $('#cid').val();
+            $.ajax({
+                type : "post",
+                url :"{$getCityUrl}",
+                dataType : "json",
+                data : {
+                    "province_id" : id
+                },
+                success : function(data) {
+                    if (data != null && data.length > 0) {
+                        var str = "<option value='-1'>请选择市</option>";
+                        for (var i = 0; i < data.length; i++) {
+                            if(cid == data[i].city_id) {
+                                str += '<option selected value="' + data[i].city_id + '">' + data[i].city_name + '</option>';
+                            }else{
+                                str += '<option  value="' + data[i].city_id + '">' + data[i].city_name + '</option>';
+                            }
+                        }
+                        $('#selCities').html(str);
+                    }
+                }
+            });
+        };
+        getSelCity();
+        //选择市区弹出区域
+        $('.getSelCity').on('change', function () {
+            var id = $('#selCities').val();
+            aid = $('#aid').val();
+            if(id==-1){
+                id = cid;
+            }
+            $.ajax({
+                type : "post",
+                url : "{$getDistrictUrl}",
+                dataType : "json",
+                data : {
+                    "city_id" : id
+                },
+                success : function(data) {
+                    if (data != null && data.length > 0) {
+                        var str = "<option value='-1'>请选择区</option>";
+                        for (var i = 0; i < data.length; i++) {
+                            if(aid==data[i].district_id){
+                                str += '<option selected value="'+data[i].district_id+'">'+data[i].district_name+'</option>';
+                            }else{
+                                str += '<option value="'+data[i].district_id+'">'+data[i].district_name+'</option>';
+                            }
+
+                        }
+                        $('#selDistricts').html(str);
+                    }
+                }
+            });
+        })
+            function getSelCity() {
+                var id = $('#selCities').val();
+                aid = $('#aid').val();
+                if(id==-1){
+                    id = cid;
+                }
+                $.ajax({
+                    type : "post",
+                    url : "{$getDistrictUrl}",
+                    dataType : "json",
+                    data : {
+                        "city_id" : id
+                    },
+                    success : function(data) {
+                        if (data != null && data.length > 0) {
+                            var str = "<option value='-1'>请选择区</option>";
+                            for (var i = 0; i < data.length; i++) {
+                                if(aid==data[i].district_id){
+                                    str += '<option selected value="'+data[i].district_id+'">'+data[i].district_name+'</option>';
+                                }else{
+                                    str += '<option value="'+data[i].district_id+'">'+data[i].district_name+'</option>';
+                                }
+
+                            }
+                            $('#selDistricts').html(str);
+                        }
+                    }
+                });
+            }
+                $('body').on('click','.select_referee',function(){
+                var uid = $(this).data('id');
+                var name = $(this).data('name');
+                if(uid!=0){
+                    $("#referee_id").val(uid);
+                    $("#referee_name").val(name);
+                    $(".new_referee").html(name);
+                }else if(uid==0){
+                    $("#referee_id").val('');
+                    $(".new_referee").html('总店');
+                }
+
+            });
+
+    })
+</script>

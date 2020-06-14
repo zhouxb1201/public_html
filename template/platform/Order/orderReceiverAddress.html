@@ -1,0 +1,127 @@
+<form class="form-horizontal padding-15" role="form">
+    <div class="form-group">
+        <label for="receiver_name" class="col-sm-3 control-label">收货人</label>
+        <div class="col-sm-8">
+            <input type="text" class="form-control" id="receiver_name" value="{$detail['receiver_name']}">
+        </div>
+    </div>
+    <div class="form-group">
+        <label for="receiver_mobile" class="col-sm-3 control-label">手机号码</label>
+        <div class="col-sm-8">
+            <input type="text" class="form-control" id="receiver_mobile" value="{$detail['receiver_mobile']}">
+        </div>
+    </div>
+    <div class="form-group">
+        <label for="receiver_province" class="col-sm-3 control-label">省</label>
+        <div class="col-sm-8">
+            <select class="form-control" id="receiver_province"></select>
+        </div>
+    </div>
+    <div class="form-group">
+        <label for="receiver_city" class="col-sm-3 control-label">市</label>
+        <div class="col-sm-8">
+            <select class="form-control" id="receiver_city"></select>
+        </div>
+    </div>
+    <div class="form-group">
+        <label for="receiver_district" class="col-sm-3 control-label">区</label>
+        <div class="col-sm-8">
+            <select class="form-control" id="receiver_district"></select>
+        </div>
+    </div>
+    <div class="form-group">
+        <label for="receiver_address" class="col-sm-3 control-label">收货地址</label>
+        <div class="col-sm-8">
+            <input type="text" class="form-control" id="receiver_address" value="{$detail['receiver_address']}">
+        </div>
+    </div>
+    <input type="hidden" id="hidden_address_order_id" value="{$detail['order_id']}">
+</form>
+<script>
+    $(function () {
+        $("#receiver_province").on('change', function () {
+            $("#receiver_city option").remove();
+            $("#receiver_district option").remove();
+            getCity($(this).val());
+        })
+
+        $("#receiver_city").on('change', function () {
+            $("#receiver_district option").remove();
+            getDistrict($(this).val());
+        })
+
+        getProvince({$detail['receiver_province']})
+        getCity({$detail['receiver_province']},{$detail['receiver_city']});
+        getDistrict({$detail['receiver_city']},{$detail['receiver_district']})
+    })
+
+    //获取省份信息
+    function getProvince(select_province_id) {
+        var province_obj = $("#receiver_province")[0];
+        $.ajax({
+            type: "post",
+            url: "{:__URL('PLATFORM_MAIN/order/getProvince')}",
+            dataType: "json",
+            success: function (data) {
+                if (data != null && data.length > 0) {
+                    $.each(data, function (k, v) {
+                        if (select_province_id == v.province_id) {
+                            var opt = new Option(v.province_name, v.province_id, false, true);
+                        } else {
+                            var opt = new Option(v.province_name, v.province_id);
+                        }
+                        province_obj.options.add(opt);
+                    })
+                }
+            }
+        });
+    }
+
+    //获取城市信息
+    function getCity(province_id, select_city_id) {
+        var city_obj = $("#receiver_city")[0];
+        $.ajax({
+            type: "post",
+            url: "{:__URL('PLATFORM_MAIN/order/getCity')}",
+            data: {'province_id': province_id},
+            dataType: "json",
+            success: function (data) {
+                var html1 = new Option('请选择', '-1');
+                city_obj.options.add(html1);
+                if (data != null && data.length > 0) {
+                    $.each(data, function (k, v) {
+                        if (select_city_id == v.city_id) {
+                            var opt = new Option(v.city_name, v.city_id, false, true);
+                        } else {
+                            var opt = new Option(v.city_name, v.city_id);
+                        }
+                        city_obj.options.add(opt);
+                    })
+                }
+            }
+        });
+    }
+
+    //获取地区信息
+    function getDistrict(city_id, select_district_id) {
+        var district_obj = $("#receiver_district")[0];
+        $.ajax({
+            type: "post",
+            url: "{:__URL('PLATFORM_MAIN/order/getDistrict')}",
+            data: {'city_id': city_id},
+            dataType: "json",
+            success: function (data) {
+                if (data != null && data.length > 0) {
+                    $.each(data, function (k, v) {
+                        if (select_district_id == v.district_id) {
+                            var opt = new Option(v.district_name, v.district_id, false, true);
+                        } else {
+                            var opt = new Option(v.district_name, v.district_id);
+                        }
+                        district_obj.options.add(opt);
+                    })
+                }
+            }
+        });
+    }
+</script>

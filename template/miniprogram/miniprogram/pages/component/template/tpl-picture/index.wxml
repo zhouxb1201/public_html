@@ -1,0 +1,9 @@
+<view>
+  <view class='picture' style="padding-bottom:{{temDataitem.style.paddingtop}}px;" wx:for="{{temDataitem.data}}" wx:for-index="index" wx:key="">
+    <view style="background:{{temDataitem.style.background}};padding:{{temDataitem.style.paddingtop}}px {{temDataitem.style.paddingleft}}px 0 {{temDataitem.style.paddingleft}}px;box-sizing:border-box;">      
+      <nav-components type='1' url="{{item.linkurl ? item.linkurl : ''}}" param=''>
+        <image mode='widthFix' src="{{item.imgurl}}"></image>
+      </nav-components>
+    </view>
+  </view>
+</view>

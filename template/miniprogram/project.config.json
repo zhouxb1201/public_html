@@ -1,0 +1,127 @@
+{
+	"miniprogramRoot": "miniprogram/",
+	"cloudfunctionRoot": "cloudfunctions/",
+	"setting": {
+		"urlCheck": false,
+		"es6": true,
+		"postcss": true,
+		"preloadBackgroundData": false,
+		"minified": true,
+		"newFeature": true,
+		"autoAudits": false,
+		"coverView": true,
+		"showShadowRootInWxmlPanel": true,
+		"scopeDataCheck": false,
+		"nodeModules": false,
+		"checkInvalidKey": true,
+		"checkSiteMap": false,
+		"uploadWithSourceMap": true,
+		"babelSetting": {
+			"ignore": [],
+			"disablePlugins": [],
+			"outputPath": ""
+		},
+		"useCompilerModule": true
+	},
+	"appid": "wx77a47397c4c429e0",
+	"projectname": "%E5%9B%A2%E5%A4%A7%E4%BA%BA",
+	"libVersion": "2.9.4",
+	"simulatorType": "wechat",
+	"simulatorPluginLibVersion": {},
+	"compileType": "miniprogram",
+	"condition": {
+		"search": {
+			"current": -1,
+			"list": []
+		},
+		"conversation": {
+			"current": -1,
+			"list": []
+		},
+		"plugin": {
+			"current": -1,
+			"list": []
+		},
+		"game": {
+			"list": []
+		},
+		"gamePlugin": {
+			"current": -1,
+			"list": []
+		},
+		"miniprogram": {
+			"current": -1,
+			"list": [
+				{
+					"id": -1,
+					"name": "db guide",
+					"pathName": "pages/databaseGuide/databaseGuide",
+					"query": ""
+				},
+				{
+					"id": 1,
+					"name": "packageSecond/pages/live/mylive/index",
+					"pathName": "packageSecond/pages/live/mylive/index",
+					"query": "",
+					"scene": null
+				},
+				{
+					"id": 2,
+					"name": "packageSecond/pages/live/pusher/index",
+					"pathName": "packageSecond/pages/live/pusher/index",
+					"query": "",
+					"scene": null
+				},
+				{
+					"id": -1,
+					"name": "packageSecond/pages/live/square/index",
+					"pathName": "packageSecond/pages/live/square/index",
+					"query": "",
+					"scene": null
+				},
+				{
+					"id": -1,
+					"name": "packageSecond/pages/live/openLive/index",
+					"pathName": "packageSecond/pages/live/openLive/index",
+					"query": "",
+					"scene": null
+				},
+				{
+					"id": -1,
+					"name": "packageSecond/pages/live/notice/index",
+					"pathName": "packageSecond/pages/live/notice/index",
+					"query": "",
+					"scene": null
+				},
+				{
+					"id": -1,
+					"name": "packageSecond/pages/live/player/index",
+					"pathName": "packageSecond/pages/live/player/index",
+					"query": "",
+					"scene": null
+				},
+				{
+					"id": -1,
+					"name": "packageSecond/pages/live/liveShop/index",
+					"pathName": "packageSecond/pages/live/liveShop/index",
+					"query": "",
+					"scene": null
+				},
+				{
+					"id": 8,
+					"name": "packageSecond/pages/goodthingcircle/home/index",
+					"pathName": "packageSecond/pages/goodthingcircle/home/index",
+					"query": "extend_code=7225682159 ",
+					"scene": null
+				},
+				{
+					"id": -1,
+					"name": "packageSecond/pages/goodthingcircle/vedioDetail/index",
+					"pathName": "packageSecond/pages/goodthingcircle/vedioDetail/index",
+					"query": "extend_code=7225682159&uid=MTQ0Nw%3D%3D&thing_id=51",
+					"scene": null
+				}
+			]
+		}
+	}
+}

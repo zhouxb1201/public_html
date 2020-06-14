@@ -1,0 +1,139 @@
+<form class='withdraw' bindsubmit="templateSend" report-submit="true">
+  <view class='withdraw_group'>
+    <view class='group_cell'>
+      <view class='title'>可提现余额</view>
+      <view class='value font_color_red'>¥ {{balance}}</view>
+    </view>
+    <view class='group_cell'>
+      <view class='title'>提现账户</view>
+      <view class='value'>
+        <input type='text' placeholder='请输入提现账户' disabled='disabled' value='{{account}}' bindtap='onAccountShow'></input>
+      </view>
+    </view>
+    <view class='group_cell'>
+      <view class='title'>提现余额</view>
+      <view class='value'>
+        <input type='text' placeholder='请输入提现余额' bindinput='cashMoneyFun'></input>
+      </view>
+    </view>
+  </view>
+  <view class='save_btn'>
+    <button class='btn' formType="submit"  bindtap='subscribeMessage'>提现</button>
+  </view>
+</form>
+
+<van-popup show="{{ accountShow }}" position='bottom' custom-style="border-radius:30rpx 30rpx 0 0;" bind:close="onAccountClose">
+  <view class='account'>
+    <view class='title'>
+      <text>提现账户</text>
+    </view>
+    <view class='account_list'>
+      <view class='account_item' 
+        wx:for='{{account_list}}' 
+        wx:key='' 
+        data-id='{{item.id}}' 
+        data-realname='{{item.realname}}' 
+        data-accountnumber='{{item.account_number}}' 
+        data-type='{{item.type}}' 
+        data-typestart='{{item.type_start}}' 
+        bindtap='selectAccount'>
+
+        <view class='account_info'>
+          <view class='account_cell'>账户姓名：{{item.realname}}</view>          
+          <view class='account_cell' wx:if='{{item.type == 2}}'>账户类型：微信</view>
+          <view class='account_cell' wx:if='{{item.type == 1}}'>账户类型：银行卡</view>
+          <view class='account_cell' wx:if='{{item.type == 4}}'>账户类型：银行卡</view>
+          <view class='account_cell' wx:if='{{item.type == 3}}'>账户类型：支付宝</view>
+          <view class='account_cell' wx:if='{{item.type != 2}}'>账户号码：{{item.account_number}}</view>
+        </view>
+        <view class='icon' wx:if='{{item.type_start}}'>
+          <icon wx:if="{{item.select}}" type="success" color="#1989fa" size='20' />
+          <icon type="circle" wx:else size='20' />
+        </view>
+        <view class='icon_no' wx:else>          
+          <icon type="circle" size='20' />
+        </view>               
+      </view>
+    </view>
+    <view class='account_foot_btn'>
+      <navigator url='../post/index'>
+        <view class='addAccountBtn'>新增账户</view>
+      </navigator>
+      
+    </view>
+  </view>    
+</van-popup>
+
+
+<van-dialog use-slot async-close show="{{ payShow }}" show-cancel-button confirm-button-open-type="getUserInfo" bind:close="onPasswordClose" title='请输入支付密码' bind:getuserinfo="getUserInfo" bind:confirm='passwordConfirmFun' bind:cancel='onPasswordClose'>
+  <view class='pay_box'>
+    <view class='pay_group'>
+      <view class='cell'>
+        <view class='title'>支付密码</view>
+        <view class='value'>
+          <input type='password' placeholder='请输入支付密码' bindinput='passwordFun'></input>
+        </view>
+      </view>
+    </view>
+    <view class='text_group'>
+      <view>由9-20个字母、数字、普通字符组成</view>
+      <view class='reset_btn' bindtap='resetPayPasswordShow'>忘记密码？</view>
+    </view>
+  </view>
+</van-dialog>
+
+<van-popup show="{{reset_pay_show}}"  position='bottom' bind:close="resetPayPasswordClose">
+  <view class='reset_password_box'>
+    <view class='top'>设置支付密码</view>
+    <!-- 手机验证 -->
+    <view class='phone_validate' wx:if='{{check_code == 0}}'>
+      <view class='group'>
+        <view class='cell'>
+          <view class='title'>手机号码</view>
+          <view class='value'>
+            <input type='text' value='{{user_tel}}' disabled='disabled'></input>
+          </view>
+        </view>
+        <view class='cell'>
+          <view class='title'>短信验证码</view>
+          <view class='value phone_code'>
+            <input type='text' placeholder='请输入短信验证码' bindinput='verificationCodeFun'></input>
+            <button class="v_code {{codeDis == true?'d_code':''}}" bindtap="changeCode" disabled="{{codeDis}}">
+                {{phoneCode}}
+                <text hidden="{{phoneCode == '获取验证码'}}">S</text>
+            </button>
+          </view>
+        </view>
+      </view>
+
+      <view class='foot'>
+        <view class='foot_btn' bindtap='resetPayPasswordClose'>取消</view>
+        <view class='foot_btn' bindtap='checkVerificationCode'>下一步</view>        
+      </view>
+    </view>
+
+     <!-- 修改支付密码 -->
+    <view class='reset_pay_password' wx:if='{{check_code == 1}}'>
+      <view class='group'>
+        <view class='cell'>
+          <view class='title'>支付密码</view>
+          <view class='value'>
+            <input type='password' placeholder='请输入支付密码' bindblur='newPayPasswordFun'></input>
+          </view>
+        </view>
+        <view class='cell'>
+          <view class='title'>确认密码</view>
+          <view class='value'>
+            <input type='password' placeholder='再次输入支付密码' bindblur='confirmPayPasswordFun'></input>
+          </view>
+        </view>
+      </view>
+
+      <view class='foot'>        
+        <view class='foot_btn' bindtap='resetPayPasswordClose'>取消</view>
+        <view class='foot_btn' bindtap='updatePayPassword'>完成</view>
+      </view>
+    </view>
+  </view>
+</van-popup>
+

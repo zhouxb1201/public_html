@@ -1,0 +1,146 @@
+
+{extend name="shop/new/Member/base" /}
+{block name="main"}
+<div class="v-main-right fl">
+                    <div class="v-container">
+                        <!--page-->
+                        <div class="balance-box bonus" style="height: 130px">
+                            <div class="bouns-item">
+                                <div class="bouns-item-left">
+                                    <p class="total">
+                                        <span>{if $bonus_set['withdrawals_bonus']}{$bonus_set['withdrawals_bonus']}{else}已发放分红{/if}：<i>{if $bonus_info['member_info']['grant_bonus']}{$bonus_info['member_info']['grant_bonus']}{else}0.00{/if}</i>&nbsp;元</span>
+                                    </p>
+                                    <p>
+                                        <span>{if $bonus_set['frozen_bonus']}{$bonus_set['frozen_bonus']}{else}冻结分红{/if}：<i>{if $bonus_info['member_info']['freezing_bonus']}{$bonus_info['member_info']['freezing_bonus']}{else}0.00{/if}</i>&nbsp;元</span>
+                                        <span>{if $bonus_set['withdrawal_bonus']}{$bonus_set['withdrawal_bonus']}{else}待发放分红{/if}：<i>{if $bonus_info['member_info']['ungrant_bonus']}{$bonus_info['member_info']['ungrant_bonus']}{else}0.00{/if}</i>&nbsp;元</span>
+                                    </p>
+                                    <p>
+                                        {if  $bonus_info['member_info']['global_agent_level_id']}
+                                        <span>{if $globalbonus_set['global_agreement']}{$globalbonus_set['global_agreement']}{else}全球股东{/if}：<i>{$bonus_info['member_info']['global_level_name']}</i></span>
+                                        {/if}
+                                        {if  $bonus_info['member_info']['area_agent_level_id']}
+                                        <span>{if $areabonus_set['area_agreement']}{$areabonus_set['area_agreement']}{else}区域分红{/if}：<i>{$bonus_info['member_info']['area_level_name']}</i></span>
+                                        {/if}
+                                        {if  $bonus_info['member_info']['team_agent_level_id']}
+                                        <span>{if $teambonus_set['team_agreement']}{$teambonus_set['team_agreement']}{else}团队分红{/if}：<i>{$bonus_info['member_info']['team_level_name']}</i></span>
+                                        {/if}
+                                    </p>
+                                </div>
+                            </div>
+                            <div class="shu"></div>
+                            <div class="bouns-item pr"><img src="{:__URL('SHOP_MAIN/member/bonusQrcode')}" alt="" class="qr-code"></div>
+                        </div>
+                        <div class="tabs-container">
+                            <ul class="tabs clearfix rWater">
+                                {if $globalStatus==1 && $bonus_info['member_info']['is_global_agent']}
+                                <li class="active"><a href="javascript:void(0);" class="bonustype" data-id="1">{if $globalbonus_set['global_agreement']}{$globalbonus_set['global_agreement']}{else}全球股东{/if}流水</a></li>
+                                {/if}
+                                {if $areaStatus==1 && $bonus_info['member_info']['is_area_agent']}
+                                {if $globalStatus==1 && $bonus_info['member_info']['is_global_agent'] }
+                                <li><a href="javascript:void(0);" class="bonustype"  data-id="2">{if $areabonus_set['area_agreement']}{$areabonus_set['area_agreement']}{else}区域分红{/if}流水</a></li>
+                                {else}
+                                <li class="active"><a href="javascript:void(0);" class="bonustype"  data-id="2">{if $areabonus_set['area_agreement']}{$areabonus_set['area_agreement']}{else}区域分红{/if}流水</a></li>
+                                {/if}
+                                {/if}
+                                {if $teamStatus==1 && $bonus_info['member_info']['is_team_agent'] }
+                                {if ($globalStatus==1 && $bonus_info['member_info']['is_global_agent']) || ($areaStatus==1 && $bonus_info['member_info']['is_area_agent'])}
+                                <li><a href="javascript:void(0);" class="bonustype"  data-id="3">{if $teambonus_set['team_agreement']}{$teambonus_set['team_agreement']}{else}团队分红{/if}流水</a></li>
+                                {else}
+                                <li class="active"><a href="javascript:void(0);" class="bonustype"  data-id="3">{if $teambonus_set['team_agreement']}{$teambonus_set['team_agreement']}{else}团队分红{/if}流水</a></li>
+                                {/if}
+                                {/if}
+                            </ul>
+                            <div class="tab_container">
+                                <div id="tab1" class="tab_content" style="display: block; ">
+                                    <table class="runningTable">
+                                        <thead>
+                                            <tr>
+                                                <th>变动类型</th>
+                                                <th>{$bonus_set['bonus']}</th>
+                                                <th>备注</th>
+                                                <th>时间</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody id="list">
+
+
+                                        </tbody>
+                                    </table>
+                                    <div class="page clearfix" style="display: none">
+                                        <div class="M-box3 m-style fr"></div>
+                                    </div>
+                                </div>
+
+                            </div>
+                        </div>
+
+
+                        <!--page-->
+                    </div>
+                </div>
+{/block}
+{block name="javascript"}
+    <script>
+        require(['common','dialog'], function (common,Dialog) {
+            Dialog.withAccount(".tabs-container", "li", "active");
+            loadingInfo(1);
+            function loadingInfo(page_index){
+                var type = $('.rWater').children('.active').children('a').data('id');
+               var data_url ='';
+                if(type==1){
+                    data_url = "{$globalBonusDetailUrl}";
+                } else if(type==2){
+                    data_url = "{$areaBonusDetailUrl}";
+                } else if(type==3){
+                    data_url = "{$teamBonusDetailUrl}";
+                }
+                $.ajax({
+                    url: data_url,
+                    type:'post',
+                    async:true,
+                    data:{"page_index":page_index},
+                    dataType:'json',
+                    success : function(data) {
+                        var html = '';
+                        if (data["data"].length > 0) {
+                            for (var i = 0; i < data["data"].length; i++) {
+                                html += '<tr>';
+                                if(data["data"][i]["from_type"]==1){
+                                    html += '<td >订单完成</td>';
+                                    html += '<td >+' + data["data"][i]["bonus"] + '</td>';
+                                }
+                                if(data["data"][i]["from_type"]==2){
+                                    html += '<td >订单退款</td>';
+                                    html += '<td >-' + data["data"][i]["bonus"] + '</td>';
+                                }
+                                if(data["data"][i]["from_type"]==3){
+                                    html += '<td >订单支付</td>';
+                                    html += '<td >+' + data["data"][i]["bonus"] + '</td>';
+                                }
+                                if(data["data"][i]["from_type"]==4){
+                                    html += '<td >{$bonus_set['bonus']}发放</td>';
+                                    html += '<td >+' + data["data"][i]["bonus"] + '</td>';
+                                }
+
+                                html += '<td >' + data["data"][i]["text"] + '</td>';
+                                html += '<td >' +data["data"][i]["create_time"]+ '</td>';
+                                html += '</tr>';
+                            }
+                            $('.page').css('display','block');
+                        } else {
+                            $('.page').css('display','none');
+                            html += '<tr><th colspan="5">暂无符合条件的数据记录</th></tr>';
+                        }
+                        $("#list").html(html);
+                        common.Pages('.M-box3', data['total_count'], data["page_count"], page_index, loadingInfo);
+
+                    }
+                })
+            }
+            $('body').on('click','.bonustype',function(){
+                var type = $(this).data('id');
+                loadingInfo(1,type);
+            })
+        });
+    </script>
+{/block}

@@ -1,0 +1,162 @@
+<view class="head" wx:if="{{items.styletype == 1}}">
+  <image mode="widthFix" class="bg" src="{{items.bgSrc}}" class="bg"></image>
+  <view class="box box-info">
+    <view class="logo">
+      <view class="img">
+        <image mode="widthFix" src="{{info.user_headimg}}"></image>
+      </view>
+    </view>
+    <view class="info">
+      <view class="content">
+        <view class="name">{{info.member_name}}</view>
+        <view class="tag van-tag van-tag--round" style="background-color: rgb(223, 201, 152);">
+          <view class="icon iconfont v-icon-level span"></view>{{info.level_name}}
+        </view>
+      </view>
+      <view class="content">
+        <view class="sup">
+          <text>推荐人：</text>
+          <text>{{info.referee_name}}</text>
+        </view>
+        <view class="time">加入时间：{{info.become_distributor_time}}</view>
+      </view>
+    </view>
+  </view>
+</view>
+
+<view class="head" wx:if="{{items.styletype == 2}}">
+  <image mode="widthFix" class="bg" src="{{items.bgSrc}}" class="bg"></image>
+  <view class="boxes box-info">
+    <view class="logo two">
+      <view class="img">
+        <image mode="widthFix" src="{{info.user_headimg}}"></image>
+      </view>
+    </view>
+    <view class="info two">
+      <view class="content two">
+        <view class="name two">{{info.member_name}}</view>
+        <view class="tag  two">
+          <view class="icon iconfont v-icon-level span"></view>{{info.level_name}}
+        </view>
+      </view>
+      <view class="content sup-time two">
+        <view class="sup">
+          <text>推荐人：</text>
+          <text>{{info.referee_name}}</text>
+        </view>
+        <view class="time">加入时间：{{info.become_distributor_time}}</view>
+      </view>
+    </view>
+  </view>
+</view>
+
+<view class="head" wx:if="{{items.styletype == 3}}">
+  <image mode="widthFix" class="bg" src="{{items.bgSrc}}" class="bg"></image>
+  <view class="box box-info">
+    <view class="logo">
+      <view class="img">
+        <image mode="widthFix" src="{{info.user_headimg}}"></image>
+      </view>
+    </view>
+    <view class="info three">
+      <view class="content">
+        <view class="name three">{{info.member_name}}</view>
+        <view class="tag van-tag van-tag--round three" style="background-color: rgb(112, 133, 165);">
+          {{info.level_name}}
+        </view>
+      </view>
+    </view>
+    <view class="foot three">
+      <view class="sup three">
+        <text>推荐人：</text>
+        <text>{{info.referee_name}}</text>
+      </view>
+      <view class="time">
+        <text>加入时间：</text>
+        <text>{{info.become_distributor_time}}</text>
+      </view>
+    </view>
+  </view>
+</view>
+
+<view class="head" wx:if="{{items.styletype == 4}}">
+  <image mode="widthFix" class="bg" src="{{items.bgSrc}}" class="bg"></image>
+  <view class="box box-info">
+    <view class="logo">
+      <view class="img">
+        <image mode="widthFix" src="{{info.user_headimg}}"></image>
+      </view>
+    </view>
+    <view class="info four">
+      <view class="content">
+        <view class="name three">{{info.member_name}}</view>
+        <view class="tag van-tag van-tag--round three" style="background-color: rgb(229, 186, 83);">
+          {{info.level_name}}
+        </view>
+      </view>
+    </view>
+    <view class="foot four">
+      <view class="sup">
+        <text>推荐人：</text>
+        <text>{{info.referee_name}}</text>
+      </view>
+      <view class="time">
+        <text>加入时间：</text>
+        <text>{{info.become_distributor_time}}</text>
+      </view>
+    </view>
+  </view>
+</view>
+
+<view class="head" wx:if="{{items.styletype == 5}}">
+  <image mode="widthFix" class="bg" src="{{items.bgSrc}}" class="bg"></image>
+  <view class="boxes box-info">
+    <view class="logo five">
+      <view class="img">
+        <image mode="widthFix" src="{{info.user_headimg}}"></image>
+      </view>
+    </view>
+    <view class="info five">
+      <view class="content five">
+        <view class="name five">{{info.member_name}}</view>
+        <view class="tag  five">
+          <view class="icon iconfont v-icon-team-agent span"></view>{{info.level_name}}
+        </view>
+      </view>
+      <view class="content sup-time five">
+        <view class="sup">
+          <text>推荐人：</text>
+          <text>{{info.referee_name}}</text>
+        </view>
+        <view class="time">加入时间：{{info.become_distributor_time}}</view>
+      </view>
+    </view>
+  </view>
+</view>
+<view class="head" wx:if="{{items.styletype == 6}}">
+  <image mode="widthFix" class="bg" src="{{items.bgSrc}}" class="bg"></image>
+  <view class="box box-info">
+    <view class="logo-info">
+      <view class="logo">
+        <view class="img">
+          <image mode="widthFix" src="{{info.user_headimg}}"></image>
+        </view>
+      </view>
+      <view class="info six">
+        <view class="content">
+          <view class="name six">{{info.member_name}}</view>
+          <view class="tag  six">
+            <view class="icon iconfont v-icon-team-agent span"></view>{{info.level_name}}
+          </view>
+        </view>
+      </view>
+    </view>
+    <view class="sup-time-six">
+      <view class="sup">
+        <text>推荐人：</text>
+        <text>{{info.referee_name}}</text>
+      </view>
+      <view class="time">加入时间：{{info.become_distributor_time}}</view>
+    </view>
+  </view>
+</view>

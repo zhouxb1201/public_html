@@ -1,0 +1,142 @@
+<import src="/common/wxParse/wxParse.wxml"/>
+<view class='apply'>
+  
+  <view class="audit" wx:if="{{page_status == 4}}">
+    <view class="audit_box">
+      <view class="img">
+      <van-icon class='icon' name="underway" size='6em' color='rgb(25, 137, 250)'/>
+      </view>
+      
+      <view class="name">亲爱的会员</view>
+      <view>您的申请已提交至平台审核，请耐心等待</view>
+    </view>
+  </view>
+  <view class='normal' wx:else>
+    <view class="reason" wx:if="{{uncheck_reason != ''}}">审核不通过原因：{{uncheck_reason}}</view>
+    <!-- 身份信息 -->
+    <view class='cell_group'>
+
+      <view class='cell_item'>
+        <view class='cell_title'>
+          <text class='cell_required'>*</text> 真实姓名
+        </view>
+        <view class='cell_value'>
+          <input value="{{real_name}}" placeholder='请输入您的真实姓名' bindblur='realUserName'></input>
+        </view>
+      </view>
+
+      <view class='cell_item'>
+        <view class='cell_title'>
+          <text class='cell_required'>*</text> 手机号码
+        </view>
+        <view class='cell_value'>
+          <input value="{{user_tel}}" type="number" placeholder='请输入您的手机号码' bindinput="userPhone"></input>
+        </view>
+      </view>
+
+      <view class='cell_item'>
+        <view class='cell_title'>
+          <text class='cell_required'>*</text> 身份证号
+        </view>
+        <view class='cell_value'>
+          <input value="{{id_card}}" type="number" placeholder='请输入您的身份证号' bindblur='idCardNo'></input>
+        </view>
+      </view>
+
+      <view class='cell_item'>
+        <view class='cell_title'>
+          <text class='cell_required'>*</text> 手持身份证照
+        </view>
+        <view class='cell_value'>
+          <view class='img_list' wx:if='{{idCardShow}}'>
+            <view class='item'>
+              <view class='btn_delete iconfont v-icon-close' data-imgtype='1' bindtap='deleteImg'></view>
+              <view class='box_img' data-imgsrc='{{idCardImg}}' bindtap='previewImage'>
+                <image mode='widthFix' src='{{idCardImg}}'></image>
+              </view>
+            </view>
+          </view>
+          <view class='img_group' wx:else>
+            <view class='uploader' data-imgtype='1' bindtap='getImagesFun'>
+              <view class='upload_icon iconfont v-icon-camera'></view>
+              <view class='num'>0/1</view>
+            </view>
+            <view class='example' data-imgnum='1' bindtap='exampleImgOnShow'>示例</view>
+          </view>
+
+        </view>
+      </view>
+
+      <view class='cell_item'>
+        <view class='cell_title'>
+          <text class='cell_required'>*</text> 身份证正照
+        </view>
+        <view class='cell_value'>
+          <view class='img_list' wx:if='{{idCardfrontShow}}'>
+            <view class='item'>
+              <view class='btn_delete iconfont v-icon-close' data-imgtype='2' bindtap='deleteImg'></view>
+              <view class='box_img' data-imgsrc='{{idCardfrontImg}}' bindtap='previewImage'>
+                <image mode='widthFix' src='{{idCardfrontImg}}'></image>
+              </view>
+            </view>
+          </view>
+          <view class='img_group' wx:else>
+            <view class='uploader' data-imgtype='2' bindtap='getImagesFun'>
+              <view class='upload_icon iconfont v-icon-camera'></view>
+              <view class='num'>0/1</view>
+            </view>
+            <view class='example' data-imgnum='2' bindtap='exampleImgOnShow'>示例</view>
+          </view>
+
+        </view>
+      </view>
+
+      <view class='cell_item'>
+        <view class='cell_title'>
+          <text class='cell_required'>*</text> 身份证反照
+        </view>
+        <view class='cell_value'>
+          <view class='img_list' wx:if='{{idCardbehindShow}}'>
+            <view class='item'>
+              <view class='btn_delete iconfont v-icon-close' data-imgtype='3' bindtap='deleteImg'></view>
+              <view class='box_img' data-imgsrc='{{idCardbehindImg}}' bindtap='previewImage'>
+                <image mode='widthFix' src='{{idCardbehindImg}}'></image>
+              </view>
+            </view>
+          </view>
+          <view class='img_group' wx:else>
+            <view class='uploader' data-imgtype='3' bindtap='getImagesFun'>
+              <view class='upload_icon iconfont v-icon-camera'></view>
+              <view class='num'>0/1</view>
+            </view>
+            <view class='example' data-imgnum='3' bindtap='exampleImgOnShow'>示例</view>
+          </view>
+        </view>
+      </view>
+    </view>
+
+    <view class="agreement">
+      <checkbox class="checkbox" data-haveread="{{have_read}}" bindtap="readAgreement"></checkbox>我已阅读并认同
+      <navigator url="../protocol/index" class="label">《主播协议》</navigator>
+    </view>
+
+    <view class='foot_group'>
+      <view class="btn {{have_read == 0?'dis':''}}" bindtap="{{have_read == 0?'':'actApplyAnchor'}}">提交申请</view>
+    </view>
+  </view>  
+
+</view>
+
+<van-popup show="{{ exampleShow }}" bind:close="exampleImgOnClose">
+  <view class='example_img' wx:if='{{example_img_num  == 1}}'>
+    <image mode='widthFix' src='{{publicUrl}}/wap/static/images/identity-img-1.png'></image>
+  </view>
+
+  <view class='example_img' wx:if='{{example_img_num  == 2}}'>
+    <image mode='widthFix' src='{{publicUrl}}/wap/static/images/identity-img-2.png'></image>
+  </view>
+
+  <view class='example_img' wx:if='{{example_img_num  == 3}}'>
+    <image mode='widthFix' src='{{publicUrl}}/wap/static/images/identity-img-3.png'></image>
+  </view>
+</van-popup>

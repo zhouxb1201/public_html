@@ -1,0 +1,477 @@
+{extend name="shop/new/Member/base" /}
+{block name="main"}
+
+                <div class="v-main-right fl">
+                    <div class="v-container">
+                        <!--page-->
+                        <div class="address">
+                            <div class="address-title">
+                                收货地址
+                            </div>
+                            <div class="address-main">
+                                <div class="address-box">
+                                  <div class="j-body" style="display: flex;flex-wrap: wrap;">
+
+                                  </div>
+                                </div>
+                                <div class="page clearfix" style="display: none">
+                                    <div class="M-box3 m-style fr"></div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!--page-->
+                        <input type="hidden" id="page_index">
+                    </div>
+                </div>
+                <!--添加地址模态框-->
+                <div class="addAddress-dialog" style="display: none">
+                    <div class="pop-wrapper">
+                        <div class="pop-msg" style="display: none">
+                            <p class="error error_tel">账户名错误</p>
+                        </div>
+                        <dl class="clearfix">
+                            <dt><em>*</em>收货人：</dt>
+                            <dd>
+                                <input id="addr_name" type="text" placeholder="姓名，如：张三、Lily" class="addr-input l input_focus" maxlength="12" style="color: rgb(51, 51, 51);">
+                            </dd>
+                        </dl>
+                        <dl class="clearfix">
+                            <dt>邮政编码：</dt>
+                            <dd>
+                                <input id="zip_code" class="addr-input l input_focus" type="text"  maxlength="11" style="color: rgb(51, 51, 51);">
+                            </dd>
+                        </dl>
+                        <dl class="clearfix">
+                            <dt><em>*</em>手机号码：</dt>
+                            <dd>
+                                <input id="addr_tel" class="addr-input l input_focus" type="text" placeholder="手机号码（重要必填）" maxlength="11" style="color: rgb(51, 51, 51);">
+                            </dd>
+                        </dl>
+                        <dl class="clearfix">
+                            <dt><em>*</em>收货地址：</dt>
+                            <dd>
+                                <div data-toggle="distpicker">
+                                    <select  class="distpicker-sels getProvince" id="province_id">
+                                        <option value="-1">请选择省</option>
+                                    </select>
+                                    <select  class="distpicker-sels getCity" id="city_id">
+                                        <option value="-1">请选择市</option>
+                                    </select>
+                                    <select  class="distpicker-sels" id="district_id">
+                                        <option value="-1">请选择区</option>
+                                    </select>
+                                </div>
+                            </dd>
+                        </dl>
+                        <dl class="clearfix">
+                            <dt><em>*</em>详细地址：</dt>
+                            <dd>
+                                <input id="address_info" class="addr-input l input_focus" type="text" placeholder="详细地址（重要必填）" style="color: rgb(51, 51, 51);">
+                            </dd>
+                        </dl>
+                        <dl class="clearfix">
+                            <dt></dt>
+                            <dd class="vm">
+                                <label for="default"><input type="checkbox"  id="default"> 设为默认地址</label>
+                            </dd>
+                        </dl>
+                    </div>
+                </div>
+
+{/block}
+{block name="javascript"}
+    <script>
+        require(['common','dialog'], function (common,dialog) {
+            LoadingInfo(1);
+            function LoadingInfo(page_index) {
+                $("#page_index").val(page_index);
+                $.ajax({
+                        type: "post",
+                        url:  __URL(SHOPMAIN + "/member/addressList"),
+                        data: {
+                            "page_index": page_index
+                        },
+                        success: function (data) {
+                            var html = '';
+                            if (data["data"].length > 0) {
+                                for (var i = 0; i < data["data"].length; i++) {
+                                    html+='<div class="address-item">';
+                                    html+='<div class="address-name"><i class="icon icon-user3"></i>&nbsp;<span>'+data["data"][i]['consigner']+'</span></div>';
+                                    html+='<div class="address-details"><i class="icon icon-location2"></i>&nbsp;'+data["data"][i]['address_info']+'&nbsp;'+data["data"][i]['address']+'</div>';
+                                    html+='<div class="phone"><i class="icon icon-phone"></i>&nbsp;<span>'+data["data"][i]['mobile']+'</span></div>';
+                                    html+='<div class="editDel">';
+                                    html+='<a href="javascript:void(0);" class="address-update" data-id="'+data["data"][i]['id']+'">修改</a>';
+                                    html+='<a href="javascript:void(0);" class="delAddress" data-id="'+data["data"][i]['id']+'">删除</a>';
+                                    html+='</div>';
+                                    if (data["data"][i]['is_default'] == 1){
+                                        html+='<div class="default selected"><a href="javascript:void(0);">默认地址</a></div>';
+                                    }
+                                    html+='</div>';
+                                }
+                                $('.page').css('display','block');
+                            }else{
+                                $('.page').css('display','none');
+                            }
+                            html+='<div class="address-item addAddress address-add">';
+                            html+='<a href="javascript:void(0);">+添加地址</a>';
+                            html+='</div>';
+                            $(".j-body").html(html);
+                            common.Pages('.M-box3', data['total_count'], data["page_count"], page_index, LoadingInfo);
+                        }
+                    }
+                )
+                ;
+            }
+            $('body').on('click','.delAddress',function(){
+                var id = $(this).data('id');
+                layer.confirm('你确定删除该地址？', {
+                    btn: ['确定', '取消']//按钮
+                }, function (index) {
+                    layer.close(index);
+                    $.ajax({
+                        type:"post",
+                        url:"{:__URL('SHOP_MAIN/member/memberAddressDelete')}",
+                        data:{
+                            'id' : id
+                        },
+                        success : function(data) {
+                            if (data["code"] > 0) {
+                                layer.msg('删除成功',{icon: 1, time: 2000}, LoadingInfo($("#page_index").val()));
+                            }else{
+                                layer.msg('删除失败');
+                            }
+                        }
+                    });
+                });
+
+            });
+            //修改
+            $('.j-body').on('click','.address-update',function(){
+                $(".pop-msg").css("display", "none");
+                var id = $(this).data('id');
+                $.ajax({
+                    type:"post",
+                    url:"{:__URL('SHOP_MAIN/member/getMemberAddressDetail')}",
+                    data:{
+                        'id' : id
+                    },
+                    success : function(data) {
+                        $("#addr_name").val(data['consigner']);
+                        $("#addr_tel").val(data['mobile']);
+                        $("#address_info").val(data['address']);
+                        $("#zip_code").val(data['zip_code']);
+                        var  pid =  data['province'];
+                        var  cid =  data['city'];
+                        var  did =  data['district'];
+                        if(data['is_default']==1){
+                            $("#default").prop("checked", true);
+                        }
+                        $.ajax({
+                            type : "post",
+                            url :  __URL('SHOP_MAIN/member/getprovince'),
+                            dataType : "json",
+                            success : function(data) {
+                                if (data != null && data.length > 0) {
+                                    var str = "";
+                                    for (var i = 0; i < data.length; i++) {
+                                        if(data[i].province_id==pid){
+                                            str += '<option  selected value="'+data[i].province_id+'">'+data[i].province_name+'</option>';
+                                        }else{
+                                            str += '<option value="'+data[i].province_id+'">'+data[i].province_name+'</option>';
+                                        }
+                                    }
+                                    $("#province_id").append(str);
+                                }
+                            }
+                        });
+                        $.ajax({
+                            type : "post",
+                            url :  __URL('SHOP_MAIN/member/getcity'),
+                            data:{
+                                'province_id' : pid
+                            },
+                            dataType : "json",
+                            success : function(data) {
+                                if (data != null && data.length > 0) {
+                                    var str = "";
+                                    for (var i = 0; i < data.length; i++) {
+                                        if(data[i].city_id==cid){
+                                            str += '<option  selected value="'+data[i].city_id+'">'+data[i].city_name+'</option>';
+                                        }else{
+                                            str += '<option value="'+data[i].city_id+'">'+data[i].city_name+'</option>';
+                                        }
+                                    }
+                                    $("#city_id").append(str);
+                                }
+                            }
+                        });
+                        $.ajax({
+                            type : "post",
+                            url :  __URL('SHOP_MAIN/member/getDistrict'),
+                            dataType : "json",
+                            data:{
+                                'city_id' : cid
+                            },
+                            success : function(data) {
+
+                                if (data != null && data.length > 0) {
+                                    var str = "";
+                                    for (var i = 0; i < data.length; i++) {
+                                        if(data[i].district_id==did){
+                                            str += '<option  selected value="'+data[i].district_id+'">'+data[i].district_name+'</option>';
+                                        }else{
+                                            str += '<option value="'+data[i].district_id+'">'+data[i].district_name+'</option>';
+                                        }
+                                    }
+                                    $("#district_id").append(str);
+                                }
+                            }
+                        });
+                        $('.getProvince').change('click',function(){
+                            $.ajax({
+                                type : "post",
+                                url :  __URL('SHOP_MAIN/member/getcity'),
+                                dataType : "json",
+                                data :{
+                                    province_id:$("#province_id").val()
+                                },
+                                success : function(data) {
+                                    var str = "";
+                                     str += "<option value='-1'>请选择市</option>";
+                                    if (data != null && data.length > 0) {
+                                        for (var i = 0; i < data.length; i++) {
+                                            str += '<option value="'+data[i].city_id+'">'+data[i].city_name+'</option>';
+                                        }
+                                        $("#city_id").children().remove();
+                                        $("#district_id").html("<option value='-1'>请选择区</option>");
+                                        $("#city_id").append(str);
+                                    }
+                                }
+                            });
+                        });
+                        $('.getCity').change('click',function(){
+                            $.ajax({
+                                type : "post",
+                                url :  __URL('SHOP_MAIN/member/getDistrict'),
+                                dataType : "json",
+                                data :{
+                                    city_id:$("#city_id").val()
+                                },
+                                success : function(data) {
+                                    var str = "";
+                                    str += "<option value='-1'>请选择区</option>";
+                                    if (data != null && data.length > 0) {
+                                        for (var i = 0; i < data.length; i++) {
+                                            str += '<option value="'+data[i].district_id+'">'+data[i].district_name+'</option>';
+                                        }
+                                        $("#district_id").children().remove();
+                                        $("#district_id").append(str);
+                                    }
+                                }
+                            });
+                        });
+                        dialog.updateAddress("修改收货地址",".addAddress-dialog",function(){
+                            var consigner = $("#addr_name").val();
+                            var mobile = $("#addr_tel").val();
+                            var address = $("#address_info").val();
+                            var province=$("#province_id").val();
+                            var zip_code=$("#zip_code").val();
+                            var city=$("#city_id").val();
+                            var district=$("#district_id").val();
+                            var is_default = $('#default').is(':checked')?'1':'0';
+                            if(consigner==''){
+                                $(".error_tel").html('收货人不能为空');
+                                $(".pop-msg").css("display", "block");
+                                $("#addr_name").focus();
+                                return false;
+                            }
+                            if(mobile==''){
+                                $(".error_tel").html('手机号不能为空');
+                                $(".pop-msg").css("display", "block");
+                                $("#addr_tel").focus();
+                                return false;
+                            }
+                            if(address==''){
+                                $(".error_tel").html('详细地址不能为空');
+                                $(".pop-msg").css("display", "block");
+                                $("#address_info").focus();
+                                return false;
+                            }
+                            if(province=='-1'){
+                                $(".error_tel").html('请选择省');
+                                $(".pop-msg").css("display", "block");
+                                return false;
+                            }
+                            if(city=='-1'){
+                                $(".error_tel").html('请选择市');
+                                $(".pop-msg").css("display", "block");
+                                return false;
+                            }
+                            if(district=='-1'){
+                                $(".error_tel").html('请选择区');
+                                $(".pop-msg").css("display", "block");
+                                return false;
+                            }
+                            $.ajax({
+                                type : "post",
+                                url : "{:__URL('SHOP_MAIN/member/updateMemberAddress')}",
+                                dataType : "json",
+                                data : {
+                                    "consigner":consigner,
+                                    "mobile":mobile,
+                                    "address":address,
+                                    "province":province,
+                                    "city":city,
+                                    "district":district,
+                                    "id" : id,
+                                    "zip_code":zip_code,
+                                    "is_default":is_default
+                                },
+                                success : function(data) {
+                                    if(data['code']>0){
+                                        layer.msg('修改成功',{icon: 1, time: 2000}, LoadingInfo($("#page_index").val()));
+                                    }else{
+                                        layer.msg('修改失败');
+                                    }
+                                }
+                            });
+                        });
+                    },
+                });
+            });
+            //添加
+            $('body').on('click','.addAddress',function(){
+                $(".pop-msg").css("display", "none");
+                $(" input[ type='text' ] ").val('');
+                $.ajax({
+                    type : "post",
+                    url :  __URL('SHOP_MAIN/member/getprovince'),
+                    dataType : "json",
+                    success : function(data) {
+                        if (data != null && data.length > 0) {
+                            var str = "";
+                            for (var i = 0; i < data.length; i++) {
+                                str += '<option value="'+data[i].province_id+'">'+data[i].province_name+'</option>';
+                            }
+                            $("#province_id").append(str);
+                        }
+                    }
+                });
+                $('.getProvince').change('click',function(){
+                    $.ajax({
+                        type : "post",
+                        url :  __URL('SHOP_MAIN/member/getcity'),
+                        dataType : "json",
+                        data :{
+                            province_id:$("#province_id").val()
+                        },
+                        success : function(data) {
+                            if (data != null && data.length > 0) {
+                                var str = "";
+                                str += "<option value='-1'>请选择市</option>";
+                                for (var i = 0; i < data.length; i++) {
+                                    str += '<option value="'+data[i].city_id+'">'+data[i].city_name+'</option>';
+                                }
+                                $("#city_id").children().remove();
+                                $("#district_id").children().remove();
+                                $("#city_id").append(str);
+                            }
+                        }
+                    });
+                });
+                $('.getCity').change('click',function(){
+                    $.ajax({
+                        type : "post",
+                        url :  __URL('SHOP_MAIN/member/getDistrict'),
+                        dataType : "json",
+                        data :{
+                            city_id:$("#city_id").val()
+                        },
+                        success : function(data) {
+                            if (data != null && data.length > 0) {
+                                var str = "";
+                                str += "<option value='-1'>请选择区</option>";
+                                for (var i = 0; i < data.length; i++) {
+                                    str += '<option value="'+data[i].district_id+'">'+data[i].district_name+'</option>';
+                                }
+                                $("#district_id").children().remove();
+                                $("#district_id").append(str);
+                            }
+                        }
+                    });
+                });
+                dialog.updateAddress("添加收货地址",".addAddress-dialog",function(){
+                    var consigner = $("#addr_name").val();
+                    var mobile = $("#addr_tel").val();
+                    var address = $("#address_info").val();
+                    var province=$("#province_id").val();
+                    var city=$("#city_id").val();
+                    var district=$("#district_id").val();
+                    var is_default = $('#default').is(':checked')?'1':'0';
+                    var zip_code=$("#zip_code").val();
+                    if(consigner==''){
+                        $(".error_tel").html('收货人不能为空');
+                        $(".pop-msg").css("display", "block");
+                        $("#addr_name").focus();
+                        return false;
+                    }
+                    if(mobile==''){
+                        $(".error_tel").html('手机号不能为空');
+                        $(".pop-msg").css("display", "block");
+                        $("#addr_tel").focus();
+                        return false;
+                    }
+                    if(address==''){
+                        $(".error_tel").html('详细地址不能为空');
+                        $(".pop-msg").css("display", "block");
+                        $("#address_info").focus();
+                        return false;
+                    }
+                    if(province=='-1' || province==''){
+                        $(".error_tel").html('请选择省');
+                        $(".pop-msg").css("display", "block");
+                        return false;
+                    }
+                    if(city=='-1' || city==''){
+                        $(".error_tel").html('请选择市');
+                        $(".pop-msg").css("display", "block");
+                        return false;
+                    }
+                    if(district=='-1' || district=='' ){
+                        $(".error_tel").html('请选择区');
+                        $(".pop-msg").css("display", "block");
+                        return false;
+                    }
+                    $.ajax({
+                        type : "post",
+                        url : "{:__URL('SHOP_MAIN/member/addressInsert')}",
+                        dataType : "json",
+                        data : {
+                            "consigner":consigner,
+                            "mobile":mobile,
+                            "address":address,
+                            "province":province,
+                            "city":city,
+                            "district":district,
+                            "zip_code":zip_code,
+                            "is_default":is_default
+                        },
+                        success : function(data) {
+                            if(data['code']>0){
+                                layer.msg('添加成功',{icon: 1, time: 2000}, LoadingInfo($("#page_index").val()));
+
+                            }else{
+                                layer.msg('添加失败');
+                            }
+                        }
+                    });
+                });
+            });
+
+        })
+    </script>
+{/block}
+
+
+

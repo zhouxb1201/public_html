@@ -1,0 +1,26 @@
+page{
+  background-color: #f8f8f8;
+  font-size: 28rpx;
+}
+.account_info{
+  background-color: #fff;
+}
+.cell{
+  display: flex;
+  padding: 20rpx 30rpx;
+  border-bottom: 1px solid #ebedf0;
+}
+.cell .title{
+  width: 180rpx;
+}
+
+.foot{
+  padding: 40rpx 30rpx;
+}
+.save_btn{
+  background-color: #f44;
+  color: #fff;
+  height: 80rpx;
+  line-height: 80rpx;
+  text-align: center;
+}

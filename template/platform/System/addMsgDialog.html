@@ -1,0 +1,75 @@
+ <form class="form-horizontal">
+            <div class="form-group">
+                  <label class="col-md-3 control-label"><span class="text-bright">*</span>推送标题</label>
+                  <div class="col-md-5">
+                     <input type="text" id="push-title" class="form-control" name="push-title">
+                  </div>
+            </div>
+            <div class="form-group" id="div-device">
+                  <label class="col-md-3 control-label">设备号(单播填写)</label>
+                  <div class="col-md-5">
+                     <input type="text" id="device_token" class="form-control" name="device_token">
+                  </div>
+            </div>
+            <div class="form-group">
+                  <label class="col-md-3 control-label"><span class="text-bright">*</span>推送内容</label>
+                  <div class="col-md-5"> 
+                     <textarea name="content" id="content" rows="4" placeholder="请输入推送内容" class="form-control" style="resize:none" ></textarea>
+                  </div>
+            </div>
+            <div class="form-group" id="time-input" style="display: none">
+                <label class="col-md-3 control-label"><span class="text-bright"></span>时间</label>
+                <div class="col-md-8">
+                    <div class="date-input-group">
+                        <div class="date-input-control">
+                            <input type="text" data-types="datetime" class="form-control" id="push_time" placeholder="推送时间" value="" autocomplete="off" name="orderStartDate" ><i class="icon icon-calendar"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-md-3 control-label">推送端口</label>
+                <div class="col-md-9">
+                    <label class="radio-inline">
+                        <input type="radio" name="push_port" id="" value="1" checked=""> 全部端口
+                    </label>
+                    <label class="radio-inline">
+                        <input type="radio" name="push_port" id="" value="2">IOS
+                    </label>
+                    <label class="radio-inline">
+                        <input type="radio" name="push_port" id="" value="3">Android
+                    </label>
+                    <label class="radio-inline">
+                        <input type="radio" name="push_port" id="" value="4">IOS单播
+                    </label>
+                    <label class="radio-inline">
+                        <input type="radio" name="push_port" id="" value="5">Android单播
+                    </label>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-md-3 control-label">推送方式</label>
+                <div class="col-md-9">
+                    <label class="radio-inline">
+                        <input type="radio" name="push_type" id="" value="1" checked=""> 立即推送
+                    </label>
+                    <label class="radio-inline">
+                        <input type="radio" name="push_type" id="" value="2">定时推送
+                    </label>
+                </div>
+            </div>
+    </form>
+<script>
+require(['util'],function(util){
+    util.layDate('#push_time');
+           $('body').on('change','input[name="push_type"]',function(){
+
+            var value = $(this).val();
+            if(value==2){
+                $("#time-input").attr("style","display:block");
+            }else{
+                $("#time-input").attr("style","display:none");
+            }
+        })
+})
+</script>

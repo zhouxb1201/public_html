@@ -1,0 +1,259 @@
+{extend name="platform/new_base" /}
+{block name="resources"/}
+{/block}
+{block name="main"}
+                <!-- page -->
+                <!--<form action="" class="form">
+                    <div class="v-form-inline">
+                        <div class="form-group">
+                            <label class="control-label">粉丝信息</label>
+                            <input type="text" class="form-control" id="user" placeholder="昵称/openID">
+                        </div>
+                        <div class="form-group date-form-group">
+                            <label class="control-label">关注时间</label>
+                            <div class="date-input-group">
+                                <div class="date-input-control">
+                                    <input type="text" class="form-control" id="orderStartDate" placeholder="开始时间" value=""><i class="icon icon-calendar"></i>
+                                </div>
+                                <span class="date-input-group-addon">~</span>
+                                <div class="date-input-control">
+                                    <input type="text" class="form-control" id="orderEndDate" placeholder="结束时间" value=""><i class="icon icon-calendar"></i>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <a class="btn btn-primary mr-15 search"><i class="icon icon-search"></i> 搜索</a>
+                        </div>
+                    </div>
+                </form>-->
+
+                <form class="v-filter-container">
+                    <div class="filter-fields-wrap">
+                        <div class="filter-item clearfix">
+                            <div class="filter-item__field">
+                                <div class="v__control-group">
+                                    <label class="v__control-label">粉丝信息</label>
+                                    <div class="v__controls">
+                                        <input type="text" id="user" class="v__control_input" placeholder="昵称/openID" autocomplete="off">
+                                    </div>
+                                </div>
+
+                                <div class="v__control-group">
+                                    <label class="v__control-label">申请时间</label>
+                                    <div class="v__controls v-date-input-control">
+                                        <label for="orderTime">
+                                            <input type="text" class="v__control_input pr-30" id="orderTime" placeholder="请选择时间" autocomplete="off" data-types="datetime">
+                                            <i class="icon icon-calendar"></i>
+                                            <input type="hidden" id="orderStartDate">
+                                            <input type="hidden" id="orderEndDate">
+                                        </label>
+                                    </div>
+                                </div>
+
+                            </div>
+                        </div>
+                        <div class="filter-item clearfix">
+                            <div class="filter-item__field">
+                                <div class="v__control-group">
+                                    <label class="v__control-label"></label>
+                                    <div class="v__controls">
+                                        <a class="btn btn-primary search"><i class="icon icon-search"></i> 搜索</a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+
+                <div class="screen-title">
+                    <span class="text">信息列表</span>
+                </div>
+                <div class="flex-auto-center mb-20 bg-info text-center border-info">
+                    <div class="flex-1 padding-15">
+                        <h3 class="strong">粉丝总人数</h3>
+                        <p id="fans_count">{$fans_count}</p>
+                        <span> 根据公众号平台的规则，粉丝需要与公众号48小时内有互动才能发消息</span>
+                    </div>
+                </div>
+                <div class="flex mb-10 PAmaterial" id="mat_type1">
+                    <a href="javascript:void(0)"; class="btn btn-primary uploadFans">同步公众号粉丝</a>
+                </div>
+                <table class="table v-table table-auto-center">
+                    <thead>
+                        <tr>
+                            <th>头像</th>
+                            <th>昵称</th>
+                            <th>关注状态</th>
+                            <th>关注时间</th>
+                            <th>操作</th>
+                        </tr>
+                    </thead> 
+                    <tbody id="list">
+
+                    </tbody>
+                </table>
+                <input type="hidden" id="page_index">
+                <nav aria-label="Page navigation" class="clearfix">
+                    <ul id="page" class="pagination pull-right"></ul>
+                </nav>
+                <!-- page end -->
+<div id="saveTips" style="display: none">
+    <div class="saving"></div>
+    <div class="saveing-box">
+        <div><img src="/public/platform/images/loading.svg" alt="" style="width: 80px;height: 80px"></div>
+        <p>公众号粉丝同步中</p>
+    </div>
+</div>
+{/block}
+{block name="script"}
+<script>
+require(['util'],function(util){
+    util.initPage(getList);
+    util.layDate('#orderTime',true,function(value, date, endDate){
+        var h=date.hours<10 ?"0"+date.hours : date.hours;
+        var m=date.minutes<10 ?"0"+date.minutes : date.minutes;
+        var s=date.seconds<10 ?"0"+date.seconds : date.seconds;
+        var h1=endDate.hours<10 ?"0"+endDate.hours : endDate.hours;
+        var m1=endDate.minutes<10 ?"0"+endDate.minutes : endDate.minutes;
+        var s1=endDate.seconds<10 ?"0"+endDate.seconds : endDate.seconds;
+        var date1=date.year+'-'+date.month+'-'+date.date+' '+h+":"+m+":"+s;
+        var date2=endDate.year+'-'+endDate.month+'-'+endDate.date+' '+h1+":"+m1+":"+s1;
+
+        if(value){
+            $('#orderStartDate').val(date1);
+            $('#orderEndDate').val(date2);
+        }
+        else{
+            $('#orderStartDate').val('');
+            $('#orderEndDate').val('');
+        }
+
+    });
+
+    function getList(page_index){
+        $("#page_index").val(page_index);
+        var user = $("#user").val();
+        var start_create_date = $("#orderStartDate").val();
+        var end_create_date = $("#orderEndDate").val();
+        $.ajax({
+            type : "post",
+            url : "{:__URL('PLATFORM_MAIN/wchat/fansList')}",
+            async : true,
+            data : {
+                "page_index" : page_index,
+                "start_create_date":start_create_date,
+                "end_create_date":end_create_date,
+                "search_text" : user,
+            },
+            success : function(data) {
+                var html = '';
+                $("#fans_count").html(data['count']);
+                if (data["data"].length > 0) {
+                    for (var i = 0; i < data["data"].length; i++) {
+                        html += '<tr>';
+                        html += '<td>';
+                        html +='<img src="'+__IMG(data["data"][i]["headimgurl"])+'" height="60" width="60" alt="">';
+                        html +='</td>';
+                        html += '<td >'+ data["data"][i]["nickname"] +'</td>';
+                        if(data["data"][i]["is_subscribe"]==1){
+                            html += '<td><span class="label label-success">已关注</span></td>';
+                        }else{
+                            html += '<td><span class="label label-danger">取消关注</span></td>';
+                        }
+                        html +='<td >'+ data["data"][i]["subscribe_date"] +'</td>';
+                        html +='<td><div class="btn-group">';
+                        html +='<a href="javascript:;" class="btn btn-primary dropdown-toggle mr-04" data-groupid ="' + data['data'][i]['groupid'] +'" data-id ="' + data['data'][i]['fans_id'] +'" data-openid ="' + data['data'][i]['openid'] +'" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">'+ data["data"][i]["group_name"] +'<span class="caret"></span> </a>';
+                        html +='<ul class="dropdown-menu">';
+                        if(data['group']['data'].length>0){
+                            for (var j = 0; j < data['group']['data'].length; j++) {
+                                html += '<li><a href="javascript:;" class="check_group" data-id ="' + data['group']['data'][j]['group_id'] + '"  >' + data['group']['data'][j]['group_name'] + '</a></li>';
+                            }
+                        }else{
+                            html += '<li><a href="javascript:;">暂无分组</a></li>';
+                        }
+                        html +='</ul></div>';
+                        var openid = data['data'][i]['openid'];
+                        html += '<a href="' + __URL('PLATFORM_MAIN/wchat/serviceNews&openid=' + openid) + '" class="btn btn-success dropdown-toggle mr-04">发送消息</a>';
+                        html += '<a href="javascript:;" class="btn btn-default dropdown-toggle checkInfo" data-id ='+ data['data'][i]['openid']+' >查看详情</a>';
+                        html +='</td>';
+                        html += '</tr>';
+                    }
+
+                } else {
+                    html += '<tr align="center"><td colspan="5" class="h-200">暂无符合条件的数据记录</td></tr>';
+                }
+                $('#page').paginator('option', {
+                    totalCounts: data['total_count']  // 动态修改总数
+                });
+                $("#list").html(html);
+            }
+        });
+    }
+    $('.search').on('click',function(){
+        util.initPage(getList);
+    });
+    //同步
+    $('.uploadFans').on('click',function(){
+        $(this).attr({disabled: "disabled"}).html('获取中...');
+        $('#saveTips').show();
+        var page_index = $("#page_index").val();
+        $.ajax({
+            type: "post",
+            url: __URL(PLATFORMMAIN + "/wchat/uploadFans"),
+            async: true,
+            data: {
+                'page_index':page_index
+            },
+            success: function (data) {
+                if (data['code']>0) {
+                    $('#saveTips').hide();
+                    $('.uploadFans').removeAttr('disabled').html('同步公众号粉丝');
+                    util.message('同步粉丝成功','success',getList($("#page_index").val()));
+                }else{
+                    if(data['errormsg']){
+                        util.message(data['errormsg'],'danger');
+                    }else{
+                        util.message(data['message'],'danger');
+                    }
+                }
+            }
+        })
+    });
+    // 修改分组
+    $('body').on('click','.check_group',function(){
+            var fans_id=$(this).parents('.dropdown-menu').siblings('a').data('id');
+            var default_group_id=$(this).parents('.dropdown-menu').siblings('a').data('groupid');
+            var openid=$(this).parents('.dropdown-menu').siblings('a').data('openid');
+            var group_id = $(this).data('id');
+            $.ajax({
+                    type : "post",
+                    url : "{:__URL('PLATFORM_MAIN/Wchat/updateFansGroup')}",
+                    async : true,
+                    data : {
+                        "group_id" : group_id,
+                        "default_group_id" : default_group_id,
+                        "fans_id" : fans_id,
+                        "openid" : openid
+                    },
+                    success : function(data) {
+                        if (data["code"] > 0) {
+                            util.message(data["message"],'success',getList($('#page_index').val()));
+                        }else{
+                            util.message(data["message"],'danger');
+                        }
+                    }
+                });
+        })
+
+    // 查看详情
+    $('body').on('click','.checkInfo',function(){
+        var openid = $(this).data('id');
+        var url = __URL('PLATFORM_MAIN/wchat/fansDetail')+'&openid='+openid;
+        util.confirm('粉丝详情', 'url:'+url,function(){
+
+        })
+    });
+    })
+
+</script>
+{/block}

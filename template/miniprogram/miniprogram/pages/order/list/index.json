@@ -1,0 +1,6 @@
+{
+  "usingComponents": {
+    "qrcode-compoent": "/pages/component/order/qrcode/index"
+  },
+  "navigationBarTitleText": "订单列表"  
+}

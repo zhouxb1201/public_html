@@ -1,0 +1,157 @@
+{block name="main"}
+<div class="v-main">
+    <!--page-->
+    <div class="v-main-content clearfix w1200 shopMain">
+        <div class="shopList">
+            <!--店铺分类-->
+            <div class="sort clearfix">
+                <div class="sort-title fl">店铺分类：</div>
+                <div class="sort-item fl">
+                    <ul class="sort-tab">
+                        {if condition="$shop_group_id eq '' "}
+                        <li class="active"><a href="{:__URL('ADDONS_SHOP_MAIN','addons=shopStreet')}" >全部</a></li>
+                        {else /}
+                        <li><a href="{:__URL('ADDONS_SHOP_MAIN','addons=shopStreet')}" >全部</a></li>
+                        {/if}
+                        {foreach $shop_group_list as $vo}
+                        {if condition="$vo['shop_group_id'] eq $shop_group_id"}
+                        <li class="active"><a href="{:__URL('ADDONS_SHOP_MAIN','addons=shopStreet&shop_group_id='.$vo['shop_group_id'])}">{$vo.group_name}</a></li>
+                        {else /} 
+                        <li><a href="{:__URL('ADDONS_SHOP_MAIN','addons=shopStreet&shop_group_id='.$vo['shop_group_id'])}" >{$vo.group_name}</a></li>
+                        {/if}
+                        {/foreach}
+                    </ul>
+                </div>
+            </div>
+            <!--分类搜索-->
+            <div class="sortSearch">
+                <ul class="clearfix sortSearch-tab">
+                    <li {if condition="$order_type eq ''"} class="active" {/if}>
+                        <a href="{:__URL('ADDONS_SHOP_MAIN','addons=shopStreet&shop_group_id='.$shop_group_id.'&shop_name='.$shop_name.'&order_type=')}">默认</a>
+                    </li>
+                    <li {if condition="$order_type eq 1"} class="active" {/if}>
+                        {if condition="$sort eq 'desc'"}
+                        <a href="{:__URL('ADDONS_SHOP_MAIN','addons=shopStreet&shop_group_id='.$shop_group_id.'&shop_name='.$shop_name.'&order_type=1&sort=asc')}">
+                        {else /}
+                        <a href="{:__URL('ADDONS_SHOP_MAIN','addons=shopStreet&shop_group_id='.$shop_group_id.'&shop_name='.$shop_name.'&order_type=1&sort=desc')}">
+                        {/if}
+                            销量 
+                            {if condition="$sort eq 'desc'"}
+                            <i class="icon-dowm"></i>
+                            {else/}
+                                {if condition="$order_type eq 1"}
+                                <i class="icon-top2"></i>
+                                {else/}
+                                <i class="icon-dowm"></i>
+                                {/if}
+                            {/if}
+                        </a>
+                    </li>
+                    <li {if condition="$order_type eq 2"} class="active" {/if}>
+                        {if condition="$sort eq 'desc'"}
+                        <a href="{:__URL('ADDONS_SHOP_MAIN','addons=shopStreet&shop_group_id='.$shop_group_id.'&shop_name='.$shop_name.'&order_type=2&sort=asc')}">
+                        {else /}
+                        <a href="{:__URL('ADDONS_SHOP_MAIN','addons=shopStreet&shop_group_id='.$shop_group_id.'&shop_name='.$shop_name.'&order_type=2&sort=desc')}">
+                        {/if}
+                            新品
+                            {if condition="$sort eq 'desc'"}
+                            <i class="icon-dowm"></i>
+                            {else/}
+                                {if condition="$order_type eq 2"}
+                                <i class="icon-top2"></i>
+                                {else/}
+                                <i class="icon-dowm"></i>
+                                {/if}
+                            {/if}
+                        </a>
+                    </li>
+                </ul>
+            </div>
+
+            <!--店铺内容-->
+            <div class="shops-content clearfix">
+                {foreach name="shop_list" item="vo"}
+                <div class="shops-item">
+
+                    <div class="shops-pic">
+                        <a href="{:__URL('ADDONS_SHOP_MAIN','addons=shopIndex&shop_id='.$vo['shop_id'])}">
+                            {if condition="$vo.picture eq '' or $vo.picture eq null "}
+                            <img src="__TEMP__/shop/new/public/image/矩形 25.png" alt="">
+                            {else}
+                            <img src="{:__IMG($vo.picture)}" alt="">
+                            {/if}
+                        </a>
+                    </div>
+
+                    <div class="shops-title"><a href="{:__URL('ADDONS_SHOP_MAIN','addons=shopIndex&shop_id='.$vo['shop_id'])}">{$vo.shop_name}</a> {if condition="$vo.shop_id eq 0"}<span class="proprietary">自营</span>{/if}</div>
+
+                    <div class="shops-rate">
+
+                        <div class="clearfix mb6">
+                            <div class="fl">描述：</div>
+                            <div class="fl">
+                                <ul class="show_number clearfix">
+                                    <li>
+                                        <div class="atar_Show">
+                                            <p tip="{$vo.description_credit}"></p>
+                                        </div>
+                                        <span></span>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+
+                        <div class="clearfix mb6">
+                            <div class="fl">服务：</div>
+                            <div class="fl">
+                                <ul class="show_number clearfix">
+                                    <li>
+                                        <div class="atar_Show">
+                                            <p tip="{$vo.service_credit}"></p>
+                                        </div>
+                                        <span></span>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                        <div class="clearfix">
+                            <div class="fl">物流：</div>
+                            <div class="fl">
+                                <ul class="show_number clearfix">
+                                    <li>
+                                        <div class="atar_Show">
+                                            <p tip="{$vo.delivery_credit}"></p>
+                                        </div>
+                                        <span></span>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+                {/foreach}
+            </div>
+            <div class="js-show-page">
+            {include file='template/shop/controlCommonPage'/}
+        </div>
+
+        </div>
+    </div>
+    <!--page-->
+</div>
+{/block}
+{block name="javascript"}
+<script>
+    require(['dialog'], function (Dialog) {
+        Dialog.withAccount(".search-tabs", "li", "active");
+        Dialog.withAccount(".sortSearch-tab", "li", "active");
+        Dialog.withAccount(".sort-tab", "li", "active");
+        Dialog.scoreShow();
+        $(document).ready(function(){
+            $('.search-tabs li[data-type=shop]').addClass('active').siblings().removeClass('active');
+            $('.J-keyword').val("{$shop_name}");
+        })
+    });
+</script>
+{/block}

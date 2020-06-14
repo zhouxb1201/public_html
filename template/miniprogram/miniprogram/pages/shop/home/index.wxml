@@ -1,0 +1,12 @@
+
+<view class='shopInfo' wx:if='{{isOpen == 1}}'>   
+  <tem-component wx:if="{{temData != ''}}" temData='{{temData}}'></tem-component>
+</view>
+<view class="no_open" wx:else>
+  <view class="box">
+    <view class="img">
+      <image mode="widthFix" src="/images/error-fail.png"></image>
+    </view>
+    <view class="text">未开启店铺应用</view>
+  </view>
+</view>

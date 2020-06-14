@@ -1,0 +1,61 @@
+<view class='order' wx:if='{{pageShow}}'>  
+  <van-tabs active="{{ active }}" bind:change="onTabsChange">
+    <van-tab title="所有订单"></van-tab>
+    <van-tab title="已付款"></van-tab>
+    <van-tab title="已收货"></van-tab>
+    <van-tab title="已完成"></van-tab>
+  </van-tabs>
+
+  <view class='list'>
+    <view class='item' 
+      wx:for='{{orderData}}' 
+      wx:key='' 
+      wx:for-item='orderitem' 
+      data-goodindex='{{index}}' 
+      data-goodshow='{{orderitem.good_show}}'      
+      bindtap='goodChangeShow'>
+
+      <view class='collapse_item'>
+        <view class='title'>
+          <view class='order_num'>{{orderitem.order_no}}</view>
+          <view class='time'>{{orderitem.create_time}}</view>
+        </view>
+        <view class='value'>
+          <view class='money'>+{{orderitem.commission}}</view>
+          <view class='status'>{{orderitem.status_name}}</view>
+        </view>
+        <view class="icon {{orderitem.good_show == true ?'rotate':''}} iconfont v-icon-arrow-down"></view>
+      </view>
+      
+      <view class='goods_list' wx:if='{{orderitem.good_show == true}}'>
+        <view class='buyer'>
+          <view class='buyer_logo'>
+            <image wx:if='{{orderitem.buyer_headimg}}' src="{{orderitem.buyer_headimg}}"></image>
+            <image wx:else src="/images/no-avatar.png"></image>
+          </view>
+          <view class='buyer_name' wx:if='{{orderitem.buyer_name}}'>
+            {{orderitem.buyer_name != ''? orderitem.buyer_name : orderitem.buyer_nick_name }}
+          </view>
+        </view>        
+        <view class='good_item' wx:for='{{orderitem.order_item_list}}' wx:key='' wx:for-item='gooditem'>
+          <view class='good_img'>
+            <image wx:if='{{gooditem.picture.pic_cover_small}}' src='{{gooditem.picture.pic_cover_small}}'></image>
+            <image wx:else src="/images/no-goods.png"></image>
+          </view>
+          <view class='card'>
+            <view class='card_title'>{{gooditem.goods_name}}</view>
+            <view class='num'>X {{gooditem.num}}</view>
+            <view class='commission_money'>佣金 : {{gooditem.commission}}</view>
+          </view>
+        </view>
+      </view>
+    </view>
+  </view>
+
+  <view class='foot'>
+    <view>没有更多了</view>
+  </view>
+</view>
+
+<!-- 登录组件 -->
+<login-component loginShow='{{loginShow}}' bind:request='requestLogin'></login-component>

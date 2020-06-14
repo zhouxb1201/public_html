@@ -1,0 +1,116 @@
+ {block name="main"}
+<div class="row padder-v">
+	<div class="col-sm-9"></div>
+	<div class="col-sm-2">
+		<div class="input-group">
+			<input type="text" id="search_text" class="input-sm form-control"
+				placeholder="请输入分销商名称">
+		</div>
+	</div>
+	<div class="col-sm-1">
+		<button class="btn btn-sm btn-default" type="button"
+			onclick="LoadingInfo(1)">搜索</button>
+	</div>
+</div>
+<section class="panel panel-default">
+	<table class="table table-striped b-t b-light text-sm">
+		<thead>
+			<tr>
+				<th width="20"><input type="checkbox"></th>
+				<th class="center">用户名</th>
+				<th class="center">真实姓名</th>
+				<th class="center">手机号</th>
+				<th class="center">微信号</th>
+				<th class="center">申请时间</th>
+				<th class="center">操作</th>
+			</tr>
+		</thead>
+		<tbody id="list">
+			<tr></tr>
+		</tbody>
+	</table>
+	{include file="./template/platform/page.html" /}
+</section>
+
+{/block} {block name="script"}
+<script type="text/javascript">
+$(function(){
+	LoadingInfo(1);
+});
+//查询用户列表
+	function LoadingInfo(page_index) {
+		var search_text = $("#search_text").val();
+		$.ajax({
+			type : "post",
+			url : "{$shopApplyListUrl}",
+			async : true,
+			data : {
+				"page_index" : page_index, "search_text" : search_text,'website_id':'{$website_id}'
+			},
+			success : function(data) {
+				var html = '';
+				$("#total_count_num").text(data["total_count"]);
+				$("#page_count_num").text(data["page_count"]);
+				$("#page_count").val(data["page_count"]);
+				$("#pageNumber a").remove();
+				if (data["data"].length > 0) {
+					for (var i = 0; i < data["data"].length; i++) {
+						html += '<tr>';
+						html += '<td><input type="checkbox" name="sub" value="'+ data['data'][i]['uid']+'"></td>';
+						html += '<td class="center">' + data["data"][i]["shop_name"] + '</td>';
+						html += '<td class="center">' + data["data"][i]["shop_type_name"] + '</td>';
+						if(data["data"][i]['apply_state'] == 1){
+							html += '<td class="center" style="color:#ffc333;">已提交申请</td>';
+						}else if(data["data"][i]['apply_state'] == 2){
+							html += '<td class="center" style="color:green;">审核通过</td>';
+						}else if(data["data"][i]['apply_state'] == -1){
+							html += '<td class="center" style="color:red;">审核失败</td>';
+						}
+						html += '<td class="center">'+ data["data"][i]['apply_distributor_time']+'</td>';
+						if(data["data"][i]['apply_state'] == 1){
+							html += '<td class="center"><a href="'+ __URL('ADDONS_MAINshopVerify?id='+ data["data"][i]['apply_id'])+'">查看</a>&nbsp;&nbsp;<a href="javascript:void(0);" onclick="save(1,'+ data["data"][i]['apply_id']+')">通过</a>&nbsp;&nbsp;<a href="javascript:void(0);" onclick="save(2,'+ data["data"][i]['apply_id']+')">拒绝</a></td>';
+						}else if(data["data"][i]['apply_state'] == 2){
+							html += '<td class="center"><a href="'+ __URL('ADDONS_MAINshopVerify?id='+ data["data"][i]['apply_id'])+'">查看</a></td>';
+						}else if(data["data"][i]['apply_state'] == -1){
+							html += '<td class="center"><a href="'+ __URL('ADDONS_MAINshopVerify?id='+ data["data"][i]['apply_id'])+'">查看</a></td>';
+						}
+
+						html += '</tr>';
+					}
+				} else {
+					html += '<tr><td class="h-200" colspan="7">暂无符合条件的数据记录</td></tr>';
+				}
+				$("#list").html(html);
+					var totalpage = $("#page_count").val();
+			if (totalpage == 1) {
+				changeClass("all");
+			}
+			var $html = pagenumShow(jumpNumber,totalpage,{$pageshow})
+			$("#pageNumber").append($html);
+			}
+		});
+	}	
+	function save(type,apply_id){
+
+		      $.ajax({
+		    	  type:"post",
+		    	  url:"{$distributorApplyListUrl}",
+		    	  data:{'apply_id':apply_id,'type':type},
+		    	  async : true,
+		    	  success:function(data){
+		    		  //alert(JSON.stringify(data)); 
+		    		  if (data["code"] > 0) {
+							showMessage('success', data["message"], "{:__URL('ADDONS_MAINshopApplyList')}");
+					  }else{
+							showMessage('error', data["message"]);
+						   } 
+		    	  }
+		      })
+	  }
+	$("#search_text").keypress(function(e){
+		if(e.keyCode == 13){
+			LoadingInfo(1);
+		}
+	});
+</script>
+{/block}

@@ -1,0 +1,277 @@
+{extend name="platform/new_base" /}
+{block name="resource"}
+
+{/block}
+{block name="main"}
+                <!-- page -->
+                <div class="mb-20">
+                    <a href="{:__URL('PLATFORM_MAIN/Goods/addAttributeService')}" class="btn btn-primary"><i class="icon icon-add1"></i> 添加品类</a>
+                </div>
+                
+                <table class="table v-table table-auto-center">
+                    <thead>
+                        <tr>
+                            <th>品类名称</th>
+                            <th>是否启用</th>
+                            <th>排序</th>
+                            <th  class="col-md-5 pr-14 operationLeft">操作</th>
+                        </tr>
+                    </thead>
+                    <tbody id="attributeList">
+                       
+                    </tbody>
+                </table>
+                <input type="hidden" id="pageIndex">
+                <nav aria-label="Page navigation" class="clearfix">
+                    <ul id="page" class="pagination pull-right"></ul>
+                </nav>
+                <!-- page end -->
+
+{/block}
+
+{block name="script"}
+<script>
+require(['util'],function(util){
+
+    util.initPage(LoadingInfo);
+    //加载数据
+    function LoadingInfo(pageIndex) {
+        $("#pageIndex").val(pageIndex);
+        $.ajax({
+            type : "post",
+            url : "{:__URL('PLATFORM_MAIN/goods/attributelist')}",
+            async : true,
+            data : {
+                "pageIndex" : pageIndex
+            },
+            success : function(data) {
+                var htnl = '';
+                if (data["data"].length > 0) {
+                    for (var i = 0; i < data["data"].length; i++) {
+                        htnl += '<tr>';
+                        htnl += '<td>';
+                        htnl += data["data"][i]["attr_name"];
+                        htnl += '</td>';
+                        if(data["data"][i]["is_use"]){
+                            htnl += '<td><a href="javascript:void(0);" class="label label-success is_show" data-is_show="0" data-attr_id="'+data["data"][i]["attr_id"]+'">开启</a></td>';
+                        }else{
+                            htnl += '<td><a href="javascript:void(0);" class="label label-danger is_show" data-is_show="1" data-attr_id="'+data["data"][i]["attr_id"]+'">关闭</a></td>';
+                        }
+                        htnl += '<td><input type="text" class="form-control sort-form-control" data-attr_id="'+data["data"][i]["attr_id"]+'" value="'+data["data"][i]["sort"]+'"></td>';
+                        htnl += '<td class="operationLeft fs-0">';
+                        htnl += '<input type="hidden" name="attr_id" value="'+data["data"][i]["attr_id"]+'">';
+                        htnl += '<input type="hidden" name="attr_name" value="'+data["data"][i]["attr_name"]+'">';
+                        htnl += '<a class="btn-operation edit" href="{:__URL(\'PLATFORM_MAIN/goods/updateGoodsAttribute?attr_id=\')}'+data["data"][i]["attr_id"]+'">编辑</a>';
+                        htnl += '<a href="javascript:void(0);" class="btn-operation associateCategory">关联分类</a>';
+                        htnl += '<a href="javascript:void(0);" class="btn-operation associateSpec">关联规格</a>';
+                        htnl += '<a href="javascript:void(0);" class="btn-operation associateBrand">关联品牌</a>';
+                        htnl += '<a href="javascript:void(0);" class="btn-operation attribututeList">属性列表</a>';
+                        htnl += '<a class="btn-operation delete_attr text-red1" href="javascript:void(0);">删除</a>';
+                        
+                        htnl += '</td>';
+                        htnl += '</tr>';
+                    }
+                } else {
+                    htnl += '<tr align="center"><td colspan="5" class="h-200">暂无符合条件的数据记录</td></tr>';
+                }
+                $('#page').paginator('option', {
+                    totalCounts: data['total_count']  // 动态修改总数
+                });
+                $("#attributeList").html(htnl);
+                util.tips();
+
+            }
+        });
+    }
+
+    $('#attributeList').on('click','.delete_attr', function () {
+        var attr_id = $(this).siblings("input[name='attr_id']").val();
+        util.alert('确认删除此品类吗 ？', function () {
+            $.ajax({
+                type: "post",
+                url: "{:__URL('PLATFORM_MAIN/goods/deleteattr')}",
+                data: {
+                    'attr_id': attr_id
+                },
+                success: function (data) {
+                    if (data["code"] > 0) {
+                        util.message(data["message"], 'success', LoadingInfo($('#pageIndex').val()));
+                    } else {
+                        util.message(data["message"], 'danger');
+                    }
+                }
+            })
+        })
+    })
+
+    // 关联规格dialog
+    $('body').on('click','.associateSpec',function(){
+        var attr_id = $(this).siblings("input[name='attr_id']").val();
+        var url = __URL(PLATFORMMAIN + "/goods/specDialog?attr_id="+attr_id);
+        util.confirm('关联规格','url:'+url,function(){
+            //获取规格ID
+            var spec_id = this.$content.find("#selectedData").val();
+            $.ajax({
+                type: "post",
+                url: __URL(PLATFORMMAIN + "/goods/specDialog"),
+                data: {
+                    'attr_id': attr_id,
+                    'spec_id' :spec_id
+                },
+                success: function (data) {
+                    if (data["code"] > 0) {
+                        util.message(data["message"], 'success', LoadingInfo($('#pageIndex').val()));
+                    } else {
+                        util.message(data["message"], 'danger');
+                    }
+                }
+            })
+        },'large');
+    })
+    // 关联品牌dialog
+    $('body').on('click','.associateBrand',function(){
+        var attr_id = $(this).siblings("input[name='attr_id']").val();
+        var url = __URL(PLATFORMMAIN + "/goods/brandDialog?attr_id="+attr_id);
+        util.confirm('关联品牌','url:'+url,function(){
+            var brand_id = this.$content.find("#selectedData").val();
+            $.ajax({
+                type: "post",
+                url: __URL(PLATFORMMAIN + "/goods/brandDialog"),
+                data: {
+                    'attr_id': attr_id,
+                    'brand_id': brand_id
+                },
+                success: function (data) {
+                    if (data["code"] > 0) {
+                        util.message(data["message"], 'success', LoadingInfo($('#pageIndex').val()));
+                    } else {
+                        util.message(data["message"], 'danger');
+                    }
+                }
+            })
+        },'large');
+    })
+    // 属性列表dialog
+    $('body').on('click','.attribututeList',function(){
+        var attr_id = $(this).siblings("input[name='attr_id']").val();
+        var url = __URL(PLATFORMMAIN + "/goods/attribututeListDialog?attr_id="+attr_id);
+        util.confirm('属性列表','url:'+url,function(){
+            var data_obj = this.$content.find(".value_data");
+            var data_obj_str = '';
+            data_obj.each(function(i,e){
+                var value_sort = $(this).find('.editAttributeItem').data('sort');
+                var value_name = $(this).find('.editAttributeItem').data('name');
+                var type = $(this).find('.editAttributeItem').data('type');
+                var value = $(this).find('.editAttributeItem').data('value');
+                var attr_value_id = $(e).find("input[name^='attr_value_id']").val();
+                if(attr_value_id === undefined){
+                    attr_value_id = 0;
+                }
+                if (type > 1) {
+                    if (value == '') {
+                        $(this).find('.editAttributeItem').focus();
+                        util.message("类型为单选框或复选框时，属性值不能为空");
+                        return false;
+                    }
+                }
+                var new_str = '';
+                new_str = value_name+ '|' +type+ '|' +value_sort+ '|1|'+value+'|'+attr_value_id;
+                data_obj_str = data_obj_str + ';' + new_str;
+            })
+            data_obj_str = data_obj_str.substr(1);
+            var data_obj_arr = data_obj_str.split('|');
+            if(data_obj_arr[0] == ''){
+                util.message('商品类型属性名称不能为空',"danger");
+                return false;
+            }
+            $.ajax({
+                type: "post",
+                url: __URL(PLATFORMMAIN + "/goods/attribututeListDialog"),
+                data: {
+                    'attr_id': attr_id,
+                    'data_obj_str': data_obj_str,
+                },
+                success: function (data) {
+                    if (data["code"] > 0) {
+                        util.message(data["message"], 'success', LoadingInfo($('#pageIndex').val()));
+                    } else {
+                        util.message(data["message"], 'danger');
+                    }
+                }
+            })
+        },'large');
+    })
+    // 关联分类dialog
+    $('body').on('click','.associateCategory',function(){
+        var attr_id = $(this).siblings("input[name='attr_id']").val();
+        var attr_name = $(this).siblings("input[name='attr_name']").val();
+        var url = __URL(PLATFORMMAIN + "/goods/associateCategoryDialog?attr_id="+attr_id);
+        util.confirm('关联分类','url:'+url,function(){
+            var cate_obj = this.$content.find('input[name=module_chek]:checked');
+            var cate_obj_arr = [];
+            cate_obj.each(function(i){
+                cate_obj_arr.push($(this).val());
+            });
+            $.ajax({
+                type: "post",
+                url: __URL(PLATFORMMAIN + "/goods/associateCategoryDialog"),
+                data: {
+                    'attr_id': attr_id,
+                    'cate_obj_arr': cate_obj_arr,
+                    'attr_name': attr_name
+                },
+                success: function (data) {
+                    if (data["code"] > 0) {
+                        util.message(data["message"], 'success', LoadingInfo($('#pageIndex').val()));
+                    } else {
+                        util.message(data["message"], 'danger');
+                    }
+                }
+            })
+        },'large');
+    });
+    //是否显示
+    $('#attributeList').on('click', '.is_show', function(){
+        var is_use = $(this).data('is_show');
+        var attr_id = $(this).data('attr_id');
+            $.ajax({
+                type: "post",
+                url: "{:__URL('PLATFORM_MAIN/goods/updateGoodsAttrShow')}",
+                data: {
+                    'attr_id' : attr_id, 'is_use' : is_use
+                },
+                success: function (data) {
+                    if (data["code"] > 0) {
+                        util.message(data["message"], 'success', LoadingInfo($('#pageIndex').val()));
+                    } else {
+                        util.message(data["message"], 'danger');
+                    }
+                }
+            })
+        // })
+    })
+    //修改排序
+    $("body").on('change', '.sort-form-control', function(){
+        var attr_id = $(this).data('attr_id');
+        var sort_val = $(this).val();
+        $.ajax({
+            type : "post",
+            url : "{:__URL('PLATFORM_MAIN/Goods/setattributefield')}",
+            async : true,
+            data : {id : attr_id, name: 'sort', value : sort_val},
+            success : function(data) {
+                if (data["code"] > 0) {
+                    util.message(data["message"],'success',LoadingInfo($('#pageIndex').val()));
+                }else{
+                    util.message(data["message"],'danger');
+                }
+            }
+        })
+    })
+
+
+
+})
+</script>
+</html>
+{/block}

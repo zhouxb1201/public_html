@@ -1,0 +1,298 @@
+{block name="main"}
+		<!-- page -->
+		<ul class="nav nav-tabs v-nav-tabs" role="tablist">
+			<li role="presentation" class="active"><a href="{:__URL('ADDONS_MAINglobalBasicSetting')}"  class="flex-auto-center">基础设置</a></li>
+			<li role="presentation"><a href="{:__URL('ADDONS_MAINglobalSettlementSetting')}"  class="flex-auto-center">结算设置</a></li>
+			<li role="presentation"><a href="{:__URL('ADDONS_MAINglobalApplicationAgreement')}&type=2"  class="flex-auto-center">申请协议</a></li>
+			<li role="presentation"><a href="{:__URL('ADDONS_MAINglobalApplicationAgreement')}&type=1"  class="flex-auto-center">文案样式</a></li>
+			<li role="presentation"><a href="{:__URL('ADDONS_MAINglobalApplicationAgreement')}&type=3"  class="flex-auto-center">推送通知</a></li>
+		</ul>
+		<div class="tab-content">
+			<div role="tabpanel" class="tab-pane fade in active" id="base">
+				<form class="form-horizontal form-validate pt-15 widthFixedForm">
+					<div class="form-group">
+						<label class="col-md-2 control-label">全球分红</label>
+						<div class="col-md-5">
+							<!--<label class="radio-inline">
+								<input type="radio" name='globalbonus_status' value="1" {if condition="$website.is_use eq 1"}checked{/if}> 开启
+							</label>
+							<label class="radio-inline">
+								<input type="radio" name='globalbonus_status' value="0" {if condition="$website.is_use neq 1"}checked{/if}> 关闭
+							</label>-->
+							<div class="switch-inline">
+								<input type="checkbox" name="globalbonus_status" id="globalbonus_status" {if condition="$website.is_use eq 1"}checked{/if}>
+								<label for="globalbonus_status" class=""></label>
+							</div>
+						</div>
+					</div>
+
+					<div class="form-group">
+						<label class="col-md-2 control-label"><span class="text-bright">*</span>成为股东条件</label>
+						<div class="col-md-8">
+							<div>
+							<label class="radio-inline">
+								<input type="radio" name="globalagentcondition" value="1" required {if condition="$website.globalagent_condition eq 1"}checked{/if}> 满足所有勾选条件
+							</label>
+							<label class="radio-inline">
+								<input type="radio" name="globalagentcondition" value="2" required {if condition="$website.globalagent_condition eq 2"}checked{/if}> 满足勾选条件之一即可
+							</label>
+							<label class="radio-inline">
+								<input type="radio" name="globalagentcondition" value="-1" required {if condition="$website.globalagent_condition eq -1"}checked{/if}> 申请成为股东
+							</label>
+							</div>
+						</div>
+					</div>
+					<div class="form-group" id="iscondition">
+						<label class="col-md-2 control-label"></label>
+						<div class="col-md-8">
+							<div class="form-additional" style="width: auto">
+								<div class="form-group">
+									<label class="col-md-4 control-label"><input type="checkbox" name="globalagentconditions" value="1"> 内购订单金额满</label>
+									<div class="col-md-7 control-group">
+										<div class="input-group">
+											<input type="number" class="form-control" min="0" name="pay_money" value="{if $website.pay_money}{$website.pay_money}{/if}">
+											<div class="input-group-addon">元</div>
+										</div>
+									</div>
+								</div>
+								<div class="form-group">
+									<label class="col-md-4 control-label"><input type="checkbox" name="globalagentconditions" value="2"> 团队人数满</label>
+									<div class="col-md-7 control-group">
+										<div class="input-group">
+											<input type="number" class="form-control" min="0" name="number" value="{if $website.number}{$website.number}{/if}">
+											<div class="input-group-addon">人</div>
+										</div>
+									</div>
+								</div>
+								<div class="form-group">
+									<label class="col-md-4 control-label"><input type="checkbox" name="globalagentconditions" value="3"> 一级分销商满</label>
+									<div class="col-md-7 control-group">
+										<div class="input-group">
+											<input type="number" class="form-control" min="0" name="one_number" value="{if $website.one_number}{$website.one_number}{/if}">
+											<div class="input-group-addon">人</div>
+										</div>
+									</div>
+								</div>
+								<div class="form-group">
+									<label class="col-md-4 control-label"><input type="checkbox" name="globalagentconditions" value="4"> 二级分销商满</label>
+									<div class="col-md-7 control-group">
+										<div class="input-group">
+											<input type="number" class="form-control" min="0" name="two_number" value="{if $website.two_number}{$website.two_number}{/if}">
+											<div class="input-group-addon">人</div>
+										</div>
+									</div>
+								</div>
+								<div class="form-group">
+									<label class="col-md-4 control-label"><input type="checkbox" name="globalagentconditions" value="5"> 三级分销商满</label>
+									<div class="col-md-7 control-group">
+										<div class="input-group">
+											<input type="number" class="form-control" min="0" name="three_number" value="{if $website.three_number}{$website.three_number}{/if}">
+											<div class="input-group-addon">人</div>
+										</div>
+									</div>
+								</div>
+								<div class="form-group">
+									<label class="col-md-4 control-label"><input type="checkbox" name="globalagentconditions" value="6"> 一级订单金额满</label>
+									<div class="col-md-7 control-group">
+										<div class="input-group">
+											<input type="number" class="form-control" min="0" name="order_money" value="{if $website.order_money>0}{$website.order_money}{/if}">
+											<div class="input-group-addon">元</div>
+										</div>
+									</div>
+								</div>
+								<div class="form-group">
+									<label class="col-md-4 control-label"><input type="checkbox" name="globalagentconditions" value="11"> 团队订单金额满</label>
+									<div class="col-md-7 control-group">
+										<div class="input-group">
+											<input type="number" class="form-control" min="0" name="up_team_money" value="{if $website.up_team_money>0}{$website.up_team_money}{/if}">
+											<div class="input-group-addon">元</div>
+										</div>
+									</div>
+								</div>
+								<div class="form-group">
+									<label class="col-md-4 control-label"><input type="checkbox" name="globalagentconditions" value="7"> 购买指定商品</label>
+									<div class="col-md-7 control-group">
+										<div class="picture-list">
+											<a href="javascript:;" class="plus-box search_goods {if $website.pic}close-box1{/if}">
+												{if $website.pic}
+												<i class='icon icon-danger' title='删除'></i><img src="{:__IMG($website.pic)}" style='width:80px;height:80px;margin:0;'>
+												{else}
+												<i class="icon icon-plus"></i>
+												{/if}
+											</a>
+											<input type="text" class="visibility" data-visi-type="singlePicture" name="picture-Logo">
+										</div>
+										<input type="hidden" name='pic_id' id="pic_id" value="">
+										<input type="hidden" name="selectgoods_id" id="selectgoods_id" value="{$website.goods_id}">
+										<div class="input-group selectid">
+											{if($website.goods_id)}指定商品：{$website.goods_name}{/if}
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+					<div class="form-group">
+						<label class="col-md-2 control-label">股东自动审核</label>
+						<div class="col-md-5">
+							<div class="switch-inline">
+								<input type="checkbox" name="globalagentcheck" id="globalagentcheck" {if condition="$website.globalagent_check eq 1"}checked{/if}>
+								<label for="globalagentcheck" class=""></label>
+							</div>
+						</div>
+					</div>
+					<div class="form-group">
+						<label class="col-md-2 control-label">股东必须完善资料</label>
+						<div class="col-md-5">
+							<div class="switch-inline">
+								<input type="checkbox" name="globalagentdata" id="globalagentdata" {if condition="$website.globalagent_data eq 1"}checked{/if}>
+								<label for="globalagentdata" class=""></label>
+							</div>
+							<div class="mb-0 help-block">开启后未完善资料的股东需要完善资料才能进行操作，若还不是股东则需要提交资料申请审核。</div>
+						</div>
+					</div>
+					<div class="form-group">
+						<label class="col-md-2 control-label">是否开启跳级降级</label>
+						<div class="col-md-5">
+							<div class="switch-inline">
+								<input type="checkbox" name="globalagentgrade" id="globalagentgrade" {if condition="$website.globalagent_grade eq 1"}checked{/if}>
+								<label for="globalagentgrade" class=""></label>
+							</div>
+							<div class="mb-0 help-block">开启后，分销商按照权重顺序跳级或跳降级，只要升级或降级条件满足则会一直执行。</div>
+						</div>
+					</div>
+
+					<div class="form-group"></div>
+					<div class="form-group">
+						<label class="col-md-2 control-label"></label>
+						<div class="col-md-8">
+							<button class="btn btn-primary add" type="submit">保存</button>
+							<a href="javascript:history.go(-1);" class="btn btn-default">返回</a>
+						</div>
+					</div>
+
+				</form>
+			</div>
+		</div>
+
+		<!-- page end -->
+{/block}
+{block name="script"}
+<script>
+    require(['util'],function(util){
+        loading();
+        function loading(){
+            var globalagent_conditions = "{$website.globalagent_conditions}";
+            globalagent_conditions = globalagent_conditions.split(',');
+            for(var i = 0; i < globalagent_conditions.length;i++){
+                $('[name="globalagentconditions"][value="'+globalagent_conditions[i]+'"]').prop("checked", true);
+            }
+            var globalagent_condition = "{$website.globalagent_condition}";
+            if(globalagent_condition==-1){
+                $("#iscondition").hide();
+            }else{
+                $("#iscondition").show();
+            }
+        }
+        $("input[name='globalagentconditions']").click(function () {
+            if($(this).is(':checked')){
+                var vals=$(this).val();
+                if(vals!=7 || $("input[name='selectgoods_id']").val()==''){
+                    $(this).parent(".control-label").siblings(".control-group").find("input").attr("required",true);
+                }
+            } else{
+                $(this).parents(".form-group").removeClass('has-error');
+                $(this).parents(".form-group").find('.help-block-error').html('');
+                $(this).parent(".control-label").siblings(".control-group").find("input").removeAttr("required",true);
+            }
+        })
+        $('body').on('click','.search_goods', function () {
+            var url = "{:__URL('PLATFORM_MAIN/goods/selectGoodsList')}";
+            util.confirm('选择商品','url:'+url, function () {
+                var data = this.$content.find('.goods_val').val();
+                var pic = $('#pic_id').val();
+                $(".selectid").html('指定商品：'+data);
+                html='';
+                html += "<i class='icon icon-danger' title='删除'></i><img src="+__IMG(pic)+" style='width:80px;height:80px;margin:0;'>";
+                $(".search_goods").find('.visibility').removeAttr("required");
+                $(".search_goods").addClass('close-box1').removeClass('plus-box').removeClass('search_goods');
+                $(".close-box1").html(html);
+                $(".close-box1").siblings('.visibility').removeAttr("required");
+            })
+
+        })
+        $("input[name='globalagentcondition']").click(function () {
+            if($(this).is(':checked') && $("input[name='globalagentcondition']:checked").val()==-1){
+                $("#iscondition").hide();
+            } else{
+                $("#iscondition").show();
+            }
+        })
+        function isInArray(arr,value){
+            for(var i = 0; i < arr.length; i++){
+                if(value === arr[i]){
+                    return true;
+                }
+            }
+            return false;
+        }
+        util.validate($('.form-validate'),function(form){
+            var globalbonus_status = $("input[name='globalbonus_status']").is(':checked') ? 1 : 2;
+            var globalagentcondition = $("input[name='globalagentcondition']:checked").val();
+            var globalagentconditions = $("input:checkbox[name='globalagentconditions']:checked").map(function(index,elem) {
+                return $(elem).val();
+            }).get().join(',');
+            var arr=globalagentconditions.split(',');
+            if(isInArray(arr,"7")){
+                var goods_id = $("input[name='selectgoods_id']").val();
+            }else{
+                var goods_id ='';
+            }
+            if(globalagentcondition>0 && globalagentconditions==''){
+                util.message('请填写成为股东条件','danger');
+                return false;
+			}
+            var pay_money = $("input[name='pay_money']").val();
+            var number = $("input[name='number']").val();
+            var one_number = $("input[name='one_number']").val();
+            var two_number = $("input[name='two_number']").val();
+            var three_number = $("input[name='three_number']").val();
+            var order_money = $("input[name='order_money']").val();
+			var up_team_money = $("input[name='up_team_money']").val();
+            var globalagentcheck = $("input[name='globalagentcheck']").is(':checked') ? 1 : 2;
+            var globalagentgrade = $("input[name='globalagentgrade']").is(':checked') ? 1 : 2;
+            var globalagentdata = $("input[name='globalagentdata']").is(':checked') ? 1 : 2;
+            $.ajax({
+                type:"post",
+                url:"{$globalBasicSettingUrl}",
+                data:{
+                    'globalbonus_status':globalbonus_status,
+                    'number':number,
+                    'one_number':one_number,
+                    'two_number':two_number,
+                    'three_number':three_number,
+                    'globalagent_condition': globalagentcondition,
+                    'globalagent_conditions':globalagentconditions,
+                    'pay_money':pay_money,
+                    'order_money':order_money,
+					'up_team_money':up_team_money,
+                    'globalagent_check':globalagentcheck ,
+                    'globalagent_grade':globalagentgrade,
+                    'goods_id':goods_id,
+					'globalagent_data':globalagentdata
+                },
+                async:true,
+                success:function (data) {
+                    if (data['code']>0) {
+                        util.message(data["message"], 'success', "{:__URL('ADDONS_MAINglobalBasicSetting')}");
+                    }else if(data['code']==-3) {
+                        util.message('该应用有未完成分红数据，暂时无法关闭，必须等分红结算完成才可以进行关闭操作！', 'danger', "{:__URL('ADDONS_MAINglobalBasicSetting')}");
+                    }else{
+                        util.message(data["message"], 'danger');
+                    }
+                }
+            });
+        })
+    })
+</script>
+{/block}

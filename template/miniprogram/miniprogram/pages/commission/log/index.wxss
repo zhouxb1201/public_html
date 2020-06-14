@@ -1,0 +1,35 @@
+page{
+  font-size: 28rpx;
+  background-color: #f8f8f8;
+}
+.log_list{
+  background-color: #fff;
+}
+.log_list .log_cell{
+  width: 100%;
+  padding: 20rpx 30rpx;
+  box-sizing: border-box;
+  border-bottom: 1px solid #ebedf0;
+}
+.log_list .log_cell .order{
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 5rpx;
+  line-height: 48rpx;
+}
+.log_list .log_cell .order .order_money_red{
+  color: #ff454e;
+}
+.log_list .log_cell .order .order_money_green{
+  color: #4b0;
+}
+.log_list .log_cell .order .order_time{
+  color: #969799;
+}
+.log_type{
+  font-size: 24rpx;
+}
+.noMore{
+  text-align: center;
+  padding: 40rpx 30rpx;
+}

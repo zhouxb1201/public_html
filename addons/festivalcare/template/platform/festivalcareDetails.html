@@ -1,0 +1,142 @@
+{block name="resources"}
+{/block}
+{block name="main"}
+        <!-- page -->
+        <form class="form-horizontal">
+            <div class="screen-title">
+                <span class="text">活动信息</span>
+            </div>
+            <div class="form-group">
+            <div class="col-md-10">
+                <table class="table v-table table-auto-center table-bordered">
+                    <tbody>
+                        <tr>
+                            <td class="col-md-3 bg-f5">
+                                <p>活动名称</p>
+                            </td>
+                            <td class="text-left">
+                                <p>{$info['festivalcare_name']}</p>
+                            </td>
+                        </tr>
+                        <tr class="no_sku">
+                            <td class="col-md-3 bg-f5">
+                            	<p>活动时间</p>
+                            </td>
+                            <td class="text-left">
+                                <p>{php}echo date('Y-m-d H:i:s',$info['start_time']){/php}</p>
+                            </td>
+                        </tr>
+                        <tr class="no_sku">
+                            <td class="col-md-3 bg-f5">
+                            	<p>推送会员</p>
+                            </td>
+                            <td class="text-left">
+                                <p>{$info['group_name']}</p>
+                            </td>
+                        </tr>
+                        <tr class="no_sku">
+                            <td class="col-md-3 bg-f5">
+                            	<p>推送内容</p>
+                            </td>
+                            <td class="text-left">
+                                <p>{$info['weixin_msg']}</p>
+                            </td>
+                        </tr>
+                        <tr class="no_sku">
+                            <td class="col-md-3 bg-f5">
+                           		<p>活动状态</p>
+                            </td>
+                            <td class="text-left">
+                            	{if($info['state']==1)}
+                                <p style="color: #f0ad4e;">待开始</p>
+                                {elseif($info['state']==2)}
+                                <p style="color: #5cb85c;">进行中</p>
+                                {elseif($info['state']==3)}
+                                <p style="color:#d9534f;">已结束</p>
+                                {/if}
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            </div>
+            <div class="screen-title">
+                <span class="text">奖项信息</span>
+            </div>
+            <div class="form-group">
+            	<div class="col-md-10">
+	                <div class="tab-content">
+		                <table class="table v-table table-auto-center table-bordered">
+		                    <tbody>
+		                        <tr class="no_sku">
+		                            <td class="col-md-3 bg-f5">
+		                            	<p>奖品类型 </p>
+		                            </td>
+		                            <td class="text-left">
+		                                <p>
+		                                {if($info['prize_type']==1)}余额
+		                                {elseif($info['prize_type']==2)}积分
+		                                {elseif($info['prize_type']==3)}优惠券
+		                                {elseif($info['prize_type']==4)}礼品券
+		                                {elseif($info['prize_type']==5)}商品
+		                                {elseif($info['prize_type']==6)}赠品
+		                                {/if}
+		                                </p>
+		                            </td>
+		                        </tr>
+		                        <tr class="no_sku">
+		                            <td class="col-md-3 bg-f5">
+		                            	<p>奖品名称 </p>
+		                            </td>
+		                            <td class="text-left">
+		                                <p>{$info['prize_name']}</p>
+		                            </td>
+		                        </tr>
+		                        <tr class="no_sku">
+		                            <td class="col-md-3 bg-f5">
+		                            	<p>奖品</p>
+		                            </td>
+		                            <td class="text-left">
+		                                <p>
+		                                {if($info['prize_type']==1)}{$info['prize_money']}元
+		                                {elseif($info['prize_type']==2)}{$info['prize_point']}积分
+		                                {elseif($info['prize_type']==3)}{$info['name']}优惠券
+		                                {elseif($info['prize_type']==4)}{$info['name']}礼品券
+		                                {elseif($info['prize_type']==5)}{$info['name']}
+		                                {elseif($info['prize_type']==6)}{$info['name']}
+		                                {/if}
+		                                </p>
+		                            </td>
+		                        </tr>
+		                        {if($info['prize_pic'])}
+		                        <tr class="no_sku">
+		                            <td class="col-md-3 bg-f5">
+		                            	<p>奖品图片</p>
+		                            </td>
+		                            <td class="text-left">
+		                                <p><img src="{$info['prize_pic']}" width="60" height="60"></p>
+		                            </td>
+		                        </tr>
+		                        {/if}
+		                        <tr class="no_sku">
+		                            <td class="col-md-3 bg-f5">
+		                            	<p>奖品过期时间</p>
+		                            </td>
+		                            <td class="text-left">
+		                                <p>{php}echo date('Y-m-d H:i:s',$info['expire_time']){/php}</p>
+		                            </td>
+		                        </tr>
+		                    </tbody>
+		                </table>
+	                </div>
+                </div>
+            </div>
+            <div class="form-group"></div>
+            <div class="form-group">
+                <label class="col-md-2 control-label"></label>
+                <div class="col-md-8">
+                    <a href="javascript:history.go(-1);" class="btn btn-default">返回</a>
+                </div>
+            </div>
+        </form>
+{/block}

@@ -1,0 +1,35 @@
+page{
+  background-color: #f8f8f8;
+  font-size: 28rpx;
+}
+
+.content{
+  padding: 20rpx;
+  background-color: #fff;
+}
+.no_agreement{
+  color: #666;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.foot_group{
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  overflow: hidden;
+  padding: 20rpx;
+}
+.foot_group .cell{
+  padding: 20rpx 30rpx;  
+}
+.foot_group .cell .agree_btn{
+  background-color: #f44;
+  color: #fff;
+  height: 88rpx;
+  line-height: 88rpx;
+  width: 100%;
+  text-align: center;
+  border-radius: 50rpx;
+}

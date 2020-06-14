@@ -1,0 +1,21 @@
+<div class="modal-body">
+    <form class="form-horizontal" role="form">
+        <div class="form-group">
+            <label for="template_type" class="col-sm-3 control-label">模板类型</label>
+            <div class="col-sm-8">
+                <select name="template_type" id="template_type" disabled>
+                        {foreach $typeList as $key => $typet}
+                        <option value="{$key}" {if $template_type== $key} selected {/if}>{$typet}</option>
+                    {/foreach}
+                </select>
+            </div>
+        </div>
+        <div class="form-group">
+            <label for="name" class="col-sm-3 control-label">模板名称</label>
+            <div class="col-sm-8">
+                <input type="text" class="form-control" name="name" value="{$template['name']}">
+            </div>
+        </div>
+        <input type="hidden" name="tem" value="{$code}">
+    </form>
+</div>

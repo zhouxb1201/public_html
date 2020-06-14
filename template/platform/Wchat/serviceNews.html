@@ -1,0 +1,277 @@
+{extend name="platform/new_base" /}
+{block name="resources"/}
+<style>
+    .pull-left,
+    .pull-right {
+        position: relative;
+    }
+
+    .alert {
+        margin-bottom: 5px;
+        padding: 5px;
+    }
+
+    .infol {
+        margin-left: 15px;
+        padding: 5px;
+        max-width: 60%;
+
+    }
+
+    .infor {
+        margin-right: 15px;
+        padding: 5px;
+        max-width: 60%;
+        word-wrap: break-word;
+    }
+
+    .more {
+        cursor: pointer;
+    }
+    .border{
+        border:1px solid #ccc;
+        border-top: none;
+        padding: 4px;
+    }
+    .material_border{
+        border: 1px solid #ddd;
+        /*min-height: 200px;*/
+    }
+    .selectMedia{
+        padding: 42px 0;
+        margin-bottom: 0;
+        line-height: normal;
+        position: relative;
+        display: block;
+        border: 2px dotted #d9dadc;
+        text-align: center;
+    }
+.media_cover {
+    width: 20%;
+    margin: 0 auto;
+    padding: 20px;
+}
+    .appmsg_img img{
+        width: 100px;
+        height: 100px;
+    }
+    .show_media{
+        border: 1px solid #ddd;
+        /*min-height: 200px;*/
+    }
+    .show_media_content{
+        width: 20%;
+        margin: 0 auto;
+    }
+</style>
+{/block} {block name="main"}
+<!-- page -->
+<div class="panel panel-default">
+    <div class="panel-heading">和 <span class="text-primary"> {$fans_info['nickname']} </span> 的聊天记录</div>
+    <div class="panel-body" id="log" style="max-height:300px;overflow-y:scroll">
+        <div id="more" data-id="712" class="text-center more text-info"><i class="fa fa-clock-o"></i> 已加载全部</div>
+        <div id="prev" data-id="712">
+            <div id="position"></div>
+        </div>
+        <div id="last" data-id="717" style="margin-bottom:30px;">
+            <!--<div class="pull-left col-lg-12 col-md-12 col-sm-12 col-xs-12">-->
+                <!--<div class="pull-right"><img src="/public/platform/images/wxMenu/gw-wx.gif" width="35" style="border:2px solid #418BCA;border-radius:5px"><br></div>-->
+                <!--<div class="alert alert-info pull-right infor">test<br>11-13 17:55:02</div>-->
+                <!--<div style="clear:both"></div>-->
+            <!--</div>-->
+            <!--<div style="clear:both"></div>-->
+            <!--<div class="pull-left col-lg-12 col-md-12 col-sm-12 col-xs-12">-->
+                <!--<div class="pull-left"><img src="http://thirdwx.qlogo.cn/mmopen/Pj4CEuz5tTeuMicfAtkBw7Y7BSfFBPLGy9RT7UQH1slRXy0SQ9wxDZiasPPa5R5JEFBClJaYQXariayaDe8FyULYl6qX3ZHLNXy/132"-->
+                        <!--width="35"><br></div>-->
+                <!--<div class="alert alert-info pull-left infol">111<br>11-19 15:18:37</div>-->
+                <!--<div style="clear:both"></div>-->
+            <!--</div>-->
+            <div style="clear:both"></div>
+        </div>
+    </div>
+</div>
+
+<div class="panel panel-default">
+		<div class="panel-heading">
+			和 <span class="text-primary"> {$fans_info['nickname']} </span> 的聊天
+		</div>
+		<div class="panel-body">
+			<form action="" class="form-horizontal" role="form" id="form0">
+				<div class="form-group">
+					<label class="pull-left control-label ml-15">消息类型</label>
+					<div class="pull-left ml-15">
+						<label class="radio-inline"><input type="radio" value="1" name="msgtype" class="msgtype" checked>文本</label>
+						<label class="radio-inline"><input type="radio" value="2" name="msgtype" class="msgtype">素材库</label>
+					</div>
+				</div>
+			</form>
+            <div class="form-group add_text" >
+                <div>
+                    <textarea name="content" id="content_text" class="form-control" cols="30" rows="8" placeholder="添加要回复的内容" style="resize: none"></textarea>
+                    <div class="border"><a href="javascript:;" id="select_emoji" data-original-title="" title=""><i class="icon icon-emoji"></i></a></div>
+                </div>
+            </div>
+ 
+            <div class="form-group add_mater" style="display: none">
+                <div class="material_border">
+                    <div class="media_cover">
+                        <a class="selectMedia" href="javascript:;">
+                                <i class="icon icon-add"></i>
+                                <p>从素材库中选择</p>
+                        </a>
+                    </div>
+                </div>
+                <div class="show_media" style="display: none">
+
+                </div>
+            </div>
+
+			<div class="form-group">
+				<label class="col-xs-12 col-sm-3 col-md-2 control-label"></label>
+				<div class="col-sm-10">
+                    <a class="btn btn-primary sendMsg" >发送</a>
+				</div>
+			</div>
+		</div>
+	</div>
+<input type="hidden" id="send_media_id">
+<input type="hidden" id="default_uid" value="{$fans_info['uid']}">
+<input type="hidden" id="openid" value="{$fans_info['openid']}">
+<!-- page end -->
+{/block} {block name="script"}
+<script>
+    require(['util'], function (util) {
+        function loading(){
+            $.ajax({
+                type: "post",
+                url: "{:__URL('PLATFORM_MAIN/wchat/loadNews')}",
+                async: true,
+                data: {
+                    "uid":$('#default_uid').val(),
+                },
+                success: function (data) {
+                   $("#last").html(data);
+                   setTimeout(loading,3000);
+                }
+            });
+        }
+        loading();
+        $('body').on('click','.msgtype',function() {
+            $type = $("input[name='msgtype']:checked").val();
+            if ($type == 1) {
+                $('.add_text').show();
+                $('.add_mater').hide();
+            }
+            if ($type == 2) {
+                $('.add_mater').show();
+                $(".material_border").show();
+                $('.show_media').hide();
+                $('.add_text').hide();
+            }
+        })
+        // 选择素材
+        $('body').on('click','.selectMedia',function(){
+            var url = __URL('PLATFORM_MAIN/wchat/onLoadMaterial');
+            util.confirm('选取素材', 'url:'+url,function(){
+                var media_id = this.$content.find('#replay_key_id').val();
+                if(media_id==''){
+                    util.message('请选择素材','danger');
+                    return false;
+                }else{
+                    $(".material_border").hide();
+                    $("#send_media_id").val(media_id);
+                    $.ajax({
+                        type: "post",
+                        url: "{:__URL('PLATFORM_MAIN/wchat/getWeiXinMediaDetail')}",
+                        async: true,
+                        data: {
+                            "media_id":media_id,
+                        },
+                        success: function (data) {
+                            var  html ='';
+                            if (data) {
+                                html += '<div class="show_media_content">';
+                                html += '<div class="appmsg_info mb-10"><p class="appmsg_date">创建时间：'+data['createtime']+'</p></div>';
+                                if(data['type']=='text'){
+                                    html += '<h4 class="appmsg_title mb-10">'+ data['attachment']+'</h4>';
+                                }
+                                if(data['type']=='image'){
+                                    html += '<h4 class="appmsg_title mb-10">'+ data['filename']+'</h4>';
+                                    html += '<div class="appmsg_img mb-10"><img src="' + data['attachment'] + '" width="100" height="100"> </div>';
+                                }
+                                if(data['type']=='news'){
+                                    html += '<h4 class="appmsg_title mb-10"><a href="javascript:void(0);">'+ data['items']['data'][0]['title']+'</a></h4>';
+                                    html += '<div class="appmsg_img mb-10"> <a href="' + data['items']['data'][0]['url'] + '" target="_blank"><img src="' + data['items']['data'][0]['thumb_url'] + '" width="100" height="100"></a></div>';
+                                }
+                                if(data['type']=='voice'){
+                                    html += '<h4 class="appmsg_title mb-10"><a href="javascript:void(0);">'+ data['filename']+'</a></h4>';
+                                    html += '<div class="appmsg_img mb-10"><div class="icon audio-player-play" data-attach="'+data['attachment']+'"><span><i class="fa fa-play"></i></span></div </div>';
+                                }
+                                if(data['type']=='video'){
+                                    html += '<h4 class="appmsg_title mb-10"><a href="javascript:void(0);">'+ data['tag']['title']+'</a></h4>';
+                                    html += '<div class="appmsg_img mb-10"><div class="icon audio-player-play" data-attach="'+data['tag']['description']+'"><span><i class="fa fa-play"></i></span></div </div>';
+                                }
+                                html += '<a href="javascript:void(0);" class="delmt link_dele btn btn-primary mb-10" data-id='+data['media_id']+'>删除</a>';
+                                html += '</div>';
+                                $('.show_media').html(html);
+                                $('.show_media').show();
+                            }
+                        }
+                    });
+                }
+
+            },'large')
+        });
+        $('body').on('click','.delmt',function() {
+            $(".material_border").show();
+            $(".show_media").hide();
+            $(".show_media").html('');
+            $("#send_media_id").val('');
+        });
+        $('body').on('click','.sendMsg',function() {
+            if($("input[name='msgtype']:checked").val()==1 && $("#content_text").val()=='') {
+                util.message('请选择消息','danger');
+                return false;
+            }
+            if($("#send_media_id").val()=='' && $("input[name='msgtype']:checked").val()==2){
+                util.message('请选择消息','danger');
+                return false;
+            }
+            var val='';
+            if($("input[name='msgtype']:checked").val()==1){
+                val = $("#content_text").val();
+            }else{
+                val = $("#send_media_id").val();
+            }
+            $.ajax({
+                type: "post",
+                url: "{:__URL('PLATFORM_MAIN/wchat/sendMsg')}",
+                async: true,
+                data: {
+                    "media_id": val,
+                    "openid": $("#openid").val()
+                },
+                success: function (data) {
+                    if (data["errcode"] == 0) {
+                        loading();
+                        $(".material_border").show();
+                        $("#content_text").val('');
+                        $(".show_media").html('');
+                        $("#send_media_id").val('');
+                        util.message('发送成功', 'success');
+                    } else {
+                        util.message(data["errmsg"], 'danger');
+                    }
+                }
+            });
+        });
+        //选择表情
+        $('body').on('click','#select_emoji',function(){
+            var em=$("#content_text").val();
+            util.emojiDialog(function(data){
+                $("#content_text").val(em+data.emoji);
+            })
+        })
+    })
+</script>
+{/block}

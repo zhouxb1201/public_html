@@ -1,0 +1,42 @@
+<view class='coupon_centre'>
+  <view class='banner'>
+    <image mode='widthFix' src='{{couponBannerImg}}'></image>
+  </view>
+  <view class='list'>
+    <view class='box' wx:for='{{couponList}}' wx:key=''>
+      <view class='item'>
+        <view class='img'>
+          <image mode="widthFix" src="{{item.shop_logo != '' ? item.shop_logo : '/images/color-shop.png'}}"></image>
+        </view>
+        <view class='info'>
+          <view class='name'>{{item.coupon_name}}</view>
+          <view class='price' wx:if='{{item.coupon_genre == 1}}'>¥{{item.money}}</view>
+          <view class='price' wx:elif='{{item.coupon_genre == 2}}'>¥{{item.money}} 满{{item.at_least}}可用</view>
+          <view class='price' wx:else='{{item.coupon_genre == 3}}'>{{item.discount}}折 满{{item.at_least}}可用</view>
+          <view class='time'>有效期{{item.start_time}}至{{item.end_time}}</view>
+        </view>        
+      </view>
+      <view class='circle'>
+          <view class='circle_box' >
+            <canvas class='circle_bg' canvas-id='circle_bg{{index}}' ></canvas>
+            <canvas class='circle_draw' canvas-id='circle_draw{{index}}'></canvas>
+            <view class="circle_text">
+                <text class='circle_info' wx:if='{{item.count != 0}}'>已抢</text>
+                <view class="circle_dot">{{item.circle_num}}</view>                 
+            </view>
+          </view>
+          <view class='draw_btn_disable' wx:if="{{item.circle_num == '100%'}}">立即领取</view>
+          <view class='draw_btn' wx:else bindtap='userArchiveCoupon' data-couponid='{{item.coupon_type_id}}'>立即领取</view>
+       </view>
+    </view>
+  </view>
+</view>
+
+<!-- 关联手机 -->
+<phone-compoent phoneShow='{{phoneShow}}' bind:phoneEven='phonereResult'></phone-compoent>
+
+<!-- 登录组件 -->
+<login-component loginShow='{{loginShow}}' bind:request='requestLogin'></login-component>
+
+
+

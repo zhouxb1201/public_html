@@ -1,0 +1,45 @@
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>领取卡券</title>
+
+</head>
+<body>
+<a href="javascript:void(0)" id="addCard">领取</a>
+</body>
+
+
+<script src="https://res.wx.qq.com/open/js/jweixin-1.0.0.js"></script>
+<script>
+    wx.config({
+        debug: true,
+        appId: "{$appid}",
+        timestamp: {$timestamp},
+        nonceStr: "{$noncestr}",
+        signature: "{$signature}",
+        jsApiList: [
+            'addCard'
+        ]
+    });
+    wx.ready(function(){
+        //添加卡券
+        document.querySelector('#addCard').onclick = function () {
+            wx.addCard({
+                cardList: [
+                    {
+                        cardId: "{$cardid}",
+                        cardExt: '{"timestamp":"{$timestamp}","nonce_str":"{$noncestr}","signature":"{$signature}"}'
+                    }
+                ],
+                success: function (res) {
+                    alert('已添加卡券：' + JSON.stringify(res.cardList));
+                },
+                error:function(res){
+                    alert('失败');
+                    console.log(res);
+                }
+            });
+        };
+    });
+</script>
+</html>

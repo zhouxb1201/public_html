@@ -1,0 +1,33 @@
+<view class="list" wx:if="{{list.length > 0}}">
+	<view class="cell panel-item" wx:for="{{list}}" wx:key='index' wx:for-item='item' bindtap="toDetail" data-thing_type="{{item.thing_type}}" data-thing_id="{{hash=='collect'?item.type_id:item.thing_id}}">
+		<view class="item-left">
+			<image class="img" mode="scaleToFill" src="{{item.user_headimg != '' ? item.user_headimg : '/images/no-avatar.png'}}" />
+		</view>
+		<view class="item-right">
+			<view class="title">
+				<view >{{item.thing_user_name ? item.thing_user_name : '匿名'}}</view>
+			</view>
+			<view class="text">
+				<view class="left-text">{{item.content}}</view>
+			</view>
+			<view class="text" wx:if="{{item.type > 0}}">
+				<view class="left-text">{{ item.type > 2 ? '收藏了你的干货' : '赞了你的干货'}}</view>
+			</view>
+			<view class="text">
+				<view class="left-text">{{time.formatDate(item.create_time) }}</view>
+			</view>
+		</view>
+		<view class="item-edge">
+			<image src="{{item.thing_type == 1 ? item.pic_cover : item.video_img.pic_cover}}" />
+		</view>
+	</view>
+</view>
+<view class="no_good" wx:else>
+	<view class="box">
+		<view class="img">
+			<image mode="widthFix" src="/images/empty-data.png"></image>
+		</view>
+		<view class="text">暂无数据~</view>
+	</view>
+</view>
+<wxs src="../grapDetail/time.wxs" module="time" />

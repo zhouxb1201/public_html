@@ -1,0 +1,112 @@
+<form class='payment' wx:if='{{payboxShow}}' bindsubmit="templateSend" report-submit="true">
+  <view class='pay_top'>
+    <view>应付金额</view>
+    <view class='money'>¥{{payMoney}}</view>
+    <view class='limit_time' wx:if="{{isShow}}">请在{{uplogtime}}内完成支付</view>
+  </view>
+  <view class='pay_type'>
+    <view class='pay_type_title'>支付方式</view>
+    <view class='pay_type_item' data-selected='{{balanceSelected}}' bindtap='balancePayStatus' wx:if='{{payTypeShow != 1 && mipConfig.bpay == true}}'>
+      <text class='icon iconfont v-icon-balance3'></text>
+      <text>余额支付 <text class='balanceTotal'>( 余额{{balance}}元<text wx:if="{{point > 0}}">，{{point}}积分</text> )</text>
+      </text>
+      <icon wx:if="{{balanceSelected}}" type="success" color="red" size='20' />
+      <icon type="circle" wx:else size='20' />
+    </view>
+    <view class='pay_type_item' data-selected='{{weChatSelected}}' wx:if="{{mipConfig.wechat_pay == true}}" bindtap='weChatPayStatus'>
+      <text class='icon iconfont v-icon-wx-pay'></text>
+      <text>微信支付</text>
+      <icon wx:if="{{weChatSelected}}" type="success" color="red" size='20' />
+      <icon type="circle" wx:else size='20' />
+    </view>
+    <view wx:if="{{payAction.gppay}}" class='pay_type_item' data-selected='{{globeSelected}}' wx:if="{{mipConfig.gppay == true}}" bindtap='globePayStatus'>    
+      <text class='icon iconfont v-icon-wx-pay'></text>
+      <text>微信支付(跨境)</text>
+      <icon wx:if="{{globeSelected}}" type="success" color="red" size='20' />
+      <icon type="circle" wx:else size='20' />
+    </view>
+    <!-- <view class='pay_type_item' data-selected='{{deliverySelected}}' bindtap='dPayStatus' wx:if='{{mipConfig.dpay == true && pageType != "integral"}}'>
+      <text class='icon iconfont v-icon-logistic4'></text>
+      <text>货到付款</text>
+      <icon wx:if="{{deliverySelected}}" type="success" color="red" size='20' />
+      <icon type="circle" wx:else size='20' />
+    </view> -->
+  </view>
+
+  <view class='foot_pay'>
+    <button class='paybtn' formType="submit" disabled='{{disabled}}' bindtap='subscribeMessage'>确认付款（¥{{payMoney}}）</button>
+  </view>
+
+</form>
+
+<van-dialog use-slot async-close show="{{ payShow }}" show-cancel-button confirm-button-open-type="getuserinfo" title='请输入支付密码' bind:getuserinfo="getUserInfo" bind:confirm='passwordConfirmFun' bind:cancel='onPasswordClose'>
+  <view class='pay_box'>
+    <view class='pay_group'>
+      <view class='cell'>
+        <view class='title'>支付密码</view>
+        <view class='value'>
+          <input type='password' value="{{password}}" placeholder='请输入支付密码' bindinput='passwordFun'></input>
+        </view>
+      </view>
+    </view>
+    <view class='text_group'>
+      <view>由9-20个字母、数字、普通字符组成</view>
+      <view class='reset_btn' bindtap='resetPayPasswordShow'>忘记密码？</view>
+    </view>
+  </view>
+</van-dialog>
+
+<van-popup show="{{reset_pay_show}}" position='bottom' bind:close="resetPayPasswordClose">
+  <view class='reset_password_box'>
+    <view class='top'>设置支付密码</view>
+    <!-- 手机验证 -->
+    <view class='phone_validate' wx:if='{{check_code == 0}}'>
+      <view class='group'>
+        <view class='cell'>
+          <view class='title'>手机号码</view>
+          <view class='value'>
+            <input type='text' value='{{user_tel}}' disabled='disabled'></input>
+          </view>
+        </view>
+        <view class='cell'>
+          <view class='title'>短信验证码</view>
+          <view class='value phone_code'>
+            <input type='text' placeholder='请输入短信验证码' bindinput='verificationCodeFun'></input>
+            <button class="v_code {{codeDis == true?'d_code':''}}" bindtap="changeCode" disabled="{{codeDis}}">
+              {{phoneCode}}
+              <text hidden="{{phoneCode == '获取验证码'}}">S</text>
+            </button>
+          </view>
+        </view>
+      </view>
+
+      <view class='foot'>
+        <view class='foot_btn' bindtap='resetPayPasswordClose'>取消</view>
+        <view class='foot_btn' bindtap='checkVerificationCode'>下一步</view>
+      </view>
+    </view>
+
+    <!-- 修改支付密码 -->
+    <view class='reset_pay_password' wx:if='{{check_code == 1}}'>
+      <view class='group'>
+        <view class='cell'>
+          <view class='title'>支付密码</view>
+          <view class='value'>
+            <input type='password' placeholder='请输入支付密码' bindblur='newPayPasswordFun'></input>
+          </view>
+        </view>
+        <view class='cell'>
+          <view class='title'>确认密码</view>
+          <view class='value'>
+            <input type='password' placeholder='再次输入支付密码' bindblur='confirmPayPasswordFun'></input>
+          </view>
+        </view>
+      </view>
+
+      <view class='foot'>
+        <view class='foot_btn' bindtap='resetPayPasswordClose'>取消</view>
+        <view class='foot_btn' bindtap='updatePayPassword'>完成</view>
+      </view>
+    </view>
+  </view>
+</van-popup>

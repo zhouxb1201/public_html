@@ -1,0 +1,272 @@
+page{
+  font-size: 28rpx;
+  background-color: #f8f8f8;
+}
+
+.coupon_detail_box{
+  background-color: #ff454e;
+  padding: 20rpx 30rpx;
+  color: #fff;
+}
+.coupon_detail_box .info{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+}
+.coupon_detail_box .info .logo{
+  width: 120rpx;
+  height: 120rpx;
+  border-radius: 50%;
+  border: 2px solid #fff;
+  overflow: hidden;
+}
+.coupon_detail_box .info .logo image{
+  width: 100%;
+  height: 100%;
+}
+.coupon_detail_box .info .name{
+  margin: 10rpx 0;
+}
+.coupon_detail_box .info .time{
+  color: #ccc;
+  font-size: 24rpx;
+}
+
+.coupon_box{
+  background-color: #fff;
+  margin: 30rpx 40rpx;
+  padding: 40rpx 30rpx;
+  display: flex;
+  align-items: center;
+  color: #ffab33;
+  border-radius: 4px;
+  justify-content: space-between;
+  position: relative;
+}
+.coupon_box::after{
+  content: '';
+  display: block;
+  position: absolute;
+  width: 32rpx;
+  height: 32rpx;
+  background-color: #f44;
+  border-radius: 50%;
+  top: 50%;
+  left: -10rpx;
+  margin-top: -16rpx; 
+}
+.coupon_box::before{
+  content: '';
+  display: block;
+  position: absolute;
+  width: 32rpx;
+  height: 32rpx;
+  background-color: #f44;
+  border-radius: 50%;
+  top: 50%;
+  right: -10rpx;
+  margin-top: -16rpx;  
+}
+.no_coupon{
+  color: #999;
+}
+.coupon_box .coupon_r .coupon_num .money{
+  font-size: 63rpx;
+  font-weight: 700;
+}
+.coupon_box .coupon_r .coupon_num .discount{
+  font-size: 63rpx;
+  font-weight: 700;
+}
+.coupon_box .coupon_r .coupon_num .unit{
+  font-size: 34rpx;
+}
+.coupon_box .coupon_r{
+  display: flex;
+  align-items: center;
+}
+.coupon_box .coupon_r .coupon_text{
+  margin-left: 30rpx;
+}
+.coupon_box .coupon_btn .btn{
+  height: 48rpx;
+  min-width: 120rpx;
+  border-radius: 50rpx;
+  text-align: center;
+  line-height: 48rpx;
+  padding: 0 16rpx;
+}
+.coupon_box .coupon_btn .receive_btn{
+  background-color: #ffab33;  
+  color: #fff;
+}
+.coupon_box .coupon_btn .received_btn{
+  background-color: #e8e8e8;
+  color: #999;
+}
+
+
+
+.top_fixed{
+  position: fixed;
+  top: 0;
+}
+
+.sort {    
+    width: 100%;
+    padding:0;
+    background: #fff;
+    align-items: center;
+    display: flex;
+}
+.sort .item {
+    flex: 1;
+    position: relative;
+    text-align: center;
+    font-size: 28rpx;
+    padding: 25rpx 30rpx;
+    color: #666;
+    vertical-align: middle;
+}
+.sort .item:first-child {
+    border: 0;
+}
+.sort .item .icon{
+  display: inline-block;
+}
+.sort .item.on text {
+    color: #fd5454;
+}
+.sort .item.on .icon{
+  color: #fd5454;
+}
+.DESC{
+  transform:rotate(0deg);
+}
+.ASC{
+  transform:rotate(180deg);
+  
+}
+
+
+.goodsRank .gooditem{
+  box-sizing: border-box;
+  width: calc(50% - 16rpx);
+  float: left;
+  margin: 8rpx;
+  background-color: #fff;
+  border-radius: 50rpx;
+  overflow: hidden;
+}
+.goodsRank .goodbox::after{
+  display:block;
+  clear:both;
+  content:"";
+  visibility:hidden;
+  height:0
+}
+.goodsRank .gooditem .gooddetail{
+  padding: 10rpx;
+}
+.goodsRank .gooditem .goodimg{
+  height: 360rpx;
+  overflow: hidden;  
+} 
+.goodsRank .gooditem .goodname{
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.goodsRank .gooditem .goodprice{
+  color: #ff454e;
+  font-size: 32rpx;
+  font-weight: 600;
+}
+.goodsRank .gooditem .marketprice{
+  text-decoration:line-through;
+  font-size: 26rpx;
+  margin-left: 20rpx;
+  color: rgba(119, 116, 116, 0.829);
+}
+.goodsRank .gooditem .saleNum{
+  font-size: 24rpx;
+  color: rgb(129, 129, 129);
+}
+.goodsRank .no_gooddata{  
+  margin: 0 20rpx;
+  height: 100rpx;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: #ccc;
+}
+.rightShow{
+  position: relative;
+  height: 100%;
+}
+.rightShow .rs_goods{
+  padding: 20rpx;
+  border-bottom: 1px solid rgba(102, 102, 102, 0.089); 
+  display: flex;
+  flex-flow: wrap;
+}
+.rightShow .rs_goods .btn_box{
+  width: 45%;
+  padding: 8rpx;
+}
+.rightShow .rs_goods .text{
+  width: 100%;
+  border: 1px solid rgba(204, 204, 204, 0.658);
+  display: inline-block;
+  font-size: 25rpx; 
+  text-align: center;
+  padding: 10rpx;   
+  box-sizing: border-box;
+}
+.rightShow .rs_goods .active{
+  background-color: #ff454e;
+  color: #fff;
+  border-color: #ff454e;
+}
+.rightShow .priceRange{
+  padding: 20rpx;
+  border-bottom: 1px solid rgba(102, 102, 102, 0.089); 
+}
+.rightShow .priceRange .rangeTitle{
+  font-size: 30rpx;
+  margin: 20rpx 0;
+}
+.rightShow .priceRange .range input{
+  display: inline-block;
+  border:1px solid rgba(204, 204, 204, 0.658);
+  width: 150rpx;
+  height: 60rpx;
+  padding: 8rpx;
+}
+.rightShow .sign{
+  display: inline-block;
+  height: 60rpx;
+  line-height: 60rpx;
+  vertical-align: top;
+  margin: 0 20rpx;
+}
+.buttomBtn{
+  position: absolute;
+  bottom: 0;
+  width: 100%;
+}
+.buttomBtn .btn{
+  width: 50%;
+  display: inline-block;
+  text-align: center;
+  max-height: 100rpx;
+  line-height: 100rpx;  
+}
+.buttomBtn .cancel{
+  background-color: #f8f8f8;
+}
+.buttomBtn .makesure{
+  background-color: #ff454e;
+  color: #fff; 
+}

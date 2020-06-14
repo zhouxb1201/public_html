@@ -1,0 +1,43 @@
+page{
+  font-size: 28rpx;
+  background-color: #f8f8f8;
+}
+.address_group{
+  background-color: #fff;
+}
+.input_text{
+  display: flex;
+  padding: 20rpx 30rpx;
+  border-bottom: 1px solid rgba(204, 204, 204, 0.288);
+  line-height: 48rpx;
+}
+.input_text text{
+  width: 25%;
+}
+.input_text input{
+  width: 75%;
+}
+.input_text .area_text{
+  width: 75%;
+  color: rgb(124, 124, 124);
+}
+
+.cell{
+  display: flex;
+  align-items: center;
+  padding: 20rpx 30rpx;
+  line-height: 48rpx;
+}
+.cell .text{
+  flex: 1;
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+}
+
+.savebtn{
+  margin: 50rpx 30rpx;
+  background-color: #f44;
+  color: #fff;
+ border-radius: 50rpx;
+}

@@ -1,0 +1,10 @@
+<!-- 地址 -->
+    <view class='custom customDisplay wx:if="{{customitem.required == true ? "custom_padd" : ""}}"'>
+      <view class='label_text'><text class="star" wx:if='{{customitem.required == true}}'>*</text>{{customitem.label}}</view>
+      <text class='area_text' data-index="{{index}}" bindtap='areaOnShow'>{{areaText}}</text>
+    </view>
+
+    <!-- 地址弹出框 -->
+<van-popup show="{{ popupShow }}" position="bottom" bind:close="areaOnClose">
+  <van-area area-list="{{ areaList }}" bind:confirm="changeArea" bind:cancel="areaOnClose"/>
+</van-popup>

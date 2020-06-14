@@ -1,0 +1,29 @@
+<view class="popup"  style="transform:{{isShow ? 'scale(1)' : 'scale(0)'}};transition: all 0.2s;">
+  <view class="popup-no-prize-wrap">
+     <view class="prize">
+      <image mode='widthFix' src="{{publicUrl}}/wap/static/images/no_prize_01.png"></image>
+    </view>
+    <view class="prize">
+      <image mode='widthFix' src="{{publicUrl}}/wap/static/images/win_prize_02.png"></image>
+      <view class="prize-sad">
+        <image mode='widthFix' src="{{publicUrl}}/wap/static/images/no_prize_02.png"></image>
+      </view>
+    </view>
+    <view class="prize">
+      <image mode='widthFix' src="{{publicUrl}}/wap/static/images/win_prize_03.png"></image>
+      <view class="prize-win-txt">
+        <view>差一点点就中奖了！</view>
+      </view>
+    </view>
+    <view class="prize">
+      <image mode='widthFix' src="{{publicUrl}}/wap/static/images/win_prize_04.png"></image>
+      <view class="prize-win-txt">
+        <view class="btn-wrap">
+          <button class="btn" open-type='share' hover-class='none'>立即分享</button>
+          <button class="btn" hover-class='none' bindtap='onClose'>知道了</button>
+        </view>
+      </view>
+    </view>
+    <view class="close" bindtap='onClose'></view>
+  </view>
+</view>

@@ -1,0 +1,212 @@
+<view class="order_list" wx:if="{{pageShow != false}}">
+  <view class='header'>
+    <view class='order_search'>
+      <view class='search_box'>
+        <icon type='search' size='16'></icon>
+        <input type='text' placeholder='订单号/店铺名称/商品名称' bindblur='searchOrderFun'></input>
+      </view>
+    </view>
+    <van-tabs active="{{ active }}" bind:change='changeStateFun'>
+      <van-tab title="全部"></van-tab>
+      <van-tab title="待付款"></van-tab>
+      <van-tab title="待发货"></van-tab>
+      <van-tab title="待收货"></van-tab>
+      <!-- <van-tab title="已收货"></van-tab> -->
+      <van-tab title="待评价"></van-tab>
+      <van-tab title="售后"></van-tab>
+    </van-tabs>
+  </view>
+  <view class='list'>
+    <view class='order_item' wx:for='{{orderList}}' wx:key=''>
+      <view class='cell jc_sb'>
+        <view class='item_title'>
+          <view class='icon iconfont v-icon-shop1'></view>
+          <view>{{item.shop_name}}</view>
+          <view class='iconfont v-icon-arrow-right'></view>
+        </view>
+        <view class='item_value font_color'>{{item.status_name}}</view>
+      </view>
+      <view class='cell' wx:for="{{item.order_item_list}}" wx:key='' wx:for-index="idx" wx:for-item="gooditem">
+        <view class='good_image' data-goodsid='{{gooditem.goods_id}}' data-ordertype="{{item.order_type}}" bindtap='ongoodpage'>
+          <image mode='aspectFit' src="{{gooditem.pic_cover != '' ? gooditem.pic_cover:'/images/rectangle-error.png'}}"></image>
+        </view>
+        <view class='good_info'>
+          <view class='good_name'>{{gooditem.goods_name}}</view>
+          <view class='price_num'>
+            <view class='money font_color'>
+              <text wx:if="{{gooditem.goods_point > 0}}">
+                <text wx:if="{{gooditem.price > 0 && gooditem.goods_point > 0}}">¥ {{gooditem.price}} + {{ gooditem.goods_point }}积分</text>
+              <text wx:else>{{ gooditem.goods_point }}积分</text>
+              </text>
+              <text wx:else>¥ {{gooditem.price}}</text>
+              <view class='num'>X {{gooditem.num}}</view>
+            </view>
+            <view wx:for='{{gooditem.member_operation}}' wx:key='' wx:for-item='operitem'>
+              <!-- 退款 -->
+              <view class='refund' wx:if="{{operitem.no == 'refund' }}" data-ordergoodid='{{gooditem.order_goods_id}}' data-unrefund='{{item.unrefund}}' data-unrefundreason='{{item.unrefund_reason}}' bindtap='onrefundPage'>
+                <text>{{operitem.name}}</text>
+              </view>
+              <!-- 退货/退款 -->
+              <view class='refund' wx:if="{{operitem.no == 'return'}}" data-ordergoodid='{{gooditem.order_goods_id}}' data-unrefund='{{item.unrefund}}' data-unrefundreason='{{item.unrefund_reason}}' bindtap='onrefundPage'>
+                <text>{{operitem.name}}</text>
+              </view>
+              <!-- 售后情况 -->
+              <view class='refund' wx:if="{{operitem.no == 'refund_detail' }}" data-ordergoodid='{{gooditem.order_goods_id}}' data-type='goods' bindtap='customerService'>
+                <text>{{operitem.name}}</text>
+              </view>
+            </view>
+
+          </view>
+        </view>
+
+      </view>
+      <view class='cell'>
+        <view class='pay'>
+          <text class='pay_type_text' wx:if='{{item.order_status != 0}}'>{{item.pay_type_name}}</text>
+          <text> 
+            <text wx:if='{{item.order_status == 0}}'>待付款</text>
+            <text wx:else>实付：</text>
+          </text>
+          <text class='pay_money' wx:if="{{item.order_point > 0}}"><block wx:if="{{item.order_money > 0 }}">¥ {{item.order_money}} + {{item.order_point}}积分</block><block wx:else>{{item.order_point}}积分</block></text>
+          <text class='pay_money' wx:else>¥ {{item.order_money}}</text>
+        </view>
+      </view>
+      <view class='cell fun_btn'>
+        <block wx:for="{{item.member_operation}}" wx:key='' wx:for-item='operationitem'>
+          <!-- 待付款 -->
+          <form bindsubmit="templateSend" report-submit="true" wx:if='{{item.order_status == 0}}'>
+            <view class='btn pay_now' 
+              wx:if="{{operationitem.no == 'pay'}}" 
+              data-orderno='{{item.out_order_no}}' 
+              bindtap='payNowFun'>
+              立即付款
+            </view>
+            <button class='btn close_order_btn'
+              formType="submit" 
+              wx:if="{{operationitem.no == 'close'}}" 
+              data-orderid='{{item.order_id}}' 
+              bindtap='subscribeMessage'>
+              关闭订单
+            </button>
+          </form>
+
+          <!-- 待发货 -->
+          <view wx:if='{{item.order_status == 1}}'>
+            <view class='btn' 
+              wx:if="{{operationitem.no == 'refund'}}" 
+              data-orderid='{{item.order_id}}' 
+              bindtap='onOrderReturn'>
+              退款
+            </view>
+          </view>
+
+          <!-- 待收货 -->
+          <view wx:if='{{item.order_status == 2}}'>
+            <view class='btn' 
+              wx:if="{{operationitem.no == 'return'}}" 
+              data-orderid='{{item.order_id}}' 
+              bindtap='onOrderReturn'>
+              退货/退款
+            </view>
+            <view class='btn' 
+              wx:if="{{operationitem.no == 'getdelivery'}}" 
+              data-orderid='{{item.order_id}}' 
+              bindtap='makeSureGood'>
+              确认收货
+            </view>            
+          </view>
+
+          <!-- 已收货 -->
+          <view wx:if='{{item.order_status == 3}}'>
+            <view class='btn' wx:if="{{operationitem.no == 'return'}}" data-orderid='{{item.order_id}}' bindtap='onOrderReturn'>退货/退款</view>
+            <view class='btn' wx:if="{{operationitem.no == 'evaluation' && item.is_evaluate != 2}}" data-orderid='{{item.order_id}}' data-isevaluate='{{item.is_evaluate}}' bindtap='evaluationFun'>
+              {{item.is_evaluate == 1?'追加评价':'评价'}}
+            </view>
+            <view class='btn' wx:if="{{operationitem.no == 'buy_again'}}" data-goodlist='{{item.order_item_list}}' bindtap='buyAgain'>
+              再次购买
+            </view>
+          </view>
+
+          <!-- 待评价 -->
+          <view wx:if='{{item.order_status == -2}}'>
+            <view class='btn' wx:if="{{operationitem.no == 'return'}}" data-orderid='{{item.order_id}}' bindtap='onOrderReturn'>退货/退款</view>
+            <view class='btn' wx:if="{{operationitem.no == 'evaluation' && item.is_evaluate != 2}}" data-orderid='{{item.order_id}}' data-isevaluate='{{item.is_evaluate}}' bindtap='evaluationFun'>
+              {{item.is_evaluate == 1?'追加评价':'评价'}}
+            </view>
+            <view class='btn' wx:if="{{operationitem.no == 'buy_again'}}" data-goodlist='{{item.order_item_list}}' bindtap='buyAgain'>
+              再次购买
+            </view>
+          </view>
+
+          <!-- 已完成 -->
+          <view wx:if='{{item.order_status == 4}}'>
+            <view class='btn' wx:if="{{operationitem.no == 'evaluation' && item.is_evaluate != 2}}" data-orderid='{{item.order_id}}' data-isevaluate='{{item.is_evaluate}}' bindtap='evaluationFun'>
+              {{item.is_evaluate == 1?'追加评价':'评价'}}
+            </view>
+            <view class='btn' wx:if="{{operationitem.no == 'buy_again'}}" data-goodlist='{{item.order_item_list}}' bindtap='buyAgain'>
+              再次购买
+            </view>
+          </view>
+
+          <!-- 订单关闭 -->
+          <view wx:if='{{item.order_status == 5}}'>
+            <view class='btn' wx:if="{{operationitem.no == 'buy_again'}}" data-goodlist='{{item.order_item_list}}' bindtap='buyAgain'>
+              再次购买
+            </view>
+          </view>
+
+          <!-- 售后中 -->
+          <view wx:if='{{item.order_status == -1}}'>
+            <view class='btn' wx:if="{{operationitem.no == 'refund_detail'}}" data-orderid='{{item.order_id}}' data-type='order' bindtap='customerService'>
+              {{operationitem.name}}
+            </view>
+          </view>
+
+          <navigator class='btn' wx:if="{{operationitem.no == 'logistics'}}" url='../logistics/index?orderId={{item.order_id}}'>
+            <view>查看物流</view>
+          </navigator>
+
+          <view class='btn' wx:if="{{operationitem.no == 'delete_order'}}" data-orderid='{{item.order_id}}' bindtap='deleteOrder'>
+            删除订单
+          </view>
+
+          <view class='btn pay_now' wx:if="{{operationitem.no == 'last_money'}}" data-item='{{item}}' bindtap='presellPay'>
+            付尾款
+          </view>
+
+          <view class='btn' wx:if="{{operationitem.no == 'pickup'}}" data-verificationcode='{{item.verification_code}}' data-verificationqrcode='{{item.verification_qrcode}}' bindtap='pickUpQrcode'>
+            {{operationitem.name}}
+          </view>
+
+          <!-- 我要使用 -->
+          <view class='btn' wx:if="{{operationitem.no == 'use_card'}}" bindtap='useCard'>
+            {{operationitem.name}}
+          </view>
+
+          <navigator class='btn' wx:if="{{operationitem.no == 'detail'}}" url='../detail/index?orderId={{item.order_id}}'>
+            <view>订单详情</view>
+          </navigator>
+
+        </block>
+      </view>
+    </view>
+  </view>
+  <view class='noMore' wx:if="{{no_more}}">没有更多了</view>
+
+  <view class='no_data' wx:if='{{orderList.length == 0 && page_index == 1}}'>
+    <view class='no_data_box'>
+      <view class='img'>
+        <image src='/images/empty-order.png' mode='widthFix'></image>
+      </view>
+      <view class='no_data_text'>没有相关数据</view>
+      <view class='onPage_btn'>
+        <navigator url='/pages/goodlist/index' class='shopping_btn'>去购物</navigator>
+      </view>
+
+    </view>
+  </view>
+
+</view>
+
+<!-- 提货码 -->
+<qrcode-compoent boxshow='{{boxshow}}' code_img='{{verification_qrcode}}' code_num='{{verification_code}}'></qrcode-compoent>

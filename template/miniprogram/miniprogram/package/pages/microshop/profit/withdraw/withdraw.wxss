@@ -1,0 +1,151 @@
+page{
+  font-size: 28rpx;
+  background-color: #f8f8f8;
+}
+
+.withdraw_group{
+  background-color: #fff;
+}
+
+.withdraw_group .group_cell{
+  display: flex;
+  padding: 20rpx 30rpx;
+  border-bottom: 1rpx solid #ebedf0;
+  align-items: center;
+}
+.withdraw_group .group_cell .title{
+  width: 180rpx;
+}
+.font_color_red{
+  color: #f44;
+}
+
+.value radio{
+  transform: scale(0.8);
+}
+
+.foot_group{
+  margin: 60rpx 30rpx;
+}
+.foot_group .btn{
+  margin-bottom: 30rpx;
+  font-size: 28rpx;
+  height: 88rpx;
+  line-height: 84rpx;
+  background-color: #e8e8e8;
+  color: #999;
+  appearance: none;
+  -webkit-appearance: none;
+  border:0;
+}
+.foot_group .btn.recharge{
+  background-color: #f44;
+  color: #fff;
+}
+.foot_group .btn.disabeld{
+  color: #999;
+  background-color: #e8e8e8;
+}
+
+.group{
+  background-color: #fff;
+  margin-top: 20rpx;
+}
+.group .cell{
+  display: flex;
+  justify-content: space-between;
+  padding: 20rpx 30rpx;
+  align-items: center;  
+}
+
+
+.pay_box{
+  font-size: 28rpx;
+  margin-top: 20rpx;
+}
+.pay_group .cell{
+  display: flex;
+  align-items: center;
+  padding: 20rpx 30rpx;  
+  border-top: 1px solid #ddd;
+  border-bottom: 1px solid #ddd;
+}
+.pay_group .cell .title{
+  width: 180rpx;
+}
+.pay_box .text_group{
+  text-align: center;
+  font-size: 24rpx;
+  color: #ccc;
+  margin: 10rpx 0;
+}
+.reset_btn{
+  color: rgba(49, 137, 252, 0.801);
+  padding: 10rpx 0;
+}
+
+
+.reset_password_box .top{
+  padding: 20rpx 30rpx;
+  border-bottom: 1px solid #ebedf0;
+  text-align: center;
+  font-size: 32rpx;
+}
+.phone_validate{
+  margin-bottom: 600rpx;
+}
+.reset_pay_password{
+  margin-bottom: 600rpx;
+}
+
+
+.group{
+  background-color: #fff;
+}
+.cell{
+  display: flex;
+  padding: 20rpx 30rpx;
+  align-items: center;
+  border-bottom: 1px solid #ebedf0;
+}
+.cell .title{
+  width: 180rpx;
+}
+.cell .value{
+  flex: 1;
+}
+
+.phone_code{
+  position: relative;
+}
+.v_code{
+  position: absolute;
+  right: 0;
+  top: 0;
+  font-size: 22rpx;
+  border-radius: 50rpx;
+  color: red;
+  border: 1px solid red;
+  background-color: #fff;
+  z-index: 99;
+}
+.d_code{
+  border: 1px solid rgba(182, 179, 179, 0.171);
+}
+
+.foot{
+  position: fixed;
+  bottom: 0;  
+  display: flex;
+  width: 100%;
+}
+.foot_btn{
+  background-color: #fff;
+  color: #323233;
+  height: 80rpx;
+  line-height: 80rpx;
+  text-align: center;
+  display: inline-block;
+  flex: 1;
+  border:1px solid #ebedf0 
+}

@@ -1,0 +1,98 @@
+<view class='bargain_detail'>
+  <view class='card'>
+    <view class='good_card' bindtap='onGoodsDetailPage'>
+      <view class='img'>
+        <image src='{{action_bargain.pic_cover}}'></image>
+      </view>
+      <view class='info'>
+        <view class='good_name'>{{action_bargain.goods_name}} </view>
+        <view class='count_down'>
+          <view class='time'><text>{{oDay}}</text>：<text>{{oHours}}</text>：<text>{{oMinutes}}</text>：<text>{{oSeconds}}</text></view>
+          <view>砍价将失效</view>
+        </view>
+        <view class='price'>¥ {{action_bargain.start_money}}</view>
+      </view>      
+    </view>
+    <view class='now_price_text'>现价 <text>¥{{action_bargain.now_bargain_money}}</text>元，还能砍 <text>¥{{action_bargain.can_bargain_money}}</text>元</view>
+
+    <!-- is_my_bargain页面标识 false：别人砍 true：自己邀请别人砍 -->
+    <view class='btn_group' wx:if='{{action_bargain.is_my_bargain == true}}'>
+      <button class='share_btn' open-type='share'>邀请朋友砍一刀</button>      
+      <view class='btn buy_btn' bindtap='skuShow'>现价购买</view>
+    </view>
+    <view class='btn_group' wx:else>
+      <button class='share_btn' bindtap='helpBargain' wx:if='{{action_bargain.is_help_bargain == true}}'>帮砍</button>      
+      <view class='btn buy_btn' bindtap='myBargain'>我要砍价</view>
+    </view>
+  
+  </view>
+
+  <view class='card'>
+    <view class='card_title'> <text>砍价帮</text> </view>
+    <view class='card_list'>
+      <view class='item' wx:for='{{action_bargain.help_bargain_list}}' wx:key='' wx:for-item='helpItem'>
+        <view class='img'>
+          <image src="{{helpItem.help_user_headimg != ''? helpItem.help_user_headimg:'../../../images/no-avatar.png'}}"></image>
+        </view>
+        <view class='info'>
+          <view class='name'>{{helpItem.help_name}}</view>
+          <view>帮忙砍掉{{helpItem.help_price}}元</view>
+        </view>
+      </view>
+    </view>
+  </view>
+  
+</view>
+
+
+<topnav-component></topnav-component>
+
+<!-- 规格弹出框 -->
+<van-popup show="{{ skuShow }}" position="bottom" bind:click-overlay="skuOnclose">
+    <view class='goods_sku'>
+        <view class='goodHeader'>
+          <view class='goodHeaderImg'><image src='{{action_bargain.pic_cover}}'></image></view>
+          <view class='goodHeaderTop'>
+            <view class='goodTitle'>
+              <view>{{action_bargain.goods_name}}</view>
+              <view class='price'>¥{{action_bargain.now_bargain_money}}</view>
+            </view>
+            <view class='closeBtn'>
+              <van-icon name='close' color='#eee' size='20px' bindtap='skuOnclose' />
+            </view>
+          </view>
+        </view>
+        <view class="{{skuGroupShow == true ? 'goods_sku_tree' :''}} ">
+          <view class='goods_sku_tree_item' wx:for="{{sku.tree}}" wx:key='' wx:for-index='group_idx'>
+            <view class='goods_sku_tree_key'>{{item.k}}:</view>          
+            
+            <view wx:for="{{item.v}}" class="goods_sku_tree_value {{i.isSelect == 'true' ? 'active_value':''}}" wx:for-item='i' wx:for-index='index' data-attr-index="{{index}}" data-select-index="{{group_idx}}" data-attr-id="{{i.id}}" wx:key='item' catchtap="clickMenu" data-isSelect="{{i.isSelect}}">
+              <text>{{i.name}}</text>
+            </view>
+
+          </view>
+        </view>
+        <view class='stock_num'>
+          <view class='buy_num'>
+            <view>购买数量：</view>
+            <van-stepper v-model="value" class='v_stepper' value="{{buyNum}}" max="{{maxBuy != ''?maxBuy:stockNum}}" bind:change="changeBuynum" />
+          </view>
+          <view>剩余{{stockNum}}件 <text class='maxbuy' wx:if="{{maxBuy != ''}}">每次限购{{maxBuy}}件</text> </view>
+        </view>
+      </view>
+      <view class='bottomBtn' wx:if="{{stockNum != 0}}">
+        <view class='buyOn' bindtap='buyNowOrder' >确定</view>                        
+      </view>
+      <view class='nocartbottom' wx:else>
+        <view class='nocartbtn'>商品已售罄</view>
+      </view>
+</van-popup>
+
+<!-- 关联手机 -->
+<phone-compoent phoneShow='{{phoneShow}}'></phone-compoent>
+
+<!-- 登录组件 -->
+<login-component loginShow='{{loginShow}}' bind:request='requestLogin'></login-component>
+
+<!-- 小导航 -->
+<topnav-component></topnav-component>

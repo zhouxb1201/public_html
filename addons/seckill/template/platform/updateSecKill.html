@@ -1,0 +1,243 @@
+{block name="main"}
+        <!-- page -->
+        <form class="form-horizontal pt-15 form-validate widthFixedForm">
+            <div class="screen-title">
+                <span class="text">规则设置</span>
+            </div>
+            <div class="form-group">
+                <label class="col-md-2 control-label"><span class="text-bright">*</span>活动时间</label>
+                <div class="col-md-5">
+                    <div class="date-input-group">
+                        <div class="date-input-control w-200">
+                            <input type="text" class="form-control" name="seckill_time" readonly id="seckill_time" placeholder="活动时间" data-mindate="{$apply_start_date}" data-maxdate="{$apply_end_date}"  value="" autocomplete="off"><i class="icon icon-calendar"></i>
+                        </div>
+                    </div>
+                    <div class="help-block mb-0">开始时间点为选中日期的0:00:00</div>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-md-2 control-label"><span class="text-bright">*</span>活动场次</label>
+                <div class="col-md-5">
+                    <select class="form-control w-200" name="seckill_name" id="seckill_name" required>
+                        {foreach name="sk_quantum_arr" item="sk_quantum"}
+                        <option value="{$sk_quantum}">{$sk_quantum}点场</option>
+                        {/foreach}
+                    </select>
+                    <div class="mb-0 help-block">可选择【秒杀设置】勾选的秒杀时段。</div>
+                </div>
+            </div>
+            <div class="form-group" id="sele_goods">
+                <label class="col-md-2 control-label"><span class="text-bright">*</span>选择商品</label>
+                <div class="col-md-5">
+                    <div  id="selectGoods" class="form-control number-form-control bord-color">点击选择</div>
+                    <div class="mb-0 help-block">只能选择未参加“限时折扣、预售、砍价、拼团”活动或24小时内没有参加秒杀的商品。</div>
+                </div>
+            </div>
+            <div id="goods_info_box" class="form-group hidden">
+                <label class="col-md-2 control-label"></label>
+                <div class="col-md-5">
+                    <div class="media text-left">
+                        <div class="media-left goods-img">
+                            <img  src="http://iph.href.lu/60x60" onerror="this.src='http://iph.href.lu/60x60';" width="60" height="60">
+                        </div>
+                        <div class="media-body max-w-300">
+                            <div class="line-2-ellipsis goods-text"></div>
+                            <div class="line-1-ellipsis text-danger strong goods-price"></div>
+                        </div>
+                    </div>
+                    <input type="hidden" name="goods_id" id="goods_id" value="">
+                    <input type="hidden" name="" id="sku_id" value="">
+                </div>
+            </div>
+            <div id="product_sku" class="hidden">
+                <div class="form-group">
+                    <label class="col-md-2 control-label">活动库存 / 价格</label>
+                    <div class="col-md-9">
+                        <table class="table table-bordered table-auto-center" id="stock_table" required style="display: table;">
+
+                        </table>
+                    </div>
+                </div>
+            </div>
+            <div id="four-select" class="show">
+                <div class="form-group">
+                    <label class="col-md-2 control-label"><span class="text-bright">*</span>活动库存</label>
+                    <div class="col-md-5">
+                        <div class="input-group w-200">
+                            <input type="number" name="seckill_num" min="1" id="seckill_num" required class="form-control number-form-control mr-15">
+                            <div class="input-group-addon">件</div>
+                        </div>
+                        <div class="mb-0 help-block">秒杀活动的商品库存，与商品发布里面的库存相互独立。</div>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-md-2 control-label"><span class="text-bright">*</span>活动价格</label>
+                    <div class="col-md-5">
+                        <div class="input-group w-200">
+                           <input type="number" min="1" required name="seckill_price" id="seckill_price" class="form-control number-form-control mr-15">
+                           <div class="input-group-addon">元</div>
+                        </div>
+                        <div class="mb-0 help-block">参与秒杀的活动价格。</div>   
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-md-2 control-label">限购</label>
+                    <div class="col-md-5">
+                        <div class="input-group w-200">
+                            <input type="number" min="1" name="seckill_limit_buy" id="seckill_limit_buy" required class="form-control number-form-control mr-15">
+                            <div class="input-group-addon">件</div>
+                        </div>
+                        <div class="mb-0 help-block">用户最多可以秒杀多少件商品。</div>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-md-2 control-label">虚拟抢购量</label>
+                    <div class="col-md-5">
+                        <div class="input-group w-200">
+                            <input type="number" min="0" name="seckill_vrit_num" id="seckill_vrit_num" required class="form-control number-form-control mr-15">
+                            <div class="input-group-addon">件</div>
+                        </div>
+                        <div class="mb-0 help-block">活动开始后，前端抢购量将会以实际购买量+虚拟抢购量显示。</div>    
+                    </div>
+                </div>
+            </div>
+            <div id="sub_val">
+                <div class="form-group">
+                    <label class="col-md-2 control-label"></label>
+                    <div class="col-md-8">
+                        <button class="btn btn-primary-diy" type="submit" id="submit">添加</button>
+                        <a href="javascript:history.go(-1);" class="btn btn-default-diy">返回</a>
+                    </div>
+                </div>
+            </div>
+
+        </form>
+
+        <!-- page end -->
+{/block}
+{block name="script"}
+<script>
+    require(['util'], function (util) {
+        util.layDate2('#seckill_time');
+        //util.layDate('#seckill_time');
+        //添加秒杀活动
+        util.validate($('.form-validate'), function (form) {
+            //判断商品是否选择了
+            var goods_id = $('#goods_id').val();
+            if(goods_id == ''){
+                $('#sele_goods').addClass('has-error');
+                var info = '<span id="seckill_time-error" class="help-block-error">请选择商品</span>';
+                $('#selectGoods').after(info);
+                return;
+            }
+            if($('#product_sku').hasClass('hidden')){
+                /*var sku_id = $('#sku_id').val();
+                var goods_info[sku_id] = {};
+                */
+                var data = {};
+                var goods_info = {};
+                // var data['goods_info'][sku_id] = {};
+                // var data = {'goods_info':{sku_id:{}}};
+            }else{
+                var data = {};
+            }
+
+            // 活动时间
+            var seckill_time = $('#seckill_time').val();
+            data.seckill_time = seckill_time;
+            //活动场次
+            var seckill_name = $('#seckill_name').val();
+            data.seckill_name = seckill_name;
+            //商品id
+            data.goods_id = goods_id;
+            //活动库存
+            if($('#product_sku').hasClass('hidden')){
+                //活动库存
+                var  seckill_num = $('#seckill_num').val();
+                //活动价格
+                var  seckill_price = $('#seckill_price').val();
+                //限购
+                var seckill_limit_buy = $('#seckill_limit_buy').val();
+                //虚拟抢购量
+                var seckill_vrit_num = $('#seckill_vrit_num').val();
+                //sku_id
+                var sku_id = $('#sku_id').val();
+                goods_info.seckill_num = seckill_num;
+                goods_info.seckill_price = seckill_price;
+                goods_info.seckill_limit_buy = seckill_limit_buy;
+                goods_info.seckill_vrit_num = seckill_vrit_num;
+                var temp = {};
+                temp[sku_id] = goods_info;
+                data.goods_info = temp;
+                // console.log(data);return;
+            }else{
+                //这里是有sku的区间，先获取当前商品有多少个sku_id
+                var sku_obj = $('input[name=sku_id]');
+                var seckill_num_obj = $('input[name=seckill_num]');
+                var seckill_price_obj = $('input[name=seckill_price]');
+                var seckill_limit_buy_obj = $('input[name=seckill_limit_buy]');
+                var seckill_vrit_num_obj = $('input[name=seckill_vrit_num]');
+                var goods_info = {};
+                // console.log(sku_obj);return;
+                for(var i=0;i<sku_obj.length;i++){
+                    var sku_id = $(sku_obj[i]).val();
+                    goods_info[sku_id] = {};
+                    var seckill_num = $(seckill_num_obj[i]).val();
+                    var seckill_price = $(seckill_price_obj[i]).val();
+                    var seckill_limit_buy = $(seckill_limit_buy_obj[i]).val();
+                    var seckill_vrit_num = $(seckill_vrit_num_obj[i]).val();
+                    goods_info[sku_id].seckill_num = seckill_num;
+                    goods_info[sku_id].seckill_price = seckill_price;
+                    goods_info[sku_id].seckill_limit_buy = seckill_limit_buy;
+                    goods_info[sku_id].seckill_vrit_num = seckill_vrit_num;
+                }
+                data.goods_info = goods_info;
+            }
+            // console.log(data);return;
+            $.post('{$addSecKillUrl}',
+                    data,
+                    function(res){
+                    if (res["code"] > 0) {
+                        util.message('添加成功', 'success', "{:__URL('ADDONS_MAINsecKillList')}");
+                    } else {
+                        util.message(res["message"], 'danger');
+                    }
+            });
+        })
+
+        $('#selectGoods').click(function () {
+            //0为商家店铺商品 1为全平台的商品
+            var goods_type = 1;
+            util.goodsDialog('url:'+'{$modalSeckillGoodsList}&t='+(new Date()).getTime()+'&goods_type='+goods_type,function(data){
+            })
+        })
+        // 批量设置
+        $('#stock_table').on('click','.batchSet',function(){
+            var batch_text = $(this).text();
+            var batch_type = $(this).data('batch_type');
+            var html = '<form class="form-horizontal padding-15">';
+            html += '<div class="form-group"><label class="col-md-3 control-label">'+batch_text+'</label><div class="col-md-8">'
+            html += '<input type="number" min="0" oninput="if(value.length>9)value=value.slice(0,9)" name="batch_'+batch_type+'" class="form-control">'
+            html += '</div></div></form>'
+            util.confirm('批量修改'+batch_text,html,function(){
+                var val;
+                var maxNum = 9999999.99;
+                var currInput = $('#stock_table input[name="'+batch_type+'"]');
+                val = this.$content.find('input[name="batch_'+batch_type+'"]').val()
+                if(!val || val == ''){
+                    util.message(batch_text+'不能为空');
+                    return false
+                }else if(val > maxNum && batch_type !== 'goods_code'){
+                    util.message('价格最大为 '+maxNum);
+                    return false
+                }
+                currInput.each(function(i,e){
+                    e.value = val;
+                })
+            })
+
+        })
+
+    })
+</script>
+{/block}

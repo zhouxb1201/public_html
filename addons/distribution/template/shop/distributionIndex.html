@@ -1,0 +1,103 @@
+
+{block name="main"}
+<div class="v-main-right fl">
+	<div class="v-container">
+		<!--page-->
+		<div class="balance-box commission">
+			<div class="commission-item">
+				<div class="commission-item-left">
+					<p class="total">
+						<span>{if $total_commission}{$total_commission}{else}总佣金{/if}：<i class="red" id="commission_total">0.00</i>&nbsp;元</span>
+					</p>
+					<p>
+						<span>{if $withdrawable_commission}{$withdrawable_commission}{else}可用佣金{/if}：<i id="withdrawals">0.00</i>&nbsp;元</span>
+						<span>{if $frozen_commission}{$frozen_commission}{else}冻结佣金{/if}：<i id="frozen_commission">0.00</i>&nbsp;元</span>
+					</p>
+				</div>
+			</div>
+			<div class="shu"></div>
+			<div class="qr-code pr">
+				<img src="{:__URL('SHOP_MAIN/member/getDistributionCode')}" alt="" width="70" height="70">
+			</div>
+		</div>
+		<div class="t-title">流水记录</div>
+		<table class="runningTable">
+			<thead>
+			<tr>
+				<th>变动类型</th>
+				<th>金额</th>
+				<th>备注</th>
+				<th>时间</th>
+			</tr>
+			</thead>
+			<tbody id="list">
+
+			</tbody>
+		</table>
+		<div class="page clearfix" style="display: none">
+			<div class="M-box3 m-style fr"></div>
+		</div>
+		<!--page-->
+		<input type="hidden" id="page_index">
+	</div>
+</div>
+{/block}
+{block name="javascript"}
+<script>
+    require(['common'], function (common) {
+		LoadingInfo();
+		LoadingInfo1(1);
+        //查询用户信息
+        function LoadingInfo() {
+            $.ajax({
+                type : "post",
+                url : '{$distributionIndexUrl}',
+                async : true,
+                data : {
+                    uid :{$params['uid']}
+                },
+                success : function(data) {
+					$("#commission_total").html(data['total_commission']);
+					$("#withdrawals").html(data['commission']);
+					$("#frozen_commission").html(data['freezing_commission']);
+                }
+            });
+        }
+        //查询佣金记录
+        function LoadingInfo1(page_index) {
+            $("#page_index").val(page_index);
+            $.ajax({
+                type : "post",
+                url : '{$commissionDetailsUrl}',
+                async : true,
+                data : {
+                    "page_index" : page_index,
+                    "website_id":{$params['website_id']}
+                },
+                success : function(data) {
+                    if(data['code']==-1){
+                        layer.msg(data['message'])
+					}
+                    var html = '';
+                    if (data["data"].length > 0) {
+                        for (var i = 0; i < data["data"].length; i++) {
+                            html += '<tr>';
+							html += '<td>' + data["data"][i]["type_name"]+'</td>';
+							html += '<td>' + data["data"][i]["commission"]+'</td>';
+                            html += '<td>' + data["data"][i]["text"]+'</td>';
+                            html += '<td>' + data["data"][i]["create_time"] + '</td>';
+                            html += '</tr>';
+                        }
+                        $('.page').css('display','block');
+                    } else {
+                        $('.page').css('display','none');
+                        html += '<tr><th colspan="5">暂无符合条件的数据记录</th></tr>';
+                    }
+                    $("#list").html(html);
+                    common.Pages('.M-box3', data['total_count'], data["page_count"], page_index, LoadingInfo1);
+                }
+            });
+        }
+    });
+</script>
+{/block}

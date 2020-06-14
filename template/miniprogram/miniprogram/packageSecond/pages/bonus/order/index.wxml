@@ -1,0 +1,44 @@
+<view class='order'>  
+  <van-tabs active="{{ active }}" bind:change="onTabsChange">
+    <van-tab title="所有订单"></van-tab>
+    <van-tab title="已付款"></van-tab>
+    <van-tab title="已收货"></van-tab>
+    <van-tab title="已完成"></van-tab>
+  </van-tabs>
+
+  <view class='list_box'>
+    <view class='list'>
+      <view class='item' wx:for='{{orderData}}' wx:key='' wx:for-item='orderitem' data-goodindex='{{index}}' data-boole='{{boole}}' bindtap='goodChangeShow'>
+        <view class='collapse_item'>
+          <view class='title'>
+            <view class='order_num'>{{orderitem.order_no}}</view>
+            <view class='time'>{{orderitem.create_time}}</view>
+          </view>
+          <view class='value'>
+            <view class='money'>+{{orderitem.bonus}}</view>
+            <view class='status'>{{orderitem.status_name}}</view>
+          </view>          
+        </view>
+        <view class='goods_list' wx:if='{{goods_list_show == index && boole == true}}'>
+          <view class='good_item' wx:for='{{orderitem.order_item_list}}' wx:key='' wx:for-item='gooditem'>
+            <view class='good_img'>
+              <image src='{{gooditem.picture.pic_cover_small}}'></image>              
+            </view>
+            <view class='card'>
+              <view class='card_title'>{{gooditem.goods_name}}</view>
+              <view class='num_money'>
+                <view class='num'>X {{gooditem.num}}</view>
+                <view class='money'>分红 : {{gooditem.bonus}}</view>
+              </view>              
+            </view>
+          </view>
+        </view>
+      </view>
+    </view>
+  </view>
+  
+
+  <view class='foot'>
+    <view>没有更多了</view>
+  </view>
+</view>

@@ -1,0 +1,12 @@
+/* miniprogram/pages/component/areaCode/areaCode.wxss */
+/*选择器  */
+@import "../../../css/iconfont.wxss";
+.section__title{
+  /* margin-bottom: 20rpx; */
+  display: inline-block;
+}
+.section{
+  /* margin: 50rpx 0; */
+  font-size: 30rpx;
+  display: inline-block;
+}

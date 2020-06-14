@@ -1,0 +1,66 @@
+page{
+  background-color: #f8f8f8
+}
+
+.searchPage .searchTop{
+  padding: 20rpx 20rpx;
+  background-color: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: space-around;
+}
+.searchPage .searchTop .searchInput{  
+  background:#f8f8f8;
+  display: flex;  
+  align-items: center;
+  padding: 5rpx;
+  flex: 1;
+}
+.searchPage .searchTop .searchInput .icon{
+  font-size: 28rpx;
+  color: rgb(167, 166, 166);
+  padding: 0 10rpx;
+}
+.searchPage .searchTop .searchInput input{
+  color:#999;
+  font-size:28rpx;  
+  width: 500rpx;
+  height: 60rpx;
+  flex: 1;
+}
+.searchPage .searchTop .searchbtn{
+  border: 1px solid #fff;
+  background-color: #fff;
+  font-size: 32rpx;
+  color: #999; 
+  padding: 0 10rpx;
+}
+
+.historyList{
+  background-color: #fff;
+}
+.historyTitle{
+  padding: 30rpx 20rpx;
+  font-size: 32rpx;
+}
+.historyList .historyItem{
+  border-bottom: 1px solid #eee;
+  padding: 20rpx 25rpx;
+  font-size: 30rpx;
+  color: rgba(51, 51, 51, 0.623);
+}
+
+.clearBtn{
+  width: 40%;
+  font-size: 30rpx;
+  color: rgba(51, 51, 51, 0.623);
+  border-radius: 0rpx;
+  background-color: #fff;
+  margin-top: 40rpx;
+}
+
+.no_search{
+  text-align: center;
+  font-size: 30rpx;
+  margin-top: 30rpx;
+}

@@ -1,0 +1,7 @@
+{
+  "usingComponents": {
+    "qrcode-compoent": "/pages/component/order/qrcode/index",
+    "topnav-component": "/pages/component/topnav/topnav"
+  },
+  "navigationBarTitleText": "订单详情"
+}

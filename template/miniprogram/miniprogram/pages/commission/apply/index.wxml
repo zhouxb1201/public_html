@@ -1,0 +1,99 @@
+<import src="/common/wxParse/wxParse.wxml"/>
+<view class='commission_apply'>
+  <view class='img' wx:if="{{distributorApplyData.xieyi.logo != ''}}">
+    <image mode='widthFix' src='{{distributorApplyData.xieyi.logo}}'></image>
+  </view>
+
+  <!-- 等待审核 -->
+  <view class='auditing' wx:if='{{isdistributor == 1}}'>
+    <view class='info'>
+      <van-icon class='icon' name="underway" size='4em' color='rgb(25, 137, 250)'/>
+      <view>申请提交成功，请耐心等待商城审核。</view>
+    </view>
+  </view>
+
+  <!-- 审核失败 -->
+  <view class='auditing' wx:if='{{isdistributor == -1}}'>
+    <view class='info'>
+      <van-icon class='icon' name="clear" size='4em' color='rgb(102, 102, 102)'/>
+      <view>商城拒绝申请，请联系客服或重新提交！</view>
+    </view>
+  </view>
+
+  <!-- 完善资料 -->
+  <view class='auditing' wx:if='{{isdistributor == 3}}'>
+    <view class='info'>
+      <van-icon class='icon' name="more" size='4em' color='rgb(25, 137, 250)'/>
+      <view>满足条件，请完善资料！</view>
+    </view>
+  </view>
+
+  <!-- 未申请，满足条件之一 / 满足以下所有条件-->
+  <view wx:if='{{isdistributor == 0 }}'>
+    <view class='condition_group' wx:if='{{distributor_condition == 2 || distributor_condition == 1}}'>
+      <view class='title' wx:if='{{distributor_condition == 2}}'>满足其中一个条件即可成为分销商</view>
+      <view class='title' wx:if='{{distributor_condition == 1}}'>满足以下条件自动成为分销商</view>
+      <view class='value' wx:for='{{conditions_array}}' wx:key=''>
+        <view class='cell' wx:if="{{item == '2'}}">{{index+1}}：订单消费达到 <text class='num'>{{distributorApplyData.condition.pay_money}}</text> 元</view>
+        <view class='cell' wx:if="{{item == '3'}}">{{index+1}}：订单数达到 <text class='num'>{{distributorApplyData.condition.order_number}}</text> 件</view>
+        <view class='cell' wx:if="{{item == '4'}}">{{index+1}}：购买商品，并完成订单</view>
+        <view class='cell' wx:if="{{item == '5'}}">{{index+1}}：购买指定商品  <navigator class='buy' url='../../goods/detail/index?goodsId={{distributorApplyData.condition.goods_id}}'>去购买</navigator></view>
+      </view>
+    </view>    
+  </view>
+
+  <!-- 未申请，直接申请 -->
+  <view wx:if="{{(isdistributor == 0 && distributor_condition == -1) || (isdistributor == 0 && distributor_condition == 3) || (isdistributor == -1 && distributor_condition == -1) || (isdistributor == 2 && apply_status == 'replenish')}}">
+    <view wx:if="{{distributor_condition == -1 || apply_status == 'replenish'}}">
+      <view class='apply_group' wx:if="{{distributorApplyData.customform.length == 0}}">
+        <view class='apply_cell'>
+          <view class='title'>真实姓名</view>
+          <view class='value'>
+            <input type='text' placeholder='请输入真实姓名' bindblur='realNameFun'></input>
+          </view>
+        </view>
+        <view class='apply_cell'>
+          <view class='title'>手机号码</view>
+          <view class='value'>
+            <input type='text' value='{{distributorApplyData.user_tel}}' disabled='disabled'></input>
+          </view>
+        </view>
+      </view>
+      <view wx:else>        
+        <!-- 自定义表单 -->
+        <form-com 
+          id='getForm' 
+          wx:if="{{customform != ''}}" 
+          customform='{{customform}}' 
+          bind:customformEven='customformData' >
+        </form-com>
+      </view>      
+    </view>
+    <view class='Agreement_btn' wx:if='{{distributor_condition == -1 || distributor_condition == 3 || distributor_condition == 2 }}'>
+        <view class='Agreement_radio'>
+          <label class='radio' data-checked='{{radioChecked}}' bindtap='radioApplyChange'>
+              <radio value="" checked="{{radioChecked}}" color='#1989fa'></radio>
+              我已阅读并同意以下协议
+            </label>
+        </view>    
+        <view class="sub_btn {{radioChecked == true ? 'active_btn' : ''}}">
+          <button class='sure_btn' bindtap='distributorapply'>提交申请</button>
+        </view>    
+      </view>
+    
+  </view>
+
+ 
+  
+  
+
+  <!-- 协议 -->
+  <view class='Agreement_content'>
+    <view class='Agreement_title'><text class='title_text'>分销协议</text></view>
+    <view class='content'>
+      <template is="wxParse" data="{{wxParseData:content.nodes}}" />
+    </view>
+  </view>
+
+</view>
+

@@ -1,0 +1,79 @@
+<view class='base_info'>
+  <view class='account_info'>
+    <view class='cell'>
+      <view class='title'>用户名</view>
+      <view class='value'>
+        <input type='text' value='{{user_name}}' placeholder='只能修一次' bindblur='userNameFun'></input>
+      </view>
+    </view>
+    <view class='cell'>
+      <view class='title'>昵称</view>
+      <view class='value'>
+        <input type='text' value='{{nick_name}}' placeholder='请输入昵称' bindblur='nickNameFun'></input>
+      </view>
+    </view>
+    <view class='cell'>
+      <view class='title'>真实姓名</view>
+      <view class='value'>
+        <input type='text' value='{{real_name}}' placeholder='请输入真实姓名' bindblur='realNameFun'></input>
+      </view>
+    </view>
+    <view wx:if="{{customform == ''}}">
+      <view class='cell'>
+        <view class='title'>生日</view>
+        <view class='value'>
+          <input type='text' value='{{getTime}}' placeholder='请输入生日日期' bindtap='birthdayFun' disabled='disabled'></input>
+        </view>
+      </view>
+      <view class='cell'>
+        <view class='title'>性别</view>
+        <view class='value'>
+          <radio-group class="radio-group" bindchange="sexRadioChange">
+            <label class="radio" wx:for="{{sex_list}}" wx:key=''>
+              <radio value="{{item.name}}" color='#1989fa' checked="{{item.checked}}" />
+              {{item.value}}
+            </label>
+          </radio-group>
+        </view>
+      </view>
+      <view class='cell'>
+        <view class='title'>QQ</view>
+        <view class='value'>
+          <input type='text' value='{{user_qq}}' placeholder='请输入QQ号码' bindblur='userQQFun'></input>
+        </view>
+      </view>
+      <view class='cell'>
+        <view class='title'>所在地</view>
+        <input type='text' value='{{area}}' placeholder='请输入所在地' bindtap='areaShow' disabled='disabled'></input>
+      </view>
+    </view>
+     
+    <!-- 自定义表单    -->
+    <form-com 
+      id='getForm' 
+      wx:if="{{customform != ''}}" 
+      customform='{{customform}}' 
+      bind:customformEven='customformData' >
+    </form-com>    
+  </view>
+
+  <view class='foot'>
+    <view class='save_btn' bindtap='saveMemberBaseInfo'>保存</view>
+  </view>
+</view>
+
+<!-- 生日弹框 -->
+<van-popup show="{{ birthdayShow }}" position='bottom' bind:close="onBirthdayClose">
+  <van-datetime-picker type="date" value="{{ currentDate }}" max-date="{{maxDate}}" min-date="{{minDate}}" bind:confirm="onTimeConfirm" bind:cancel="onBirthdayClose" />
+</van-popup>
+
+<!-- 所在地弹框 -->
+<van-popup show="{{ areaShow }}" position='bottom' bind:close="areaOnClose">
+  <van-area area-list="{{ areaList }}" bind:confirm="confirmArea" bind:cancel="areaOnClose"/>
+</van-popup>
+
+<!-- 关联手机 -->
+<phone-compoent phoneShow='{{phoneShow}}' bind:phoneEven='phonereResult'></phone-compoent>
+
+
+

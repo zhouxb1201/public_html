@@ -1,0 +1,16 @@
+<view class='listmenu'>
+  <view class='menu_group' wx:for="{{temDataitem.data}}" wx:key="">    
+    <nav-components type='1' url='{{item.linkurl}}' param=''>
+      <view class='menu_item'>
+        <view class='menu_item_l'>        
+            <view class='icon iconfont {{item.iconclass}}'></view>
+            <view class='l_text'>{{item.text}}</view>
+          </view>
+          <view class='menu_item_r'>      
+            <view class='l_remark'>{{item.remark}}</view>
+            <van-icon name="arrow" size="14px"/>            
+          </view>    
+      </view>
+    </nav-components> 
+  </view>
+</view>

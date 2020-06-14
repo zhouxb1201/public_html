@@ -1,0 +1,41 @@
+page{
+  font-size: 28rpx;
+  background-color: #f8f8f8;
+}
+.foot_btn{
+  position: fixed;
+  bottom: 0;
+  width: 100%;  
+}
+.foot_btn .add_btn{
+  height: 88rpx;
+  background-color: #f44;
+  color: #fff;
+  text-align: center;
+  line-height: 88rpx;
+  margin: 30rpx;
+  border-radius: 50rpx;
+}
+.account_item{
+  background-color: #fff;
+  margin: 30rpx;
+  border-radius: 8rpx;
+  box-shadow: 0 0 20rpx 0 rgba(0,0,0,.1);
+  padding: 20rpx 30rpx;
+}
+.account{
+  margin-bottom: 150rpx;
+}
+.account_item .cell{
+  display: flex;
+  justify-content: space-between;
+  height: 60rpx;
+  align-items: center;
+}
+.account_item .cell .icon_grop{
+  display: flex;
+}
+.account_item .cell .icon{
+  padding: 12rpx;
+  margin-left: 18rpx;
+}

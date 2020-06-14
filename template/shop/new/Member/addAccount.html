@@ -1,0 +1,484 @@
+{extend name="shop/new/Member/base" /}
+
+{block name="main"}
+<div class="v-main-right fl">
+    <div class="v-container">
+        <!--表单-->
+        <form class="form-list" id="form-list">
+            <div class="control-group clearfix">
+                <label class="control-label"><em>*</em> 账号类型：</label>
+                <div class="controls">
+                    {foreach $withdraw_message as $value}
+                    {if $value==3}
+                    <label class="sex-label">
+                        <input type="radio" class="account-type" name="account_type" value="3" checked>
+                        <span>支付宝</span>
+                    </label>
+                    {/if}
+                    {if $value==1}
+                    <label class="sex-label">
+                        <input type="radio" class="account-type" name="account_type" value="1">
+                        <span>银行卡</span>
+                    </label>
+                    {/if}
+                    {if $value==4}
+                    <label class="sex-label">
+                        <input type="radio" class="account-type" name="account_type" value="4">
+                        <span>银行卡</span>
+                    </label>
+                    {/if}
+                    {/foreach}
+                </div>
+            </div>
+            {if in_array(1,$withdraw_message)}
+            <div id="withdraw1" style="display: none">
+            <div class="control-group clearfix">
+                <label class="control-label"><em>*</em> 卡类型：</label>
+                <div class="controls">
+                    <label class="sex-label">
+                        <input type="radio" name="bank_type" value="00">
+                        <span>储蓄卡</span>
+                    </label>
+                    <label class="sex-label">
+                        <input type="radio" name="bank_type" value="02">
+                        <span>信用卡</span>
+                    </label>
+                </div>
+            </div>
+            <div class="control-group clearfix">
+                <label class="control-label"><em>*</em>银行：</label>
+                <div class="controls">
+                    <select name="banks" class="text" id="bank_code">
+                        {foreach $bank_list as $value}
+                        <option value="{$value['bank_code']}">{$value['bank_short_name']}</option>
+                        {/foreach}
+                    </select>
+                </div>
+            </div>
+            <div class="control-group clearfix">
+                <label class="control-label"><em>*</em>持卡人：</label>
+                <div class="controls">
+                    <input name="user" id="realname" type="text" class="text" placeholder="请输入持卡人姓名" autocomplete="off">
+                </div>
+            </div>
+            <div class="control-group clearfix">
+                <label class="control-label"><em>*</em>身份证号：</label>
+                <div class="controls">
+                    <input name="idCard"  id="bank_card" type="text" class="text" placeholder="请输入身份证号码" autocomplete="off">
+                </div>
+            </div>
+            <div class="control-group clearfix">
+                <label class="control-label"><em>*</em>有效期：</label>
+                <div class="controls">
+                    <input name="effectDate" id="valid_date" type="text" class="text" placeholder="示例：01/20，输入0120" autocomplete="off">
+                </div>
+            </div>
+            <div class="control-group clearfix">
+                <label class="control-label"><em>*</em>安全码：</label>
+                <div class="controls">
+                    <input name="safeCode" id="cvv2" type="text" class="text" placeholder="卡背后三位数" autocomplete="off">
+                </div>
+            </div>
+            <div class="control-group clearfix">
+                <label class="control-label"><em>*</em>手机号码：</label>
+                <div class="controls">
+                    <input name="phone" id="bank_mobile" type="text" class="text" placeholder="银行预留手机号码" autocomplete="off">
+                </div>
+            </div>
+            <div class="control-group clearfix " >
+                <label class="control-label"><em>*</em>短信验证码：</label>
+                <div class="controls pr">
+                    <input name="phone" id="sms_code" type="text" class="text" placeholder="请输入短信验证码" autocomplete="off">
+                    <button type="button" class="obtain-code1 withdrawal-add1 sms_code">发送验证码</button>
+                </div>
+            </div>
+            </div>
+            {/if}
+            {if in_array(3,$withdraw_message)}
+            <div id="withdraw3">
+            <div class="control-group clearfix">
+                <label class="control-label"><em>*</em>账户号码：</label>
+                <div class="controls">
+                    <input name="accountAli" type="text" id="account_number" class="text" placeholder="请输入支付宝账号" autocomplete="off">
+                </div>
+            </div>
+            <div class="control-group clearfix">
+                <label class="control-label"><em>*</em>真实姓名：</label>
+                <div class="controls">
+                    <input name="realname" type="text" id="realname" class="text" placeholder="请输入对应的真实姓名" autocomplete="off">
+                </div>
+            </div>
+            </div>
+            {/if}
+            {if in_array(4,$withdraw_message)}
+            <div id="withdraw4" style="display: none">
+            <div class="control-group clearfix">
+                <label class="control-label"><em>*</em>持卡人：</label>
+                <div class="controls">
+                    <input name="user" id="realname" type="text" class="text" placeholder="请输入持卡人姓名" autocomplete="off">
+                </div>
+            </div>
+            <div class="control-group clearfix">
+                <label class="control-label"><em>*</em>银行卡：</label>
+                <div class="controls">
+                    <input name="bankCard" id="bank_name" type="text" class="text" placeholder="请输入银行名称" autocomplete="off">
+                </div>
+            </div>
+            <div class="control-group clearfix">
+                <label class="control-label"><em>*</em>银行卡号：</label>
+                <div class="controls">
+                    <input name="bankCard" id="account_number" type="text" class="text" placeholder="请输入银行卡号" autocomplete="off">
+                </div>
+            </div>
+            </div>
+            {/if}
+            <div class="control-group clearfix priority-low">
+                <label class="control-label">&nbsp;</label>
+                <div class="fl">
+                    <a  class="ms-stand-btn1 withdrawal-add" name="" style="outline:none;border: 1px solid transparent;">保存</a>
+                </div>
+
+            </div>
+        </form>
+        <!--表单-->
+        <!--page-->
+    </div>
+</div>
+<input type="hidden"  id="thpinfo">
+
+{/block}
+{block name="javascript"}
+<script>
+    require(['common','dialog'], function (common,dialog) {
+        $('body').on('click',".account-type",function(){
+            var account_type = $('input[name=account_type]:checked').val();
+            if(account_type==1){
+                $("#withdraw3").css("display","none");
+                $("#withdraw1").css("display","block");
+                $("#withdraw4").css("display","none");
+            }
+            if(account_type==3) {
+                $("#withdraw1").css("display", "none");
+                $("#withdraw3").css("display", "block");
+                $("#withdraw4").css("display", "none");
+            }
+            if(account_type==4) {
+                $("#withdraw1").css("display", "none");
+                $("#withdraw4").css("display", "block");
+                $("#withdraw3").css("display", "none");
+            }
+            })
+        //添加账号
+        $('body').on('click',".withdrawal-add",function(){
+            var account_type = $('input[name=account_type]:checked').val();
+            if(account_type=='' || account_type==null){
+                layer.msg('账户类型不能为空');
+                return false;
+            }
+            if(account_type==1){
+                var realname = $("#withdraw1").find("#realname").val();
+                var account_number = $("#withdraw1").find("#account_number").val();
+                var bank_type = $('input[name=bank_type]:checked').val();
+                var bank_code = $("#withdraw1").find("#bank_code").val();
+                var bank_card = $("#withdraw1").find("#bank_card").val();
+                var valid_date = $("#withdraw1").find("#valid_date").val();
+                var bank_mobile = $("#withdraw1").find("#bank_mobile").val();
+                var cvv2 = $("#withdraw1").find("#cvv2").val();
+                var sms_code = $("#withdraw1").find("#sms_code").val();
+                var thpinfo = $("#withdraw1").find("#thpinfo").val();
+                if(sms_code==''){
+                    layer.msg('验证码不能为空');
+                    $("#withdraw1").find("#sms_code").focus();
+                    return false;
+                }
+                if(thpinfo==''){
+                    layer.msg('请先获取验证码');
+                    $("#withdraw1").find("#sms_code").focus();
+                    return false;
+                }
+            }
+            if(account_type==3){
+                var realname = $("#withdraw3").find("#realname").val();
+                var account_number = $("#withdraw3").find("#account_number").val();
+            }
+            if(account_type==4){
+                var realname = $("#withdraw4").find("#realname").val();
+                var account_number = $("#withdraw4").find("#account_number").val();
+                var bank_name = $("#withdraw4").find("#bank_name").val();
+            }
+            if(sms_code && account_type==1 && thpinfo){
+                if(realname==''){
+                    layer.msg('持卡人姓名不能为空');
+                    $("#withdraw1").find("#realname").focus();
+                    return false;
+                }
+                if(bank_mobile==''){
+                    layer.msg('手机号不能为空');
+                    $("#withdraw1").find("#bank_mobile").focus();
+                    return false;
+                }
+                if(account_number==''){
+                    layer.msg('银行卡号不能为空');
+                    $("#withdraw1").find("#account_number").focus();
+                    return false;
+                }
+                if(bank_type == '02'){
+                    if(valid_date==''){
+                        layer.msg('有效期不能为空');
+                        $("#withdraw1").find("#valid_date").focus();
+                        return false;
+                    }
+                    if(cvv2==''){
+                        layer.msg('安全码不能为空');
+                        $("#withdraw1").find("#cvv2").focus();
+                        return false;
+                    }
+                }
+                if(bank_mobile==''){
+                    layer.msg('手机号不能为空');
+                    $("#withdraw1").find("#bank_mobile").focus();
+                    return false;
+                }
+                if(bank_code==''){
+                    layer.msg('银行不能为空');
+                    $("#withdraw1").find("#bank_code").focus();
+                    return false;
+                }
+                if(bank_type==''){
+                    layer.msg('银行卡类型不能为空');
+                    $("#withdraw1").find("#bank_type").focus();
+                    return false;
+                }
+                if(bank_card==''){
+                    layer.msg('持卡人身份证号不能为空');
+                    $("#withdraw1").find("#bank_card").focus();
+                    return false;
+                }
+                $.ajax({
+                    type : "post",
+                    url : "{:__URL('SHOP_MAIN/member/tlAgreeSigning')}",
+                    async:false,
+                    data : {
+                        "realname":realname,
+                        "thpinfo":thpinfo,
+                        "bank_type":bank_type,
+                        "bank_code":bank_code,
+                        "bank_card":bank_card,
+                        "sms_code":sms_code,
+                        "mobile":bank_mobile,
+                        "valid_date":valid_date,
+                        "cvv2":cvv2,
+                        "account_number":account_number
+                    },
+                    success : function(data) {
+                        if(data['code']>0){
+                            layer.msg('添加成功',{icon: 1, time: 2000});
+                            location.href = __URL(SHOPMAIN + "/member/accountList");
+                        }else{
+                            layer.msg('添加失败');
+                        }
+                    }
+                });
+            }else{
+                if(account_type==3){
+                    if(account_number==''){
+                        layer.msg('支付宝账号不能为空');
+                        $("#withdraw3").find("#account_number").focus();
+                        return false;
+                    }
+                    if(realname==''){
+                        layer.msg('真实姓名不能为空');;
+                        $("#withdraw3").find("#realname").focus();
+                        return false;
+                    }
+                }
+                if(account_type==4){
+                    if(realname==''){
+                        layer.msg('持卡人姓名不能为空');
+                        $("#withdraw4").find("#realname").focus();
+                        return false;
+                    }
+                    if(account_number==''){
+                        layer.msg('银行卡号不能为空');
+                        $("#withdraw4").find("#account_number").focus();
+                        return false;
+                    }
+                    if(bank_name==''){
+                        layer.msg('银行名称不能为空');
+                        $("#withdraw4").find("#bank_name").focus();
+                        return false;
+                    }
+                }
+                $.ajax({
+                    type : "post",
+                    url : "{:__URL('SHOP_MAIN/member/addAccount')}",
+                    async:true,
+                    data : {
+                        "realname":realname,
+                        "type":account_type,
+                        "bank_name":bank_name,
+                        "account_number":account_number
+                    },
+                    success : function(data) {
+                        if(data['code']>0){
+                            layer.msg('添加成功',{icon: 1, time: 2000});
+                            location.href = __URL(SHOPMAIN + "/member/accountList");
+                        }else{
+                            layer.msg(data['message']);
+                        }
+                    }
+                });
+            }
+
+        });
+        $('body').on('click',".withdrawal-add1",function(){
+            var account_type = $('input[name=account_type]:checked').val();
+                var realname = $("#withdraw1").find("#realname").val();
+                var account_number = $("#withdraw1").find("#account_number").val();
+                var bank_type = $('input[name=bank_type]:checked').val();
+                var bank_code = $("#withdraw1").find("#bank_code").val();
+                var bank_card = $("#withdraw1").find("#bank_card").val();
+                var valid_date = $("#withdraw1").find("#valid_date").val();
+                var bank_mobile = $("#withdraw1").find("#bank_mobile").val();
+                var cvv2 = $("#withdraw1").find("#cvv2").val();
+                var thpinfo = $("#withdraw1").find("#thpinfo").val();
+                if(realname==''){
+                        layer.msg('持卡人姓名不能为空');
+                        $("#withdraw1").find("#realname").focus();
+                        return false;
+                    }
+                if(account_number==''){
+                        layer.msg('银行卡号不能为空');
+                        $("#withdraw1").find("#account_number").focus();
+                        return false;
+                    }
+                if(bank_type == '02'){
+                        if(valid_date==''){
+                            layer.msg('有效期不能为空');
+                            $("#withdraw1").find("#valid_date").focus();
+                            return false;
+                        }
+                        if(cvv2==''){
+                            layer.msg('安全码不能为空');
+                            $("#withdraw1").find("#cvv2").focus();
+                            return false;
+                        }
+                    }
+                if(bank_mobile==''){
+                        layer.msg('手机号不能为空');
+                        $("#withdraw1").find("#bank_mobile").focus();
+                        return false;
+                    }
+                if(bank_code==''){
+                        layer.msg('银行不能为空');
+                        $("#withdraw1").find("#bank_code").focus();
+                        return false;
+                    }
+                if(bank_type==''){
+                        layer.msg('银行卡类型不能为空');
+                        $("#withdraw1").find("#bank_type").focus();
+                        return false;
+                    }
+                if(bank_card==''){
+                        layer.msg('持卡人身份证号不能为空');
+                        $("#withdraw1").find("#bank_card").focus();
+                        return false;
+                    }
+                if(account_type==1 && thpinfo){
+                    $.ajax({
+                        type : "post",
+                        url : "{:__URL('SHOP_MAIN/member/tlAgreeSms')}",
+                        async:false,
+                        data : {
+                            "realname":realname,
+                            "type":account_type,
+                            "bank_type":bank_type,
+                            "bank_code":bank_code,
+                            "bank_card":bank_card,
+                            "valid_date":valid_date,
+                            "mobile":bank_mobile,
+                            "cvv2":cvv2,
+                            "thpinfo":thpinfo,
+                            "account_number":account_number
+                        },
+                        success : function(data) {
+                            if(data['code']>0){
+                                layer.msg(data['message'],{icon: 1, time: 2000});
+                            }else{
+                                layer.msg(data['message']);
+                            }
+                        }
+                    });
+                } else if(account_type==1){
+                    if(realname==''){
+                        layer.msg('持卡人姓名不能为空');
+                        $("#withdraw1").find("#realname").focus();
+                        return false;
+                    }
+                    if(account_number==''){
+                        layer.msg('银行卡号不能为空');
+                        $("#withdraw1").find("#account_number").focus();
+                        return false;
+                    }
+                    if(bank_type == '02'){
+                        if(valid_date==''){
+                            layer.msg('有效期不能为空');
+                            $("#withdraw1").find("#valid_date").focus();
+                            return false;
+                        }
+                        if(cvv2==''){
+                            layer.msg('安全码不能为空');
+                            $("#withdraw1").find("#cvv2").focus();
+                            return false;
+                        }
+                    }
+                    if(bank_mobile==''){
+                        layer.msg('手机号不能为空');
+                        $("#withdraw1").find("#bank_mobile").focus();
+                        return false;
+                    }
+                    if(bank_code==''){
+                        layer.msg('银行不能为空');
+                        $("#withdraw1").find("#bank_code").focus();
+                        return false;
+                    }
+                    if(bank_type==''){
+                        layer.msg('银行卡类型不能为空');
+                        $("#withdraw1").find("#bank_type").focus();
+                        return false;
+                    }
+                    if(bank_card==''){
+                        layer.msg('持卡人身份证号不能为空');
+                        $("#withdraw1").find("#bank_card").focus();
+                        return false;
+                    }
+                    $.ajax({
+                        type : "post",
+                        url : "{:__URL('SHOP_MAIN/member/addAccount')}",
+                        async:false,
+                        data : {
+                            "realname":realname,
+                            "type":account_type,
+                            "bank_type":bank_type,
+                            "bank_code":bank_code,
+                            "bank_card":bank_card,
+                            "valid_date":valid_date,
+                            "mobile":bank_mobile,
+                            "cvv2":cvv2,
+                            "account_number":account_number
+                        },
+                        success : function(data) {
+                            if(data['code']>0){
+                                layer.msg(data['message']);
+                                $("#thpinfo").val(data['thpinfo']);
+                            }else{
+                                layer.msg(data['message']);
+                            }
+                        }
+                    });
+                }
+
+        });
+    });
+</script>
+{/block}

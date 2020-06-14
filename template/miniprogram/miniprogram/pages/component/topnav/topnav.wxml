@@ -1,0 +1,16 @@
+<!--<view class="box iconfont v-icon-applicat">
+</view>-->
+
+<view class="shortcut-entry">
+  <view class="menu {{showMenuClass}}">
+    <view class="item" wx:for="{{items}}" wx:key="" bindtap='onTabBar' data-index="{{index}}" >
+        <view class="iconfont v-icon-{{item.icon}} icon">
+        </view>
+        <text class="text">{{item.name}}</text>
+    </view>
+  </view>
+  <view class="box" bindtap="onShowActive">
+    <view class="iconfont v-icon-{{iconClass}} icon">
+    </view>
+  </view>
+</view>

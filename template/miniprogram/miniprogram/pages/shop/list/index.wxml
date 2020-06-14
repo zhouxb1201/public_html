@@ -1,0 +1,84 @@
+<view class='shoplist'>
+  <view class='navtop'>
+    <view class='shop_search'>
+      <view class='search_input' bindtap='onSearchPage'>
+        <view class='icon iconfont v-icon-search'></view>
+        <input class='search_text' value='{{shop_value}}' placeholder='请输入搜索关键词' disabled='disabled'></input>
+      </view>
+      <view class='reset_btn' bindtap='resetSearchkey'>重置</view>
+    </view>
+    <view class='sort'>
+      <view class="item {{navActive == '' ? 'on' : ''}}" data-order='' bindtap="{{shopTypeShow?'shopTypeOnclose':'shopTypeOnshow'}}">
+        <text>{{shop_group_name}}</text>
+      </view>
+      <view class="item {{navActive == 'sale_num' ? 'on' : ''}}" data-order='sale_num' data-sort='{{saleNum}}' bindtap='changeSort' wx:if='{{config_store != 1}}'>
+        <text>销量</text>
+        <view class="icon iconfont v-icon-sort2 {{saleNum}}"></view>
+      </view>
+      <view class="item {{navActive == 'shop_collect' ? 'on' : ''}}" data-order='shop_collect' data-sort='{{shopCollect}}' bindtap='changeSort'>
+        <text>人气</text>
+        <view class="icon iconfont v-icon-sort2 {{shopCollect}}"></view>
+      </view>
+      <view class="item {{navActive == 'comprehensive' ? 'on' : ''}}" data-order='comprehensive' data-sort='{{shopCredit}}' bindtap='changeSort'>
+        <text>评分</text>
+        <view class="icon iconfont v-icon-sort2 {{shopCredit}}"></view>
+      </view>
+      <view class="item" bindtap='allStoreFun' wx:if='{{config_store == 1}}'>
+        <text>附近门店</text>
+      </view>
+    </view>
+  </view>
+  <view class='shop_box'>
+    <view class='shopItem' wx:for="{{shopList}}" wx:key="">
+      <navigator url='../home/index?shopId={{item.shop_id}}&stars={{item.comprehensive}}' style='width:100%;'>
+        <view class='shop_header'>
+          <view class='shop_logo'>
+            <image lazy-load='true' src="{{item.shop_logo ==''?'/images/no-shop.png':item.shop_logo}}"></image>
+          </view>
+          <view class='shop_header_r'>
+            <view>{{item.shop_name}}
+              <text class='shop_group' wx:if="{{item.group_name != null && item.is_visible == 1 ? item.group_name : ''}}">/{{item.group_name}}</text>
+            </view>
+            <view class="rate">
+              <van-rate value="{{ item.comprehensive }}" size='13' readonly="true" />
+              <view class="rate_num">{{item.comprehensive}}分</view>
+            </view>
+            <view class='shop_tag'>
+              <van-tag type="danger" class='tag' size='medium' wx:if="{{item.shop_id == 0}}">自营</van-tag>
+              <van-tag type="primary" class='tag' size='medium' wx:if="{{item.has_store == 1}}">O2O</van-tag>
+            </view>
+          </view>
+        </view>
+      </navigator>
+      <view class='shopGoodList' wx:if='{{item.goods_list.length != 0 }}'>
+        <view class='shopGoodItem' wx:for="{{item.goods_list}}" wx:for-item="gooditem" wx:key="" data-goodid='{{gooditem.goods_id}}' bindtap='ongoodDetail'>
+          <view class='shopgoodImg'>
+            <image src='{{gooditem.logo}}'></image>
+          </view>
+          <text class='goodprice'>¥ {{gooditem.price}}</text>
+        </view>
+      </view>
+    </view>
+    <view class='noMore' wx:if="{{noMore == true}}">没有更多</view>
+    <view class='error' wx:if="{{errorFail == true}}">
+      <view class='error_img'>
+        <image mode='widthFix' src='../../images/error-fail.png'></image>
+      </view>
+      <text>数据加载失败,请稍后再试!</text>
+      <button bindtap='getShopsList'>刷新</button>
+    </view>
+  </view>
+
+</view>
+
+
+<van-popup show="{{shopTypeShow}}" position="top" bind:click-overlay="shopTypeOnclose" custom-style='top:180rpx;'>
+  <view class="group_box {{shopTypeArray.length > 10  ?'pb':''}}">
+    <view class='group_cell'>
+      <view class='item' data-shopgroupid='' data-shopgroupname='全部' bindtap='selectShopType'>
+        全部
+      </view>
+      <view class='item' wx:for='{{shopTypeArray}}' wx:key='' wx:for-item='typeItem' data-shopgroupid='{{typeItem.shop_group_id}}' data-shopgroupname='{{typeItem.group_name}}' wx:if='{{typeItem.is_visible == 1}}' bindtap='selectShopType'>{{typeItem.group_name}}</view>
+    </view>
+  </view>
+</van-popup>

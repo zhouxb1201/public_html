@@ -1,0 +1,20 @@
+<view class="list" wx:if="{{listData.length > 0}}">
+	<view class="cell" wx:for="{{listData}}" wx:key='index' wx:for-item='item'>
+		<image mode="scaleToFill" src="{{item.auser_headimg != '' ? item.auser_headimg : '/images/no-avatar.png'}}" class="img"></image>
+		<view class="info">
+			<text>{{item.attention_thing_user_name ? item.attention_thing_user_name : "匿名"}}</text>
+			<text>干货·{{item.thing_count ? item.thing_count : 0}}</text>
+		</view>
+		<view class="btn">
+			<button bindtap='onOthers' data-id="{{item.follow_uid}}" data-index="{{index}}" class="gray">{{item.mutual ? '互相关注' : '已关注' }}</button>
+		</view>
+	</view>
+</view>
+<view class="no_good" wx:else>
+	<view class="box">
+		<view class="img">
+			<image mode="widthFix" src="/images/empty-data.png"></image>
+		</view>
+		<view class="text">你还没有关注任何人~</view>
+	</view>
+</view>

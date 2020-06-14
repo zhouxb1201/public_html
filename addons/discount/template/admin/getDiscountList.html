@@ -1,0 +1,220 @@
+{block name="resources"/}
+<style>
+
+</style>
+{/block}
+{block name="main"}
+<div class="row addBtnSearch">
+    <div class="col-sm-6 add">
+        <a href="{:__URL('ADDONS_ADMIN_MAINaddDiscount')}" class="add_btn"><i class="icon icon-add1"></i> 添加活动</a>
+    </div>
+    <div class="searchFr search">
+        <input type="text" class="searchs" id='search_text' placeholder="活动名称">
+        <button type="button" class="search_to">搜索</button>
+    </div>
+</div>
+
+<!--<th width="10%">-->
+<!--<button style="margin:0 5px 0 0 !important;" class="btn-common-delete btn-small" onclick="batchDelete()">批量删除-->
+<!--</button>-->
+<!--</th>-->
+<table class="table table-hover v-table discount">
+    <thead>
+    <tr>
+        <th>活动名称</th>
+        <th>生效时间</th>
+        <th>活动状态</th>
+        <th class="col-md-2 pr-14 operationLeft">操作</th>
+    </tr>
+    </thead>
+    <tbody class="trs"></tbody>
+</table>
+<div class="page clearfix">
+    <div class="M-box3 m-style fr">
+    </div>
+</div>
+
+<!-- 模态框（Modal） -->
+<div class="modal fade hide" id="discountInfo" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
+     aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                <h3>限时折扣详情</h3>
+            </div>
+            <div class="modal-body">
+                <div class="modal-infp-style">
+                    <table>
+                        <tr>
+                            <td style="width:60px;">活动名称</td>
+                            <td colspan='3' id="discount_name"></td>
+                        </tr>
+                        <tr>
+                            <td>有效期</td>
+                            <td colspan='3' id="time"></td>
+                        </tr>
+                        <tr>
+                            <td>活动状态</td>
+                            <td colspan='3' id="status"></td>
+                        </tr>
+
+                        <tr>
+                            <td>折扣</td>
+                            <td colspan='3' id="discount_num"></td>
+                        </tr>
+                        <tr>
+                            <td>商品范围</td>
+                            <td colspan='3' id="goods_list"></td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+            </div>
+        </div>
+    </div>
+</div>
+{/block}
+{block name="script"}
+<script type="text/javascript">
+  require(['utilAdmin','util'], function (utilAdmin,util) {
+    $(function () {
+        LoadingInfo(1);
+    })
+
+
+
+    function LoadingInfo(page_index) {
+        $('#page_index').val(page_index ? page_index : '1');
+        var search_text = $("#search_text").val();
+        var status = {$status};
+        $.ajax({
+            type: "post",
+            url : "{$discountList}",
+            data: {
+                "page_index": page_index,
+                "page_size": $("#showNumber").val(),
+                "search_text": search_text,
+                "status": status
+            },
+            success: function (data) {
+                var html = '';
+                if (data["data"].length > 0) {
+                    for (var i = 0; i < data["data"].length; i++) {
+                        switch (data['data'][i]['status']) {
+                            case 0:
+                                var status_name = '<span class="label label-warning">待开始</span>';
+                                break;
+                            case 1:
+                                var status_name = '<span class="label label-success">进行中</span>';
+                                break;
+                            case 3:
+                                var status_name = '<span class="label label-danger">已关闭</span>';
+                                break;
+                            case 4:
+                                var status_name = '<span class="label label-danger">已结束</span>';
+                                break;
+                        }
+                        html += '<tr>';
+                        // html += '<td><div>';
+                        // if (data['data'][i]['status'] == 1) {
+                        //     html += '<input name="sub_use" type="checkbox" value="' + data["data"][i]["discount_id"] + '" disabled>';
+                        // } else {
+                        //     html += '<input name="sub_no_use" type="checkbox"  value="' + data["data"][i]["discount_id"] + '">';
+                        // }
+                        html += '<td>' + data["data"][i]["discount_name"] + '</td>';
+                        html += '<td>';
+                        html += '<div>' + utilAdmin.timeStampTurnTime(data["data"][i]["start_time"]) + '</div>';
+                        html += '<div>~</div>';
+                        html += '<div>' + utilAdmin.timeStampTurnTime(data["data"][i]["end_time"]) + '</div>';
+                        html += '</td>';
+                        html += '<td>' + status_name + '</td>';
+
+                        html += '<td class="fullSend-ol fs-0 operationLeft">';
+                        if (data['data'][i]['status'] == 0) {
+                            html += '<a class="btn-operation"  href="' + __URL('ADMIN_MAIN/Menu/addonmenu&addons=editdiscount?discount_id=' + data["data"][i]["discount_id"]) + '">编辑</a>';
+                            html += '<a class="btn-operation"  href="' + __URL('ADMIN_MAIN/Menu/addonmenu&addons=discountDetail?discount_id=' + data["data"][i]["discount_id"]) + '">详情</a>';
+                            html += '<a href="javascript:void(0);"  data-id="' + data["data"][i]["discount_id"] + '" class="del1 btn-operation text-red1">删除</a>';
+                        } else if (data['data'][i]['status'] == 1) {
+                            html += '<a href="javascript:void(0);"  data-id="' + data["data"][i]["discount_id"] + '" class="close1 btn-operation">关闭</a>';
+                            html += '<a class="btn-operation"  href="' + __URL('ADMIN_MAIN/Menu/addonmenu&addons=discountDetail?discount_id=' + data["data"][i]["discount_id"]) + '">详情</a>';
+                        } else if (data['data'][i]['status'] == 3) {
+                            html += '<a class="btn-operation"  href="' + __URL('ADMIN_MAIN/Menu/addonmenu&addons=discountDetail?discount_id=' + data["data"][i]["discount_id"]) + '">详情</a>';
+                            html += '<a href="javascript:void(0);"  data-id="' + data["data"][i]["discount_id"] + '" class="del1 btn-operation text-red1">删除</a>';
+                        } else if (data['data'][i]['status'] == 4) {
+                            html += '<a class="btn-operation"  href="' + __URL('ADMIN_MAIN/Menu/addonmenu&addons=discountDetail?discount_id=' + data["data"][i]["discount_id"]) + '">详情</a>';
+                            html += '<a href="javascript:void(0);"  data-id="' + data["data"][i]["discount_id"] + '" class="del1 btn-operation text-red1">删除</a>';
+                        }
+
+                        
+                        html += '</td>';
+                        html += '</tr>';
+                    }
+                } else {
+                    html += '<tr align="center"><td class="h-200" colspan="4">暂无符合条件的数据记录</td></tr>';
+                }
+                $(".trs").html(html);
+                utilAdmin.tips();
+                utilAdmin.page(".M-box3", data['total_count'], data["page_count"], page_index, LoadingInfo);
+            }
+        });
+    }
+
+    //关闭限时折扣
+    function closeDiscount(discount_id) {
+        $.ajax({
+            type: "post",
+            url: "{$closediscount}",
+            data: {"discount_id": discount_id},
+            success: function (data) {
+                if (data["code"] > 0) {
+                    utilAdmin.message(data["message"],"success", function () {
+                        LoadingInfo($("#page_index").val());
+                    })
+                } else {
+                    utilAdmin.message(data["message"],"danger");
+                }
+            }
+        })
+    }
+
+
+    //删除限时折扣
+    function delDiscount(discount_id) {
+        $.ajax({
+            type: "post",
+            url: "{$delDiscount}",
+            data: {"discount_id": discount_id.toString()},
+            dataType: "json",
+            success: function (data) {
+                if (data["code"] > 0) {
+                    utilAdmin.message(data["message"],"success", function () {
+                        LoadingInfo($("#page_index").val());
+                    })
+                } else if (data["code"] == -1) {
+                    utilAdmin.message('正在进行中的活动不可删除！',"danger");
+                } else {
+                    utilAdmin.message(data["message"], "danger");
+                }
+            }
+        })
+    }
+    $('body').on('click','.search_to',function(){
+        LoadingInfo(1);
+    });
+    $('body').on('click','.del1',function(){
+        var id=$(this).attr('data-id');
+        delDiscount(id);
+        $(".tooltip.fade.top.in").remove();
+    });
+    $('body').on('click','.close1',function(){
+        var id=$(this).attr('data-id');
+        closeDiscount(id);
+        $(".tooltip.fade.top.in").remove();
+    });
+
+  })
+</script>
+{/block}

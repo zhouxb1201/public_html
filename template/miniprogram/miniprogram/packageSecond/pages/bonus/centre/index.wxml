@@ -1,0 +1,108 @@
+<view class='bonus_centre' wx:if='{{pageShow}}'>
+
+  <view class='head'>
+    <view class='info'>
+      <view class='img'>
+        <image src='{{bonusData.user_headimg}}'></image>
+      </view>
+      <view class='name'>{{bonusData.member_name}}</view>
+    </view>
+
+    <view class='head_foot'>      
+      <view class="item border_r {{is_one_agent == true ? 'is_one': ''}}" wx:if='{{bonusData.global_is_start == 1}}'>
+        <view>{{txt_global_agreement}}</view>        
+        <view wx:if='{{bonusData.is_global_agent == 2}}'>{{bonusData.global_level_name}}</view>
+        <view wx:else>--</view>
+      </view>
+
+      <view class="item border_r {{is_one_agent == true ? 'is_one': ''}}" wx:if='{{bonusData.area_is_start == 1}}'>
+        <view>{{txt_area_agreement}}</view>             
+        <view wx:if='{{bonusData.is_area_agent == 2}}'>{{bonusData.area_level_name}}</view>
+        <view wx:else>--</view>
+      </view>
+
+      <view class="item {{is_one_agent == true ? 'is_one': ''}}" wx:if='{{bonusData.team_is_start == 1}}'>
+        <view>{{txt_team_agreement}}</view>               
+        <view wx:if='{{bonusData.is_team_agent == 2}}'>{{bonusData.team_level_name}}</view>
+        <view wx:else>--</view>
+      </view>
+    </view>
+  </view>
+
+  <view class='cell_card_box' wx:if="{{bonusData.global_is_start == 1 || bonusData.area_is_start == 1 || bonusData.team_is_start == 1}}">
+    <view class='cell_card' wx:if="{{bonusData.is_global_agent == 2 || bonusData.is_area_agent == 2 || bonusData.is_team_agent == 2}}">
+      <view class='card_item item_line_r item_cel_3'>
+        <view class='card_title'>{{txt_withdrawals_bonus}}</view>
+        <view class='card_text'>{{bonusData.grant_bonus}}</view>
+      </view>
+      <view class='card_item item_line_r item_cel_3'>
+        <view class='card_title'>{{txt_withdrawal_bonus}}</view>
+        <view class='card_text'>{{bonusData.ungrant_bonus}}</view>
+      </view>
+      <view class='card_item item_cel_3' >
+        <view class='card_title'>{{txt_frozen_bonus}}</view>
+        <view class='card_text'>{{bonusData.freezing_bonus}}</view>
+      </view>
+    </view>    
+  </view>
+
+  <view class='cart_box'>
+    <view wx:if="{{bonusData.global_is_start == 1 || bonusData.area_is_start == 1 || bonusData.team_is_start == 1}}">
+      <view class='list_card line_b' wx:if="{{bonusData.is_global_agent == 2 || bonusData.is_area_agent == 2 || bonusData.is_team_agent == 2}}">
+        <view class='item line_r'>
+          <navigator url='../detail/index' hover-class='none'>
+            <view class='icon iconfont v-icon-balance2'></view>
+            <view>{{txt_bonus_money}}</view>
+          </navigator>      
+        </view>
+        <view class='item'>
+          <navigator url='../order/index' hover-class='none'>
+            <view class='icon iconfont v-icon-text1'></view>
+            <view>{{txt_bonus_order}}</view>
+          </navigator>      
+        </view>
+        <view class='item line_l'>
+          <navigator url='/packageSecond/pages/credential/code/index?role_type_array={{role_type_array}}' hover-class='none'>
+            <view class='icon iconfont v-icon-guarantee'></view>
+            <view>授权证书</view>
+          </navigator>      
+        </view>
+      </view>
+    </view>
+    <view>
+      <view class='list_card'>
+        <!-- is_global_agent是否是全球代理商，0未申请，1审核中，2是通过，-1已拒绝 -->
+        <navigator class='item line_r' 
+          url='../apply/global/index?type=1' 
+          wx:if='{{bonusData.global_is_start == 1 &&bonusData.is_global_agent != 2}}'
+          hover-class='none'>
+          <view class='icon iconfont v-icon-shareholder-agent'></view>          
+          <view>{{txt_apply_global}}</view>
+        </navigator>
+        
+        <!-- is_area_agent是否是区域代理商，0未申请，1审核中，2是通过，-1已拒绝 -->
+        <navigator class='item line_r' 
+          url='../apply/area/index?type=2' 
+          wx:if='{{bonusData.area_is_start == 1 && bonusData.is_area_agent != 2}}'
+          hover-class='none'>
+          <view class='icon iconfont v-icon-region-agent'></view>          
+          <view>{{txt_apply_area}}</view>
+        </navigator>
+        
+        <!-- is_team_agent是否是全球代理商，0未申请，1审核中，2是通过，-1已拒绝 -- -->
+        <navigator class='item' 
+          url='../apply/team/index?type=3' 
+          wx:if='{{bonusData.team_is_start == 1 && bonusData.is_team_agent != 2}}'
+          hover-class='none'>
+          <view class='icon iconfont v-icon-team-agent'></view>
+          <view>{{txt_apply_team}}</view>
+        </navigator>
+               
+      </view>
+    </view>
+  </view>
+
+</view>
+
+<!-- 登录组件 -->
+<login-component loginShow='{{loginShow}}' bind:request='requestLogin'></login-component>

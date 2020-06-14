@@ -1,0 +1,86 @@
+{block name="main"}
+<table class="table v-table table-auto-center">
+    <thead>
+    <tr>
+        <th>页面名称</th>
+        <th>页面模板</th>
+        <th>状态</th>
+        <th>更新时间</th>
+        <th>操作</th>
+    </tr>
+    </thead>
+    <tbody id="list">
+    </tbody>
+</table>
+<input type="hidden" id="page_index">
+<nav aria-label="Page navigation" class="clearfix">
+    <ul id="page" class="pagination pull-right"></ul>
+</nav>
+{/block}
+
+{block name="script"}
+<script id="mini_program_list" type="text/html">
+    <%each data as item item_id%>
+    <tr>
+        <td>
+            <%item.template_name%>
+        </td>
+        <td>
+            <%if item.type == 1%>
+            商城首页
+            <%else if item.type == 2%>
+            店铺首页
+            <%else if item.type == 3%>
+            商品详情页
+            <%else if item.type == 4%>
+            会员中心
+            <%else if item.type == 5%>
+            分销中心
+            <%/if%>
+        </td>
+        <td>
+            <%if item.in_use == 1%>
+            <span class="text-success">使用中</span>
+            <%else%>
+            <span class="text-danger">未使用</span>
+            <%/if%>
+        </td>
+        <td>
+            <%item.update_date%>
+        </td>
+        <td>
+            <a href="javascript:void(0)" class="text-primary J-custom" data-id="<%item.id%>">装修</a>
+        </td>
+    </tr>
+    <%/each%>
+</script>
+
+<script>
+    require(['util', 'tpl'], function (util, tpl) {
+        util.initPage(LoadingInfo);
+
+        $("#list").on('click', '.J-custom', function () {
+            var id = $(this).data('id');
+            location.href = __URL('ADDONS_MAINminiProgramCustom&id=' + id);
+        })
+
+        function LoadingInfo(page_index) {
+            $("#page_index").val(page_index);
+            $.ajax({
+                type: "post",
+                url: "{$miniProgramListUrl}",
+                data: {
+                    "page_index": page_index,
+                    "page_size": $("#showNumber").val(),
+                },
+                success: function (data) {
+                    $("#list").html(tpl('mini_program_list', data))
+                    $('#page').paginator('option', {
+                        totalCounts: data.total_count
+                    });
+                }
+            });
+        }
+    })
+</script>
+{/block}

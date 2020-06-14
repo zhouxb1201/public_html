@@ -1,0 +1,416 @@
+{block name="main"}
+			<!-- page -->
+			<form class="form-horizontal form-validate pt-15 widthFixedForm">
+				<div class="form-group">
+					<label class="col-md-2 control-label"><span class="text-bright">*</span>等级名称</label>
+					<div class="col-md-5">
+						<input type="text" class="form-control" name="level_name" required autocomplete="off">
+					</div>
+				</div>
+				<div class="form-group">
+					<label class="col-md-2 control-label"><span class="text-bright">*</span>分红比例</label>
+					<div class="col-md-5">
+						<div class="input-group">
+							<input type="number" class="form-control" min="0" max="100" name="ratio" required autocomplete="off">
+							<div class="input-group-addon">%</div>
+						</div>
+					</div>
+				</div>
+				<div class="form-group">
+					<label class="col-md-2 control-label">自动升级</label>
+					<div class="col-md-5">
+						<div class="switch-inline">
+							<input type="checkbox" id="upgrade-switch" value="1"  name="upgradetype">
+							<label for="upgrade-switch"></label>
+						</div>
+						<div class="help-block mb-0">开启后满足一定条件自动升级，关闭后则该等级不会自动升级。</div>
+					</div>
+				</div>
+				<div id="isupgrade" class="hide">
+					<div class="form-group">
+						<label class="col-md-2 control-label">升级条件</label>
+						<div class="col-md-5">
+							<div>
+								<label class="radio-inline">
+									<input type="radio"   value="1" name="upgradecondition"> 满足所有勾选条件
+								</label>
+								<label class="radio-inline">
+									<input type="radio"  value="2" name="upgradecondition"> 满足勾选条件之一即可
+								</label>
+							</div>
+							
+						</div>
+					</div>
+					<div class="form-group" id="upgrade-condition">
+						<label class="col-md-2 control-label"></label>
+						<div class="col-md-8">
+							<div class="form-additional" style="width: auto;">
+								<div class="form-group">
+									<label class="col-md-4 control-label"><input type="checkbox" name="upgradeconditions" value="1"> 内购订单金额满</label>
+									<div class="col-md-7 control-group">
+										<div class="input-group">
+											<input type="number" class="form-control" min="0" name="pay_money">
+											<div class="input-group-addon">元</div>
+										</div>
+									</div>
+								</div>
+								<div class="form-group">
+									<label class="col-md-4 control-label"><input type="checkbox" name="upgradeconditions" value="3"> 一级分销商满</label>
+									<div class="col-md-7 control-group">
+										<div class="input-group">
+											<input type="number" class="form-control" min="0" name="one_number">
+											<div class="input-group-addon">人</div>
+										</div>
+									</div>
+								</div>
+								<div class="form-group">
+									<label class="col-md-4 control-label"><input type="checkbox" name="upgradeconditions" value="4"> 二级分销商满</label>
+									<div class="col-md-7 control-group">
+										<div class="input-group">
+											<input type="number" class="form-control" min="0" name="two_number" >
+											<div class="input-group-addon" >人</div>
+										</div>
+									</div>
+								</div>
+								<div class="form-group">
+									<label class="col-md-4 control-label"><input type="checkbox" name="upgradeconditions" value="5"> 三级分销商满</label>
+									<div class="col-md-7 control-group">
+										<div class="input-group">
+											<input type="number" class="form-control" min="0" name="three_number">
+											<div class="input-group-addon">人</div>
+										</div>
+									</div>
+								</div>
+								<div class="form-group">
+									<label class="col-md-4 control-label"><input type="checkbox" name="upgradeconditions" value="8"> 下线客户数达</label>
+									<div class="col-md-7 control-group">
+										<div class="input-group">
+											<input type="number" class="form-control" min="0" name="offline_number">
+											<div class="input-group-addon">人(非分销商)</div>
+										</div>
+									</div>
+								</div>
+								<div class="form-group">
+									<label class="col-md-4 control-label"><input type="checkbox" name="upgradeconditions" value="2"> 团队人数</label>
+									<div class="col-md-7 control-group">
+										<div class="input-group">
+											<input type="number" class="form-control" min="0" name="group_number">
+											<div class="input-group-addon">人(分销商)</div>
+										</div>
+									</div>
+								</div>
+								<div class="form-group">
+									<label class="col-md-4 control-label"><input type="checkbox" name="upgradeconditions" value="9"> 指定推荐等级</label>
+									<div class="col-md-7 control-group">
+										<div class="input-group">
+											<select class="form-control upgrade_level" style="min-width: 130px" name="upgrade_level">
+												{foreach $level_info as $v}
+												<option value="{$v['id']}">{$v['level_name']}</option>
+												{/foreach}
+											</select>
+											<div class="input-group-addon">达</div>
+											<input type="number" class="form-control" min="0" name="level_number">
+											<div class="input-group-addon">人</div>
+										</div>
+									</div>
+								</div>
+								<div class="form-group">
+									<label class="col-md-4 control-label"><input type="checkbox" name="upgradeconditions" value="6"> 一级订单金额满</label>
+									<div class="col-md-7 control-group">
+										<div class="input-group">
+											<input type="number" class="form-control" min="0" name="order_money">
+											<div class="input-group-addon">元</div>
+										</div>
+									</div>
+								</div>
+								<div class="form-group">
+									<label class="col-md-4 control-label"><input type="checkbox" name="upgradeconditions" value="11"> 团队订单金额满</label>
+									<div class="col-md-7 control-group">
+										<div class="input-group">
+											<input type="number" class="form-control" min="0" name="up_team_money">
+											<div class="input-group-addon">元</div>
+										</div>
+									</div>
+								</div>
+								<div class="form-group">
+									<label class="col-md-4 control-label"><input type="checkbox" name="upgradeconditions" value="7"> 购买指定商品</label>
+									<div class="col-md-7 control-group">
+										<div class="picture-list">
+											<a href="javascript:;" class="plus-box search_goods"><i class="icon icon-plus"></i></a>
+											<input type="text" class="visibility" data-visi-type="singlePicture" name="picture-Logo">
+										</div>
+										<input type="hidden" name='pic_id' id="pic_id" value="">
+										<input type="hidden" name='selectgoods_id' id="selectgoods_id" value="">
+										<div class="input-group selectid">
+
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="form-group">
+					<label class="col-md-2 control-label">自动降级</label>
+					<div class="col-md-5">
+						<div class="switch-inline">
+							<input type="checkbox" id="downgrade-switch" value="1" name="downgradetype">
+							<label for="downgrade-switch"></label>
+						</div>
+						<div class="help-block mb-0">开启后不满足指定条件自动降级，关闭后则该等级不会自动降级。</div>
+					</div>
+				</div>
+				<div id="isdowngrade" class="hide">
+					<div class="form-group">
+						<label class="col-md-2 control-label">降级条件</label>
+						<div class="col-md-5">
+							<div>
+							<label class="radio-inline">
+								<input type="radio"  value="1" name="downgradecondition"> 满足所有勾选条件
+							</label>
+							<label class="radio-inline">
+								<input type="radio" value="2" name="downgradecondition"> 满足勾选条件之一即可
+							</label>
+							</div>
+						</div>
+					</div>
+					<div class="form-group" id="downgrade-condition">
+						<label class="col-md-2 control-label"></label>
+						<div class="col-md-8">
+							<div class="form-additional" style="width: auto;">
+								<div class="form-group">
+									<label class="col-md-4 control-label"><input type="checkbox" name="downgradeconditions" value="1"> 团队订单量</label>
+									<div class="col-md-7 control-group">
+										<div class="input-group">
+											<input type="number" class="form-control" min="0" name="team_number_day">
+											<div class="input-group-addon">天内，少于</div>
+											<input type="number" class="form-control" min="0" name="team_number">
+											<div class="input-group-addon">单</div>
+										</div>
+									</div>
+								</div>
+								<div class="form-group">
+									<label class="col-md-4 control-label"><input type="checkbox" name="downgradeconditions" value="2"> 团队订单金额</label>
+									<div class="col-md-7 control-group">
+										<div class="input-group">
+											<input type="number" class="form-control" min="0" name="team_money_day">
+											<div class="input-group-addon">天内，少于</div>
+											<input type="number" class="form-control" min="0" name="team_money">
+											<div class="input-group-addon">元</div>
+										</div>
+									</div>
+								</div>
+								<div class="form-group">
+									<label class="col-md-4 control-label"><input type="checkbox" name="downgradeconditions" value="3"> 内购订单金额</label>
+									<div class="col-md-7 control-group">
+										<div class="input-group">
+											<input type="number" class="form-control" min="0" name="self_money_day">
+											<div class="input-group-addon">天内，少于</div>
+											<input type="number" class="form-control" min="0" name="self_money">
+											<div class="input-group-addon">元</div>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="form-group">
+					<label class="col-md-2 control-label"><span class="text-bright">*</span>权重</label>
+					<div class="col-md-5">
+						<input type="number" class="form-control" name="weight" required >
+						<div class="help-block mb-0">等级权重，数字越大级别越高。按设置的权重大小从低到高进行升级。</div>
+					</div>
+				</div>
+				<div class="form-group"></div>
+				<div class="form-group">
+					<label class="col-md-2 control-label"></label>
+					<div class="col-md-8">
+						<button class="btn btn-primary add" type="submit">添加</button>
+						<a href="javascript:history.go(-1);" class="btn btn-default">返回</a>
+					</div>
+				</div>
+			</form>
+
+			<input type="hidden" value="{$level_weight}" name="level_weight" id="level_weight">
+
+
+			<!-- page end -->
+{/block}
+{block name="script"}
+<script>
+    require(['util'],function(util){
+        $("#upgrade-switch").change(function () {
+            var upgradetype = $("input[name='upgradetype']:checked").val();
+            if(upgradetype==1){
+                $("input[name='upgradecondition']").attr("required",true);
+				$("#isupgrade").removeClass("hide");
+            }else{
+                $("input[name='upgradecondition']").removeAttr("required",true);
+				$("#isupgrade").addClass("hide");
+            }
+        })
+        $("#downgrade-switch").change(function () {
+            var downgradetype = $("input[name='downgradetype']:checked").val();
+            if(downgradetype==1){
+                $("input[name='downgradecondition']").attr("required",true);
+				$("#isdowngrade").removeClass("hide");
+            }else{
+                $("input[name='downgradecondition']").removeAttr("required",true);
+				$("#isdowngrade").addClass("hide");
+            }
+        })
+        $("input[name='upgradeconditions']").click(function () {
+            if($(this).is(':checked')){
+                var vals=$(this).val();
+                if(vals!=7 || $("input[name='selectgoods_id']").val()==''){
+                    $(this).parent(".control-label").siblings(".control-group").find("input").attr("required",true);
+                }
+            } else{
+                $(this).parents(".form-group").removeClass('has-error');
+                $(this).parents(".form-group").find('.help-block-error').html('');
+                $(this).parent(".control-label").siblings(".control-group").find("input").removeAttr("required",true);
+            }
+        })
+        $("input[name='downgradeconditions']").click(function () {
+            if($(this).is(':checked')){
+                $(this).parent(".control-label").siblings(".control-group").find("input").attr("required",true);
+            } else{
+                $(this).parents(".form-group").removeClass('has-error');
+                $(this).parents(".form-group").find('.help-block-error').html('');
+                $(this).parent(".control-label").siblings(".control-group").find("input").removeAttr("required",true);
+            }
+        })
+        $("input[name='weight']").on('blur',function () {
+            var weight = $("input[name='weight']").val();
+            var arr = $("#level_weight").val();
+            arr = arr.split(',');
+            for(var i = 0; i < arr.length; i++){
+                if(weight === arr[i]){
+                    util.message('该等级权重值已存在','danger');
+                    $("input[name='weight']").val('');
+                    return false;
+                }
+            }
+        })
+        function isInArray(arr,value){
+            for(var i = 0; i < arr.length; i++){
+                if(value === arr[i]){
+                    return true;
+                }
+            }
+            return false;
+        }
+        util.validate($('.form-validate'),function(form){
+            var upgrade_level = $(".upgrade_level").val();
+            var level_number = $("input[name='level_number']").val();
+            var offline_number = $("input[name='offline_number']").val();
+            var group_number = $("input[name='group_number']").val();
+            var level_name = $("input[name='level_name']").val();
+            var ratio = $("input[name='ratio']").val();
+            var upgradetype = $("input[name='upgradetype']:checked").val();
+            var one_number = $("input[name='one_number']").val();
+            var two_number = $("input[name='two_number']").val();
+            var three_number = $("input[name='three_number']").val();
+            var order_money = $("input[name='order_money']").val();
+			var up_team_money = $("input[name='up_team_money']").val();
+            var pay_money = $("input[name='pay_money']").val();
+            var downgradetype = $("input[name='downgradetype']:checked").val();
+            var team_number = $("input[name='team_number']").val();
+            var team_money = $("input[name='team_money']").val();
+            var self_money = $("input[name='self_money']").val();
+            var team_number_day = $("input[name='team_number_day']").val();
+            var team_money_day = $("input[name='team_money_day']").val();
+            var self_money_day = $("input[name='self_money_day']").val();
+            var upgrade_condition = $("input[name='upgradecondition']:checked").val();
+            var downgrade_condition = $("input[name='downgradecondition']:checked").val();
+            var weight = $("input[name='weight']").val();
+            var upgradeconditions = $("input:checkbox[name='upgradeconditions']:checked").map(function(index,elem) {
+                return $(elem).val();
+            }).get().join(',');
+            var arr=upgradeconditions.split(',');
+            if(isInArray(arr,"7")){
+                var goods_id = $("input[name='selectgoods_id']").val();
+            }else{
+                var goods_id ='';
+            }
+            var downgradeconditions = $("input:checkbox[name='downgradeconditions']:checked").map(function(index,elem) {
+                return $(elem).val();
+            }).get().join(',');
+            if(upgradetype==1 && upgradeconditions==''){
+                util.message('请填写升级条件','danger');
+                return false;
+            }
+            if(downgradetype==1 && downgradeconditions==''){
+                util.message('请填写降级条件','danger');
+                return false;
+            }
+            $('.add').attr({disabled: "disabled"}).html('提交中...');
+            $.ajax({
+                type: "post",
+                url: "{$addGlobalAgentLevelUrl}",
+                data: {
+                    'upgrade_level':upgrade_level,
+                    'level_number':level_number,
+                    'offline_number':offline_number,
+                    'group_number':group_number,
+                    'level_name':level_name,
+                    'ratio':ratio,
+                    'upgradetype': upgradetype,
+                    'one_number':one_number,
+                    'two_number':two_number,
+                    'three_number':three_number,
+                    'pay_money':pay_money,
+                    'order_money':order_money ,
+					'up_team_money':up_team_money ,
+                    'downgradetype':downgradetype,
+                    'team_number':team_number,
+                    'team_money':team_money,
+                    'self_money':self_money,
+                    'team_number_day':team_number_day,
+                    'team_money_day':team_money_day,
+                    'self_money_day':self_money_day,
+                    'weight': weight,
+                    'downgradeconditions':downgradeconditions,
+                    'upgradeconditions': upgradeconditions,
+                    'downgrade_condition':downgrade_condition,
+                    'upgrade_condition': upgrade_condition,
+                    'goods_id':goods_id
+                },
+                async: true,
+                success: function (data) {
+                    if (data['code'] > 0) {
+                        util.message(data["message"], 'success', "{:__URL('ADDONS_MAINglobalAgentLevelList')}");
+                    } else {
+                        if(data['code'] ==-2){
+                            util.message('该等级已存在', 'danger');
+                        }else if(data['code'] ==-3){
+                            util.message('等级总比例超过100%', 'danger');
+                        }else{
+                            util.message(data["message"], 'danger');
+						}
+                        $('.add').removeAttr('disabled').html('添加');
+                    }
+                }
+            });
+
+        })
+        $('body').on('click','.search_goods', function () {
+            var url = "{:__URL('PLATFORM_MAIN/goods/selectGoodsList')}";
+            util.confirm('选择商品','url:'+url, function () {
+                var data = this.$content.find('.goods_val').val();
+                var pic = $('#pic_id').val();
+                $(".selectid").html('指定商品：'+data);
+                html='';
+                html += "<i class='icon icon-danger' title='删除'></i><img src="+__IMG(pic)+" style='width:80px;height:80px;margin:0;'>";
+                $(".search_goods").html(html);
+                $(".search_goods").find('.visibility').removeAttr("required");
+                $(".search_goods").addClass('close-box1').removeClass('plus-box').removeClass('search_goods');
+                $(".close-box1").html(html);
+                $(".close-box1").siblings('.visibility').removeAttr("required");
+            },'large')
+
+        })
+    })
+</script>
+{/block}

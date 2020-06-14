@@ -1,0 +1,41 @@
+
+<van-popup show="{{ phoneShow }}" bind:click-overlay="phoneOnclose" custom-style='border-radius:30rpx;' bind:close="phoneOnclose">
+ <view class='binding_phone'>
+    <view class='top'>绑定手机号</view>
+    <view class='info_group'>
+      <view class='cell'>
+        <view class='title'>手机号码</view>
+        <view class="areaCode" wx:if="{{is_country_code}}"><areaCode-compoent bind:getValue="onGetValue"></areaCode-compoent></view>
+        <view class='value'>
+          <input type='number' placeholder='请输入手机号码' bindinput='userPhoneFun'></input>
+        </view>
+      </view>
+      <view class='cell'>
+        <view class='title'>验证码</view>
+        <view class='value phone_code'>
+          <input type='text' placeholder='请输入短信验证码' bindinput='verificationCodeFun'></input>
+          <button class="v_code {{codeDis == true?'d_code':''}}" bindtap="checkMobile" disabled="{{codeDis}}">
+            {{phoneCode}}
+           <text hidden="{{phoneCode == '获取验证码'}}">S</text>
+          </button>
+        </view>
+      </view>    
+      <view class='cell' wx:if='{{passwordShow}}'>
+        <view class='title'>密码</view>
+        <view class='value'>
+          <input type='password' placeholder='请输入密码' bindblur='passwordFun'></input>
+        </view>
+      </view>
+      <view class='cell' wx:if='{{passwordShow}}'>
+        <view class='title'>确认密码</view>
+        <view class='value'>
+          <input type='password' placeholder='请确认密码' bindblur='passwordSureFun'></input>
+        </view>
+      </view>
+    </view>    
+    <view class='tips'>授权即代表同意《注册协议》</view>
+    <view class='foot'>
+      <view class='foot_btn' bindtap='associateAccountFun'>同意协议并绑定</view>
+    </view>
+  </view>
+</van-popup>

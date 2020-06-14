@@ -1,0 +1,262 @@
+{block name="main"}
+<!-- page -->
+<form class="form-horizontal form-validate widthFixedForm">
+    <div class="screen-title">
+        <span class="text">规则设置</span>
+    </div>
+    <div class="form-group">
+        <label class="col-md-2 control-label"><span class="text-bright">*</span>券包名称</label>
+        <div class="col-md-5">
+            <input type="text" id="voucher_package_name" class="form-control" name="voucher_package_name" required>
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="col-md-2 control-label"><span class="text-bright">*</span>发放数量</label>
+        <div class="col-md-5">
+            <div class="input-group w-200">
+                <input type="number" id="count" name="count" class="form-control" required min="0">
+                <div class="input-group-addon">份</div>
+            </div>
+            <div class="mb-0 help-block">0代表不限制。</div>
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="col-md-2 control-label">每人限领</label>
+        <div class="col-md-5">
+            <div class="input-group w-200">
+                <input type="number" class="form-control" name="max_fetch" id="max_fetch" min="0">
+                <div class="input-group-addon">份</div>
+            </div>
+            <div class="mb-0 help-block">0代表不限制。</div>
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="col-md-2 control-label"><span class="text-bright">*</span>领券时间</label>
+        <div class="col-md-8">
+            <div class="v-datetime-input-control">
+                <label for="effect_time">
+                    <input type="text" class="form-control" id="effect_time" placeholder="请选择时间" autocomplete="off" name="effect_time" required>
+                    <i class="icon icon-calendar"></i>
+                    <input type="hidden" id="start_time" name="start_time">
+                    <input type="hidden" id="end_time" name="end_time">
+                </label>
+            </div>
+            <div class="help-block mb-0">开始时间点为选中日期的0:00:00，结束时间点为选中日期的23:59:59</div>
+        </div>
+
+    </div>
+    <div class="form-group">
+        <label class="col-md-2 control-label">券包说明</label>
+        <div class="col-md-5">
+            <textarea class="form-control" name="desc" id="desc" rows="4"></textarea>
+        </div>
+    </div>
+
+    <div class="screen-title">
+        <span class="text">券包设置</span>
+    </div>
+    <div class="form-group">
+        <div>
+            <div class="tab-content">
+                <table class="table v-table table-auto-center">
+                    <thead>
+                    <tr>
+                        <th>类型</th>
+                        <th>已选</th>
+                        <th>操作</th>
+                    </tr>
+                    </thead>
+                    <tbody id="selected_list">
+                    <tr {if $is_coupon_type == 0}class="hidden"{/if}>
+                        <td>优惠券</td>
+                        <td id="coupon_type"></td>
+                        <td><a href="javascript:;" class="text-primary J-select" data-type="coupon_type"
+                               data-title="选择优惠券">选择</a></td>
+                    </tr>
+                    <tr {if $is_gift_voucher == 0}class="hidden"{/if}>
+                        <td>礼品券</td>
+                        <td id="gift_voucher"></td>
+                        <td><a href="javascript:;" class="text-primary J-select" data-type="gift_voucher"
+                               data-title="选择礼品券">选择</a></td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <div class="form-group"></div>
+    <div class="form-group">
+        <label class="col-md-2 control-label"></label>
+        <div class="col-md-8">
+            <button class="btn btn-primary" type="submit">保存</button>
+            <a href="javascript:history.go(-1);" class="btn btn-default">返回</a>
+        </div>
+    </div>
+    <input type="hidden" id="voucher_package_id" name="voucher_package_id"/>
+</form>
+
+<!-- page end -->
+{/block}
+{block name="script"}
+<script id="tpl_selected_list" type="text/html">
+    <%each data as item index%>
+    <p class="J-addons"><%item.name%> <span class="red J-x" data-id="<%item.id%>" data-type="<%item.type%>">X</span></p>
+    <%/each%>
+</script>
+<script>
+    require(['util', 'tpl'], function (util, tpl) {
+        // util.layDate("#start_time")
+        // util.layDate("#end_time")
+        util.layDate('#effect_time',true,function(value, date, endDate){
+            var date1=date.year+'-'+date.month+'-'+date.date;
+            var date2=endDate.year+'-'+endDate.month+'-'+endDate.date;
+            if(value){
+                $('#start_time').val(date1);
+                $('#end_time').val(date2);
+                $('#effect_time').parents('.form-group').removeClass('has-error');
+            }
+            else{
+                $('#start_time').val('');
+                $('#end_time').val('');
+            }
+        });
+
+        window['voucher_package_info'] = {$voucher_package_info};
+        window['post_voucher_package_url'] = "{$addVoucherPackageUrl}"
+        window['temp_coupon_type_id_array'] = [] // 保存选中的优惠券
+        window['temp_gift_voucher_id_array'] = []
+        if (typeof (voucher_package_info) == 'object') {
+            post_voucher_package_url = "{$updateVoucherPackageUrl}";
+            $("#voucher_package_id").val(voucher_package_info.voucher_package_id);
+            $("#voucher_package_name").val(voucher_package_info.voucher_package_name);
+            $("#count").val(voucher_package_info.count);
+            $("#max_fetch").val(voucher_package_info.max_fetch);
+            $("#start_time").val(util.timeStampTurnDate(voucher_package_info.start_time));
+            $("#end_time").val(util.timeStampTurnDate(voucher_package_info.end_time));
+            $("#effect_time").val(util.timeStampTurnDate(voucher_package_info.start_time)+' - '+ util.timeStampTurnDate(voucher_package_info.end_time));
+            $("#desc").val(voucher_package_info.desc);
+            temp_coupon_type_id_array = voucher_package_info.coupon_type_id_array
+            temp_gift_voucher_id_array = voucher_package_info.gift_voucher_id_array
+            $("#coupon_type").html(tpl('tpl_selected_list', {data: voucher_package_info.coupon_type_list}))
+            $("#gift_voucher").html(tpl('tpl_selected_list', {data: voucher_package_info.gift_voucher_list}))
+        } else {
+            $("button[type=submit]").html('添加')
+        }
+
+        $(".J-select").on('click', function () {
+            var type = $(this).data('type');
+            var title = $(this).data('title');
+            util.confirm(title, 'url:{$selectModalUrl}?type=' + type, function () {
+                var selected_list = [];
+                if (type == 'coupon_type') {
+                    temp_coupon_type_id_array = []
+                } else {
+                    temp_gift_voucher_id_array = []
+                }
+                this.$content.find('input[type=checkbox]:checked').each(function () {
+                    var id = $(this).data('id')
+                    var name = $(this).data('name')
+                    if (type == 'coupon_type') {
+                        temp_coupon_type_id_array.push(id)
+                    } else {
+                        temp_gift_voucher_id_array.push(id)
+                    }
+                    selected_list.push({'id': id, 'name': name, 'type': type})
+                })
+                if (type == 'coupon_type') {
+                    $("#coupon_type").html(tpl('tpl_selected_list', {data: selected_list}))
+                } else {
+                    $("#gift_voucher").html(tpl('tpl_selected_list', {data: selected_list}))
+                }
+            });
+        })
+
+        $("#selected_list").on('click', '.J-x', function () {
+            var type = $(this).data('type')
+            var id = $(this).data('id')
+            if (type == 'coupon_type') {
+                temp_coupon_type_id_array = $.grep(temp_coupon_type_id_array, function (value) {
+                    return value != id;
+                })
+
+            } else {
+                temp_gift_voucher_id_array = $.grep(temp_gift_voucher_id_array, function (value, i) {
+                    return value != id;
+                })
+            }
+            $(this).parent().remove();
+        })
+
+        //提交数据
+        var flag = false;
+        util.validate($('.form-validate'), function (form) {
+            var voucher_package_id = $("#voucher_package_id").val();
+            var voucher_package_name = $("#voucher_package_name").val();
+
+            var count = $("#count").val();
+            var max_fetch = $("#max_fetch").val();
+            var start_time = $("#start_time").val();
+            var end_time = $("#end_time").val();
+            var desc = $("#desc").val();
+            var coupon_type_id_array = [];
+            var gift_voucher_id_array = [];
+
+            if ($("#coupon_type").parent().hasClass('hidden') === false){
+                //被隐藏的内容 = 应用没开启
+                $("#coupon_type .J-addons").each(function (i) {
+                    coupon_type_id_array.push($(this).find('span').data('id'));
+                });
+            }
+            if ($("#gift_voucher").parent().hasClass('hidden') === false){
+                $("#gift_voucher .J-addons").each(function (i) {
+                    gift_voucher_id_array.push($(this).find('span').data('id'));
+                });
+            }
+
+            if (coupon_type_id_array.length == 0 && gift_voucher_id_array.length == 0) {
+                util.message("至少选择一个优惠券或者礼品券");
+                return;
+            }
+            if (parseInt(count) < parseInt(max_fetch) && parseInt(count)>0) {
+                util.message('每人最大领取数目要小于发放数量！', 'info', function () {
+                    $('#max_fetch').focus();
+                });
+                return false;
+            }
+            if (flag) {
+                return;
+            }
+            if (util.DateTurnTime(start_time) > util.DateTurnTime(end_time)) {
+                $("#effect_time").focus();
+                util.message("开始使用时间大于结束时间");
+                return;
+            }
+
+            flag = true;
+            $.ajax({
+                type: "post",
+                url: post_voucher_package_url,
+                data: {
+                    'voucher_package_id': voucher_package_id,
+                    'voucher_package_name': voucher_package_name,
+                    'count': count,
+                    'max_fetch': max_fetch,
+                    'start_time': start_time,
+                    'end_time': end_time,
+                    'desc': desc,
+                    'coupon_type_id_array': coupon_type_id_array,
+                    'gift_voucher_id_array': gift_voucher_id_array
+                },
+                success: function (data) {
+                    if (data["code"] > 0) {
+                        util.message(data["message"], 'success', "{:__URL('ADDONS_MAINvoucherPackageList')}");
+                    } else {
+                        util.message(data["message"], 'danger');
+                    }
+                }
+            });
+        });
+    })
+</script>
+{/block}

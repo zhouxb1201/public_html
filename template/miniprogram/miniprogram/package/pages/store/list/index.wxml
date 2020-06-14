@@ -1,0 +1,60 @@
+<view class='store_list'>
+  <view class='navtop'>
+    <view class='shop_search'>
+      <view class='search_input'>
+        <view class='icon iconfont v-icon-search'></view>
+        <input class='search_text' placeholder='请输入搜索关键词' bindconfirm="searchKeyFun"></input>
+      </view>
+    </view>
+    <view class='sort'>
+      <view class="item {{navActive == 'distance' ? 'on' : ''}}" data-order='distance' data-sort='{{distance}}' bindtap='changeSort' >
+        <text>距离</text>
+        <view class="icon iconfont v-icon-sort2 {{distance}}"></view>
+      </view>
+      <view class="item {{navActive == 'sales' ? 'on' : ''}}" data-order='sales' data-sort='{{sales}}' bindtap='changeSort'>
+        <text>销售量</text>
+        <view class="icon iconfont v-icon-sort2 {{sales}}"></view>
+      </view>      
+      <view class="item {{navActive == 'score' ? 'on' : ''}}" data-order='score' data-sort='{{score}}' bindtap='changeSort'>
+        <text>人气</text>
+        <view class="icon iconfont v-icon-sort2 {{score}}"></view>
+      </view>
+    </view>
+  </view>
+  <view class='list'>
+    <view class='cell_item' wx:for='{{store_list}}' wx:key=''>
+      <view>
+        <view class="store_box" data-storeid='{{item.store_id}}' bindtap='onstoreHomePage'>
+          <view class="store_img">
+            <image mode="widthFix" src="{{item.store_img != ''?item.store_img:'/images/no-shop.png'}}"></image>
+          </view>
+          <view class="store_info">
+            <view class='item_top' >
+              <view class='name'>{{item.shop_name}}（{{item.store_name}}）</view>              
+            </view>
+            <view class='score'>
+              <van-rate readonly value="{{ item.score }}" size='12' />
+              <view class='distance'>{{item.distance}}km</view>
+            </view>           
+          </view>
+        </view>
+      </view>
+      <view class="goods" wx:if='{{item.goods.length > 0}}'>
+        <view class="goods_box">
+          <view class="goods_list">
+            <view class="goodItem" wx:for='{{item.goods}}' wx:key='' wx:for-item='goodItem' data-goodid="{{goodItem.goods_id}}" bindtap="onGoodDetailPage" >
+              <view class="goodImg">
+                <image mode="widthFix" src="{{goodItem.goods_img}}"></image>
+              </view>
+              <view class="good_price">¥{{goodItem.price}}</view>
+            </view>
+          </view>
+        </view>
+      </view>
+    </view>
+
+  </view>
+  <view class="no_more">
+    没有更多了
+  </view>
+</view>

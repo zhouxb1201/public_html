@@ -1,0 +1,5 @@
+<view class='floater' wx:if='{{backTopValue}}'>
+  <view class='box' bindtap='backTop'>
+    <view class='icon_up iconfont v-icon-upward'></view>
+  </view>
+</view>

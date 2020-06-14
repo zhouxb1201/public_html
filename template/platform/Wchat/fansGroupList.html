@@ -1,0 +1,169 @@
+{extend name="platform/new_base" /}
+{block name="resources"/}
+<style>
+    .addBoder {
+        border: 1px solid #a94442;
+    }
+</style>
+{/block}
+{block name="main"}
+                <div class="flex mb-10 PAmaterial" id="mat_type1"><!-- page -->
+                    <a href="javascript:;" class="btn btn-primary dropdown-toggle addGroup">添加分组</a>
+                </div>
+                <table class="table v-table table-auto-center">
+                    <thead>
+                        <tr>
+                            <th>分组名称</th>
+                            <th>组内粉丝数</th>
+                            <th class="col-md-2 pr-14 operationLeft">操作</th>
+                        </tr>
+                    </thead> 
+                    <tbody id="list">
+
+                    </tbody>
+                </table>
+                <input type="hidden" id="page_index">
+                <nav aria-label="Page navigation" class="clearfix">
+                    <ul id="page" class="pagination pull-right"></ul>
+                </nav>
+                <!-- page end -->
+{/block}
+{block name="script"}
+<script>
+require(['util'],function(util){
+    util.initPage(getList);
+    var flag1=false;
+    $('body').on('click','.addGroup',function(){
+        if(!flag1){
+            $(".dis_group").remove();
+            var html='<tr><td><input class="addGroupName form-control" type="text" value=""></td><td>0</td><td class="operationLeft fs-0"><a href="javascript:void(0);" class="btn-operation text-red1 delGroup">删除</a></td></tr>';
+            $('#list').append(html);
+        }
+        flag1=true;
+
+    });
+    $('body').on('click','.delGroup',function(){
+        $(this).parent().parent().remove();
+        flag1=false;
+    });
+    function getList(page_index){
+        $("#page_index").val(page_index);
+        $.ajax({
+            type : "post",
+            url : "{:__URL('PLATFORM_MAIN/wchat/fansGroupList')}",
+            async : true,
+            data : {
+                "page_index" : page_index,
+            },
+            success : function(data) {
+                var html = '';
+                if (data["data"].length > 0) {
+                    for (var i = 0; i < data["data"].length; i++) {
+                        html += '<tr>';
+                        if(data["data"][i]["from"]==1) {
+                            html += '<td >'+ data["data"][i]["group_name"] +'</td>';
+                        }else{
+                            html += '<td>';
+                            html += '<input class="updateGroupName" data-name="'+ data["data"][i]["group_name"] +'" data-id="'+ data["data"][i]["group_id"] +'" type="text" value="' + data["data"][i]["group_name"] + '">';
+                            html += '</td>';
+                        }
+                        html += '<td >'+ data["data"][i]["count"] +'</td>';
+                        if(data["data"][i]["from"]==1){
+                            html += '<td><span class="label label-success">微信分组，不能操作</span></td>';
+                        }else{
+                            html += '<td class="operationLeft fs-0"><a class="btn-operation text-red1 delFansGroup" data-id="'+ data["data"][i]["group_id"] +'">删除</a></td>';
+                        }
+                        html += '</tr>';
+                    }
+                } else {
+                    html += '<tr align="center"><td colspan="3" class="dis_group h-200">暂无符合条件的数据记录</td></tr>';
+                }
+                $('#page').paginator('option', {
+                    totalCounts: data['total_count']  // 动态修改总数
+                });
+                $("#list").html(html);
+            }
+        });
+    }
+    // 删除分组
+    $('body').on('click','.delFansGroup',function(){
+            var group_id = $(this).data('id');
+            $.ajax({
+                    type : "post",
+                    url : "{:__URL('PLATFORM_MAIN/Wchat/delFansGroup')}",
+                    async : true,
+                    data : {
+                        "group_id" : group_id,
+                    },
+                    success : function(data) {
+                        if (data["code"] > 0) {
+                            util.message(data["message"],'success',getList($('#page_index').val()));
+                        }else if(data["code"]==-2){
+                            util.message('改分组下有粉丝无法删除','danger');
+                        }else{
+                            util.message(data["message"],'danger');
+                        }
+                    }
+                });
+        })
+    // 修改分组名称
+    $('body').on('blur','.updateGroupName',function(){
+        var group_id = $(this).data('id');
+        var group_name_default = $(this).data('name');
+        var group_name = $(this).val();
+        if(group_name==''){
+            $('.updateGroupName').addClass('addBoder');
+            util.message('请填写分组名称','danger');
+            return false;
+        }else{
+            $('.updateGroupName').removeClass('addBoder');
+        }
+        if(group_name_default!=group_name){
+            $.ajax({
+                type : "post",
+                url : "{:__URL('PLATFORM_MAIN/Wchat/updateGroupName')}",
+                async : true,
+                data : {
+                    "group_id" : group_id,
+                    "group_name" : group_name
+                },
+                success : function(data) {
+                    if (data["code"] > 0) {
+                        util.message(data["message"],'success',getList($('#page_index').val()));
+                    }else{
+                        util.message(data["message"],'danger');
+                    }
+                }
+            });
+        }
+    })
+    // 添加分组
+    $('body').on('blur','.addGroupName',function(){
+        var group_name = $(this).val();
+        if(group_name==''){
+            $('.addGroupName').addClass('addBoder');
+            util.message('请填写分组名称','danger');
+            return false;
+        }else{
+            $('.addGroupName').removeClass('addBoder');
+        }
+        $.ajax({
+            type : "post",
+            url : "{:__URL('PLATFORM_MAIN/Wchat/addFansGroupList')}",
+            async : true,
+            data : {
+                "group_name" : group_name
+            },
+            success : function(data) {
+                if (data["code"] > 0) {
+                    util.message(data["message"],'success',getList($('#page_index').val()));
+                }else{
+                    util.message(data["message"],'danger');
+                }
+            }
+        });
+    })
+    })
+
+</script>
+{/block}

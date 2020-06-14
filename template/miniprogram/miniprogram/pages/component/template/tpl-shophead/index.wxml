@@ -1,0 +1,263 @@
+<view class="shop_head" wx:if="{{items.styletype == 1}}">
+  <view class="head">
+    <image mode="widthFix" src="{{items.bgSrc}}" class="bg"></image>
+    <view class="box info">
+      <view class="logo one">
+        <view class="img">
+          <image mode="widthFix" src="{{shopData.shop_logo != '' ?shopData.shop_logo:'/images/no-shop.png'}}"></image>
+        </view>
+      </view>
+      <view class="content">
+        <view class="wrap">
+          <view class="name">
+            {{shopData.shop_name}}
+          </view>
+          <view class='collentBtn one' wx:if="{{isCollection == false}}" bindtap="collectShopFun">
+            <view class="icon iconfont v-icon-love span"></view>收藏 </view>
+          <view class='collentBtn one' wx:if="{{isCollection == true}}" bindtap="cancelcollectShopFun">取消收藏</view>
+        </view>
+        <view class="wrap">
+          <view class="fans">粉丝{{shopData.fans_number}}</view>
+          <view class="score">综合评分
+            <view class="star">
+              <van-rate value="{{ temDataitem.stars }}" size='13' color="#f44" void-icon="star" void-color="#f44" readonly="true" />
+            </view>
+          </view>
+        </view>
+      </view>
+    </view>
+  </view>
+  <view class="van-cell">
+    <view class="van-cell__value van-cell__value--alone search-cell">
+      <view class="btn" bindtap="onSearchPage">
+        <view class="icon iconfont v-icon-search search-icon"></view>
+        <view class='search_text'>搜索</view>
+      </view>
+      <view class="btn" bindtap="onGoodsPage">
+        全部商品
+      </view>
+    </view>
+  </view>
+</view>
+
+
+<view class="shop_head" wx:if="{{items.styletype == 2}}">
+  <view class="head">
+    <image mode="widthFix" src="{{items.bgSrc}}" class="bg"></image>
+    <view class="boxes info">
+      <view class="logo two">
+        <view class="img two">
+          <image mode="widthFix" src="{{shopData.shop_logo != '' ?shopData.shop_logo:'/images/no-shop.png'}}"></image>
+        </view>
+      </view>
+      <view class="content two">
+        <view class="wrap">
+          <view class="name">
+            {{shopData.shop_name}}
+          </view>
+          <view class='collentBtn two' wx:if="{{isCollection == false}}" bindtap="collectShopFun">
+            <view class="icon iconfont v-icon-love span"></view>收藏 </view>
+          <view class='collentBtn two' wx:if="{{isCollection == true}}" bindtap="cancelcollectShopFun">取消收藏</view>
+        </view>
+        <view class="wrap">
+          <view class="fans">粉丝{{shopData.fans_number}}</view>
+          <view class="score">综合评分
+            <view class="star">
+              <van-rate value="{{ temDataitem.stars }}" size='13' color="#043f8d" void-icon="star" void-color="#043f8d" readonly="true" />
+            </view>
+          </view>
+        </view>
+      </view>
+    </view>
+  </view>
+  <view class="van-cell">
+    <view class="van-cell__value van-cell__value--alone search-cell">
+      <view class="btn" bindtap="onSearchPage">
+        <view class="icon iconfont v-icon-search search-icon"></view>
+        <view class='search_text'>搜索</view>
+      </view>
+      <view class="btn" bindtap="onGoodsPage">
+        全部商品
+      </view>
+    </view>
+  </view>
+</view>
+
+<view class="shop_head" wx:if="{{items.styletype == 3}}">
+  <view class="head">
+    <image mode="widthFix" src="{{items.bgSrc}}" class="bg"></image>
+    <view class="boxes info">
+      <view class="logo two">
+        <view class="img two">
+          <image mode="widthFix" src="{{shopData.shop_logo != '' ?shopData.shop_logo:'/images/no-shop.png'}}"></image>
+        </view>
+      </view>
+      <view class="content three">
+        <view class="wrap">
+          <view class="name">
+            {{shopData.shop_name}}
+          </view>
+          <view class='collentBtn three' wx:if="{{isCollection == false}}" bindtap="collectShopFun">
+            <view class="icon iconfont v-icon-love span"></view>收藏 </view>
+          <view class='collentBtn three' wx:if="{{isCollection == true}}" bindtap="cancelcollectShopFun">取消收藏</view>
+        </view>
+        <view class="wrap">
+          <view class="fans">粉丝{{shopData.fans_number}}</view>
+          <view class="score">综合评分
+            <view class="star">
+              <van-rate value="{{ temDataitem.stars }}" size='13' color="#fff" void-icon="star" void-color="#fff" readonly="true" />
+            </view>
+          </view>
+        </view>
+      </view>
+    </view>
+  </view>
+  <view class="van-cell">
+    <view class="van-cell__value van-cell__value--alone search-cell">
+      <view class="btn" bindtap="onSearchPage">
+        <view class="icon iconfont v-icon-search search-icon"></view>
+        <view class='search_text'>搜索</view>
+      </view>
+      <view class="btn" bindtap="onGoodsPage">
+        全部商品
+      </view>
+    </view>
+  </view>
+</view>
+
+<view class="shop_head" wx:if="{{items.styletype == 4}}">
+  <view class="head" style="min-height:240rpx;">
+    <image mode="widthFix" src="{{items.bgSrc}}" class="bg" style="min-height:240rpx;"></image>
+    <view class="boxes info">
+      <view class="logo two">
+        <view class="img two">
+          <image mode="widthFix" src="{{shopData.shop_logo != '' ?shopData.shop_logo:'/images/no-shop.png'}}"></image>
+        </view>
+      </view>
+      <view class="content four">
+        <view class="wrap">
+          <view class="name">
+            {{shopData.shop_name}}
+          </view>
+        </view>
+      </view>
+      <view class="foot">
+        <view class="fans">粉丝{{shopData.fans_number}}</view>
+        <view class="score">
+          综合评分
+          <view class="star">
+            <van-rate value="{{ temDataitem.stars }}" size='10' color="#fff" void-icon="star" void-color="#fff" readonly="true" />
+          </view>
+        </view>
+        <view class="collec">
+          <view class='collentBtn three' wx:if="{{isCollection == false}}" bindtap="collectShopFun">
+            <view class="icon iconfont v-icon-love span"></view>收藏 </view>
+          <view class='collentBtn three' wx:if="{{isCollection == true}}" bindtap="cancelcollectShopFun">取消收藏</view>
+        </view>
+
+      </view>
+    </view>
+  </view>
+  <view class="van-cell">
+    <view class="van-cell__value van-cell__value--alone search-cell">
+      <view class="btn" bindtap="onSearchPage">
+        <view class="icon iconfont v-icon-search search-icon"></view>
+        <view class='search_text'>搜索</view>
+      </view>
+      <view class="btn" bindtap="onGoodsPage">
+        全部商品
+      </view>
+    </view>
+  </view>
+</view>
+
+<view class="shop_head" wx:if="{{items.styletype == 5}}">
+  <view class="head">
+    <image mode="widthFix" src="{{items.bgSrc}}" class="bg"></image>
+    <view class="box info">
+      <view class="logo one">
+        <view class="img five">
+          <image  src="{{shopData.shop_logo != '' ?shopData.shop_logo:'/images/no-shop.png'}}"></image>
+        </view>
+      </view>
+      <view class="content">
+        <view class="wrap">
+          <view class="name">
+            {{shopData.shop_name}}
+          </view>
+          <view class='collentBtn five' wx:if="{{isCollection == false}}" bindtap="collectShopFun">
+            <view class="icon iconfont v-icon-love span five"></view>收藏 </view>
+          <view class='collentBtn five' wx:if="{{isCollection == true}}" bindtap="cancelcollectShopFun">取消收藏</view>
+        </view>
+        <view class="wrap">
+          <view class="fans">粉丝{{shopData.fans_number}}</view>
+          <view class="score">综合评分
+            <view class="star">
+              <van-rate value="{{ temDataitem.stars }}" size='13' color="#f44" void-icon="star" void-color="#f44" readonly="true" />
+            </view>
+          </view>
+        </view>
+      </view>
+    </view>
+  </view>
+  <view class="van-cell">
+    <view class="van-cell__value van-cell__value--alone search-cell">
+      <view class="btn" bindtap="onSearchPage">
+        <view class="icon iconfont v-icon-search search-icon"></view>
+        <view class='search_text'>搜索</view>
+      </view>
+      <view class="btn" bindtap="onGoodsPage">
+        全部商品
+      </view>
+    </view>
+  </view>
+</view>
+
+<view class="shop_head" wx:if="{{items.styletype == 6}}">
+  <view class="head">
+    <image mode="widthFix" src="{{items.bgSrc}}" class="bg"></image>
+    <view class="box info">
+      <view class="logo one">
+        <view class="img">
+          <image  src="{{shopData.shop_logo != '' ?shopData.shop_logo:'/images/no-shop.png'}}"></image>
+        </view>
+      </view>
+      <view class="content">
+        <view class="wrap">
+          <view class="name">
+            {{shopData.shop_name}}
+          </view>
+          <view class='collentBtn six' wx:if="{{isCollection == false}}" bindtap="collectShopFun">
+            <view class="icon iconfont v-icon-love span six"></view>收藏 </view>
+          <view class='collentBtn six' wx:if="{{isCollection == true}}" bindtap="cancelcollectShopFun">取消收藏</view>
+        </view>
+        <view class="wrap">
+          <view class="fans">粉丝{{shopData.fans_number}}</view>
+          <view class="score">综合评分
+            <view class="star">
+              <van-rate value="{{ temDataitem.stars }}" size='13' color="#f44" void-icon="star" void-color="#f44" readonly="true" />
+            </view>
+          </view>
+        </view>
+      </view>
+    </view>
+  </view>
+  <view class="van-cell">
+    <view class="van-cell__value van-cell__value--alone search-cell">
+      <view class="btn" bindtap="onSearchPage">
+        <view class="icon iconfont v-icon-search search-icon"></view>
+        <view class='search_text'>搜索</view>
+      </view>
+      <view class="btn" bindtap="onGoodsPage">
+        全部商品
+      </view>
+    </view>
+  </view>
+</view>
+
+<view class="shop_item" wx:if="{{shopData.has_store == 1}}">
+  <view class="row" bindtap="allStoreFun">
+    <view>门店列表</view>
+    <view class="iconfont v-icon-arrow-right"></view>
+  </view>
+</view>

@@ -1,0 +1,65 @@
+{extend name="platform/new_base" /}
+{block name="resources"}
+{/block}
+{block name="menu"}
+{if $no_menu == '1'}
+
+{else}
+{if $second_menu_list && !$three_menu_list}
+<div class="v-subnav">
+    <!--<div class="v-subnav-title">{$frist_menu.module_name}</div>-->
+    {volist name="nav_list" id="vo"}
+    {notempty name="vo['sub_menu']"}
+    <ul class="v-subnav-list {if condition="$vo['data']['module_id'] eq $headid"}block{else}hide{/if}" id="menu_{$vo['data']['module_id']}" >
+    {volist name="vo['sub_menu']" id="v1"}
+    <li>
+        <a href="{:__URL('PLATFORM_MAIN/'.$v1['url'])}" {if condition="strtoupper($v1['method']) eq strtoupper($action)"} class="item active"{else} class="item"{/if}> {$v1['module_name']}</a>
+    </li>
+    {/volist}
+    </ul>
+    {/notempty}
+    {/volist}
+</div>
+{/if}
+
+{if $three_menu_list}
+<div class="v-subnav">
+    <!--<div class="v-subnav-title">{$second.module_name}</div>-->
+    <ul class="v-subnav-list block" id="menu_{$vo['module_id']}" >
+        {volist name="three_menu_list" id="vo"}
+        {php}
+        if(strtoupper($vo['method']) == strtoupper($action)){
+        $___session = strtoupper($action);
+        session('addonmenu_menu_action',$___session);
+        }else{
+        $___session = session('addonmenu_menu_action');
+        }
+        {/php}
+        <li>
+            <a href="{:__URL('PLATFORM_MAIN/'.$vo['url'])}" {if condition="strtoupper($vo['method']) eq strtoupper($action)"} class="item active"{elseif condition="(strtoupper($vo['method']) eq strtoupper($___session))" } class="item parentactive2222255555"{else /} class="item"{/if} > {$vo['module_name']}</a>
+        </li>
+        {/volist}
+    </ul>
+</div>
+{/if}
+{/if}
+{/block}
+
+{block name="main"}
+
+<?php
+	echo hook("$hook_name", $params);
+?>
+{/block}
+
+{block name="script"}
+
+<script>
+    $(function(){
+        var is_has = $('.v-subnav-list li a.active');
+        if(is_has.length == 0){
+            $('.v-subnav-list li a.parentactive2222255555').addClass('active');
+        }
+    })
+</script>
+{/block}

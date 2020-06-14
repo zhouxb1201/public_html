@@ -1,0 +1,203 @@
+{extend name="shop/new/Member/base" /}
+
+{block name="main"}
+<div class="v-main-right fl">
+    <div class="v-container">
+        <!--page-->
+        <div class="withdrawals addAccount">
+            <div class="withdrawals-title">提现账号</div>
+            <div class="withdrawals-main">
+                <div class="withdrawals-box" ></div>
+                <div class="withdrawals-box1 flex" id="list">
+
+                </div>
+            </div>
+        </div>
+        <!--详情-->
+        <!--<div class="withdrawals wxdetail">-->
+            <!--<div class="withdrawals-title">账户详情</div>-->
+            <!--<div class="withdrawals-main1">-->
+                <!--<div class="withdrawals-box1 flex">-->
+                    <!--<div class="withdrawals-item1">-->
+                        <!--<div class="wi-card">-->
+                            <!--<img src="__TEMP__/shop/new/public/image/account/weixin.png" alt="" class="wi-card-img">-->
+                            <!--微信-->
+                        <!--</div>-->
+                        <!--<div class="flex flex-pack-justify wi-info">-->
+                            <!--<div class="wi-accounts"><span class="mr-10">{$member_info['user_info']['wx_openid']}</span><span class="showAccount"><i class="icon-accountclose icon"></i></span></div>-->
+                        <!--</div>-->
+                    <!--</div>-->
+                    <!--<div class="withdrawals-tips">-->
+                        <!--<div class="wt-title">账号提示</div>-->
+                        <!--<div class="wt-detail">微信授权登录后自动生成，该账号可用于微信提现，上述字符串为所授权的微信号提现的唯一标识，所以该账号无法编辑。</div>-->
+                    <!--</div>-->
+                <!--</div>-->
+            <!--</div>-->
+        <!--</div>-->
+        <!--<div class="withdrawals">-->
+            <!--<div class="withdrawals-title">账户详情</div>-->
+            <!--<div class="withdrawals-main1">-->
+                <!--<div class="withdrawals-box1 flex">-->
+                    <!--<div class="withdrawals-item1">-->
+                        <!--<div class="wi-card">-->
+                            <!--<img src="__TEMP__/shop/new/public/image/account/Ali.png" alt="" class="wi-card-img">-->
+                            <!--支付宝-->
+                        <!--</div>-->
+                        <!--<div class="flex flex-pack-justify wi-info">-->
+                            <!--<div class="wi-accounts"><span class="mr-10">*好  138 **** 8888</span> <span class="showAccount"><i class="icon-accountopen icon"></i></span></div>-->
+                        <!--</div>-->
+                    <!--</div>-->
+                    <!--<div class="withdrawals-tips">-->
+                        <!--<div class="wt-title">账号提示</div>-->
+                        <!--<div class="wt-detail">该用户可用于支付宝提现。</div>-->
+                    <!--</div>-->
+                <!--</div>-->
+            <!--</div>-->
+            <!--<div class="withdrawals-operation">-->
+                <!--<a href="javascript:void(0);" class="btn-diy btn-primary-diy">编辑</a>-->
+                <!--<a href="javascript:void(0);" class="btn-diy btn-default-diy">删除</a>-->
+            <!--</div>-->
+        <!--</div>-->
+        <!--<div class="withdrawals">-->
+            <!--<div class="withdrawals-title">账户详情</div>-->
+            <!--<div class="withdrawals-main1">-->
+                <!--<div class="withdrawals-box1 flex">-->
+                    <!--<div class="withdrawals-item1">-->
+                        <!--<div class="wi-card">-->
+                            <!--<img src="__TEMP__/shop/new/public/image/account/yinlian.png" alt="" class="wi-card-img">-->
+                            <!--银联-->
+                        <!--</div>-->
+                        <!--<div class="flex flex-pack-justify wi-info">-->
+                            <!--<div class="wi-accounts"><span class="mr-10">**** 8888</span><i class="icon-accountopen icon"></i></div>-->
+                        <!--</div>-->
+                    <!--</div>-->
+                    <!--<div class="withdrawals-tips">-->
+                        <!--<div class="mb-10">-->
+                            <!--<div class="wt-title">银行支付限额</div>-->
+                            <!--<div class="wt-detail">-->
+                                <!--<div class="flex flex-pack-justify mb-10">-->
+                                    <!--<div>单笔限额</div>-->
+                                    <!--<div>￥50000</div>-->
+                                <!--</div>-->
+                                <!--<div class="flex flex-pack-justify">-->
+                                    <!--<div>单日限额</div>-->
+                                    <!--<div>￥50000</div>-->
+                                <!--</div>-->
+                            <!--</div>-->
+                        <!--</div>-->
+                        <!--<div>-->
+                            <!--<div class="wt-title">账号提示</div>-->
+                            <!--<div class="wt-detail">该用户可用于支付宝提现。</div>-->
+                        <!--</div>-->
+
+                    <!--</div>-->
+                <!--</div>-->
+            <!--</div>-->
+            <!--<div class="withdrawals-operation">-->
+                <!--<a href="javascript:void(0);" class="btn-diy btn-primary-diy">解绑</a>-->
+            <!--</div>-->
+        <!--</div>-->
+        <!--详情-->
+        <!--page-->
+    </div>
+</div>
+{/block}
+{block name="javascript"}
+<script>
+    require(['common','dialog'], function (common,dialog) {
+        LoadingInfo();
+        function LoadingInfo() {
+            $.ajax({
+                    type: "post",
+                    url:  __URL(SHOPMAIN + "/member/accountList"),
+                    success: function (data) {
+                        var html = '';
+                        if("{$member_info['user_info']['wx_openid']}"!=''){
+                            html+='<div class="withdrawals-item1">';
+                            html+='<div class="wi-card">';
+                            html+='<img src="__TEMP__/shop/new/public/image/account/weixin.png" alt="" class="wi-card-img">';
+                            html+='微信';
+                            html+='</div>';
+                            html+='<div class="flex flex-pack-justify wi-info">';
+                            html+='<div class="wi-wx-tips">微信授权登录后自动增加</div>';
+                            html+='<div><span class="wi-info-a wxdetail">详情</span></div>';
+                            html+='</div>';
+                            html+='</div>';
+                        }
+                        if (data.length > 0) {
+                            for (var i = 0; i < data.length; i++) {
+                                if(data[i]['type']==3){
+                                    html+='<div class="withdrawals-item1">';
+                                    html+='<div class="wi-card">';
+                                    html+='<img src="__TEMP__/shop/new/public/image/account/Ali.png" alt="" class="wi-card-img">';
+                                    html+='支付宝';
+                                    html+='</div>';
+                                    html+='<div class="flex flex-pack-justify wi-info">';
+                                    html+='<div class="wi-account">'+data[i]['account_number']+'</div>';
+                                    html+='<div><span class="wi-info-a"><a data-number="'+data[i]['account_number']+'" data-id="'+data[i]['id']+'">详情</a></span></div>';
+                                    html+='</div>';
+                                    html+='</div>';
+                            	}
+                                if(data[i]['type']==4){
+                                    html += '<div class="withdrawals-item1">';
+                                    html += '<div class="wi-card">';
+                                    html += '<img src="__TEMP__/shop/new/public/image/account/yinlian.png" alt="" class="wi-card-img">';
+                                    html += '银联';
+                                    html += '</div>';
+                                    html += '<div class="flex flex-pack-justify wi-info">';
+                                    html += '<div class="wi-account">'+data[i]['account_number']+'</div>';
+                                    html += '<div><span class="wi-info-a"><a href="' + __URL('SHOP_MAIN/member/accountDetail')+'?id="'+data[i]['id']+'"&type=2">详情</a></span></div>';
+                                    html += '</div>';
+                                    html += '</div>';
+                                }
+                                if(data[i]['type']==1){
+                                    html += '<div class="withdrawals-item1">';
+                                    html += '<div class="wi-card">';
+                                    html += '<img src="'+data[i]['bank_iocn']+'" alt="" class="wi-card-img">';
+                                    html += data[i]['open_bank'];
+                                    html += '</div>';
+                                    html += '<div class="flex flex-pack-justify wi-info">';
+                                    html += '<div class="wi-account">'+data[i]['account_number']+'</div>';
+                                    html += '<div><span class="wi-info-a"><a href="' + __URL('SHOP_MAIN/member/accountDetail')+'?id='+data[i]['id']+'&type='+data[i]['type']+' ">详情</a></span></div>';
+                                    html += '</div>';
+                                    html += '</div>';
+                                }
+                            }
+                        }
+                        if(data.length < 5){
+                            html += ' <div class="withdrawals-item withdrawal-add">';
+                            html += '<a href="' + __URL('SHOP_MAIN/member/addAccount')+'" class="add_bank">添加账户</a>';
+                            html += '</div>';
+                        }
+                        $("#list").html(html);
+                    }
+                }
+            );
+        }
+        $('body').on('click','.delAccount',function(){
+            var id = $(this).data('id');
+            layer.confirm('你确定删除该账号？', {
+                btn: ['确定', '取消']//按钮
+            }, function (index) {
+                layer.close(index);
+                $.ajax({
+                    type:"post",
+                    url:"{:__URL('SHOP_MAIN/member/delAccount')}",
+                    data:{
+                        'id' : id
+                    },
+                    success : function(data) {
+                        if (data["code"] > 0) {
+                            layer.msg('删除成功',{icon: 1, time: 2000}, LoadingInfo());
+                        }else{
+                            layer.msg('删除失败');
+                        }
+                    }
+                });
+            });
+
+        });
+
+    });
+</script>
+{/block}

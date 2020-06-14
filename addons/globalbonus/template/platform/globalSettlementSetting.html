@@ -1,0 +1,186 @@
+
+{block name="main"}
+		<!-- page -->
+		<ul class="nav nav-tabs v-nav-tabs" role="tablist">
+			<li role="presentation" ><a href="{:__URL('ADDONS_MAINglobalBasicSetting')}"  class="flex-auto-center">基础设置</a></li>
+			<li role="presentation" class="active"><a href="{:__URL('ADDONS_MAINglobalSettlementSetting')}"  class="flex-auto-center">结算设置</a></li>
+			<li role="presentation"><a href="{:__URL('ADDONS_MAINglobalApplicationAgreement')}&type=2"  class="flex-auto-center">申请协议</a></li>
+			<li role="presentation"><a href="{:__URL('ADDONS_MAINglobalApplicationAgreement')}&type=1"  class="flex-auto-center">文案样式</a></li>
+			<li role="presentation"><a href="{:__URL('ADDONS_MAINglobalApplicationAgreement')}&type=3"  class="flex-auto-center">推送通知</a></li>
+		</ul>
+		<div class="tab-content">
+			<div role="tabpanel" class="tab-pane fade in active" id="settlement">
+				<form class="form-horizontal form-validate pt-15 widthFixedForm">
+					<div class="form-group">
+						<label class="col-md-2 control-label">提现方式</label>
+						<div class="col-md-5">
+							<label class="radio-inline">
+								<input type="radio" name="withdrawalstype" value="1" checked>商城余额
+							</label>
+						</div>
+					</div>
+					<div class="form-group">
+						<label class="col-md-2 control-label"><span class="text-bright">*</span>分红结算节点</label>
+						<div class="col-md-5">
+							<select class="form-control" id="bonus_calculation" name="bonus_calculation" required>
+								<option value="" >请选择</option>
+								<option value="1" {if condition="$website.bonus_calculation eq 1"} selected="selected"{/if}>实付款金额</option>
+								<option value="2" {if condition="$website.bonus_calculation eq 2"} selected="selected"{/if}>商品原价</option>
+								<option value="3" {if condition="$website.bonus_calculation eq 3"} selected="selected"{/if}>商品售价</option>
+								<option value="4" {if condition="$website.bonus_calculation eq 4"} selected="selected"{/if}>商品成本价</option>
+								<option value="5" {if condition="$website.bonus_calculation eq 5"} selected="selected"{/if}>商品利润价</option>
+							</select>
+							<div class="mb-0 help-block">平台订单（分红金额计算节点） * 分红比例 * 等级占比 / 等级人数 = 个人获得分红</div>
+						</div>
+					</div>
+					<div class="form-group">
+						<label class="col-md-2 control-label"><span class="text-bright">*</span>分红比例</label>
+						<div class="col-md-5">
+							<div class="input-group">
+								<input type="number" name="bonuspoundage" class="form-control" min="0" required value="{if $website.bonus_poundage}{$website.bonus_poundage}{/if}">
+								<div class="input-group-addon">%</div>
+							</div>
+						</div>
+					</div>
+					<div class="form-group">
+						<label class="col-md-2 control-label">自动分红</label>
+						<div class="col-md-5">
+							<div class="switch-inline">
+								<input type="checkbox" name="withdrawals_check" id="withdrawals_check" {if condition="$website.withdrawals_check eq 1"}checked{/if}>
+								<label for="withdrawals_check" class=""></label>
+							</div>
+						</div>
+					</div>
+					<div class="form-group" id="limit_time" style="display: none">
+						<label class="col-md-2 control-label">自动分红发放周期</label>
+						<div class="col-md-5">
+							<select class="form-control" id="bonus_grant" name="bonus_grant">
+								<option value="" >请选择</option>
+								<option value="1" {if condition="$website.limit_time eq 1"} selected="selected"{/if}>一天</option>
+								<option value="7" {if condition="$website.limit_time eq 7"} selected="selected"{/if}>七天</option>
+								<option value="10" {if condition="$website.limit_time eq 10"} selected="selected"{/if}>十天</option>
+								<option value="15" {if condition="$website.limit_time eq 15"} selected="selected"{/if}>十五天</option>
+								<option value="30" {if condition="$website.limit_time eq 30"} selected="selected"{/if}>三十天</option>
+								<option value="100" {if condition="$website.limit_time eq 100"} selected="selected"{/if}>指定日期</option>
+							</select>
+							<div class="mb-0 help-block">开启后，根据所选的周期凌晨12点统一发放。</div>
+						</div>
+					</div>
+					<div class="form-group" id="limit_times" style="display: none">
+						<label class="col-md-2 control-label">每月</label>
+						<div class="col-md-5">
+							<div class="input-group">
+							<input type="number" name="limit_date" class="form-control" min="0" id="limit_date" value="{$website.limit_date}">
+							<div class="input-group-addon">日</div>
+							</div>
+							<div class="mb-0 help-block">将会按照设置的日期当天凌晨12点进行发放分红，如当前月份没有设置的日期，则按该月最后一天处理。</div>
+						</div>
+					</div>
+					<div class="form-group">
+						<label class="col-md-2 control-label">分红个人所得税</label>
+						<div class="col-md-5">
+							<div class="input-group">
+								<input type="number" class="form-control" min="0" name="poundage" value="{if $website.poundage}{$website.poundage}{/if}">
+								<div class="input-group-addon">%</div>
+							</div>
+							<div class="mb-0 help-block">分红提现时，按照比例扣税个人所得税，0或空则不扣除。</div>
+						</div>
+					</div>
+					<div class="form-group">
+						<label class="col-md-2 control-label">分红免打税区间</label>
+						<div class="col-md-5">
+							<div class="input-group">
+								<input type="number" name="withdrawalsbegin" class="form-control number-form-control" step="0.1" min="0" value="{$website.withdrawals_begin}">
+								<div class="input-group-addon"> ~ </div>
+								<input type="number" name="withdrawalsend" class="form-control number-form-control" step="0.1" min="0" value="{$website.withdrawals_end}">
+								<div class="input-group-addon">元</div>
+							</div>
+							<div class="mb-0 help-block">当提现金额在免打税区间时，则该笔提现不扣除个人所得税，开始金额必须小于结束金额。</div>
+						</div>
+					</div>
+					<div class="form-group"></div>
+					<div class="form-group">
+						<label class="col-md-2 control-label"></label>
+						<div class="col-md-8">
+							<button class="btn btn-primary add" type="submit">保存</button>
+							<a href="javascript:history.go(-1);" class="btn btn-default">返回</a>
+						</div>
+					</div>
+				</form>
+			</div>
+		</div>
+
+	<!-- page end -->
+{/block}
+{block name="script"}
+<script>
+    require(['util'],function(util){
+        loading();
+            function loading() {
+                if ($("input[name='withdrawals_check']").is(':checked')) {
+                    $("#limit_time").show();
+                }
+                if("{$website.limit_date}"){
+                    $("#limit_times").show();
+				}
+            }
+        $('#withdrawals_check').on('change', function () {
+            if ($("input[name='withdrawals_check']").is(':checked')) {
+                $("#limit_time").show();
+				$("#bonus_grant").attr("required",true);
+            }else{
+                $("#bonus_grant").removeAttr("required",true);
+                $("#limit_time").hide();
+                $("#limit_times").hide();
+                $("#limit_date").removeAttr("required",true);
+			}
+		})
+        $('#bonus_grant').on('change', function () {
+            if ($("#bonus_grant").val() == 100) {
+                $("#limit_times").show();
+                $("#limit_date").attr("required", true);
+            }else{
+                $("#limit_times").hide();
+                $("#limit_date").removeAttr("required",true);
+			}
+        })
+        util.validate($('.form-validate'),function(form){
+            var bonus_calculation = $("#bonus_calculation").val();
+            var bonus_poundage = $("input[name='bonuspoundage']").val();
+            var poundage = $("input[name='poundage']").val();
+            var withdrawals_begin = $("input[name='withdrawalsbegin']").val();
+            var withdrawals_end = $("input[name='withdrawalsend']").val();
+            var withdrawals_check = $("input[name='withdrawals_check']").is(':checked') ? 1 : 2;
+            var limit_time = '';
+            var limit_times = '';
+            if(withdrawals_check==1){
+                limit_time = $("#bonus_grant").val();
+                if(limit_time==100){
+                    limit_times = $("#limit_date").val();
+				}
+            }
+            $.ajax({
+                type : "post",
+                url : "{$globalSettlementSettingUrl}",
+                data : {
+                    'bonus_calculation' : bonus_calculation ,
+                    'bonus_poundage': bonus_poundage,
+                    'withdrawals_begin': withdrawals_begin,
+                    'withdrawals_end': withdrawals_end,
+                    'poundage': poundage,
+                    'limit_time' : limit_time,
+                    'limit_date' : limit_times,
+                    'withdrawals_check' : withdrawals_check
+                },
+                success : function(data) {
+                    if (data['code'] > 0) {
+                        util.message(data["message"], 'success', "{:__URL('ADDONS_MAINglobalSettlementSetting')}");
+                    } else {
+                        util.message(data["message"], 'danger');
+                    }
+                }
+            });
+        })
+    })
+</script>
+{/block}

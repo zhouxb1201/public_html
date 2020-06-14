@@ -1,0 +1,40 @@
+<view class='post'>
+  <view class='post_group'>
+    <view class='post_cell'>
+
+      <view class='post_title'>账户类型</view>
+      <radio-group class="radioGroup" bindchange="bindPickerChange">
+        <radio wx:for="{{typeArray}}" wx:key='{{item.type}}' checked="{{item.checked}}" value="{{item.type}}">
+          <text class="radio-text">{{item.text}}</text> </radio>
+      </radio-group>
+
+    </view>
+    <view wx:if="{{account_type==3}}">
+      <view class='post_cell'>
+        <view class='post_title'>姓名</view>
+        <input type='text' placeholder='请输入姓名' bindinput='realnameFun' value='{{realname}}'></input>
+      </view>
+      <view class='post_cell'>
+        <view class='post_title'>账户号码</view>
+        <input type='text' placeholder='请输入账户号码' bindblur='accountNumberFun' value="{{account_number}}"></input>
+      </view>
+    </view>
+    <view wx:if="{{account_type==1 || account_type==4}}">
+      <view class='post_cell'>
+        <view class='post_title'>银行卡</view>
+        <input type='text' placeholder='请输入银行名称' bindinput='bankNameFun' value='{{bank_name}}'></input>
+      </view>
+      <view class='post_cell'>
+        <view class='post_title'>银行卡号</view>
+        <input type='text' placeholder='请输入银行账号' bindblur='accountNumberFun' value="{{account_number}}"></input>
+      </view>
+      <view class='post_cell'>
+        <view class='post_title'>持卡人</view>
+        <input type='text' placeholder='请输入持卡人姓名' bindblur='realNameFun' value="{{realname}}"></input>
+      </view>
+    </view>
+
+  </view>
+
+  <button class='save_btn' bindtap='addBankAccount'>保存</button>
+</view>

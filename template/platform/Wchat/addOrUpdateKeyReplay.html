@@ -1,0 +1,323 @@
+<form class="form-horizontal padding-15 list_key">
+
+</form>
+<input type="hidden" id="id" value="{$id}">
+<input type="hidden" id="replay_id" value="">
+<input type="hidden" id="last_media_id" value="{$info.reply_media_id}">
+<script>
+require(['util'],function(util){
+loadingKey();
+
+    // 点击文本消息
+    $('.list_key').on('click','.selectText',function(){
+        $(this).hide();
+        $(this).siblings('.showMaterial').hide();
+        $(this).siblings('#textNew').show();
+    });
+    $('.list_key').on('click','.cancel1',function(){
+        $(this).parents('.textNew1').hide();
+        $(this).parents('.textNew1').siblings('.selectText').show();
+        $(this).parents('.textNew1').siblings('.showMaterial').show();
+    });
+    $('.list_key').on('click','.delReply',function(){
+        $(this).parents('.textNew1').hide();
+        $(this).parents('.textNew1').siblings('.selectText').show();
+        $(this).parents('.textNew1').siblings('.showMaterial').show();
+    });
+
+    //点解链接带文案
+    $('.list_key').on('click','.link_dia',function(){
+        var areaVal=$(this).parents('.textNew1').find('#replay_content_text');
+        var em=areaVal.val();
+        var html='';
+        html +='<form class="form-horizontal padding-15 linktext2" id="">';
+        html +='<div class="form-group"><label class="col-md-2 control-label">链接文案</label><div class="col-md-8"><input type="text" class="form-control" id="linkCopy" value=""></div></div>';
+        html +='<div class="form-group"><label class="col-md-2 control-label">跳转链接</label><div class="col-md-8">'
+        html +='<div class="input-group item"><input type="text" class="form-control item" id="wap_jump2"><span class="input-group-btn"><a href="javascript:void(0);" class="btn btn-default link_set">选择链接</a></span>';
+		html +='</div></div></div>';
+        html +='</form>';
+        util.confirm('链接地址',html,function(){
+            var copy=this.$content.find('#linkCopy').val();
+            var link=this.$content.find('#wap_jump2').val();
+                if(!copy){
+                    util.message('文案不能为空','danger')
+                    return false;
+                }
+                if(!link){
+                    util.message('链接不能为空','danger')
+                    return false;
+                }
+
+            var href='<a href="'+link+'">'+copy+'</a>';
+            areaVal.val(em+href);
+
+        },'large');
+    });
+    // 点击表情添加到文本域
+    $('.list_key').on('click','.text_select_emoji',function(){
+        var areaVal=$(this).parents('.textNew1').find('#replay_content_text');
+        var em=areaVal.val();
+        util.emojiDialog(function(data){
+            areaVal.val(em+data.emoji);
+        })
+    })
+
+    // 文本信息跳转链接
+    // $('body').on('click','.linktext2 .link_set',function(){
+    //     console.log("linktext2");
+    //     var url = __URL(PLATFORMMAIN + "/config/selectWapUrl");
+    //     util.confirm('选择链接','url:'+url, function () {
+    //         var data = this.$content.find('#selectedData').val();
+    //         $("#wap_jump2").val(data);
+    //         // var obj = getCurrentMenu();
+    //         // updateWeixinMenuUrl(obj.attr("data-menuid"),data);
+    //     },'large');
+    // });
+
+function loadingKey() {
+    var id = $("#id").val();
+    $.ajax({
+        type: "get",
+        url: "{:__URL('PLATFORM_MAIN/wchat/getKeyReplayMedia')}",
+        async: true,
+        data: {
+             "id": id
+        },
+        success: function (data) {
+            var html = '';
+            html += '<div class="form-group">';
+            html += '<label class="col-md-3 control-label">规则名称</label>';
+            html += '<div class="col-md-8">';
+            if(data.rule_name){
+                html += '<input type="text" class="form-control" id="rule_name" value="' + data.rule_name + '">';
+            }else{
+                html += '<input type="text" class="form-control" id="rule_name" value="">';
+            }
+            html += '<p class="help-block">规则名称用于区分关键字，可围绕规则名设立触发关键字（例：春节活动）</p>';
+            html += '</div></div>';
+            html += '<div class="form-group">';
+            html += '<label class="col-md-3 control-label">匹配类型</label>';
+            html += '<div class="col-md-8">';
+            if (data.match_type == 1) {
+                html += '<label class="radio-inline"><input type="radio" name="match_type" value="1" checked> 模糊匹配</label>';
+                html += '<label class="radio-inline"><input type="radio" name="match_type" value="2"> 全局匹配</label>';
+            } else if (data.match_type == 2) {
+                html += '<label class="radio-inline"><input type="radio" name="match_type" value="1"> 模糊匹配</label>';
+                html += '<label class="radio-inline"><input type="radio" name="match_type" value="2" checked> 全局匹配</label>';
+            }else{
+                html += '<label class="radio-inline"><input type="radio" name="match_type" value="1"> 模糊匹配</label>';
+                html += '<label class="radio-inline"><input type="radio" name="match_type" value="2"> 全局匹配</label>';
+            }
+            html += '<p class="help-block">模糊匹配：粉丝给公众号发送的信息包含触发关键字即可返回内容。</p>';
+            html += '<p class="help-block">全局匹配：粉丝给公众号发送的信息必须与触发关键字完全相同才能返回内容。</p>';
+            html += '</div></div>';
+            html += '<div class="form-group">';
+            html += '<label class="col-md-3 control-label">关键字</label>';
+            html += '<div class="col-md-8">';
+            if(data.key){
+                html += '<input type="text" class="form-control" id="key" value="' + data.key + '">';
+            }else{
+                html += '<input type="text" class="form-control" id="key" value="">';
+            }
+            html += '<p class="help-block">触发关键字用于匹配粉丝给公众号发送的内容，不会在前端展示。<span style="color:red">多个关键字用英文分号隔开。</span></p>';
+            html += '</div>';
+            html += '</div>';
+            html += '<div class="form-group">';
+            html += '<label class="col-md-3 control-label">回复内容</label>';
+            html += '<div class="col-md-8 media_info">';
+            if(data){
+                if (data.media_info.type == 'voice'||  data.media_info.type == 'image') {
+                    html += '<div class="w-300 border-default">';
+                    html += '<div class="padding-15 imageText">';
+                    html += '<p class="p small-muted">' + data['media_info']['createtime'] + '</p>';
+                    html += '<div class="text-center">';
+                    html += '<img src="' + data['media_info']['attachment'] + '" class="max-w-auto" />';
+                    html += '</div>';
+                    html += '<p class="pt-15 text-muted line-2-ellipsis">' + data['media_info']['filename']+ '</p>';
+                    html += '</div>';
+                    html += '<div class="border-top flex-auto-center text-center">';
+                    html += '<a href="javascript:void(0);" class="flex-1 btn text-primary border-right showMaterial">修改</a>';
+                    html += '<a href="javascript:void(0);" class="flex-1 btn text-danger delReply" >删除</a>';
+                    html += '</div>';
+                    html += '</div>';
+                }
+                if (data.media_info.type == 'text') {
+                // html += '<div class="flex-auto-center h-300 empty-box">'; 
+                // html +='<div class="media_cover1 showMaterial" style="display: none"><span class="create_access"><a href="javascript:void(0);"><i class="icon icon-add"></i>'               
+                // html +='<strong>从素材库中选择</strong></a></span></div>'                     
+                // html +='<div class="media_cover1 selectText" style="display: none"><span class="create_access"><a href="javascript:void(0);"><i class="icon icon-add"></i><strong>文本消息</strong></a></span></div></div>'                     
+                // html +='<div class="textNew1" id="textNew">';                      
+                // html +='<textarea name="" id="replay_content_text" class="form-control resize_none" cols="60" rows="5"></textarea></div>';                
+                // html +='<div class="textNew1" id="textNew">';                      
+                // html +='<textarea name="" id="replay_content_text" class="form-control resize_none" cols="60" rows="5">'+data.media_info.attachment+'</textarea>';
+                // html +='<div class="text_border1"><a href="javascript:void(0);" class="text_select_emoji"><i class="icon icon-emoji"></i></a><a href="javascript:void(0);" class="link_dia"><i class="icon icon-link-l"></i></a></div>';
+                // html +='<div class="mt-10 text-left"><a href="javascript:void(0);" class="flex-1 btn btn-default delReply">删除</a></div></div></div>';
+
+                html += '<div class="flex-auto-center h-300 empty-box">';
+                html +='<div class="media_cover1 showMaterial" style="display: none"><span class="create_access"><a href="javascript:void(0);"><i class="icon icon-add"></i>';
+                html +='<strong>从素材库中选择</strong></a></span></div>';
+                html +='<div class="media_cover1 selectText" style="display: none"><span class="create_access"><a href="javascript:void(0);"><i class="icon icon-add"></i><strong>文本消息</strong></a></span></div>';
+                html +='<div class="textNew1" id="textNew">';                      
+                html +='<textarea name="" id="replay_content_text" class="form-control resize_none" cols="60" rows="5">'+data.media_info.attachment+'</textarea>';
+                html +='<div class="text_border1"><a href="javascript:void(0);" class="text_select_emoji mr-04"><i class="icon icon-emoji"></i></a><a href="javascript:void(0);" class="link_dia"><i class="icon icon-link-l"></i></a></div>';
+                html +='<div class="mt-10 text-left"><a class="btn btn-default delReply" href="javascript:void(0);">删除</a></div></div></div>';
+                }
+                if (data.media_info.type == 'video') {
+                    html += '<div class="w-300 border-default">';
+                    html += '<div class="padding-15 imageText">';
+                    html += '<h3 class="strong fs-16 line-1-ellipsis">' + data['media_info']['tag']['title'] + '</h3>';
+                    html += '<p class="p small-muted">' + data['media_info']['createtime'] + '</p>';
+                    html += '<div class="text-center">';
+                    html += '<img src="PLATFORM_STATIC//images/banner-bg.png" class="max-w-auto" />';
+                    html += '</div>';
+                    html += '<p class="pt-15 text-muted line-2-ellipsis">' + data['media_info']['tag']['description']+ '</p>';
+                    html += '</div>';
+                    html += '<div class="border-top flex-auto-center text-center">';
+                    html += '<a href="javascript:void(0);" class="flex-1 btn text-primary border-right showMaterial" >修改</a>';
+                    html += '<a href="javascript:void(0);" class="flex-1 btn text-danger delReply">删除</a>';
+                    html += '</div>';
+                    html += '</div>';
+                }
+                if (data.media_info.type == 'news') {
+                    html += '<div class="w-300 border-default">';
+                    html += '<div class="padding-15 imagesTexts">';
+                    for (var i = 0; i < data['media_info']['items']['data'].length; i++) {
+                        if(i==0){
+                            html += '<div class="item-head">';
+                            html += '<img src="' + data['media_info']['items']['data'][i]['thumb_url'] + '" class="max-w-auto" />';
+                            html += '<p class="line-1-ellipsis">' + data['media_info']['items']['data'][i]['title'] + '</p></div>';
+                        }else{
+                            html += '<div class="item">';
+                            html += '<p class="line-2-ellipsis">' + data['media_info']['items']['data'][i]['title'] + '</p>';
+                            html += '<img src="' + data['media_info']['items']['data'][i]['thumb_url'] + '" />';
+                            html += '</div>';
+                        }
+                    }
+                    html += '</div>';
+                    html += '<div class="border-top flex-auto-center text-center">';
+                    html += '<a href="javascript:void(0);" class="flex-1 btn text-primary border-right showMaterial">修改</a>';
+                    html += '<a href="javascript:void(0);" class="flex-1 btn btn-default delReply"  >删除</a>';
+                    html += '</div>';
+                    html += '</div>';
+                }
+            }else{
+                html += '<div class="flex-auto-center h-300 empty-box">';
+                html +='<div class="media_cover1 showMaterial"><span class="create_access"><a href="javascript:void(0);"><i class="icon icon-add"></i>'
+                html +='<strong>从素材库中选择</strong></a></span></div>';
+                html +='<div class="media_cover1 selectText"><span class="create_access"><a href="javascript:void(0);"><i class="icon icon-add"></i><strong>文本消息</strong></a></span></div>';
+                html +='<div class="textNew1" id="textNew" style="display: none">';                      
+                html +='<textarea name="" id="replay_content_text" class="form-control resize_none" cols="60" rows="5"></textarea>';
+                html +='<div class="text_border1"><a href="javascript:void(0);" class="text_select_emoji mr-04"><i class="icon icon-emoji"></i></a><a href="javascript:void(0);" class="link_dia"><i class="icon icon-link-l"></i></a></div>';
+                html +='<div class="mt-10 text-left"><a class="btn btn-default cancel1" href="javascript:void(0);">取消</a></div></div></div>';
+
+            }
+            html += '<p class="help-block">识别到内容后，给粉丝回复的内容。</p>';
+            html += '</div>';
+            html += '</div>';
+            $(".list_key").html(html);
+        }
+    });
+}
+    // 修改
+    $('body').on('click','.delReply',function(){
+            $('.border-default').hide();
+            $('.form-control-static').show();
+    });
+    $('.list_key').on('click','.showMaterial',function(){
+        var id=$("#id").val();
+        var url = __URL('PLATFORM_MAIN/wchat/onLoadMaterial&id=')+id;
+        util.confirm('选取素材', 'url:'+url,function(){
+            var  media_id = this.$content.find('#replay_key_id').val();
+            if(media_id==''){
+                util.message('请选择素材','danger');
+                return false;
+            }
+            $.ajax({
+                type: "post",
+                url: "{:__URL('PLATFORM_MAIN/wchat/updateKeyReplayMedia')}",
+                async: true,
+                data: {
+                    "media_id":media_id
+                },
+                success: function (data) {
+                    var  html = '';
+                    if(data){
+                        if (data.type == 'voice'||  data.type == 'image') {
+                            html += '<div class="w-300 border-default">';
+                            html += '<div class="padding-15 imageText">';
+                            html += '<p class="p small-muted">' + data['createtime'] + '</p>';
+                            html += '<div class="text-center">';
+                            html += '<img src="' + data['attachment'] + '" class="max-w-auto" />';
+                            html += '</div>';
+                            html += '<p class="pt-15 text-muted line-2-ellipsis">' + data['filename']+ '</p>';
+                            html += '</div>';
+                            html += '<div class="border-top flex-auto-center text-center">';
+                            html += '<a href="javascript:void(0);" class="flex-1 btn text-primary border-right showMaterial" >修改</a>';
+                            html += '<a href="javascript:void(0);" class="flex-1 btn text-danger delReply"  >删除</a>';
+                            html += '</div>';
+                            html += '</div>';
+                        }
+                        if (data.type == 'text') {
+                            html += '<div class="w-300 border-default">';
+                            html += '<div class="padding-15 imageText">';
+                            html += '<p class="pt-15 text-muted line-2-ellipsis">' + data['attachment']+ '</p>';
+                            html += '</div>';
+                            html += '<div class="border-top flex-auto-center text-center">';
+                            html += '<a href="javascript:void(0);" class="flex-1 btn text-primary border-right showMaterial">修改</a>';
+                            html += '<a href="javascript:void(0);" class="flex-1 btn text-danger delReply" >删除</a>';
+                            html += '</div>';
+                            html += '</div>';
+                        }
+                        if (data.type == 'video') {
+                            html += '<div class="w-300 border-default">';
+                            html += '<div class="padding-15 imageText">';
+                            html += '<h3 class="strong fs-16 line-1-ellipsis">' + data['tag']['title'] + '</h3>';
+                            html += '<p class="p small-muted">' + data['createtime'] + '</p>';
+                            html += '<div class="text-center">';
+                            html += '<img src="PLATFORM_STATIC//images/banner-bg.png" class="max-w-auto" />';
+                            html += '</div>';
+                            html += '<p class="pt-15 text-muted line-2-ellipsis">' + data['tag']['description']+ '</p>';
+                            html += '</div>';
+                            html += '<div class="border-top flex-auto-center text-center">';
+                            html += '<a href="javascript:void(0);" class="flex-1 btn text-primary border-right showMaterial" >修改</a>';
+                            html += '<a href="javascript:void(0);" class="flex-1 btn text-danger delReply"  >删除</a>';
+                            html += '</div>';
+                            html += '</div>';
+                        }
+                        if (data.type == 'news') {
+                            html += '<div class="w-300 border-default">';
+                            html += '<div class="padding-15 imagesTexts">';
+                            for (var i = 0; i < data['items']['data'].length; i++) {
+                                if(i==0){
+                                    html += '<div class="item-head">';
+                                    html += '<img src="' + data['items']['data'][i]['thumb_url'] + '" class="max-w-auto" />';
+                                    html += '<p class="line-1-ellipsis">' + data['items']['data'][i]['title'] + '</p></div>';
+                                }else{
+                                    html += '<div class="item">';
+                                    html += '<p class="line-2-ellipsis">' + data['items']['data'][i]['title'] + '</p>';
+                                    html += '<img src="' + data['items']['data'][i]['thumb_url'] + '" />';
+                                    html += '</div>';
+                                }
+                            }
+                            html += '</div>';
+                            html += '<div class="border-top flex-auto-center text-center">';
+                            html += '<a href="javascript:void(0);" class="flex-1 btn text-primary border-right showMaterial" >修改</a>';
+                            html += '<a href="javascript:void(0);" class="flex-1 btn text-danger delReply"  >删除</a>';
+                            html += '</div>';
+                            html += '</div>';
+                        }
+                        html += '<p class="form-control-static" style="display:none;">您还未选择回复内容，<a href="javascript:void(0);" class="text-primary materialEvent showMaterial">立即选择</a></p>';
+                    }else{
+                        html += '<p class="form-control-static" style="display:block;">您还未选择回复内容，<a href="javascript:void(0);" class="text-primary materialEvent showMaterial">立即选择</a></p>';
+                    }
+                    $("#replay_id").val(data.media_id);
+                    $(".media_info").html(html);
+                }
+            });
+        },'large')
+    })
+
+
+})
+
+</script>

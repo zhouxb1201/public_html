@@ -1,0 +1,52 @@
+<view class='detail_box'>
+  <van-tabs active="{{ active }}" bind:change='tagStatusFun'>
+    <van-tab title="采购"></van-tab>
+    <van-tab title="出货"></van-tab>
+    <van-tab title="提货"></van-tab>
+    <van-tab title="零售"></van-tab>
+  </van-tabs>
+
+  <view class='list'>
+    <view class='item' wx:for='{{cloudDetailData}}' wx:key=''>
+      <view class='head'>
+        <view class='time'>{{status_text}}时间：{{item.create_time_date}}</view>
+        <view class='num'>数量：{{item.num}}</view>
+      </view>
+      <view class='item_info'>
+        <view class='cell' wx:if='{{tag_status == 1}}'>
+          <view class='cell_text'>采购单价：¥{{item.price}}</view>
+          <view class='cell_text'>折扣：{{item.channel_purchase_discount}}%</view>
+          <view class='cell_text'>商品售价：¥{{item.platform_price}}</view>
+        </view>
+        <view class='cell' wx:elif='{{tag_status == 2}}'>
+          <view class='cell_text'>出货单价：¥{{item.price}}</view>
+          <view class='cell_text'>采购单价：¥{{item.purchase_price}}</view>
+          <view class='cell_text'>商品售价：¥{{item.platform_price}}</view>  
+        </view>
+        <view class='cell' wx:if='{{tag_status == 3}}'>
+          <view class='cell_text'>采购单价：¥{{item.platform_price}}</view>
+          <view class='cell_text'>折扣：{{item.channel_purchase_discount}}%</view>
+          <view class='cell_text'>商品售价：¥{{item.platform_price}}</view>
+        </view>
+        <view class='cell' wx:elif='{{tag_status == 4}}'>          
+          <view class='cell_text'>采购单价：¥{{item.purchase_price}}</view>
+          <view class='cell_text'>零售单价：¥{{item.retail_price}}</view>
+          <view class='cell_text'>商品售价：¥{{item.platform_price}}</view>  
+        </view>                
+      </view>
+    </view>
+  </view>  
+
+  <view class='no_data' wx:if='{{cloudDetailData.length == 0 && page_index == 1}}'>
+    <view class='no_data_box'>
+      <view class='img'>
+        <image src='/images/empty-order.png' mode='widthFix'></image>
+      </view>
+      <view class='no_data_text'>没有相关数据</view>
+    </view>
+  </view>
+  <view class='no_more' wx:else>
+    <view>没有更多</view>
+  </view>
+
+</view>

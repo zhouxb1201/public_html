@@ -1,0 +1,30 @@
+<view class='account'>
+  <view class='account_item' wx:for='{{accountList}}' wx:key=''>
+    <view class='cell'>
+      <view>账户姓名：{{item.realname}}</view>
+      <view class='icon_grop' wx:if='{{item.type != 2}}'>
+        <view class='icon icon_edit' data-id='{{item.id}}' bindtap='editAccount'>
+          <van-icon name="edit"/>
+        </view>
+        <view class='icon icon_close' data-id="{{item.id}}" bindtap='delAccount'>
+          <van-icon name="close"/>
+        </view>
+      </view> 
+    </view>
+    <view class='cell'>
+      <view wx:if="{{item.type == 1||item.type==4}}">账户类型：银行卡</view>
+      <view wx:elif="{{item.type == 2}}">账户类型：微信</view>
+      <view wx:elif="{{item.type == 3}}">账户类型：支付宝</view>
+    </view>
+    <view class='cell' wx:if='{{item.type != 2}}'>
+      <view>账户号码：{{item.account_number}}</view>
+    </view>
+  </view>
+  </view>
+  <view class='foot_btn' bindtap='onPostPage'>    
+    <view class='add_btn'>新增账户</view>
+  </view>
+
+
+<!-- 关联手机 -->
+<phone-compoent phoneShow='{{phoneShow}}' bind:phoneEven='phonereResult'></phone-compoent>

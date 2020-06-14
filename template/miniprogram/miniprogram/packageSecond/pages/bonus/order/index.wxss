@@ -1,0 +1,88 @@
+page{
+  background-color: #f8f8f8;
+  font-size: 28rpx;
+}
+
+
+.list_box{
+  margin: 30rpx;
+  border-radius:30rpx;
+  overflow: hidden; 
+  box-shadow: 0 0 10px 0 rgba(0,0,0,.05);
+}
+.collapse_item{
+  padding: 20rpx 30rpx;
+  display: flex;
+  background-color: #fff;
+  box-sizing:border-box;
+  line-height: 48rpx;
+  border-bottom: 1px solid #ebedf0;
+}
+.collapse_item .title{
+  flex: 1;
+}
+.collapse_item .value{
+  flex: 1;
+  text-align: right;
+}
+.collapse_item .value .money{
+  color: #42D242;
+}
+.collapse_item .icon{
+  font-size: 22rpx;
+  padding-top: 10rpx;
+  margin-left: 10rpx;
+  height: 28rpx;
+}
+.collapse_item .value .status{
+  color: #f44;
+}
+
+.goods_list{
+  background-color: #F8E9CA;
+}
+.good_item{
+  padding: 20rpx 30rpx;
+  display: flex;
+  border-bottom:1px solid #ebedf0;
+}
+.good_item .good_img{
+  width: 140rpx;
+  height: 140rpx;
+}
+.good_item .good_img image{
+  width: 100%;
+  height: 100%;
+}
+.good_item .card{
+  margin-left: 20rpx;
+  position: relative;
+  flex: 1;  
+}
+.good_item .card .card_title{
+  display: -webkit-box; 
+  -webkit-box-orient: vertical; 
+  -webkit-line-clamp: 2; 
+  overflow: hidden;
+  height: 80rpx;
+}
+.good_item .card .num_money{
+  display: flex;
+  justify-content: space-between;
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  flex: 1;
+}
+.good_item .card .num{
+  color: #323233
+}
+
+.foot{
+  padding: 40rpx 30rpx;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: #969799;
+}

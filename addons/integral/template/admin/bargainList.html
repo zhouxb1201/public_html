@@ -1,0 +1,134 @@
+{block name="main"}
+
+<div class="mb-20">
+    <a href="{:__URL('admin/Menu/addonmenu?addons=addBargain')}" class="btn btn-primary"><i class="icon icon-add1"></i>
+        添加砍价</a>
+    <div class="input-group search-input-group ml-10" style="float:right">
+        <input type="text" class="form-control" placeholder="商品名称" id="search_text" value="">
+        <span class="input-group-btn">
+                    <button class="btn btn-primary search" type="button">搜索</button>
+                </span>
+    </div>
+</div>
+<ul id="bargain_type" class="nav nav-tabs v-nav-tabs fs-12">
+    <li role="presentation" class="active" data-type="all"><a href="javascript:void(0)" data-toggle="tab" class="flex-auto-center" aria-expanded="true">全部<span class="J-all">({$bargain_count['all_num']})</span></a></li>
+    <li role="presentation" class="" data-type="unstart"><a href="javascript:void(0)" data-toggle="tab" class="flex-auto-center" aria-expanded="false">待开始<span class="J-all">({$bargain_count['unstart_num']})</span></a></li>
+    <li role="presentation" class="" data-type="going"><a href="javascript:void(0)" data-toggle="tab" class="flex-auto-center" aria-expanded="false">进行中<span class="J-all">({$bargain_count['going_num']})</span></a></li>
+    <li role="presentation" class="" data-type="ended"><a href="javascript:void(0)" data-toggle="tab" class="flex-auto-center" aria-expanded="false">已结束<span class="J-all">({$bargain_count['ended_num']})</span></a></li>
+    <input type="hidden" id="bargain_tab" name="bargain_tab" value="">
+</ul>
+<table class="table v-table table-auto-center">
+    <thead>
+    <tr>
+        <th>商品信息</th>
+        <th>初始价格</th>
+        <th>最低砍至金额</th>
+        <th>库存剩余</th>
+        <th>活动时间</th>
+        <th>状态</th>
+        <th>操作</th>
+    </tr>
+    </thead>
+    <tbody id="group_shopping_list">
+    </tbody>
+</table>
+<input type="hidden" id="page_index">
+<nav aria-label="Page navigation" class="clearfix">
+    <ul id="page" class="pagination pull-right"></ul>
+</nav>
+{/block}
+{block name="script"}
+<script id="shop_curr_list" type="text/html">
+    <%each data as item index%>
+    <tr>
+        <td>
+            <div class="media text-left ">
+                <div class="media-left">
+                    <p><img src="<%item.pic_cover_mid%>" style="width:60px;height:60px;"></p>
+                </div>
+                <div class="media-body max-w-300 ">
+                    <div class="line-2-ellipsis line-title">
+                        <%item.goods_name%>
+                    </div>
+                </div>
+            </div>
+        </td>
+
+        <td>
+            <%item.start_money%>
+        </td>
+        <td>
+            <%item.lowest_money%>
+        </td>
+        <td><%item.bargain_stock%></td>
+        <td>
+            <%item.start_bargain_date%><br>~<br>
+            <%item.end_bargain_date%>
+        </td>
+        <td>
+            <%if item.status==0%>
+                <a href="javascript:;" class="label label-warning" data-type=1 data-bargain_id="<%item.bargain_id%>">未开始</a>
+            <%/if%>
+            <%if item.status==1%>
+                <a href="javascript:;" class="label label-success" data-type=1 data-bargain_id="<%item.bargain_id%>">进行中</a>
+            <%/if%>
+            <%if item.status==2%>
+                <a href="javascript:;" class="label label-danger" data-type=1 data-bargain_id="<%item.bargain_id%>">已结束</a>
+            <%/if%>
+        </td>
+        <td>
+            <a href="ADDONS_ADMIN_MAINaddBargain&bargain_id=<%item.bargain_id%>" class="text-primary block" data-type="edit" data-group_id="<%item.group_id%>">编辑</a>
+            <a href="ADDONS_ADMIN_MAINbargainRecord&bargain_id=<%item.bargain_id%>" class="text-primary block" data-type="history" data-group_id="<%item.group_id%>">砍价记录</a>
+            <a href="ADDONS_ADMIN_MAINbargainDetail&bargain_id=<%item.bargain_id%>" class="text-primary block" data-type="info" data-group_id="<%item.group_id%>">活动详情</a>
+        </td>
+    </tr>
+    <%/each%>
+</script>
+<script>
+    require(['util', 'tpl'], function (util, tpl) {
+        util.initPage(LoadingInfo);
+        $('.search').click(function(){
+            LoadingInfo($('#page_index').val());
+        })
+        $('#bargain_type li').click(function(){
+            $('#bargain_tab').val($(this).data('type'));
+            LoadingInfo($('#page_index').val());
+        })
+        function LoadingInfo(page_index) {
+            $("#page_index").val(page_index);
+            var type = $('#bargain_tab').val();
+            console.log(type);
+            var bargain_type = type;
+            $.ajax({
+                type: "post",
+                url: "{$bargainListUrl}",
+                data: {
+                    "page_index": page_index,
+                    "search_text": $("#search_text").val(),
+                    "bargain_type": bargain_type
+                },
+                success: function (data) {
+                    var html = '<tr><th colspan="6">暂无符合条件的数据记录</th></tr>';
+                    if(data.data){
+                        if (tpl('shop_curr_list', data)) {
+                            for(var i = 0;i < data.data.length; i++){
+                                data.data[i]['pic_cover_mid'] = __IMG( data.data[i]['pic_cover']);
+                            }
+                            $("#group_shopping_list").html(tpl('shop_curr_list', data));
+                        } else {
+                            $("#group_shopping_list").html(html);
+                        }
+                        $('#page').paginator('option', {
+                            totalCounts: data['total_count']  // 动态修改总数
+                        });
+                    }else{
+                        $("#group_shopping_list").html(html);
+                    }
+                }
+            });
+        }
+    });
+
+
+</script>
+{/block}

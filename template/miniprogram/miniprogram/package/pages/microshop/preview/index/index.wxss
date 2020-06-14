@@ -1,0 +1,270 @@
+page {
+  font-size: 28rpx;
+  background-color: #f8f8f8;
+}
+
+.preview-head {
+  background: -webkit-gradient(linear, left top, right top, from(#f87671), to(#fcba71));
+  background: linear-gradient(left, #f87671, #fcba71);
+  background: -webkit-gradient(linear, left top, right top, from(#f87671), to(#fcba71));
+}
+
+.preview-info {
+  padding: 20rpx 30rpx;
+}
+
+.preview-info .logo {
+  padding-bottom: 100%;
+  width: 100%;
+  position: relative;
+  background: #fafafa;
+}
+
+.preview-info .logo image {
+  width: 100%;
+  height: 100%;
+  position: absolute;
+  top: 0;
+  left: 0;
+  display: block;
+}
+
+.preview-info .name {
+  padding-left: 20rpx;
+  color: #fff;
+  line-height: 40rpx;
+  letter-spacing: 4rpx;
+}
+
+.preview-info .name .fans {
+  font-size: 24rpx;
+}
+
+/*****************/
+
+.van-col {
+  float: left;
+  -webkit-box-sizing: border-box;
+  box-sizing: border-box;
+}
+
+.fl-none {
+  float: none;
+}
+
+.van-row--flex {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+}
+
+.van-row--justify-center {
+  -webkit-box-pack: center;
+  -ms-flex-pack: center;
+  justify-content: center;
+}
+
+.van-col--5 {
+  width: 20.83333333%;
+}
+
+.van-col--18 {
+  width: 75%;
+}
+
+.van-col--12 {
+  width: 50%;
+}
+
+.van-row:after {
+  content: "";
+  display: table;
+  clear: both;
+}
+
+/**************/
+
+.preview-nav {
+  background-color: #fff;
+  padding: 24rpx;
+  text-align: center;
+  font-size: 28rpx;
+  position: relative;
+}
+
+.preview-nav:before {
+  content: "";
+  width: 1px;
+  height: 70%;
+  left: 50%;
+  top: 15%;
+  background-color: #f8f8f8;
+  -webkit-transform: scaleX(0.5);
+  transform: scaleX(0.5);
+  position: absolute;
+  z-index: 10;
+  display: block;
+}
+
+.vui-icon-group {
+  position: relative;
+  overflow: hidden;
+  background: #fff;
+  border-radius: 20rpx;
+  margin: 20rpx;
+}
+
+.vui-icon-group .vui-icon-col {
+  width: 25%;
+  height: auto;
+  position: relative;
+  padding: 0;
+  margin: 20rpx 0;
+  text-align: center;
+  transition: background-color 300ms;
+  -webkit-transition: background-color 300ms;
+  float: left;
+  border: none !important;
+}
+
+.vui-icon-group .vui-icon-col .icon {
+  height: 96rpx;
+  margin: auto;
+  text-align: center;
+  line-height: 96rpx;
+  padding-top: 8rpx;
+}
+
+.vui-icon-group .vui-icon-col .icon image {
+  height: 88rpx;
+  width: 88rpx;
+}
+
+.vui-icon-group .vui-icon-col .text {
+  font-size: 24rpx;
+  text-align: center;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  padding: 16rpx 8rpx 8rpx;
+  color: #7a7a7a;
+}
+
+.bg-fff {
+  background-color: #fff;
+}
+
+.divider {
+  background: #fff;
+}
+
+.divider .divider-head {
+  text-align: center;
+  margin: 0 20%;
+  position: relative;
+  padding: 30rpx 0;
+}
+
+.divider .divider-head:before {
+  content: "";
+  position: absolute;
+  top: 50%;
+  left: 0;
+  border: 0 solid red;
+  -webkit-transform-origin: 0 0;
+  transform-origin: 0 0;
+  pointer-events: none;
+  width: 100%;
+  border-top-width: 1px;
+}
+
+.divider .divider-head text {
+  background: #fff;
+  padding: 4rpx 20rpx;
+  position: relative;
+  z-index: 1;
+  color: red;
+  letter-spacing: 2rpx;
+}
+
+.ofh {
+  overflow: hidden;
+}
+
+.item {
+  position: relative;
+  width: calc(50% - 16rpx);
+  float: left;
+  margin: 8rpx;
+  background: #fff;
+  border-radius: 20rpx;
+  overflow: hidden;
+  font-size: 28rpx;
+  -webkit-box-shadow: 0 0 20rpx 0 rgba(0, 0, 0, 0.05);
+  box-shadow: 0 0 20rpx 0 rgba(0, 0, 0, 0.05);
+}
+
+.item .image {
+  height: 0;
+  width: 100%;
+  padding: 50% 0;
+  overflow: hidden;
+  background: #fff;
+}
+
+.item .image image {
+  display: block;
+  width: 100%;
+  margin-top: -50%;
+  background-color: #fff;
+  border: none;
+}
+
+.item .info {
+  padding: 12rpx;
+}
+
+.item .info .name {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  padding: 12rpx 0;
+}
+
+.item .info .price {
+  margin-bottom: 12rpx;
+  overflow: hidden;
+}
+
+.item .info .price .sale {
+  font-weight: 800;
+  color: #ff454e;
+  font-size: 28rpx;
+  display: inline-block;
+}
+
+.item .info .price .market {
+  font-size: 24rpx;
+  color: #999;
+  font-weight: 400;
+  margin-left: 12rpx;
+  text-decoration: line-through;
+  display: inline-block;
+}
+
+.bottom-group {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-pack: justify;
+  -ms-flex-pack: justify;
+  justify-content: space-between;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+}
+
+.item .info .sales-volume {
+  color: #999;
+  font-size: 24rpx;
+}

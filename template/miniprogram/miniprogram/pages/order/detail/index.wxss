@@ -1,0 +1,360 @@
+page{
+  font-size: 28rpx;
+  background-color: #f8f8f8;
+}
+.order_detail{
+  padding-bottom: 120rpx;
+}
+.header_state{
+  background-color: #ff454e;
+  display: flex;
+  width: 100%;
+  box-sizing: border-box;
+  align-items: center;
+  justify-content: center;
+  height: 200rpx;
+}
+.van-steps{
+  background-color: #ff454e !important;
+}
+.van-step--horizontal .van-step__circle-container{
+  background-color: #ff454e !important;
+}
+.van-step__title{
+  color: #fff;
+}
+.header .head_state_info{
+  width: 66.66%;
+  padding: 0 30rpx;
+}
+.header .head_img{
+  width: 33.33%;  
+}
+.header .head_img .head_img_box{
+  width: 60%;
+  text-align: center;
+  margin: 10rpx auto;
+}
+.header .sate_unpaid{
+  color: #fff;
+}
+.header .sate_unpaid .small_text{
+  font-size: 22rpx;
+}
+
+.success_cancel{
+  background-color: #ff454e;
+  display: flex;
+  height: 200rpx;
+  justify-content: center;
+  align-items: center;
+  flex-direction:column;
+}
+.success_cancel .img{
+  width: 140rpx;
+}
+.success_cancel .text{
+  color: #fff;
+  margin-top: 10rpx;
+}
+
+.cell_group{
+  background-color: #fff;  
+  margin: 20rpx;
+  border-radius: 20rpx;
+  overflow: hidden;
+  box-shadow: 0 0 10px 0 rgba(0,0,0,.05);
+}
+.cell_group .cell_item{
+  display: flex;
+  padding: 20rpx 30rpx;
+  border-bottom: 1px solid #ebedf0;  
+}
+.cell_group .cell_item .title{
+  max-width: 180rpx;
+  flex: 1;
+}
+.cell_group .shop{
+  padding: 20rpx 30rpx;
+  border-bottom: 1rpx solid #ebedf0;
+  display: flex;
+  align-items: center;
+}
+.cell_group .shop .right{
+  color: #969799;
+  margin-right: 10rpx;
+  font-size: 24rpx;
+}
+.cell_group .user_say{
+  color: #969799;
+  font-size: 24rpx;
+}
+
+.cell_group .cell_item .box_code{
+  flex: 1;
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+}
+.cell_group .cell_item .box_code .code_img{
+  width: 326rpx;
+  height: 326rpx;
+}
+.cell_group .cell_item .box_code .code_img image{
+  width: 100%;
+  height: 100%;
+}
+
+/* 订单信息 */
+.order_name{
+  display: flex;
+  align-items: center;
+  padding: 20rpx 30rpx;
+  border-bottom: 1rpx solid #ebedf0;
+}
+.order_info{
+  padding: 20rpx 30rpx;
+  box-sizing: border-box;
+  color: #323233;
+}
+.order_info .item{
+  line-height: 48rpx;
+  display: flex;
+  align-items: center;
+}
+.order_info .item .title{
+  max-width: 180rpx;
+  flex: 1;
+}
+.order_info .item .shopname{
+  color: #f44;
+}
+.order_info .item .text{
+  color: #969799;
+  font-size: 24rpx;
+  vertical-align: middle;
+}
+
+.logistics_title{
+  display: flex;
+  justify-content: space-between;
+  padding: 20rpx 30rpx;
+  border-bottom: 1rpx solid #ebedf0;
+}
+.logistics_title .logistics_name{
+  display: flex;
+}
+.logistics_group .logistics_item{
+  margin: 10rpx 0;
+  border-bottom: 1rpx solid #ebedf0;
+  padding: 20rpx 30rpx;
+}
+.logistics_group .logistics_item .logistics_context{
+  margin-bottom: 10rpx;
+  color: #fcb418
+}
+.logistics_group .logistics_item .logistics_time{
+  
+  font-size: 24rpx;
+  color: #bebbbb;
+}
+.logistics_no_message{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 60rpx 70rpx;
+  font-size: 24rpx;
+}
+
+.icon{
+  line-height:40rpx;
+  margin-right: 10rpx;
+}
+.address_buy{
+  padding: 20rpx 30rpx;
+  border-bottom: 1px solid #ebedf0;  
+}
+.address_buy .buy_info{  
+  display: flex;
+  width: 100%;
+  box-sizing: border-box;
+  justify-content: space-between;
+  margin-bottom: 10rpx;
+}
+.address_buy .buy_info .phone{
+  color: #909399;
+}
+.address_info{
+  color: #909399;
+}
+
+.good_group{
+  display: flex;
+  box-sizing: border-box;
+  padding: 20rpx 30rpx;
+  line-height: 48rpx;
+  background-color: #fff;
+}
+.group_foot{
+  display: flex;
+  box-sizing: border-box;
+  padding: 20rpx 30rpx;
+  justify-content: flex-end;
+}
+.group_foot .good_refund{
+  border: 1rpx solid #ebedf0;
+  padding: 0rpx 12rpx;
+  margin-left: 10rpx;
+  font-size: 24rpx;
+}
+.good_image{
+  width: 180rpx;
+  height: 180rpx;
+  background-color: #f9f9f9;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-right: 20rpx;
+  overflow: hidden;
+}
+.good_image image{
+  width: 100%;
+  height: 100%;
+}
+.good_info{
+  position: relative;
+  flex: 1;
+}
+.price_num{
+  position: absolute;
+  bottom: 0;
+  width: 100%;
+  font-size: 12px;
+}
+.font_color{
+  color: #f44;
+  font-size: 24rpx;
+}
+.price_num .num{
+  float: right;
+  color: #323233;
+}
+
+.price_group{
+  background-color: #fff;
+  padding: 10rpx 30rpx;
+  box-sizing: border-box;
+}
+.price_item{
+  display: flex;
+  box-sizing: border-box;
+  justify-content: space-between;
+  line-height: 48rpx;
+}
+
+.foot{
+  position: fixed;
+  left: 0;
+  bottom: 0;
+  width: 100%;
+  height: 100rpx;
+  z-index: 100;
+  
+  background-color: #fff;
+  user-select: none;
+  border-top: 1px solid #f5f5f5;
+  box-shadow: 0 -2px 10px rgba(0,0,0,.04);
+}
+.btn_group{
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  padding: 20rpx 30rpx;
+  flex: 1;
+}
+.btn{  
+  border: 1rpx solid #ebedf0;
+  padding: 10rpx 20rpx;
+  margin-left: 10rpx;
+  font-size: 24rpx;
+}
+
+.join_group{
+  background-color: #fff;
+}
+
+.join_group .title{
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 20rpx 30rpx;
+  border-bottom:1px solid #dbdbdb; 
+}
+.join_group .title .title_l{
+  display: flex;
+  align-items: center;
+}
+.join_group .title .title_l .icon{
+  margin-right: 20rpx;
+}
+.join_group .title .title_r{
+  display: flex;
+  align-items: center;
+}
+
+.group_info{
+  display: flex;
+  justify-content: space-around;
+  padding: 20rpx;
+}
+.group_info .img{
+  width: 100rpx;
+  height: 100rpx;
+  border-radius: 50%;
+  overflow: hidden;
+  position: relative;
+}
+.group_info .img .leader{
+  position: absolute;
+  top: 0;
+  right: 10rpx;
+  font-size: 24rpx;
+  background-color: #f44;
+  color: #fff;
+  padding: 10rpx;
+  border-radius: 50%;
+}
+.group_info .img image{
+  width: 100%;
+  height: 100%;
+}
+.help{
+  width: 100rpx;
+  height: 100rpx;
+  border: 1px dashed #999;
+  line-height: 100rpx;
+  text-align: center;
+  font-size: 60rpx;
+  border-radius: 50%;
+  color: #999;
+}
+
+.btn.pay_now{
+  color: #fff;
+  background-color: #f44;
+}
+.close_order_btn{
+  background-color: #fff;
+  border-radius:0;
+  font-size: 12px;
+  min-width: 60px;
+  height: 30px;
+  line-height: 30px;
+  text-align: center;
+  border: 1rpx solid #ebedf0;
+  margin: 0;
+  margin-left: 10rpx;
+}
+.btn_group button::after {
+  border: none;
+}

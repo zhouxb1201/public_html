@@ -1,0 +1,137 @@
+page {
+  background-color: #f8f8f8;
+  font-size: 28rpx;
+}
+
+.sort {
+  position: fixed;
+  width: 100%;
+  top: 0;
+  padding: 0;
+  background: #fff;
+  align-items: center;
+  display: flex;
+  z-index: 99;
+}
+
+.sort .item {
+  flex: 1;
+  position: relative;
+  text-align: center;
+  font-size: 28rpx;
+  padding: 25rpx 30rpx;
+  color: #666;
+  vertical-align: middle;
+}
+
+.sort .item:first-child {
+  border: 0;
+}
+
+.sort .item .icon {
+  display: inline-block;
+}
+
+.sort .item.on text {
+  color: #fd5454;
+}
+
+.sort .item.on .icon {
+  color: #fd5454;
+}
+
+.DESC {
+  transform: rotate(0deg);
+}
+
+.ASC {
+  transform: rotate(180deg);
+}
+
+.goodsRank {
+  margin-top: 100rpx;
+}
+
+.goodsRank .gooditem {
+  box-sizing: border-box;
+  width: calc(50% - 16rpx);
+  float: left;
+  margin: 8rpx;
+  background-color: #fff;
+}
+
+.goodsRank .goodbox::after {
+  display: block;
+  clear: both;
+  content: "";
+  visibility: hidden;
+  height: 0;
+}
+
+.goodsRank .gooditem .gooddetail {
+  padding: 10rpx;
+}
+
+.goodsRank .gooditem .goodimg {
+  height: 360rpx;
+  overflow: hidden;
+}
+
+.goodsRank .gooditem .goodname {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.goodsRank .gooditem .goodprice {
+  color: #ff454e;
+  font-size: 32rpx;
+  font-weight: 600;
+}
+
+.goodsRank .gooditem .saleNum {
+  font-size: 24rpx;
+  color: rgb(129, 129, 129);
+}
+
+.goodsRank .no_gooddata {
+  margin: 0 20rpx;
+  height: 100rpx;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.goodsRank .gooditem .tag {
+  color: #fff;
+  font-size: 24rpx;
+  padding: 4rpx 8rpx;
+  line-height: normal;
+  border-radius: 4rpx;
+  display: inline-block;
+  background-color: rgb(255, 68, 68);
+  margin-right: 8rpx;
+}
+
+.tags {
+  display: flex;
+  overflow: hidden;
+  white-space: nowrap;
+  font-size: 26rpx;
+  padding-top:4rpx;
+}
+
+.tags .info .strong {
+  color: #ff454e;
+  font-weight: 800;
+  margin-right: 2rpx;
+}
+
+.tags .info .txt {
+  color: #666;
+  font-size: 24rpx;
+}
+
+.tags .info .symbol {
+  padding: 0 8rpx;
+}

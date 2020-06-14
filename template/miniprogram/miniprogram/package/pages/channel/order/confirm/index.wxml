@@ -1,0 +1,106 @@
+<view class='confirm_order'>
+
+  <view class='useraddress' wx:if='{{orderType == 2}}'>
+    <view class='cart_bottom_bg' bindtap='addressListShow'>
+      <view class='no_address' wx:if="{{addressData.address_id == ''}}">
+        <van-icon class='icon_add' name="add-o" size='25px'/>
+        <text class='adress_text'>添加收货地址</text>
+        <van-icon class='icon_arrow' name="arrow" />
+      </view>
+      <view wx:else class='has_address'>
+        <van-icon class='icon_location' name="location" size='25px' />
+        <view class='address_box'>
+          <view>
+            <text class='consigner'>{{addressData.consigner}}</text>
+            <text class='mobile'>{{addressData.mobile}}</text>
+          </view>
+          <view class='address_text'>
+            {{addressData.address_info}}
+          </view>
+        </view>
+        <van-icon class='icon_arrow' name="arrow" />
+      </view>      
+    </view>
+  </view>
+
+  <view class='purchase_order_box'>
+    <view class='group_box'>
+      <view class='cell head'>
+        <view class='icon_shop iconfont v-icon-shop2'></view>
+        <view class='shop_name'>{{orderData.shop_name}}</view>
+      </view>
+      <view class='cell goods_info' wx:for='{{orderData.shop_list}}' wx:key='' wx:for-item='goodItem'>
+        <view class='good_img'>
+          <image mode='widthFix' src='{{goodItem.goods_picture}}'></image>
+        </view>
+        <view class='info_content'>
+          <view class='info_head'>
+            <view class='good_name'>{{goodItem.goods_name}}</view>
+            <view class='good_shop_name' wx:if='{{orderType == 1}}'>采购于：{{goodItem.purchase_to}}</view>
+          </view>
+          <view>{{goodItem.sku_name}}</view>
+          <view class='info_bottom'>
+            <view class='good_price' wx:if="{{goodItem.price != null && orderType == 1}}">¥ {{goodItem.price}}</view>
+            <view class='good_num'>X {{goodItem.num}}</view>
+          </view>
+        </view>
+      </view>
+
+       <!-- 配送方式 -->
+      <view class='cell address' wx:if='{{orderType == 2}}'>
+        <view class='addressText_l'>配送方式</view>
+        <view class='addressText_r'>
+          <view wx:if="{{shipping_fee == 0}}">快递 包邮</view>
+          <view wx:else="{{shipping_fee > 0}}">邮费{{shipping_fee}}元</view>
+        </view>        
+      </view>
+
+      <!-- 卖家留言 -->
+      <view class='usersay' wx:if='{{orderType == 2}}'>
+        <view class='usersay_l'>卖家留言</view>               
+        <input type='text' class='usersay_r' auto-height="true" placeholder="选填：留言内容尽量与商家沟通" bindinput='buyerMessage'></input>        
+      </view>
+
+      <view class='cell group_foot'>
+        <view class='foot'>
+          <view class='foot_text'>共 <text>{{orderData.total_quantity}}</text> 件商品</view>
+          <view class='foot_text'>小计： <text>¥{{orderData.total_money}}</text> </view>
+        </view>
+      </view>
+    </view>
+  </view>
+
+  <!-- 底部 -->
+  <view class='foot_submit_bar'>    
+    <view class='price_box'>
+      <view class='price_text'>合计金额： <text class='price_num'>¥{{orderData.total_money}}</text></view>
+      <view class="submit_btn active_goods_btn" bindtap='channelOrderCreate'>提交订单</view>
+    </view>    
+  </view>
+</view>
+
+
+<!-- 地址列表弹框 -->
+<van-popup show="{{ addressListShow }}" position="bottom" custom-style="height:100%;" bind:click-overlay="addressListClose">
+  <view class='popup_title'>
+    <view class='addressClose' bindtap='addressListClose'>
+      <text class='icon_left iconfont v-icon-arrow-left2'></text>
+      返回
+    </view>
+    <view class='addressTitle'>收货地址</view> 
+  </view>
+  <view class='popup_info'>
+    <view class='item' wx:for="{{address_list}}" wx:key='' wx:for-item="addressItem" data-addressid='{{addressItem.id}}' bindtap='addressSelect'>
+      <icon wx:if="{{addressItem.id == address_id}}" type="success" color="red" size='20' />
+      <icon wx:else type="circle" size='20' />
+      <view class='item_info'>
+        <view class='cell'><text>{{addressItem.consigner}}</text>，<text>{{addressItem.mobile}}</text></view>
+        <view class='cell'><text>{{addressItem.province_name}}</text> <text>{{addressItem.address}}</text> </view>
+        <view></view>
+      </view>
+    </view>
+  </view>
+  <view class='close'>
+    <button class='closeBtn' bindtap='onAddressPage'>新增地址</button>
+  </view>
+</van-popup>

@@ -1,0 +1,298 @@
+<view class='order' wx:if='{{boxShow}}'>
+  <!-- 配送方式 -->
+  <view class='cell_group top_type' wx:if='{{has_store == 1}}'>
+    <view class='cell_item'>
+      <view class='cell_title'>配送方式</view>
+      <view class='cell_value'>
+        <radio-group class="radio-group" bindchange="typeRadioChange">
+          <label class="radio" wx:for="{{type_list}}" wx:key=''>
+            <radio value="{{item.name}}" color='#f44' checked="{{item.checked}}" />
+            {{item.value}}
+          </label>
+        </radio-group>
+      </view>
+    </view>
+    <view class='shipping_tip' wx:if='{{shipping_show}}'>
+      {{shippingTipText}}
+    </view>
+  </view>
+
+  <view class='useraddress' wx:if='{{userAddressShow}}'>
+    <view class='cart_bottom_bg' bindtap='addressListShow'>
+      <view class='no_address' wx:if="{{addressShow}}">
+        <van-icon class='icon_add' name="add-o" size='25px'/>
+        <text class='adress_text'>添加收货地址</text>
+        <van-icon class='icon_arrow' name="arrow" />
+      </view>
+      <view wx:else class='has_address'>
+        <van-icon class='icon_location' name="location" size='25px' />
+        <view class='address_box'>
+          <view>
+            <text class='consigner'>{{orderData.address.consigner}}</text>
+            <text class='mobile'>{{orderData.address.mobile}}</text>
+          </view>
+          <view class='address_text'>
+            {{orderData.address.province_name}}{{orderData.address.city_name}}{{orderData.address.district_name}}{{orderData.address.address_detail}}
+          </view>
+        </view>
+        <van-icon class='icon_arrow' name="arrow" />
+      </view>      
+    </view>
+  </view>  
+  <!-- 自定义表单    -->
+  <form-com 
+    id='getForm' 
+    wx:if="{{customform != ''}}" 
+    customform='{{customform}}' 
+    bind:customformEven='customformData' >
+  </form-com>
+  
+  <view class='shop_box'>
+    <view class='shop' wx:for="{{orderData.shop}}" wx:key=''>
+      <view class='shopName'>
+        <van-icon class='icon_shop' name="shop" size='15px'/>
+        <text class='text_name'>{{item.shop_name}}</text>
+      </view>      
+      <view class='shopGood clear' wx:for="{{item.goods_list}}" wx:key="" wx:for-item="i">
+          <view class='goodImg'>
+            <image mode='widthFix' src='{{i.goods_pic}}'></image>
+          </view>        
+          <view class='good_box'>
+            <view class='good_l'>
+              <view class='goodname'>{{i.goods_name}}</view>
+              <text class='goodspec' wx:for="{{i.spec}}" wx:key="" wx:for-item="n">
+                <text class='specname'>{{n.spec_name}}</text>
+                <text class='specvalue'>{{n.spec_value_name}}</text>
+              </text>
+            </view>
+            <view class='good_r'>              
+              <view class='text good_price'>¥ {{presell_id != 0 ?presell_allmoney : i.price}}</view>
+              <view class='text goodnum' wx:if="{{skillGroundSign == false}}">X{{i.num}}</view>
+              <van-stepper class='stepper' value="{{ i.num }}" disabled='{{stepper_disabled}}' max="{{presell_id != 0 ? presell_max_buy : i.stock}}" wx:else step="1" bind:change="onChange"/>
+            </view>
+          </view>         
+      </view>
+
+      <view class='presell_box' wx:if='{{presell_id != 0 }}'>
+        <view class='presell_item'>
+          <view class='sort red_sort'>1</view>
+          <view class='red_text'>定金 ¥{{totalPrice}}</view>
+        </view>
+        <view class='presell_item'>
+          <view class='sort'>2</view>
+          <view>尾款 ¥{{tail_money}} {{pay_start_time}} 开始支付</view>
+        </view>
+      </view>
+
+      <!-- 配送方式 -->
+      <view class='address' wx:if='{{shipping_type == 1}}'>
+        <view class='addressText_l'>配送方式</view>
+        <view class='addressText_r'>
+          <view wx:if="{{item.shipping_fee == 0 && addressid!=0 }}">快递 包邮</view>
+          <view wx:elif="{{item.shipping_fee > 0}}">邮费{{item.shipping_fee}}元</view>
+          <view wx:else>未选择收货地址</view>
+        </view>        
+      </view>
+      <view class='address' wx:else>
+        <view class='addressText_l'>配送方式</view>       
+        <!-- 计时计次 -->
+        <view class='addressText_r' wx:if="{{timing_tag == 1}}" data-shopid='{{item.shop_id}}' bindtap='getStoreList'>
+          <text wx:if="{{store_id != ''}}">{{store_name}}</text>
+          <text wx:else>请选择门店</text>
+          <van-icon class='arrow' name='arrow'/>
+        </view>
+         <view class='addressText_r' wx:elif="{{item.has_store == 0 }}">
+          <view wx:if="{{item.shipping_fee == 0 && addressid!=0}}">快递 包邮</view>
+          <view wx:elif="{{item.shipping_fee > 0}}">邮费{{item.shipping_fee}}元</view>
+          <view wx:else>未选择收货地址</view>
+        </view>
+        <view class='addressText_r' wx:else data-shopid='{{item.shop_id}}' bindtap='getUserLocation'>
+          <text wx:if="{{store_id != ''}}">{{store_name}}</text>
+          <text wx:else>请选择门店</text>
+          <van-icon class='arrow' name='arrow'/>
+        </view>
+      </view>
+
+      <!-- 优惠券 -->
+      <view class='coupon' wx:if="{{item.coupon_list.length != 0}}" data-shopid='{{item.shop_id}}' data-goodslist='{{item.goods_list}}' bindtap='couponPopup'>
+        <view class='coupon_l'>优惠券</view>
+        <view class='coupon_r' wx:if="{{item.coupon_list.length > 0}}">
+          <text wx:if="{{coupon_name != ''}}">已选：{{coupon_name}}</text>
+          <text wx:else>有{{item.coupon_list.length}}张可用优惠券 </text>
+          <van-icon class='arrow' name='arrow'/>
+        </view>
+        <view class='coupon_r' wx:else>没有可用优惠券</view>
+      </view>
+
+      <!-- 卖家留言 -->
+      <view class='usersay'>
+        <view class='usersay_l'>卖家留言</view>                
+       <input type='text' class='usersay_r' auto-height="true" value="{{leave_message}}" placeholder="选填：留言内容尽量与商家沟通" bindinput="leaveMessage"></input>       
+      </view>
+
+      <!-- 满减送 -->
+      <view class='discount_group' wx:if="{{item.full_cut_state != 'false'}}">
+        <view class='mansong'>
+          <view class='item' wx:if="{{item.full_cut.discount != '' && item.full_cut.discount != '0.00'}}">
+            <van-tag class='tag' type="danger">满减</van-tag>
+            <view class='tag_text'>订单满{{item.full_cut.price}}减{{item.full_cut.discount}}</view>
+          </view>
+          <view class='item' wx:if="{{item.full_cut.free_shipping == 1}}">
+            <van-tag class='tag' type="success">包邮</van-tag>
+            <view class='tag_text'>订单满{{item.full_cut.price}}包邮</view>
+          </view>
+          <view class='item' wx:if="{{item.full_cut.coupon_type_name != '' && item.full_cut.coupon_type_name != '0.00'}}">
+            <van-tag class='tag' type="primary">满送</van-tag>
+            <view class='tag_text'>订单满{{item.full_cut.price}}送优惠券({{item.full_cut.coupon_type_name}})</view>
+          </view>
+          <view class='item' wx:if="{{item.full_cut.gift_voucher_name != '' && item.full_cut.gift_voucher_name != '0.00'}}">
+            <van-tag class='tag' type="primary">满送</van-tag>
+            <view class='tag_text'>订单满{{item.full_cut.price}}送礼品券({{item.full_cut.gift_voucher_name}})</view>
+          </view>
+          <view class='item' wx:if="{{item.full_cut.gift_id != '' &&  item.full_cut.gift_name != ''}}">
+            <van-tag class='tag' type="primary">满送</van-tag>
+            <view class='tag_text'>订单满{{item.full_cut.price}}送赠品({{item.full_cut.gift_name}})</view>
+          </view>
+        </view>
+      </view>
+
+      <!-- 小计 -->
+      <view class='goodsnum'>
+        <view>共 {{item.goods_list.length}} 件商品</view>
+        <view class='amount' >小计： <text>¥ {{filters.toFix(item.total_amount)}}</text> </view>
+      </view>
+    </view>
+
+    <!-- 积分 -->
+    <view class='group_box' wx:if='{{orderData.is_point_deduction == 1}}'>
+      <view class='cell'>
+        <view class='item'>
+          <view class='title'>
+          <van-checkbox 
+            class='point_checkbox'
+            value="{{ pointStatus }}" 
+            shape="square" 
+            checked-color="#f44" 
+            disabled='{{orderData.deduction_point.total_deduction_point == 0 ? true:false}}'
+            data-point='{{pointStatus}}' 
+            bind:change="pointChange">
+            积分
+          </van-checkbox>
+          <text class='point_text'>共{{orderData.deduction_point.point}}积分，可使用{{orderData.deduction_point.total_deduction_point}}个</text>
+          </view>
+          <view class='value'>-¥{{is_deduction == 1 ? orderData.deduction_point.total_deduction_money : total_deduction_money}}</view>
+        </view>
+      </view>
+    </view>
+
+    <view class='group_box'>
+      <view class='cell'>
+        <view class='item' wx:if="{{orderData.is_point == 1}}">
+          <view class='title'>获得积分</view>
+          <view class='value'>{{orderData.total_give_point}}</view>        
+        </view>
+        <view class='item'>
+          <view class='title'>商品小计</view>
+          <view class='value'>¥{{filters.toFix(orderData.goods_amount)}}</view>        
+        </view>
+        <view class='item'>
+          <view class='title'>运费</view>
+          <view class='value'>¥{{filters.toFix(orderData.total_shipping)}}</view>        
+        </view>
+        <view class='item'>
+          <view class='title'>优惠金额</view>
+          <view class='value'>¥{{filters.toFix(orderData.promotion_amount)}}</view>        
+        </view>
+      </view>
+    </view>
+
+  </view>
+
+  <view class='footer'>
+    <view class='totalPrice'>合计： <text>¥{{filters.toFix(orderData.amount)}}</text> </view>
+    <button class='subbtn' wx:if='{{sum_ing == 1}}' bindtap='{{shipping_type == 2 ? "storeOrderCreate" :"orderCreate"}}'>提交订单</button>
+    <button class='subbtn subing' wx:else>提交中</button>
+  </view>
+</view>
+
+<!-- 优惠券弹出框 -->
+<van-popup show="{{ couponShow }}" position="bottom" custom-style="border-radius:30rpx 30rpx 0 0;" bind:click-overlay="couponOnclose">
+  <view class='couponShopname'>{{shopName}}</view>
+  <view class='couponPup' wx:if="{{couponData.length > 0}}">
+    <view class='couponList' wx:for="{{couponData}}" wx:key="">
+      <view class='couponItem'>
+        <view class='couponTitle'>{{item.coupon_genre == 3 ? item.discount : item.money}}{{item.coupon_genre == 3 ? "折" : "元"}}</view>
+        <view>
+          <text class='couponName'>{{item.coupon_name}}</text>
+          <text wx:if="{{item.coupon_genre == 1}}">无门槛{{item.money}}元</text>
+          <text wx:elif="{{item.coupon_genre == 2}}">满{{item.at_least}}减{{item.money}}元</text>
+          <text wx:elif="{{item.coupon_genre == 3}}">满{{item.at_least}}打{{item.discount}}折</text>
+        </view>
+        <view class='useDate'>
+          使用期限：{{item.start_time}} ~ {{item.end_time}}
+        </view>
+      </view>
+      <button class="getBtn {{item.using == true ? 'using': ''}}" data-index='{{index}}' data-couponid='{{item.coupon_id}}' bindtap='useCoupon'>使用</button>      
+    </view>    
+  </view>
+  <view wx:else class='no_more'>没有更多</view>
+  <button class='closebtn' bindtap='couponOnclose'>关闭</button>
+    
+</van-popup>
+
+<!-- 地址列表弹框 -->
+<van-popup show="{{ addressListShow }}" position="bottom" custom-style="height:100%;" bind:click-overlay="addressListClose">
+  <view class='popup_title'>
+    <view class='addressClose' bindtap='addressListClose'>
+      <text class='icon_left iconfont v-icon-arrow-left2'></text>
+      返回
+    </view>
+    <view class='addressTitle'>收货地址</view> 
+  </view>
+  <view class='popup_info'>
+    <view class='item' wx:for="{{address_list}}" wx:key='' wx:for-item="addressItem" data-addressid='{{addressItem.id}}' bindtap='addressSelect'>
+      <icon wx:if="{{addressItem.id == addressid}}" type="success" color="red" size='20' />
+      <icon wx:else type="circle" size='20' />
+      <view class='item_info'>
+        <view class='cell'><text>{{addressItem.consigner}}</text>，<text>{{addressItem.mobile}}</text></view>
+        <view class='cell'><text>{{addressItem.province_name}}</text> <text>{{addressItem.address}}</text> </view>
+        <view></view>
+      </view>
+    </view>
+  </view>
+  <view class='close'>
+    <button class='closeBtn' bindtap='onAddressPage'>新增地址</button>
+  </view>
+</van-popup>
+
+<!-- 门店地址弹出框 -->
+<van-popup show="{{shopStoreShow}}" position="bottom" custom-style="border-radius:30rpx 30rpx 0 0;" bind:click-overlay="storeListClose">
+  <view class='popup_title'>门店地址</view>
+  <view class='popup_info'>
+    <view class='item' wx:for="{{store_list}}" wx:key='' wx:for-item="storeItem"  
+      data-storename='{{storeItem.store_name}}'
+      data-storeid='{{storeItem.store_id}}'
+      data-shopid='{{storeItem.shop_id}}'
+      bindtap='storeSelect'>
+      <icon wx:if="{{storeItem.store_id == store_id}}" type="success" color="red" size='20' />
+      <icon wx:else type="circle" size='20' />
+      <view class='item_info'>
+        <view class='cell'><text>{{storeItem.store_name}}</text>，<text>{{storeItem.distance}}km</text></view>
+        <view class='cell'>
+          <text>{{storeItem.province_name}}</text>
+          <text>{{storeItem.city_name}}</text>
+          <text>{{storeItem.dictrict_name}}</text>
+          <text>{{storeItem.address}}</text> 
+        </view>        
+      </view>
+    </view>
+  </view>
+  <view class='no_more'>没有更多</view>
+  <button class='closebtn' bindtap='storeListClose'>关闭</button>
+    
+</van-popup>
+
+<!-- 保留2小数 -->
+<wxs module="filters" src="../../utils/addmul.wxs"></wxs>
+
+

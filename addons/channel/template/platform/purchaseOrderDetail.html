@@ -1,0 +1,170 @@
+
+{block name="resource"}
+<style>
+    .label-danger a {
+        padding-top: 5px;
+    }
+</style>
+{/block}
+{block name="main"}
+        <!-- page -->
+
+        <div class="screen-title">
+            <span class="text">详情信息</span>
+        </div>
+        <div class="row panel-detail">
+            <div class="col-md-4">
+                <div class="item border-right" style="height: auto;">
+                    <h3 class="strong">订单详情</h3>
+                    <p class="p">供货商：{$order['purchase_to']}</p>
+                    <p class="p">订单类型：采购订单</p>
+                    <p class="p">订单编号：{$order['order_no']}</p>
+                    {if condition='$order["order_status"] eq 0'}<p class="p">订单状态：待付款</p>{/if}
+                    {if condition='$order["order_status"] eq 4'}<p class="p">订单状态：已完成</p>{/if}
+                    {if condition='$order["order_status"] eq 5'}<p class="p">订单状态：已关闭</p>{/if}
+                    <p class="p">下单时间：{$order['create_time']}</p>
+                </div>
+            </div>
+
+            <div class="col-md-4">
+                <div class="item border-right">
+                    <h3 class="strong">采购人信息</h3>
+
+                    <p class="p">采购方：<a href="{:__URL('PLATFORM_MAIN/member/memberDetail&member_id=')}{$order['buyer_id']}" class="text-primary mt-04" target="_blank">{$order['buyer_name']}</a></p>
+                    {if $order['buyer_heigher_id']}
+                    <p class="p">渠道商上级：<a href="{:__URL('PLATFORM_MAIN/member/memberDetail&member_id=')}{$order['buyer_heigher_id']}" class="text-primary mt-04" target="_blank">{$order['buyer_heigher_name']}</a></p>
+                    {else}
+                    <p class="p">渠道商上级：<a href="javascript:;" class="text-primary mt-04">{$order['buyer_heigher_name']}</a></p>
+                    {/if}
+                </div>
+            </div>
+
+            <div class="col-md-4">
+                <div class="item">
+                    <h3 class="strong">付款信息</h3>
+                    {if condition='$order["payment_type"] eq 1'}<p class="p">支付方式：微信支付</p>{/if}
+                    {if condition='$order["payment_type"] eq 2'}<p class="p">支付方式：支付宝支付</p>{/if}
+                    {if condition='$order["payment_type"] eq 3'}<p class="p">支付方式：银行卡支付</p>{/if}
+                    {if condition='$order["payment_type"] eq 5'}<p class="p">支付方式：余额支付</p>{/if}
+                    {if condition='$order["payment_type"] eq 16'}<p class="p">支付方式：eth支付</p>{/if}
+                    {if condition='$order["payment_type"] eq 17'}<p class="p">支付方式：eos支付</p>{/if}
+                    <p class="p">商品总额：￥{$order['pay_money']}</p>
+                    <p class="p">实收金额：￥{$order['pay_money']}</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="screen-title">
+            <span class="text">订单商品</span>
+        </div>
+        <table class="table v-table table-auto-center">
+            <thead>
+            <tr>
+                <th>商品</th>
+                <th>单价</th>
+                <th>数量</th>
+                <th>优惠</th>
+                <th>合计</th>
+            </tr>
+            </thead>
+            <tbody>
+
+            {foreach name="order['order_goods']" item="goods"}
+            <tr>
+                <td class="picword_td">
+                    <div class="media text-left">
+                        <div class="media-left">
+                            <p>
+                                <img src="{:__IMG($goods['pic_cover_mid'])}" style="width:60px;height:60px;">
+                            </p>
+                        </div>
+                        <div class="media-body max-w-300">
+                            <div class="line-2-ellipsis">
+                                <a href="javascript:;">{$goods['goods_name']} </a>
+                            </div>
+                            <div class="small-muted line-2-ellipsis">
+                                <span>{$goods['sku_name']}</span>
+                            </div>
+                        </div>
+                    </div>
+                </td>
+                <td>￥{$goods['price']}</td>
+                <td>{$goods['num']}</td>
+                <td>￥{$goods['price'] * $goods['num'] - $goods['real_money']}</td>
+                <td>￥{$goods['real_money']}</td>
+            </tr>
+            {/foreach}
+            </tbody>
+        </table>
+
+        <div class="screen-title">
+            <span class="text">操作信息</span>
+        </div>
+        <ul class="nav nav-tabs v-nav-tabs" role="tablist">
+            <li role="presentation" class="active"><a href="#orderNote" aria-controls="orderNote" role="tab"
+                                                      data-toggle="tab" class="flex-auto-center">订单备注</a></li>
+            <li role="presentation"><a href="#orderLog" aria-controls="orderLog" role="tab" data-toggle="tab"
+                                       class="flex-auto-center">订单日志</a></li>
+        </ul>
+        <div class="tab-content">
+            <div role="tabpanel" class="tab-pane fade in active" id="orderNote">
+                <table class="table v-table table-auto-center">
+                    <thead>
+                    <tr>
+                        <th>备注内容</th>
+                        <th>操作人</th>
+                        <th>操作时间</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    {if $order['memo_lists']}
+                    {foreach name="order['memo_lists']" item="list"}
+                    <tr>
+                        <td>{$list['memo']}</td>
+                        <td>{$list['user_name']}</td>
+                        <td>{$list['create_date']}</td>
+                    </tr>
+                    {/foreach}
+                    {else}
+                    <tr>
+                        <td colspan="3">暂时没有数据</td>
+                    </tr>
+                    {/if}
+
+                    </tbody>
+                </table>
+            </div>
+            <div role="tabpanel" class="tab-pane fade" id="orderLog">
+                <table class="table v-table table-auto-center">
+                    <thead>
+                    <tr>
+                        <th>操作类型</th>
+                        <th>操作人</th>
+                        <th>操作时间</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    {foreach name="order['order_action']" item="action"}
+                    <tr>
+                        <td>{$action['action']}</td>
+                        <td>{$action['user_name']}</td>
+                        <td>{:date('Y-m-d H:i:s', $action['action_time'])}</td>
+                    </tr>
+                    {/foreach}
+                    </tbody>
+                </table>
+            </div>
+
+        <div class="mb-20">
+            <a href="{:__URL('ADDONS_MAINpurchaseOrder')}" class="btn btn-default">返回</a>
+        </div>
+
+        <!-- page end -->
+{/block}
+{block name="script"}
+<script>
+    require(['util'], function (util) {
+
+    })
+</script>
+{/block}

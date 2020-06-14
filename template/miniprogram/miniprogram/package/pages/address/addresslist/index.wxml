@@ -1,0 +1,42 @@
+<view>
+  <view class='addresslist'>
+    <view class='addressitem' wx:for="{{addresslist}}" wx:key="">
+      <view class='addresscell'>
+        <view class='row'>
+          <view class='title'>收货人</view>
+          <view class='itemtop'>
+            <view class='name'>{{item.consigner}}</view>
+            <view class='phone'>{{item.mobile}}</view>
+          </view>
+        </view> 
+        <view class='row'>
+          <view class='title'>收货地址</view>
+          <view class='area'>
+            <text>{{item.province_name}}</text>
+            <text>{{item.address}}</text>
+          </view>
+        </view>
+        
+      </view>
+      
+      <view class='set'>
+        <view class='setup' data-id='{{item.id}}' bindtap='selectDefault'>
+          <icon wx:if="{{item.is_default == 1}}" type="success" color="red" size='20'   />
+          <icon type="circle" wx:else size='20' />
+          <text>默认</text> 
+        </view>
+        <view class='set_r'>
+          <view class='edit' data-addressid="{{item.id}}" bindtap='onDetailPage'> <van-icon name="edit" size='24rpx' /> 编辑</view>
+          <view class='del' data-addressid="{{item.id}}" bindtap='deleteAddress'> <van-icon name="delete" size='24rpx' /> 删除</view>
+        </view>
+      </view> 
+    </view>
+  </view>
+  <view class='foot'>
+    <button class='addAddressBtn' bindtap='onaddAddressPage'>新增地址</button>
+  </view>
+  
+</view>
+
+<!-- 关联手机 -->
+<phone-compoent phoneShow='{{phoneShow}}' bind:phoneEven='phonereResult'></phone-compoent>

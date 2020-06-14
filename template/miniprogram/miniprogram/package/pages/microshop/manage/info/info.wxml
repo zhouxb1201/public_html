@@ -1,0 +1,26 @@
+<view class="van-cell-group van-hairline--top-bottom">
+  <view class="van-cell van-field">
+    <view class="van-cell__title van-field__label">
+      <text>微店名称</text>
+    </view>
+    <view class="van-cell__value">
+      <view class="van-field__body">
+        <input type="text" placeholder="微店名称" class="van-field__control" value='{{mic_name}}' bindinput="onInputName"></input>
+      </view>
+    </view>
+  </view>
+
+  <view class="van-cell van-field van-field--min-height">
+    <view class="van-cell__title van-field__label">
+      <text>微店介绍</text>
+    </view>
+    <view class="van-cell__value">
+      <view class="van-field__body">
+        <textarea placeholder="请输入微店介绍" class="van-field__control" value='{{mic_introduce}}' bindinput="onInputIntroduce"></textarea>
+      </view>
+    </view>
+  </view>  
+</view>
+<view class="foot-btn-group">
+  <view  class="van-button--danger" bindtap="onSave">保存</view>
+</view>  

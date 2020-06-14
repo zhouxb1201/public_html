@@ -1,0 +1,21 @@
+
+<view class='commission_qrcode'>
+  <view class='cell_group'>
+    <view class='van_cell'>
+      <view class='content'>
+        <view class='content_img'>
+          <image mode='widthFix' src='{{code_img}}' bindtap='saveCode'></image>
+        </view>
+      </view>
+      <view class='foot_text'>(点击保存海报分享)</view>
+    </view>
+  </view>
+
+  <view class='cell_group'>
+    <view class='van_cell'>      
+      <view class='text'>
+        微店小提示：可以通过二维码或微店链接邀请朋友购买微店商品，成交后你将会获得相应比例的返利。
+      </view>
+    </view>
+  </view>
+</view>

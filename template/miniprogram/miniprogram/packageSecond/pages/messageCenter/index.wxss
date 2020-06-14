@@ -1,0 +1,89 @@
+page{
+  font-size: 28rpx;
+  background-color: #f8f8f8;
+}
+
+.box {
+  display: flex;
+  background-color: #fff;
+  padding: 12px 0px;
+  margin-bottom: 10px;
+}
+.box .item {
+  flex: 1;
+  text-align: center;
+  position: relative;
+}
+
+.box .item .top {
+  position: relative;
+  width: 48px;
+  height: 48px;
+  margin: auto;
+}
+.box .item .top .dot {
+  display: block;
+  position: absolute;
+  right: -2px;
+  top: -2px;
+  width: 8px;
+  height: 8px;
+  z-index: 10;
+  background: red;
+  border-radius: 100%;
+  color: #fff;
+  font-size: 10px;
+}
+.box .item .img {
+  width: 48px;
+  height: 48px;
+  display: block;
+  border-radius: 8px;
+}
+
+.box .item .text {
+  padding-top: 8px;
+}
+
+.chat_list{
+  background-color: #fff;
+}
+.chat_list .item{
+  display: flex;
+  width: 100%;
+  overflow: hidden;
+  box-sizing:border-box;
+  color: #323233;
+  line-height: 48rpx;
+  padding: 20rpx 30rpx; 
+  border-bottom: 1px solid #ebedf0;
+}
+.chat_list .item .item_left{
+  margin-right: 20rpx;
+  width: 96rpx;
+  height: 96rpx;
+  border-radius: 16rpx;
+  background-color: #f8f8f8;
+}
+.chat_list .item .item_left image{
+  width: 100%;
+  height: 100%;
+}
+
+.chat_list .item .item_right{
+  flex: 1;  
+  flex-direction: column;
+  overflow: hidden;
+}
+.chat_list .item .item_right .title{
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.chat_list .item .item_right .title .time{
+  font-size: 24rpx;
+  color: #909399;
+}
+.chat_list .item .item_right .text{
+  color: #909399
+}

@@ -1,0 +1,380 @@
+{block name="main"}
+<!-- page -->
+<form class="form-horizontal form-validate widthFixedForm">
+    <div class="screen-title">
+        <span class="text">基本信息</span>
+    </div>
+    <div class="form-group">
+        <label class="col-md-2 control-label">模板标签</label>
+        <div class="col-md-8">
+            <select class="form-control" name="seckill_name" id="seckill_name">
+                <option value="请选择">请选择</option>
+                {foreach $data['all'] as $tag}
+                {if $data['custom_form_info']->custom_tag->tag_name == $tag.tag_name}
+                <option value="{$tag.id}" selected>{$tag.tag_name}</option>
+                {else}
+                <option value="{$tag.id}">{$tag.tag_name}</option>
+                {/if}
+                {/foreach}
+
+            </select>
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="col-md-2 control-label"><span class="text-bright">*</span>模板名称</label>
+        <div class="col-md-8">
+            <input type="text" id="custom_name" class="form-control" name="custom_name" value="{$data['custom_form_info']->name}" required>
+            <div class="mb-0 help-block">模板名称，例：用户资料</div>
+        </div>
+    </div>
+
+    <div class="screen-title">
+        <span class="text">字段设置</span>
+    </div>
+    <div class="form-group">
+        <label class="col-md-2 control-label"></label>
+        <div class="col-md-9">
+            <table class="table v-table table-auto-center">
+                <thead>
+                    <tr>
+                        <th width="80">类型</th>
+                        <th width="200">字段名</th>
+                        <th width="80">必填</th>
+                        <th width="50%">设置</th>
+                        <th width="80"></th>
+                    </tr>
+                </thead>
+                <tbody id="custom-list"></tbody>
+                <tfoot>
+                    <tr>
+                        <td>
+                            <a class="btn btn-primary" href="javascript:;" id="btn-add">增加一个字段</a>
+                        </td>
+                        <td colspan="4">
+                            <select class="form-control select-form-control" name="option_name" id="option">
+                                <option value="input">单行文本</option>
+                                <option value="textarea">多行文本</option>
+                                <option value="select">下拉框</option>
+                                <option value="radio">单选框</option>
+                                <option value="checkbox">多选框</option>
+                                <option value="img">图片</option>
+                                <option value="phone">手机号码</option>
+                                <option value="card">身份证号码</option>
+                                <option value="date">日期</option>
+                                <option value="date_range">日期范围</option>
+                                <option value="area">城市</option>
+                            </select>
+                        </td>
+                    </tr>
+                </tfoot>
+            </table>
+        </div>
+    </div>
+
+    <div class="form-group"></div>
+    <div class="form-group">
+        <label class="col-md-2 control-label"></label>
+        <div class="col-md-8">
+            {if $type!=1}
+            <button id="button" class="btn btn-primary" type="submit">添加</button>
+            {/if}
+            <a href="javascript:history.go(-1);" class="btn btn-default">返回</a>
+        </div>
+    </div>
+</form>
+
+<!-- page end -->
+{/block}
+{block name="script"}
+<script id='tpl_content' type='text/html'>
+    <%each items as item key%>
+    <tr class="bind-key" data-key="<%key%>">
+        <td>
+            <span><%item.name%></span>
+        </td>
+        <td>
+            <input type="text" class="form-control bind" name="<%item.tag%>_label_<%key%>" data-bind="label" placeholder="请输入字段名" value="<%item.label%>" required>
+        </td>
+        <td>
+            <input type="checkbox" class="bind" name="<%item.tag%>_required_<%key%>" data-bind="required" <%if item.required%>checked<%/if%>>
+        </td>
+        <td>
+            <%if item.tag == 'input'%>
+            <div class="mb--15">
+                <div class="form-group">
+                    <label class="col-md-4 control-label">设置默认值</label>
+                    <div class="col-md-7">
+                        <input type="text" class="form-control bind" data-bind="default" value="<%item.default%>" name="<%item.tag%>_default_<%key%>" placeholder="请输入默认值">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-md-4 control-label">提示语</label>
+                    <div class="col-md-7">
+                        <input type="text" class="form-control bind" data-bind="placeholder" value="<%item.placeholder%>" name="<%item.tag%>_placeholder_<%key%>" placeholder="请输入提示语">
+                    </div>
+                </div>
+            </div>
+            <%else if item.tag == 'textarea'%>
+            <textarea class="form-control bind" rows="3" placeholder="请输入默认值" name="<%item.tag%>_default_<%key%>" data-bind="default"><%item.default%></textarea>
+            <%else if item.tag == 'radio'%>
+            <textarea class="form-control bind" rows="3" placeholder="一行一个选项" name="<%item.tag%>_options_<%key%>" data-bind="options"><%item.options%></textarea>
+            <%else if item.tag == 'checkbox'%>
+            <textarea class="form-control bind" rows="3" placeholder="一行一个选项" name="<%item.tag%>_options_<%key%>" data-bind="options"><%item.options%></textarea>
+            <%else if item.tag == 'select'%>
+            <textarea class="form-control bind" rows="3" placeholder="一行一个选项" name="<%item.tag%>_options_<%key%>" data-bind="options"><%item.options%></textarea>
+            <%else if item.tag == 'card'%>
+            <div class="mb--15">
+                <div class="form-group">
+                    <label class="col-md-4 control-label">提示语</label>
+                    <div class="col-md-7">
+                        <input type="text" class="form-control bind" data-bind="placeholder" value="<%item.placeholder%>" name="<%item.tag%>_placeholder_<%key%>" placeholder="请输入提示语" />
+                    </div>
+                </div>
+            </div>
+            <%else if item.tag == 'phone'%>
+            <div class="mb--15">
+                <div class="form-group">
+                    <label class="col-md-4 control-label">提示语</label>
+                    <div class="col-md-7">
+                        <input type="text" class="form-control bind" data-bind="placeholder" value="<%item.placeholder%>" name="<%item.tag%>_placeholder_<%key%>" placeholder="请输入提示语" />
+                    </div>
+                </div>
+            </div>
+            <%else if item.tag == 'img'%>
+            <div class="mb--15">
+                <div class="form-group">
+                    <label class="col-md-4 control-label">最大数量</label>
+                    <div class="col-md-7">
+                        <select class="form-control bind select" name="<%item.tag%>_max_<%key%>" data-bind="max" >
+                            <option value="1" <%if item.max == 1%>selected<%/if%>>1</option>
+                            <option value="2" <%if item.max == 2%>selected<%/if%>>2</option>
+                            <option value="3" <%if item.max == 3%>selected<%/if%>>3</option>
+                            <option value="4" <%if item.max == 4%>selected<%/if%>>4</option>
+                            <option value="5" <%if item.max == 5%>selected<%/if%>>5</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+            <%else if item.tag == 'date'%>
+            <div class="mb--15">
+                <div class="form-group">
+                    <label class="col-md-4 control-label">默认日期</label>
+                    <div class="col-md-7">
+                        <select class="form-control bind" name="<%item.tag%>_type_<%key%>" data-bind="type" data-bind-init="true" data-bind-date="true">
+                            <option value="0" <%if item.type == 0%>selected<%/if%>>当天日期</option>
+                            <option value="1" <%if item.type == 1%>selected<%/if%>>自定义日期</option>
+                        </select>
+                    </div>
+                </div>
+                <%if item.type == 1%>
+                <div class="form-group">
+                    <label class="col-md-4 control-label">选择日期</label>
+                    <div class="col-md-7">
+                        <div class="date-input-control">
+                            <input type="text" class="form-control bind-date-input bind" id="selectDate_<%key%>" data-bind="default" placeholder="选择日期" value="<%item.default%>" autocomplete="off" name="selectDate_<%key%>" lay-key="<%key%>"><i class="icon icon-calendar"></i>
+                        </div>
+                    </div>
+                </div>
+                <%/if%>
+            </div>
+            <%else if item.tag == 'date_range'%>
+            <div class="mb--15">
+                <div class="form-group">
+                    <label class="col-md-4 control-label">默认开始日期</label>
+                    <div class="col-md-7">
+                        <select class="form-control bind" name="<%item.tag%>_start_type_<%key%>" data-bind="start_type" data-bind-init="true" data-bind-date="true">
+                            <option value="0" <%if item.start_type == 0%>selected<%/if%>>当天日期</option>
+                            <option value="1" <%if item.start_type == 1%>selected<%/if%>>自定义日期</option>
+                        </select>
+                    </div>
+                </div>
+                <%if item.start_type == 1%>
+                <div class="form-group">
+                    <label class="col-md-4 control-label">选择日期</label>
+                    <div class="col-md-7">
+                        <div class="date-input-control">
+                            <input type="text" class="form-control bind-date-input bind" id="startDate_<%key%>" data-bind="start_default" placeholder="选择日期" value="<%item.start_default%>" autocomplete="off" name="startDate_<%key%>" lay-key="<%key%>"><i class="icon icon-calendar"></i>
+                        </div>
+                    </div>
+                </div>
+                <%/if%>
+                <div class="form-group">
+                    <label class="col-md-4 control-label">默认结束日期</label>
+                    <div class="col-md-7">
+                        <select class="form-control bind" name="<%item.tag%>_end_type_<%key%>" data-bind="end_type" data-bind-init="true" data-bind-date="true">
+                            <option value="0" <%if item.end_type == 0%>selected<%/if%>>当天日期</option>
+                            <option value="1" <%if item.end_type == 1%>selected<%/if%>>自定义日期</option>
+                        </select>
+                    </div>
+                </div>
+                <%if item.end_type == 1%>
+                <div class="form-group">
+                    <label class="col-md-4 control-label">选择日期</label>
+                    <div class="col-md-7">
+                        <div class="date-input-control">
+                            <input type="text" class="form-control bind-date-input bind" id="endDate_<%key%>" data-bind="end_default" placeholder="选择日期" value="<%item.end_default%>" autocomplete="off" name="endDate_<%key%>" lay-key="<%key%>"><i class="icon icon-calendar"></i>
+                        </div>
+                    </div>
+                </div>
+                <%/if%>
+            </div>
+            <%else if item.tag == 'area'%>
+            <div class="mb--15">
+                <div class="form-group">
+                    <label class="col-md-4 control-label">级别</label>
+                    <div class="col-md-7">
+                        <select class="form-control bind select" name="<%item.tag%>_type_<%key%>" data-bind="type">
+                            <option value="3" <%if item.type == 3%>selected<%/if%>>省市区</option>
+                            <option value="2" <%if item.type == 2%>selected<%/if%>>省市</option>
+                            <option value="1" <%if item.type == 1%>selected<%/if%>>省</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+            <%/if%>
+        </td>
+        <td>
+            <a class="btn btn-danger btn-sm btn-del" data-key="<%key%>"><i class="glyphicon glyphicon-remove"></i></a>
+        </td>
+    </tr>
+     <%/each%>
+</script>
+<script>
+require(['util','tpl'], function (util,tpl) {
+    var arr = []
+    $.ajax({
+        type: "post",
+        url: "{$getCustomFormUrl}",
+        data: {
+            custom_id:"{$custom_form_id}",
+        },
+        async: true,
+        success: function (data) {
+            arr = data?data:[]
+            initList()
+        }
+    });
+    
+    // 添加字段
+    $('#btn-add').on('click',function(){
+        var option_tag = $('#option').val()
+        var option_text = $('#option').find("option:selected").text()
+        var obj = {}
+        obj.tag = option_tag
+        obj.name = option_text
+        obj.label = ''
+        obj.required = false
+        obj.value = ''
+        if(option_tag == 'input'){
+            obj.placeholder = ''
+            obj.default = ''
+        } else if(option_tag == 'card' || option_tag == 'phone'){
+            obj.placeholder = ''
+        } else if(option_tag == 'textarea'){
+            obj.default = ''
+        } else if(option_tag == 'select'){
+            obj.options = ''
+        } else if(option_tag == 'radio'){
+            obj.options = ''
+        } else if(option_tag == 'checkbox'){
+            obj.options = ''
+        } else if(option_tag == 'img'){
+            obj.max = 1
+        } else if(option_tag == 'date'){
+            obj.type = 0
+            obj.default = ''
+        } else if(option_tag == 'date_range'){
+            obj.start_default = ''
+            obj.end_default = ''
+            obj.start_type = 0
+            obj.end_type = 0
+        } else if(option_tag == 'area'){
+            obj.type = 3
+        }
+        arr.push(obj)
+        
+        // console.log(arr)
+        initDate()
+        $('#custom-list').html(tpl('tpl_content',{items:arr}));
+    })
+    // 删除字段
+    $('#custom-list').on('click','.btn-del',function(elm){
+        var key = $(this).data('key')
+        arr.splice(key,1)
+        initDate()
+        $('#custom-list').html(tpl('tpl_content',{items:arr}));
+    })
+    $("#custom-list").on('input propertychange change','.bind', function () {
+        var tag = this.tagName;
+        var key = $(this).parents('.bind-key').data('key') // 当前索引
+        var bind = $(this).data('bind')     // 监听绑定的属性
+        var init = $(this).data('bind-init') //初始化视图
+        var value = ''      // 监听值
+        if(tag == 'INPUT'){
+            var type = $(this).attr('type');
+            if (type == 'checkbox') {
+                value = $(this).is(':checked')
+            } else {
+                value = $(this).val()
+            }
+        }else if(tag == 'SELECT'){
+            if($(this).data('bind-date')){
+                let elm = ''
+                if(arr[key].tag == 'date'){
+                    elm = "#selectDate_"+key
+                }
+                if(arr[key].tag == 'date_range'){
+                    if(bind == 'start_type'){
+                        elm = '#startDate_'+key
+                    }else{
+                        elm = '#endDate_'+key
+                    }
+                }
+                initDate(elm)
+            }
+            value = parseFloat($(this).val())
+            
+        }else if(tag == 'TEXTAREA'){
+            value = $(this).val()
+        }
+        arr[key][bind] = value
+        if(init){
+            initList()
+        }
+    })
+    function initList(){
+        $('#custom-list').html(tpl('tpl_content',{items:arr}));
+    }
+    function initDate(elm){
+        util.date('.bind-date-input',false,function(e,i){
+            $(elm).val(e).change();
+        });
+    }
+    
+    util.validate($('.form-validate'), function (form) {
+        
+        $.ajax({
+            type: "post",
+            url: "{$updateCustomFormUrl}",
+            data: {
+                custom_id: "{$data['custom_form_info']->id}",
+                seckill_name:$('#seckill_name').val(),
+                custom_name:$('#custom_name').val(),
+                custom_form:JSON.stringify(arr)
+            },
+            async: true,
+            success: function (data) {
+                // console.log(data);
+                if (data["code"] > 0) {
+                    util.message(data["message"], 'success', "{:__URL('ADDONS_MAINcustomFormList')}");
+                } else {
+                    util.message('模板名已存在', 'danger');
+                }
+            }
+
+        });
+    })
+});
+
+</script>
+{/block}

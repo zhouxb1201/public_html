@@ -1,0 +1,14 @@
+<view class="popup" wx:if="{{isShow}}">
+  <view class="popup-wrap">
+    <view class="popup-main-end">
+      <view class="txt-end-title">你来晚了~活动已结束！</view>
+      <view class="txt-end-follow">关注公众号商城，更多好礼等你拿</view>
+      <view class="end">
+        <image mode='widthFix' src="{{publicUrl}}/wap/static/images/end.png"></image>
+      </view>
+      <view class="btn-wrap">
+        <button class="btn-know" hover-class='none' bindtap='onKnow'>知道了</button>
+      </view>
+    </view>
+  </view>
+</view>

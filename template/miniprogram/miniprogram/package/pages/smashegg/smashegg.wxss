@@ -1,0 +1,175 @@
+/* miniprogram/package/pages/smashegg/smashegg.wxss */
+
+page {
+  background-color: #b10f11;
+  position: relative;
+  padding-bottom: 40rpx;
+}
+.banner {
+  width: 100%;
+  overflow: hidden;
+  min-height: 112rpx;
+}
+.banner image {
+  max-width: 100%;
+  width: 100%;
+  height: auto;
+  display: block;
+}
+
+.right-tag {
+  position: absolute;
+  z-index: 10;
+  top: 160rpx;
+  right: 0;
+}
+
+.right-tag .menu {
+  color: #f44;
+  background-color: #fff;
+  padding: 12rpx 20rpx;
+  border-bottom-left-radius: 40rpx;
+  border-top-left-radius: 40rpx;
+  font-size: 28rpx;
+  margin-top: 40rpx;
+  display: block;
+}
+
+/****砸金蛋****/
+.smashegg-main {
+  position: relative;
+}
+
+.smashegg-egg {
+  position: relative;
+  width: 100%;
+}
+.smashegg-egg:after {
+  content: "";
+  display: block;
+  clear: both;
+}
+.item-egg {
+  position: relative;
+  width: 33.333%;
+  float: left;
+}
+.item-egg .egg-img {
+  width: 100%;
+  display: block;
+  position: relative;
+}
+.item-egg .egg-img image {
+  width: 100%;
+}
+.item-egg .hammer {
+  position: absolute;
+  width: 35%;
+  top: 0;
+  right: 0;
+  display: none;
+}
+.smashegg-chance {
+  text-align: center;
+  color: #fff;
+  font-size: 28rpx;
+  margin-top: 20rpx;
+}
+.smashegg-chance text {
+  color: #ffff00;
+}
+.btn-continue button {
+  background-color: #fff55a;
+  border: 0;
+  color: #a50000;
+  margin: 30rpx auto;
+  display: block;
+  height: 72rpx;
+  line-height: 72rpx;
+  border-radius: 40rpx;
+  box-sizing: border-box;
+  box-shadow: 0px 8rpx 2rpx #fec201;
+  width: 60%;
+  text-align: center;
+  font-size: 28rpx;
+  -webkit-appearance:none;
+  appearance:none;  
+}
+.btn-continue button.boxColor_yellow{
+  box-shadow: 0px 8rpx 2rpx #fec201;
+}
+.btn-continue button.boxColor_gray{
+  box-shadow: 0px 8rpx 2rpx #ccc;
+}
+.prize-wrap {
+  margin: 40rpx 40rpx 0 40rpx;
+  background-color: #fff;
+  border-radius: 20rpx;
+  display: block;
+}
+
+.prize-title {
+  text-align: center;
+  font-size: 28rpx;
+  color: #e84d2f;
+  padding: 36rpx;
+  display: block;
+}
+
+.prize-list-wrap {
+  overflow: hidden;
+  padding: 12rpx 40rpx;
+  color: #666;
+  height: 356rpx;
+}
+
+.prize-list-wrap .item-ul {
+  position: relative;
+  display: block;
+  overflow: hidden;
+}
+
+.prize-list-wrap .item-ul .item-li {
+  height: 56rpx;
+  line-height: 56rpx;
+  font-size: 26rpx;
+  display: flex;
+}
+
+.prize-list-wrap .item-ul .item-li text {
+  flex: 1;
+}
+
+.prize-list-wrap .item-ul .item-li text:last-child {
+  text-align: right;
+}
+
+
+.shak {
+  animation: hammer-move 0.5s linear 1 alternate;
+  display: block !important;
+}
+
+
+@keyframes hammer-move {
+  0% {
+    transform: rotate(0deg);
+    transform-origin: right bottom;
+  }
+  30% {
+    transform: rotate(10deg);
+    transform-origin: right bottom;
+  }
+  60% {
+    transform: rotate(30deg);
+    transform-origin: right bottom;
+  }
+  90% {
+    transform: rotate(10deg);
+    transform-origin: right bottom;
+  }
+  100% {
+    transform: rotate(0deg);
+    transform-origin: right bottom;
+  }
+}

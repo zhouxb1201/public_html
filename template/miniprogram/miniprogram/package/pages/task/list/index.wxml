@@ -1,0 +1,58 @@
+<view class='list_box'>
+  <van-tabs active="{{ active }}" bind:change='taskStatusFun'>
+    <van-tab title="进行中"></van-tab>
+    <van-tab title="已完成"></van-tab>
+    <van-tab title="已失效"></van-tab>
+  </van-tabs>
+
+  <view class="list">
+    <view class="list_box">
+      <view class="item" wx:for='{{task_info}}' wx:key=''>
+        <view class="text_group">
+          <view class="name">{{item.task_name}}</view>
+          <view class="rule" wx:for='{{item.task_rule}}' wx:key='' wx:for-item='ruleItem'>
+            <view class="text" wx:if='{{ruleItem.referrals}}'>推荐人数达<text>{{ruleItem.referrals}}</text>人</view>
+            <view class="text" wx:if='{{ruleItem.distribution_commission}}'>分销佣金达<text>{{ruleItem.distribution_commission}}</text>元</view>
+            <view class="text" wx:if='{{ruleItem.distribution_orders}}'>分销订单达<text>{{ruleItem.distribution_orders}}</text>笔</view>
+            <view class="text" wx:if='{{ruleItem.order_total_money}}'>订单累计金额满<text>{{ruleItem.order_total_money}}</text>元</view>
+            <view class="text" wx:if='{{ruleItem.order_total_sum}}'>支付订单达<text>{{ruleItem.order_total_sum}}</text>笔</view>
+            <view class="text" wx:if='{{ruleItem.pay_order_total_num}}'>订单总金额<text>{{ruleItem.pay_order_total_num}}</text>元</view>
+            <view class="text" wx:if='{{ruleItem.goods_name}}'>购买<text>{{ruleItem.goods_name}}</text>商品</view>
+            <view class="text" wx:if='{{ruleItem.goods_comment_num}}'>累计评价<text>{{ruleItem.goods_comment_num}}</text>次</view>
+            <view class="text" wx:if='{{ruleItem.total_recharge}}'>累计充值达<text>{{ruleItem.total_recharge}}</text>元</view>
+            <view class="text" wx:if='{{ruleItem.single_recharge}}'>单次充值满<text>{{ruleItem.single_recharge}}</text>元</view>           
+          </view>
+          <view class="a_link" data-id="{{item.general_poster_id}}" data-userid="{{item.user_task_id}}" bindtap="taskDetail">任务详情 ></view>
+        </view>
+        <view class="right_group">
+          <view class="box" wx:if='{{task_status == 1}}'>
+            <van-icon name="clock" size='2.2em' color="rgb(25, 137, 250)"/>
+            <view>进行中</view>
+          </view>
+          <view class="box" wx:elif='{{task_status == 2}}'>
+            <van-icon name="passed" size='2.2em' color="rgb(25, 137, 250)"/>
+            <view>已完成</view>
+          </view>
+          <view class="box" wx:else='{{task_status == 3}}'>
+            <van-icon name="close" size='2.2em' color="rgb(25, 137, 250)"/>
+            <view>已失效</view>
+          </view>
+        </view>
+      </view>
+    </view>
+  </view>
+
+  <view class='no_data' wx:if='{{task_info.length == 0 && page_index == 1}}'>
+    <view class='no_data_box'>
+      <view class='img'>
+        <image src='/images/empty-order.png' mode='widthFix'></image>
+      </view>
+      <view class='no_data_text'>没有相关数据</view>
+    </view>
+  </view>
+  <view class='no_more' wx:else>
+    <view>没有更多</view>
+  </view>
+
+
+</view>

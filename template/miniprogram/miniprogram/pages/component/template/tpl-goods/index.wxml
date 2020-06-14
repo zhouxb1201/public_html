@@ -1,0 +1,38 @@
+<view class='goods' style='background:{{temDataitem.style.background}}' wx:if="{{temDataitem.params.recommendtype == 1}}">
+  <view wx:for="{{temDataitem.data}}" wx:key=''>
+    <view class='row-{{temDataitem.params.showtype?temDataitem.params.showtype:2}}'>
+      <view class='item' data-goodsid='{{item.goods_id}}' bindtap='ongoodsDetail'>
+        <view class='itemBox'>
+          <view class='goodsImg'>
+            <image class='image' mode='widthFix' src="{{item.pic_cover}}" binderror="errImg"></image>
+          </view>
+          <view class='goodsName'>{{item.goods_name}}</view>
+          <view class='detail'>
+            <view class='goodsPrice'>¥{{item.price}}</view>
+          </view>
+        </view>        
+      </view>
+    </view>
+  </view>
+</view>
+<view class='goods' style='background:{{temDataitem.style.background}}' wx:elif="{{temDataitem.params.recommendtype == 0}}" data-recommendnum="{{temDataitem.params.recommendnum}}">
+  <view wx:for="{{goodsList}}" wx:for-index="i" wx:key=''>
+    <view wx:if="{{i<temDataitem.params.recommendnum}}">
+        <view class='row-{{temDataitem.params.showtype?temDataitem.params.showtype:2}}'>
+          <view class='item'>
+          <navigator url="/pages/goods/detail/index?goodsId={{item.goods_id}}" hover-class='none'>          
+             <view class='itemBox'>
+              <view class='goodsImg'>
+                <image class='image' mode='widthFix' wx:if='{{item.logo}}' src="{{item.logo != ''?item.logo:'/images/no-goods.png'}}" binderror='avatarError' data-imgindex="{{i}}"></image>
+              </view>
+              <view class='goodsName'>{{item.goods_name}}</view>
+              <view class='detail'>
+                <view class='goodsPrice'>¥{{item.price}}</view>
+              </view>
+            </view>
+          </navigator>                             
+          </view>
+        </view>
+    </view>      
+  </view>
+</view>

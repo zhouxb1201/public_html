@@ -1,0 +1,32 @@
+<view class='team' wx:if='{{pageShow}}'>
+  <van-tabs active="{{ active }}" bind:change="onTabsChange">
+    <van-tab wx:if='{{distribution_pattern == 1 || distribution_pattern == 2 || distribution_pattern == 3}}' title="{{txt_team1}}"></van-tab>
+    <van-tab wx:if='{{distribution_pattern == 2 || distribution_pattern == 3}}' title="{{txt_team2}}"></van-tab>
+    <van-tab wx:if='{{distribution_pattern == 3}}' title="{{txt_team3}}"></van-tab>    
+  </van-tabs>
+
+  <view class='list'>
+    <view class='item' wx:for='{{team_list}}' wx:key=''>
+      <view class='img'>
+        <image src="{{item.user_headimg !=''?item.user_headimg:'../../../images/no-pic.jpg'}}"></image>
+      </view>
+      <view class='customer_info'>
+        <view class='order_num'>
+          <text class='name'>{{item.member_name}}</text>
+          <text class='level'>{{item.distributor_level_name}}</text>
+        </view>
+        <view class='order_num'>
+          <text>团队人数：{{item.teamcount}} 人</text>
+          <text>累积佣金：{{item.commission}} 元</text>  
+        </view>
+      </view>
+    </view>
+  </view>
+
+  <view class='foot'>
+    <view>没有更多了</view>
+  </view>
+
+</view>
+
+

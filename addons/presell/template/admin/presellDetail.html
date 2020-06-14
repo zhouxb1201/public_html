@@ -1,0 +1,281 @@
+{block name="main"}
+
+        <form class="form-horizontal pt-15 form-validate">
+            <div class="col-md-10">
+            <table class="table v-table table-auto-center table-bordered">
+                <tbody>
+                    <tr>
+                        <td class="col-md-3 bg-f5">
+                            <div class="padding-15">
+                                <p>活动标签</p>
+                            </div>
+                        </td>
+                        <td class="text-left">
+                            <p>{$info[0]['name']}</p>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="col-md-3 bg-f5">
+                            <div class="padding-15">
+                                <p>预售类型</p>
+                            </div>
+                        </td>
+                        <td class="text-left">
+                            <p>定金+尾款</p>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="col-md-3 bg-f5">
+                            <div class="padding-15">
+                                <p>预售时间</p>
+                            </div>
+                        </td>
+                        <td class="text-left">
+                            <p>{$info[0]['start_time']} 00:00:00~{$info[0]['end_time']} 23:59:59</p>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="col-md-3 bg-f5">
+                            <div class="padding-15">
+                                <p>预售商品</p>
+                            </div>
+                        </td>
+                        <td class="text-left">
+                            <div class="media text-left">
+                                <div class="media-left goods-img">
+                                    <img  src="{$info[0]['pic_cover']}"  width="60" height="60">
+                                </div>
+                                <div class="media-body max-w-300">
+                                    <div class="line-2-ellipsis goods-text">{$info[0]['goods_name']}</div>
+                                </div>
+                            </div>
+                        </td>
+                    </tr>
+                    <tr class="no_sku">
+                        <td class="col-md-3 bg-f5">
+                            <div class="padding-15">
+                                <p>预售价</p>
+                            </div>
+                        </td>
+                        <td class="text-left">
+                            <p id="group_price">{$info[0]['allmoney']}</p>
+                        </td>
+                    </tr>
+                    <tr class="has_sku">
+                        <td class="col-md-3 bg-f5">
+                            <div class="padding-15">
+                                <p>规格信息</p>
+                            </div>
+                        </td>
+                        <td>
+                            <table class="table table-bordered table-auto-center" id='stock_table'></table>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="col-md-3 bg-f5">
+                            <div class="padding-15">
+                                <p>定金</p>
+                            </div>
+                        </td>
+                        <td class="text-left">
+                            <p id="group_limit_buy">{$info[0]['firstmoney']}</p>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="col-md-3 bg-f5">
+                            <div class="padding-15">
+                                <p>预售库存</p>
+                            </div>
+                        </td>
+                        <td class="text-left">
+                            <p id="group_limit_buy">{$info[0]['presellnum']}</p>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="col-md-3 bg-f5">
+                            <div class="padding-15">
+                                <p>限购</p>
+                            </div>
+                        </td>
+                        <td class="text-left">
+                            <p id="group_limit_buy">{$info[0]['maxbuy']}</p>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="col-md-3 bg-f5">
+                            <div class="padding-15">
+                                <p>虚拟订购量</p>
+                            </div>
+                        </td>
+                        <td class="text-left">
+                            <p id="group_limit_buy">{$info[0]['vrnum']}</p>
+                        </td>
+                    </tr>
+                    <tr>
+                    <td class="col-md-3 bg-f5">
+                        <div class="padding-15">
+                            <p>尾款支付时间</p>
+                        </div>
+                    </td>
+                    <td class="text-left">
+                        <p id="group_limit_buy">{$info[0]['pay_start_time']} 00:00:00~{$info[0]['pay_end_time']} 23:59:59</p>
+                    </td>
+                    </tr>
+                    <tr>
+                        <td class="col-md-3 bg-f5">
+                            <div class="padding-15">
+                                <p>发货时间</p>
+                            </div>
+                        </td>
+                        <td class="text-left">
+                            <p id="group_limit_buy">{$info[0]['send_goods_time']} 00:00:00</p>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="col-md-3 bg-f5">
+                            <div class="padding-15">
+                                <p>活动状态</p>
+                            </div>
+                        </td>
+                        <td class="text-left">
+                            <p>{if $info[0]['status'] eq 1}进行中{elseif $info[0]['status'] eq 2}未开始{else}已结束{/if}</p>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+            </div>
+            <div id="sku_list" data-sku_list="{$groupDetail['sku_list']}">
+            <input type="hidden" name="goods_id" id="goods_id" value="{$info[0]['goods_id']}">
+            <div class="form-group"></div>
+            <div class="form-group">
+                <label class="col-md-2 control-label"></label>
+                <div class="col-md-8">
+                    <a href="javascript:history.go(-1);" class="btn btn-default">返回</a>
+                </div>
+            </div>
+        </form>
+{/block}
+{block name="script"}
+<script>
+    require(['util'], function (util) {
+        getSku();
+        function getSku(){
+            var goods_id = $('#goods_id').val();
+            var presell_id = {$info[0]['id']};
+            if(goods_id){
+                $.ajax({
+                    type: "post",
+                    url: "{:__URL('admin/addons/execute/addons/presell/controller/Presell/action/get_sku_list')}",
+                    async: true,
+                    data: {
+                        "goods_id": goods_id,
+                        "presell_id":presell_id
+                    },
+                    success: function (data) {
+
+                        $('#sku_list').attr('data-sku_list', JSON.stringify(data));
+                        setSku($('#sku_list'));
+                    }
+                });
+            }
+        }
+
+        function setSku(obj){
+            var sku_list = obj.data('sku_list');
+            console.log(sku_list);
+            $('#goods_info_box').removeClass('hidden');
+            $('#goods_info_box').addClass('show');
+            if(sku_list.sku_name != undefined){
+                sku_list.sku_name = (sku_list.sku_name).replace(/^\s+|\s+$/g,"");
+            }
+            if(sku_list.sku_name === undefined || sku_list.sku_name !== ''){
+                $('#product_sku').removeClass('hidden');
+                $('#product_sku').addClass('show');
+                var html = '<thead>';
+                for(var sku_ids in sku_list){
+                    if(sku_ids == 0){
+                        var th_name_str = sku_list[sku_ids]['th_name_str'];
+                        var th_name_str_arr = th_name_str.split(' ');
+                        for(var th_id in th_name_str_arr){
+                            html += '<th class="vertical-middle">'+th_name_str_arr[th_id]+'</th>\n';
+                        }
+                        html += ' <th class="vertical-middle">售价</th>\n' +
+                            '<th class="vertical-middle">库存</th>\n' +
+                            '<th class="vertical-middle th-price">预售价</th>\n' +
+                            '<th class="vertical-middle th-price">定金</th>\n'+
+                            '<th class="vertical-middle th-price">预售库存</th>\n' +
+                            '<th class="vertical-middle th-price">限购</th>\n' +
+                            '<th class="vertical-middle th-price">虚拟订购量</th>\n';
+
+                        html += '</thead>\n';
+                        html += '<tbody>\n';
+                    }
+                    //处理规格
+                    var spec_val = sku_list[sku_ids]['new_im_str'];
+                    var spec_show_type = sku_list[sku_ids]['show_type_str'];
+                    var spec_arr = spec_val.split('§');
+                    var spec_show_arr = spec_show_type.split(' ');
+                    html += '<tr skuid="'+sku_list[sku_ids]['attr_value_items']+'" id="">\n';
+                    for(var spec_id in spec_arr){
+                        //判断展示类型是不是图片
+                        if(spec_show_arr[spec_id] == '3'){
+                            var spec_val_arr = spec_arr[spec_id].split('=');
+                            html +='<td skuchild="'+spec_val_arr[0]+'"><img src="'+spec_val_arr[1]+'"></td>\n';
+                        }else{
+                            var spec_val_arr = spec_arr[spec_id].split('=');
+                            html +='<td skuchild="'+spec_val_arr[0]+'">'+spec_val_arr[1]+'</td>\n';
+                        }
+                    }
+                    html += '<td>'+sku_list[sku_ids]['price']+'</td>\n' +
+                        '<td>'+sku_list[sku_ids]['stock']+'</td>\n' +
+                        '<td><input type="number" min="1" step="1" disabled name="all_money" class="form-control" value="'+sku_list[sku_ids]['all_money']+'"></td>\n' +
+                        '<td><input type="number" min="1" step="1" disabled name="first_money" class="form-control" value="'+sku_list[sku_ids]['first_money']+'"></td>\n' +
+                        '<td><input type="number" min="1" step="1" disabled name="presell_num" class="form-control" value="'+sku_list[sku_ids]['presell_num']+'"></td>\n' +
+                        '<td><input type="number" min="1" step="1" disabled name="max_buy" class="form-control" value="'+sku_list[sku_ids]['max_buy']+'"></td>\n' +
+                        '<td><input type="number" min="0" step="1" disabled name="vr_num" class="form-control" value="'+sku_list[sku_ids]['vr_num']+'"></td>\n' +
+                        '<input type="hidden" name="presell_goods_id" class="form-control" value="'+ sku_list[sku_ids]['presell_goods_id'] +'">\n' +
+                        '<input type="hidden" name="sku_id" class="form-control" value="'+ sku_list[sku_ids]['sku_id'] +'">\n' +
+                        '</tr>\n';
+                }
+                html += '<tbody>\n';
+
+                $('#stock_table').html(html);
+                // 合并单元格
+                merge_cell();
+                $('#product_sku').removeClass('hidden');
+                $('#product_sku').addClass('show');
+                $('#four-select').remove('show');
+                $('#four-select').addClass('hidden');
+            }else{
+                $('#sku_id').val(sku_list.sku_id);
+                $('#group_price').val(sku_list.group_price);
+                $('#group_limit_buy').val(sku_list.group_limit_buy);
+                $('#product_sku').removeClass('show');
+                $('#product_sku').addClass('hidden');
+                $('#four-select').removeClass('hidden');
+                $('#four-select').addClass('show');
+            }
+            if($('#sele_goods').hasClass('has-error')){
+                $('#sele_goods').removeClass('has-error');
+                $('#sele_goods #group-error').remove();
+            }
+        }
+    });
+    //合并单元格
+    function merge_cell(){
+        var td = $(' #stock_table td');
+        for(var i=0;i<td.length;i++){
+            var td_skuchild = $(td[i]).attr('skuchild');
+            if(td_skuchild != undefined){
+                 var td_box = $('td[skuchild="'+td_skuchild+'"]');
+                 if(td_box.length>1){
+                     $(td_box[0]).attr('rowspan',td_box.length);
+                     for(var j=1;j<td_box.length;j++){
+                         td_box[j].remove();
+                     }
+                 }
+            }
+        }
+    }
+</script>
+{/block}

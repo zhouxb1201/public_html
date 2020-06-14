@@ -1,0 +1,9 @@
+<!--miniprogram/package/pages/prize/result/result.wxml-->
+<view class='success-txt'>恭喜你，奖品已收入囊中！</view>
+<view class='img'>
+  <image mode='widthFix' src="{{publicUrl}}/wap/static/images/prize-success.png"></image>
+</view>
+<view class='btn-wrap'>
+  <button class="btn" open-type='share' hover-class='none'>立即分享</button>
+  <button bindtap='onBack' hover-class='none'>完成</button>
+</view>

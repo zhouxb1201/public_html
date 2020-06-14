@@ -1,0 +1,100 @@
+{extend name="shop/new/Member/base" /}
+{block name="main"}
+<div class="v-main-right fl">
+                    <div class="v-container">
+                        <!--page-->
+                        <div class="aSfatefy clearfix">
+                            {if condition="$member_info['user_info']['user_tel'] neq '' and $member_info['user_info']['user_email'] neq '' and $member_info['user_info']['payment_password'] neq ''"}
+                            <div class="safe-desc fl">安全等级：<span class="red">高</span></div>
+
+                            <div class="safe-level fl">
+                                <div class="level-pro">
+                                    <div class="user-pro pro-all"></div>
+                                </div>
+                        
+                            </div>
+                            {/if}
+                            {if condition="$member_info['user_info']['payment_password'] neq ''or $member_info['user_info']['user_email'] neq ''"}
+                            <div class="safe-desc fl">安全等级：<span class="red">良好</span></div>
+
+                            <div class="safe-level fl">
+                                <div class="level-pro">
+                                    <div class="user-pro  pro-middle "></div>
+                                </div>
+
+                            </div>
+                            {/if}
+                            {if condition="$member_info['user_info']['payment_password'] eq '' and $member_info['user_info']['user_email'] eq ''"}
+                            <div class="safe-desc fl">安全等级：<span class="red">较低</span></div>
+
+                            <div class="safe-level fl">
+                                <div class="level-pro">
+                                    <div class="user-pro pro-low"></div>
+                                </div>
+
+                            </div>
+                            {/if}
+                        </div>
+                        <div class="aSfatefy-content">
+                            <dl class="clearfix">
+                                <dd><i class="icon-lock-up"></i></dd>
+                                <dd>
+                                    <div class="info-title">登录密码</div>
+                                    <div class="desc">尽量使用混合型密码（字母、数字、符号）。</div>
+                                </dd>
+                                <dd><a href="{:__URL('SHOP_MAIN/member/modifyPassword')}" class="edit">修改</a></dd>
+                            </dl>
+                            <dl class="clearfix">
+                                <dd><i class="icon-bind-phone"></i></dd>
+                                <dd>
+                                    <div class="info-title">已绑定手机</div>
+                                    <div class="desc">轻松找回密码，快捷登录，验证身份。</div>
+                                </dd>
+                                <dd><a href="{:__URL('SHOP_MAIN/member/modifyMobile')}" class="edit">修改</a></dd>
+                            </dl>
+                            {if condition="$member_info['user_info']['payment_password'] neq ''"}
+                            <dl class="clearfix">
+                                <dd><i class="icon-bind-email"></i></dd>
+                                <dd>
+                                    <div class="info-title">已设置支付密码</div>
+                                    <div class="desc">保证提现和支付的安全性。</div>
+                                </dd>
+                                <dd><a href="{:__URL('SHOP_MAIN/member/updatePayPassword')}" class="edit">修改</a></dd>
+                            </dl>
+                            {else}
+                            <dl class="clearfix">
+                                <dd><i class="icon-bind-email"></i></dd>
+                                <dd>
+                                    <div class="info-title">未设置支付密码</div>
+                                    <div class="desc">保证提现和支付的安全性。</div>
+                                </dd>
+                                <dd><a href="{:__URL('SHOP_MAIN/member/setPayPassword')}" class="edit bind">设置</a></dd>
+                            </dl>
+                            {/if}
+                            {if $notice['noticeEmail']==1}
+                            {if condition="$member_info['user_info']['user_email'] neq ''"}
+                            <dl class="clearfix">
+                                <dd><i class="icon-bind-email"></i></dd>
+                                <dd>
+                                    <div class="info-title">已绑定邮箱</div>
+                                    <div class="desc">轻松找回密码，快捷登录，验证身份。</div>
+                                </dd>
+                                <dd><a href="{:__URL('SHOP_MAIN/member/modifyEmail')}" class="edit">修改</a></dd>
+                            </dl>
+                            {else}
+                            <dl class="clearfix">
+                                <dd><i class="icon-bind-email"></i></dd>
+                                <dd>
+                                    <div class="info-title">未绑定邮箱</div>
+                                    <div class="desc">轻松找回密码，快捷登录，验证身份。</div>
+                                </dd>
+                                <dd><a href="{:__URL('SHOP_MAIN/member/bindEmail')}" class="edit bind">绑定</a></dd>
+                            </dl>
+                            {/if}
+                            {/if}
+                        </div>
+                        <!--page-->
+                    </div>
+                </div>
+{/block}
+

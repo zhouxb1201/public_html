@@ -1,0 +1,98 @@
+{extend name="platform/new_base" /}
+{block name="resource"}
+
+{/block}
+{block name="main"}
+				<!-- page -->
+				<table class="table v-table table-auto-center">
+                    <thead>
+                        <tr>
+                            <th>发件人</th>
+                            <th>标题</th>
+                            <th>时间</th>
+                            <th>操作</th>
+                        </tr>
+                    </thead>
+                    <tbody id="list">
+
+
+                    </tbody>
+                </table>
+				<input type="hidden" id="pageIndex">
+				<nav aria-label="Page navigation" class="clearfix">
+					<ul id="page" class="pagination pull-right"></ul>
+				</nav>
+				<!-- page end -->
+{/block}
+
+{block name="script"}
+<script>
+require(['util'],function(util){
+
+    util.initPage(LoadingInfo);
+
+
+
+    //加载信息
+    function LoadingInfo(pageIndex) {
+        $.ajax({
+            type : "post",
+            url : "{:__URL('PLATFORM_MAIN/mail/cmsList')}" ,
+            async : true,
+            data : {
+                "pageIndex" : pageIndex,
+            },
+            success : function(data) {
+                var html = '';
+                $("#total_count_num").text(data["total_count"]);
+                $("#page_count_num").text(data["page_count"]);
+                $("#page_count").val(data["page_count"]);
+                if (data["data"].length > 0) {
+                    for (var i = 0; i < data["data"].length; i++) {
+                        html += '<tr>';
+                        html += '<td class="center">微商来官方</td>';
+                        html += '<td class="center">'+data["data"][i]["title"]+'</td>';
+                        html += '<td class="center">'+data["data"][i]["push_time"]+'</td>';
+                        html += '<td class="center"><a class="text-primary" href="'+__URL('PLATFORM_MAIN/Mail/cmsInfo?topic_id=' + data["data"][i]["topic_id"])+'">查看</a>  &nbsp;';
+                        html += '</td>';
+                        html += '</tr>';
+                    }
+                } else {
+                    html += '<tr><th colspan="8">暂无符合条件的数据记录</th></tr>';
+                }
+                $("#list").html(html);
+                var totalpage = $("#page_count").val();
+                $('#page').paginator('option', {
+                    totalCounts: data['total_count']  // 动态修改总数
+                });
+                load_method();
+            }
+        });
+    }
+
+	function load_method() {
+        $('.del').on('click',function () {
+            var message_id = $(this).next($("input[name='message_id']")).val();
+            util.alert('确定删除？', function () {
+                $.ajax({
+                    type: "post",
+                    url: "{:__URL('PLATFORM_MAIN/Mail/deleteMail')}",
+                    async: true,
+                    data: {
+                        "message_info_id": message_id
+                    },
+                    success: function (data) {
+                        if (data["code"] > 0) {
+                            util.message(data["message"], 'success', LoadingInfo($('#pageIndex').val()));
+                        } else {
+                            util.message(data["message"], 'error');
+                        }
+                    }
+                })
+            })
+        })
+    }
+
+})
+</script>
+{/block}

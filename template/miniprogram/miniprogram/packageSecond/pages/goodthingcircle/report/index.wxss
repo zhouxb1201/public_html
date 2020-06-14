@@ -1,0 +1,119 @@
+.upload-wrap {
+  overflow: hidden;
+  padding: 30rpx 30rpx 30rpx;
+  background-color: #ffffff;
+  position: relative;
+}
+
+.upload-wrap::after {
+  content: "";
+  position: absolute;
+  pointer-events: none;
+  box-sizing: border-box;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  transform: scaleY(0.5);
+  height: 1px;
+  background-color: #ebedf0;
+}
+
+.upload-wrap .img-group {
+  margin: 0 -8rpx;
+  overflow: hidden;
+}
+
+.upload-wrap .img-group .item {
+  width: 150rpx;
+  height: 150rpx;
+  position: relative;
+  float: left;
+  margin: 8rpx;
+}
+
+.upload-wrap .img-group .item .img {
+  width: 150rpx;
+  height: 150rpx;
+  background-color: #fff;
+  border: none;
+  border-radius: 20rpx;
+  overflow: hidden;
+}
+
+.upload-wrap .btn-delete {
+  position: absolute;
+  z-index: 10;
+  border-radius: 40rpx;
+  background: #fff;
+  right: -8rpx;
+  top: -4rpx;
+  font-size: 20rpx;
+  color: #f02941;
+  border: 1rpx solid #f02941;
+  width: 30rpx;
+  height: 30rpx;
+  text-align: center;
+  line-height: 30rpx;
+}
+
+.upload-wrap .upload-img {
+  width: 150rpx;
+  height: 150rpx;
+  float: left;
+  margin: 8rpx;
+}
+
+.upload-wrap .van-uploader {
+  position: relative;
+  display: inline-block;
+}
+
+.upload-wrap .uploader {
+  position: relative;
+  display: flex;
+  flex-flow: column;
+  text-align: center;
+  font-size: 24rpx;
+  color: #666;
+  border: 1rpx dashed #ddd;
+  line-height: 1.2;
+  width: 150rpx;
+  height: 150rpx;
+}
+
+.upload-wrap .upload-icon {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -70%);
+}
+
+.upload-wrap .img_num {
+  position: absolute;
+  bottom: 6%;
+  left: 50%;
+  transform: translateX(-50%);
+  font-size: 28rpx;
+}
+ .btn {
+  margin: 80rpx 40rpx;
+}
+
+.success {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  padding: 50px;
+  text-align: center;
+  flex-direction: column;
+}
+
+.success .h3 {
+  font-weight: normal;
+  line-height: 40px;
+}
+.success .p {
+  font-size: 12px;
+  color: #999;
+}

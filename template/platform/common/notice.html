@@ -1,0 +1,9 @@
+{if $second_menu.desc neq ''}
+<div class="alert alert-tips alert-dismissible" role="alert">
+    <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+    {$second_menu.desc}
+    {if $second_menu.jump neq ''}
+    <a href="{$second_menu.jump}" class="alert-link" target="_blank">&nbsp;查看详情</a>
+    {/if}
+</div>
+{/if}

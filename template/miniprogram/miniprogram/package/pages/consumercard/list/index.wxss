@@ -1,0 +1,65 @@
+page{
+  background-color: #f8f8f8;
+  font-size: 28rpx;
+}
+.consumer_card_list .item{
+  
+  padding: 20rpx 30rpx;
+  margin: 30rpx;
+  border-radius: 8rpx;
+  color: #fff;
+  display: flex;
+  justify-content: space-between;
+}
+.consumer_card_list .item.active{
+  background-color: #2c9cf0;
+}
+.consumer_card_list .item.active_1{
+  background-color: #ffab32;
+}
+.consumer_card_list .item.normal{
+  background-color: #9e9fa0;
+}
+
+.consumer_card_list .item .info{
+  line-height: 1.8;
+}
+.consumer_card_list .item .info .time{
+  font-size: 24rpx;
+  padding-top: 8rpx;
+}
+.consumer_card_list .item .num{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+}
+.consumer_card_list .item .num .strong{
+  font-size: 1.4em;
+  padding-top: 12rpx;
+}
+
+.no_data{
+  position: absolute;
+  top: 0rpx;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  padding: 0;
+  z-index: 10;
+  display: flex;
+  align-items: center;
+  justify-content: center; 
+  z-index: -1; 
+}
+.no_data_box{
+  width: 100%;
+  text-align: center;
+}
+.no_data_box .img{
+  max-width: 65%;
+  margin: 0 auto;
+}
+.no_data_box .no_data_text{
+  margin-top: 30rpx;
+}

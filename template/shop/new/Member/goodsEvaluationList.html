@@ -1,0 +1,140 @@
+{extend name="shop/new/Member/base" /}
+{block name="main"}
+<div class="v-main-right fl">
+                    <div class="v-container">
+                        <!--page-->
+                        <div class="search clearfix">
+                            <div class="searchs fr">
+                                <input type="text" class="searchs-ipt" id="search_text" placeholder="订单号/商品名称">
+                                <button class="search_to">搜索</button>
+                            </div>
+                        </div>
+
+                        <div class="cart-wrapper">
+                            <div class="cart-header">
+                                <div class="cart-table-header">
+                                    <div class="inner-box c6">
+                                        <div class="th th-item">商品信息</div>
+                                        <div class="th th-evaluation">评价</div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="cart-list" id="list">
+
+
+                            </div>
+                            <div class="page clearfix">
+                                <div class="M-box3 m-style fr"></div>
+                            </div>
+                        </div>
+<input type="hidden" id="page_index" value="">
+                        <!--page-->
+                    </div>
+                </div>
+{/block}
+{block name="javascript"}
+    <script>
+        require(['common'], function (common) {
+            LoadingInfo(1);
+            function LoadingInfo(page_index) {
+                $("#page_index").val(page_index);
+                var search_text = $("#search_text").val();
+                $.ajax({
+                        type: "post",
+                        url:  __URL(SHOPMAIN + "/member/goodsEvaluationList"),
+                        data: {
+                            "search_text":search_text,
+                            "page_index": page_index
+                        },
+                        success: function (data) {
+                            var html = '';
+                            if (data["data"].length > 0) {
+                                for (var i = 0; i < data["data"].length; i++) {
+                                    html+='<div class="cart-item">';
+                                    html+='<div class="item-info">';
+                                    html+='<span class="storeName">评价时间：<span>'+data["data"][i]['addtime']+'</span></span>';
+                                    html+='</div><div class="item-main clearfix bl">';
+                                    html+='<div class="td td-item clearfix tds bln">';
+                                    html+='<div class="item-pic">';
+                                    if(data["data"][i]['del_status']==1){
+                                        html+='<a class="item-img-box" href="javascript:void(0);">';
+                                    }else{
+                                        html+='<a class="item-img-box" href="'+__URL('SHOP_MAIN/goods/goodsInfo?goodsid='+data["data"][i]['goods_id'])+'">';
+                                    }
+
+                                    if(data["data"][i]['goods_image']){
+                                        html+='<img alt="" src="'+__IMG(data["data"][i]['goods_image'])+'" width="60px" height="60px" ></a>';
+                                    }else{
+                                        html+='<img alt="" src="__TEMP__/shop/new/public/image/missing.png" width="60px" height="60px" ></a>';
+                                    }
+                                    html+='</div><div class="item-desc">';
+                                    if(data["data"][i]['del_status']==1){
+                                        html+='<a href="javascript:void(0);" class="item-title">'+data["data"][i]['goods_name']+'<span style="color: red">【该商品已下架】</span></a>';
+                                    }else{
+                                        html+='<a href="'+__URL('SHOP_MAIN/goods/goodsInfo?goodsid='+data["data"][i]['goods_id'])+'" class="item-title">'+data["data"][i]['goods_name']+'</a>';
+                                    }
+                                    html += '<p class="colors">';
+                                    for (var g = 0; g < data["data"][i]['spec'].length; g++) {
+                                        html +=  data["data"][i]['spec'][g]['spec_name'] + ':' + data["data"][i]['spec'][g]['spec_value_name'] ;
+                                    }
+                                    html += '</p>';
+                                    html+='</div></div>';
+                                    html+='<div class="td tds td-evaluation"><dl class="clearfix pb4">';
+                                    html+='<dt class="fl w10">评分：</dt>';
+                                    if(data["data"][i]['explain_type']==5){
+                                        html+='<dd class="fl w90">好评</dd>';
+                                    }else if(data["data"][i]['explain_type']==3){
+                                        html+='<dd class="fl w90">中评</dd>';
+                                    }else if(data["data"][i]['explain_type']==1){
+                                        html+='<dd class="fl w90">差评</dd>';
+                                    }
+                                    html+='</dl>';
+                                    html+='<dl class="clearfix pb4"><dt class="fl w10">留言：</dt>';
+                                    html+='<dd class="fl w90 message">'+data["data"][i]['content']+'</dd>';
+                                    html+='</dl>';
+                                    html+='<dl class="clearfix">';
+                                    html+='<dt class="fl w10">晒图：</dt>';
+                                    html+='<dd class="fl w90">';
+                                    html+='<ul class="photos">';
+                                    for (var j = 0; j < data["data"][i]['evaluationImg'].length; j++) {
+                                        html += '<li><img src="'+__IMG(data["data"][i]['evaluationImg'][j])+'" width="30px"  alt=""></li>';
+                                    }
+                                    html+='</ul>';
+                                    html+='</dd>';
+                                    html+='</dl>';
+                                    if(data["data"][i]['again_content']){
+                                        html+='<dl class="clearfix pb4"><dt class="fl w10">追评：</dt>';
+                                        html+='<dd class="fl w90 message">'+data["data"][i]['again_content']+'</dd>';
+                                        html+='</dl>';
+                                        html+='<dl class="clearfix">';
+                                        html+='<dt class="fl w10">晒图：</dt>';
+                                        html+='<dd class="fl w90">';
+                                        html+='<ul class="photos">';
+                                        for (var g = 0; g < data["data"][i]['againEvaluationImg'].length; g++) {
+                                            html += '<li><img src="'+__IMG(data["data"][i]['againEvaluationImg'][g])+'" width="30px"  alt=""></li>';
+                                        }
+                                        html+='</ul>';
+                                        html+='</dd>';
+                                        html+='</dl>';
+                                    }
+
+                                    html+='</div></div></div></div></div>';
+
+                                }
+                            }else{
+                                html += '<div style="text-align:center">暂无相关商品评价！</div>';
+                            }
+                            $("#list").html(html);
+                            common.Pages('.M-box3', data['total_count'], data["page_count"], page_index, LoadingInfo);
+                        }
+                    }
+                )
+                ;
+            }
+            $('.search_to').on('click',function(){
+                LoadingInfo(1);
+            });
+        });
+    </script>
+{/block}

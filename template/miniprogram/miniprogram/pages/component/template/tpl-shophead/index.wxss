@@ -1,0 +1,271 @@
+@import "/css/iconfont.wxss";
+
+page {
+  font-size: 28rpx;
+}
+
+.shop_head {
+  width: 100%;
+  position: relative;
+}
+
+.head {
+  position: relative;
+}
+
+.head .bg {
+  display: block;
+  width: 100%;
+  min-height: 180rpx;
+  background: #fff;
+}
+
+.box {
+  display: flex;
+  align-items: center;
+}
+
+.info {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  z-index: 10;
+}
+
+.logo.one {
+  width: 20%;
+  padding: 0 20rpx 0 30rpx;
+}
+
+.logo.two {
+  width: 13.334%;
+  margin-top: 12rpx;
+}
+
+.logo .img {
+  border-radius: 8rpx;
+  position: relative;
+  height: 0;
+  width: 100%;
+  padding: 50% 0;
+  overflow: hidden;
+  background: #fff;
+}
+
+.logo .img.five {
+  padding-top:0!important;
+  padding-bottom: 56%;
+  margin-right: 20rpx;
+  height: 100%!important;
+}
+
+.logo .img.two {
+  border-radius: 50% !important;
+}
+
+.logo .img image {
+  width: 100%;
+  height: 100%;
+  position: absolute;
+  top: 0;
+  left: 0;
+}
+
+.content {
+  display: flex;
+  -ms-flex-direction: column;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.content.two {
+  height: 100rpx;
+  align-items: center;
+  color: #043f8d;
+}
+
+.content.three {
+  height: 100rpx;
+  align-items: center;
+  color: #fff;
+}
+
+.content.four {
+  color: #333;
+  height: 60rpx;
+  padding-bottom: 32rpx;
+}
+
+.content .wrap {
+  display: flex;
+  line-height: 1.8;
+  align-items: center;
+}
+
+.content .name {
+  max-width: 240rpx;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+.collentBtn {
+  position: relative;
+  display: inline-block;
+  border-radius: 4rpx;
+  text-align: center;
+  box-sizing: border-box;
+  height: 44rpx;
+  min-width: 100rpx;
+  font-size: 24rpx;
+  line-height: 40rpx;
+  margin-left: 20rpx;
+}
+
+.collentBtn.one {
+  background-color: #f44;
+  border: 2rpx solid #f44;
+  color: #fff;
+}
+
+.collentBtn.two {
+  background-color: #fff;
+  border: 2rpx solid #fff;
+  color: #043f8d;
+  border-radius: 20rpx;
+}
+
+.collentBtn.three {
+  color: #fff;
+}
+.collentBtn.five,.collentBtn .icon.five,.collentBtn .icon.six {
+  color: #f44;
+}
+.collentBtn.six{
+  color: #f44;
+  border: 2rpx solid #f44;
+}
+.collentBtn .icon {
+  font-size: 20rpx;
+}
+
+.span {
+  display: inline-block;
+}
+
+.content .fans {
+  padding-right: 20rpx;
+  font-size: 24rpx;
+}
+
+.content .score {
+  font-size: 24rpx;
+  display: flex;
+}
+
+.content .score .star {
+  margin-left: 8rpx;
+}
+
+.van-cell {
+  position: relative;
+  display: flex;
+  width: 100%;
+  overflow: hidden;
+  box-sizing: border-box;
+  color: #323233;
+  font-size: 28rpx;
+  line-height: 48rpx;
+  background-color: #fff;
+  padding: 20rpx 30rpx;
+}
+
+.van-cell__title, .van-cell__value {
+  flex: 1;
+}
+
+.van-cell__value {
+  color: #969799;
+  overflow: hidden;
+  text-align: right;
+  position: relative;
+  vertical-align: middle;
+}
+
+.van-cell__value--alone {
+  color: #323233;
+  text-align: left;
+}
+
+.search-cell .btn {
+  margin-right: 10rpx;
+  padding: 0 20rpx;
+  color: #606266;
+  background-color: #fff;
+  border: 2rpx solid #ebedf0;
+  height: 60rpx;
+  font-size: 24rpx;
+  line-height: 56rpx;
+  border-radius: 30rpx;
+  position: relative;
+  text-align: center;
+  display: inline-block;
+}
+
+.search-icon {
+  vertical-align: middle;
+  margin-right: 4rpx;
+  font-size: 24rpx;
+  margin-top: -4rpx;
+  display: inline-block;
+}
+
+.search_text {
+  display: inline-block;
+  font-size: 24rpx;
+}
+
+/***************/
+
+.boxes {
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.foot {
+  position: absolute;
+  bottom: 0;
+  width: 100%;
+  height: 44rpx;
+  background: rgba(0, 0, 0, 0.2);
+  font-size: 24rpx;
+  color: #fff;
+  display: flex;
+  align-items: center;
+}
+
+.foot .fans, .foot .score, .foot .collec {
+  flex: 1;
+  text-align: center;
+  white-space: nowrap;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.foot .score .star {
+  margin-left: 8rpx;
+}
+
+.shop_item .row{
+  border-top: 1px solid #ebedf0;
+  padding: 20rpx 30rpx;
+  background-color: #fff;  
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}

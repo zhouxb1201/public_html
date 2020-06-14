@@ -1,0 +1,253 @@
+<div class="form-group">
+    <!-- 选择商品 -->
+    <label class="col-sm-2 control-label">参加活动商品</label>
+    <div class="col-sm-4">
+        <label class="radio-inline">
+            <input class="allGoods" type="radio" value="1" name="range_type" checked="checked"/> 所有商品
+        </label>
+        <label class="radio-inline">
+            <input class="notallGoods" type="radio" name="range_type" value="0"> 部分商品
+        </label>
+    </div>
+</div>
+<div class="infoTab recomTab joinGoodsList addBtnSearch" style="display: none;">
+    <ul id="myTab" class="nav nav-tabs" style="margin-bottom: 10px;">
+        <li class="active"><a href="#goodsList" data-toggle="tab" aria-expanded="true" class="infoSingle">商品列表</a></li>
+        <li class=""><a href="#goodsChosed" data-toggle="tab" aria-expanded="false" class="infoSingle">已选商品</a></li>
+        <li class="fr" style="text-align: right;">
+            <div class="search">
+                <input type="text" id="search_text" class="searchs" placeholder="商品名称">
+                <button class="search_to" type="button">搜索</button>
+            </div>
+        </li>
+    </ul>
+    <div id="myTabContent" class="tab-content">
+        <div class="tab-pane fade active in" id="goodsList">
+            <!--表格-->
+            <table class="table v-table">
+                <thead>
+                <tr>
+                    <th>商品信息</th>
+                    <th>库存</th>
+                    <th>店铺</th>
+                    <th>操作</th>
+                </tr>
+                </thead>
+                <tbody id="goods_lists">
+                </tbody>
+            </table>
+            <div class="page clearfix">
+                <div class="M-box3 m-style fr">
+                </div>
+            </div>
+        </div>
+        <div class="tab-pane fade" id="goodsChosed">
+            <!--表格-->
+            <table class="table v-table">
+                <thead>
+                <tr>
+                    <th>商品信息</th>
+                    <th>库存</th>
+                    <th>店铺</th>
+                    <th>操作</th>
+                </tr>
+                </thead>
+                <tbody>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<input type="hidden" id="goods_id_array">
+<script>
+  require(['utilAdmin','util'], function (utilAdmin,util) {
+      $(".allGoods").on("click",function(){
+          ShopRadio(1)
+      });
+      $(".notallGoods").on("click",function(){
+          ShopRadio(0)
+      });
+      $("body").on("click",".search_to",function(){
+          LoadingInfo(1)
+      });
+    var $goods_selected_array = new Array();
+    var $goods_id_selected_array = {$seleted_goods};
+    var $data_array;
+    $(function () {
+        LoadingInfo(1);
+    });
+
+    function join(goods_id, e) {
+        if ($("#selected_" + goods_id).length > 0) {
+            return false;
+        } else {
+            for (var i = 0; i < $data_array.length; i++) {
+                if ($data_array[i]['goods_id'] == goods_id) {
+                    $goods_selected_array[$goods_selected_array.length] = $data_array[i];
+                    $goods_id_selected_array[$goods_id_selected_array.length] = goods_id;
+                    refresh_data();
+                    break;
+                }
+            }
+            var a = '<a href="javascript:void(0);" class="join cancelJoin" data-goodsId="' + goods_id + '">取消参加</a>';
+            $(e).parent("td").html(a);
+            $("#selected_" + goods_id + " .td-js-class").html(a);
+        }
+    }
+
+    function cancel_join(goods_id, e) {
+        if ($("#selected_" + goods_id).length > 0) {
+            for (var i = 0; i < $goods_selected_array.length; i++) {
+                if ($goods_selected_array[i]['goods_id'] == goods_id) {
+                    $goods_selected_array.splice(i, 1);
+                    $goods_id_selected_array.splice(i, 1);
+                    refresh_data();
+                    break;
+                }
+            }
+            var a = '<a href="javascript:void(0);" class="join joins" data-goodsId="' + goods_id + '">参加活动</a>';
+            $(e).parent("td").html(a);
+            $("#select_" + goods_id + " .td-js-class").html(a);
+        }
+    }
+
+    $('body').on('click','.cancelJoin',function(){
+        var _this=$(this);
+        var goods_id=$(this).attr('data-goodsId');
+        cancel_join(goods_id,_this);
+    })
+    $('body').on('click','.joins',function(){
+        var _this=$(this);
+        var goods_id=$(this).attr('data-goodsId');
+        join(goods_id,_this);
+    })
+
+    //刷新 已选商品
+    function refresh_data() {
+        var data = $goods_selected_array;
+        var html = "";
+
+        for (var i = 0; i < data.length; i++) {
+            html += '<tr id="selected_' + data[i]["goods_id"] + '" goodsid="' + data[i]["goods_id"] + '">';
+            html += '<td class="picword_td">';
+            html += '<div class="media text-left ">';
+
+            if (data[i]["picture_info"] != null) {
+                html += '<div class="media-left"><p><img src="' + __IMG(data[i]["picture_info"]['pic_cover_mid']) + '" style="width:60px;height:60px;"></p></div>';
+            } else {
+                html += '<div class="media-left"><p><img src="__ROOT__/" style="width:60px;height:60px;"></p></div>';
+            }
+
+            html += '<div class="media-body max-w-300 ">';
+            html += ' <div class="line-2-ellipsis line-title">';
+            html += ' <a href="javascript:;" target="_blank" class="a-goods-title">' + data[i]["goods_name"] + ' </a>';
+            html += ' </div>';
+            html += ' <div class="small-muted line-2-ellipsis">' + data[i]["price"] + '</div>';
+            html += ' </div></div></td>';
+
+            html += '<td>' + data[i]["stock"] + '</td>';
+            html += '<td>' + data[i]["shop_name"] + '</td>';
+            html += '<td class="td-js-class"><a href="javascript:void(0);" class="join cancelJoin" data-goodsId="' + data[i]["goods_id"] + '">取消参加</a></td>';
+            html += '</tr>';
+        }
+        $("#goodsChosed tbody tr").remove();
+        $("#goodsChosed tbody").append(html);
+    }
+
+    function LoadingInfo(page_index) {
+        $('#page_index').val(page_index ? page_index : '1');
+        var $goodsArr = new Array();
+        var search_text = $("#search_text").val();
+        var range_type = $("input[name='range_type']").val();
+        if (range_type == 0) {
+            $("#turn-ul").show();
+        } else {
+            $("#turn-ul").hide();
+        }
+        $.ajax({
+            type: "post",
+            url: "{:__URL('ADMIN_MAIN/goods/getsearchgoodslist')}",
+            data: {
+                "page_index": page_index,
+                "page_size": $("#showNumber").val(),
+                "search_text": search_text,
+            },
+            success: function (data) {
+                $data_array = data['data'];
+                var html = '';
+                if (data['data'].length > 0) {
+                    for (var i = 0; i < data['data'].length; i++) {
+                        var curr = data['data'][i];
+                        if (jQuery.inArray(curr["goods_id"], $goodsArr) == "-1") {
+                            $goodsArr.push(curr["goods_id"]);
+                        } else {
+                            continue;
+                        }
+
+                        html += '<tr id="select_' + curr["goods_id"] + '">';
+                        // html += '<td class="picword_td">';
+                        // html += '<div class="col-sm-2 pic_td">';
+                        // if (curr["picture_info"] != null) {
+                        //     html += '<img src="' + __IMG(curr["picture_info"]['pic_cover_micro']) + '">';
+                        // } else {
+                        //     html += '<img src="__ROOT__/"></div>';
+                        // }
+                        // html += '</div>';
+                        // html += '<div class="col-sm-9 word_td">';
+                        // html += '<p class="tdTitles">' + curr["goods_name"] + '</p>';
+                        // html += '<p><strong>' + curr["price"] + '</strong></p>';
+                        // html += '</div>';
+                        // html += '</td>';
+                        html += '<td class="picword_td">';
+                        html += '<div class="media text-left ">';
+
+                        if (curr["picture_info"] != null) {
+                            html += '<div class="media-left"><p><img src="' + __IMG(curr["picture_info"]['pic_cover_mid']) + '" style="width:60px;height:60px;"></p></div>';
+                        } else {
+                            html += '<div class="media-left"><p><img src="__ROOT__/" style="width:60px;height:60px;"></p></div>';
+                        }
+
+                        html += '<div class="media-body max-w-300 ">';
+                        html += ' <div class="line-2-ellipsis line-title">';
+                        html += ' <a href="javascript:;" target="_blank" class="a-goods-title">' + curr["goods_name"] + ' </a>';
+                        html += ' </div>';
+                        html += ' <div class="small-muted line-2-ellipsis">' + curr["price"] + '</div>';
+                        html += ' </div></div></td>';
+
+                        html += '<td>' + curr["stock"] + '</td>';
+                        html += '<td>' + curr["shop_name"] + '</td>';
+                        if ($goods_id_selected_array.length > 0) {
+                            if (jQuery.inArray(curr["goods_id"], $goods_id_selected_array) == "-1") {
+                                html += '<td class="td-js-class"><a href="javascript:;" class="join joins" data-goodsId="' + curr["goods_id"] + '">' + '参加活动' + '</a></td>';
+                            } else {
+                                html += '<td class="td-js-class"><a href="javascript:;" class="join cancelJoin" data-goodsId="' + curr["goods_id"] + '">' + '取消参加' + '</a></td>';
+                            }
+                        } else {
+                            html += '<td class="td-js-class"><a href="javascript:;" class="join joins" data-goodsId="' + curr["goods_id"] + '">' + '参加活动' + '</a></td>';
+                        }
+                    }//end for
+                } else {
+                    html += '<tr align="center"><th colspan="4">暂无符合条件的数据记录</th></tr>';
+                }
+                $("#goods_lists").html(html);
+                utilAdmin.page('.M-box3', data['total_count'], data["page_count"], page_index, LoadingInfo);
+            }
+        });
+    }
+
+    //控制商品列表显示数据
+    function ShopRadio(num) {
+        if (num == 0) {
+            $(".infoTab").show();
+            $("#turn-ul").show();
+            $("ul.ui-nav-tab li.js-tab").eq(1).click();
+        } else {
+            $(".infoTab").hide();
+            $("#turn-ul").hide();
+        }
+    }
+
+  })
+
+</script>

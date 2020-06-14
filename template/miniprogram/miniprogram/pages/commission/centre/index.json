@@ -1,0 +1,8 @@
+{
+  "usingComponents": {
+    "login-component": "/pages/component/login/login",
+    "phone-compoent": "/pages/component/phone/phonecom",
+    "tem-component": "/pages/component/tem/index",
+    "header-component":"../component/header/index"
+  }
+}

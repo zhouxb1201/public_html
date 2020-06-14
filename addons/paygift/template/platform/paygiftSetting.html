@@ -1,0 +1,55 @@
+{block name="main"}
+        <!-- page -->
+        <form class="form-horizontal pt-15">
+            <div class="form-group">
+                <label class="col-md-2 control-label">是否开启</label>
+                <div class="col-md-5">
+                    <!--<label class="radio-inline">
+                        <input type="radio" name="is_paygift" id="open" {if $is_use==1}checked{/if} value="1"> 开启
+                    </label>
+                    <label class="radio-inline">
+                        <input type="radio" name="is_paygift" id="close" value="0" {if $is_use==0}checked{/if}> 关闭
+                    </label>-->
+                    <div class="switch-inline">
+                        <input type="checkbox" name="is_paygift" id="is_paygift" {if $is_use==1}checked{/if}>
+                        <label for="is_paygift" class=""></label>
+                    </div>
+
+                </div>
+            </div>
+            <div class="form-group"></div>
+            <div class="form-group">
+                <label class="col-md-2 control-label"></label>
+                <div class="col-md-8">
+                    <button class="btn btn-primary save" id="save" type="button">保存</button>
+                    <a href="javascript:history.go(-1);" class="btn btn-default">返回</a>
+                </div>
+            </div>
+        </form>
+
+        <!-- page end -->
+{/block}
+{block name="script"}
+<script>
+    require(['util'],function(util){
+        $("#save").on("click",function () {
+            $.ajax({
+                type:'POST',
+                dataType:'json',
+                url:'{$saveSettingUrl}',
+                data:{
+                    'is_paygift':$("input[name='is_paygift']").is(':checked')?1:0,
+                },
+                success:function (data) {
+                    if (data['code'] > 0) {
+                        util.message(data["message"], 'success', "{:__URL('ADDONS_MAINpaygiftSetting')}");
+                    } else {
+                        util.message(data["message"], 'danger');
+                    }
+                }
+            });
+        })
+
+    })
+</script>
+{/block}

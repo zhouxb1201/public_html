@@ -1,0 +1,10 @@
+{
+  "usingComponents": {
+    "login-component": "/pages/component/login/login",
+    "phone-compoent": "/pages/component/phone/phonecom",
+    "topnav-component": "/pages/component/topnav/topnav"
+  },
+  "navigationBarTitleText": "砍价详情" ,
+  "backgroundTextStyle": "dark" ,
+  "enablePullDownRefresh": true
+}

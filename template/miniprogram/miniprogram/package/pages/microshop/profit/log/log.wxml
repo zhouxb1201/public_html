@@ -1,0 +1,14 @@
+<view class="van-cell" wx:for="{{list}}" wx:key="">
+  <view class="van-cell__title">
+    <view>
+      <view class="{{item.profit > 0 ? 'positive' : 'negative'}}">{{item.profit}}</view>
+      <view class="fs-12 text-regular">{{item.text}}</view>
+    </view>
+  </view>
+  <view class="van-cell__value">
+    <text>{{item.create_time}}</text>
+  </view>
+</view>
+<view class='no_gooddata' wx:if="{{noMore == 'true'}}">
+  <text>没有更多了</text>
+</view>

@@ -1,0 +1,59 @@
+.item {
+  margin: 10px;
+}
+.item .h4 {
+  text-align: center;
+  font-size: 12px;
+  font-weight: normal;
+  color: #999;
+}
+.cell-group-box {
+  position: relative;
+  overflow: hidden;
+  background: #fff;
+  border-radius: 10px;
+  box-shadow: 0 0 10px 0 rgba(0, 0, 0, 0.05);
+  word-break: break-all;
+  padding: 10px;
+  margin-top: 10px;
+}
+.title {
+  padding: 8px 0px;
+}
+.text {
+  line-height: 16px;
+  color: #999;
+  font-size: 12px;
+}
+
+
+.no_good {
+  background-color: #ffff;
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.no_good .box {
+  text-align: center;
+  width: 100%;
+
+}
+
+.no_good .box .img {
+  max-width: 65%;
+  display: block;
+  margin: 40rpx auto;
+  height: auto;
+}
+
+.no_good .box .text {
+  line-height: 16px;
+  color: #999;
+  font-size: 12px;
+}

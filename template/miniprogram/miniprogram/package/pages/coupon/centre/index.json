@@ -1,0 +1,7 @@
+{
+  "usingComponents": {
+    "phone-compoent": "/pages/component/phone/phonecom",
+    "login-component": "/pages/component/login/login"
+  },
+  "navigationBarTitleText": "领劵中心"
+}

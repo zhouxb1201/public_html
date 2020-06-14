@@ -1,0 +1,345 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <title>{$second_menu.module_name} - {if $logo_config.title_word}{$logo_config.title_word}{else}团大人 - 让更多的人帮你卖货！{/if}</title>
+    <link rel="stylesheet" href="__STATIC__/lib/bootstrap/css/bootstrap.min.css">
+    <link rel="stylesheet" href="__STATIC__/css/common.css?t=1.1">
+    <link rel="stylesheet" href="__STATIC__/lib/drag/layer.css">
+    <link rel="stylesheet" href="ADMIN_CSS/shop.css?t=1.1">
+    <link rel="shortcut icon" href="ADMIN_IMG/logo.png" type="image/x-icon" />
+
+    <!--引入require-->
+    <script>
+        var PLATFORMJS = "PLATFORM_NEW_JS";
+    </script>
+    <script type="text/javascript" src="PLATFORM_NEW_JS/jquery.min.js"></script>
+    <script type="text/javascript" src="PLATFORM_NEW_LIB/require.js"></script>
+    <script type="text/javascript" src="PLATFORM_NEW_JS/config.js"></script>
+</head>
+<body>
+{include file="admin/controlCommonVariable" }
+{block name="resources"/}{/block}
+{include file="admin/urlModel"}
+<input id='page_index' type="hidden">
+<input id='showNumber' type="hidden" value='{$pagesize}'>
+<div class="v-layout  {if !$second_menu_list} nosubnav {/if}">
+    <div class="v-sidebar">
+        <div class="v-nav">
+            {block name="first_menu_list"/}
+            <ul class="v-nav-list">
+                {foreach name="headlist" item="per"}
+                {if $per.icon_class=='icon-application-color' }
+                <li><a href="{:__URL('ADMIN_MAIN/'.$per['url'])}" class="item{if condition=" strtoupper($per['module_id'])
+                    eq $headid"} active{/if}" title=""><span class="icon-application-color"><span class="path1"></span><span class="path2"></span><span class="path3"></span><span class="path4"></span><span class="path5"></span></span>&nbsp; {$per.module_name}</a></li>
+                    {else}
+
+                <li><a href="{:__URL('ADMIN_MAIN/'.$per['url'])}" class="item{if condition=" strtoupper($per['module_id'])
+                    eq $headid"} active{/if}" title=""><i class="icon {if $per.icon_class}{$per.icon_class}{else} icon-shop {/if}"></i> {$per.module_name}</a></li>
+                     {/if}
+                {/foreach}
+            </ul>
+            {/block}
+        </div>
+        {block name="second_menu_list"/}
+        <div class="v-subnav">
+            <!--<div class="v-subnav-title">{$frist_menu['module_name']}</div>-->
+            <ul class="v-subnav-list">
+                {foreach name="leftlist" item="leftitem"}
+                <li><a href="{:__URL('ADMIN_MAIN/'.$leftitem['url'])}" class="item{if condition=" strtoupper($leftitem['module_id'])
+                    eq $second_menu_id"} active{/if}">{$leftitem.module_name}</a></li>
+                {/foreach}
+            </ul>
+        </div>
+        {/block}
+    </div>
+    {block name="header"}
+        {if $no_menu == '1'}
+
+        {else}
+        <div class="v-header">
+            <div class="v-header-box">            
+                <div class="v-header-title">
+                     <span class="v-header-word">{$web_info['mall_name']}</span>
+                </div>
+                <div class="v-header-account">
+                    <div class="user-menu fs-12">
+                        <div class="inline-block">
+                        <a href="{:__URL('ADMIN_MAIN/index/preview')}" class="previewIndex" target="_blank">预览</a>
+                        </div>
+                        <div class="inline-block newsTips shortcutBar">
+                            <a href="javascript:void(0);" id="news-tips" class="dker clear-cache" style="position: relative;" >
+                                <span><i class="icon icon-message3"></i></span> 
+                                <span class="badge pa tip0"></span>
+                            </a>
+                            <div class="dropdown-menu" aria-labelledby="news-tips">
+                                <ul class="newsTips_ul">
+                                    <li class="no_count hide">暂无待办信息</li>
+                                    <li class="dai_count hide"><a href="{:__URL('ADMIN_MAIN/order/orderlist')}?order_status=1" class="flex flex-pack-justify"><div>待发货订单</div><div class="text-red tip2"></div></a></li>
+                                    <li class="after_count hide"><a href="{:__URL('ADMIN_MAIN/order/afterorderlist')}" class="flex flex-pack-justify"><div>售后订单</div><div class="text-red tip3"></div></a></li>
+                                </ul>
+
+                            </div>
+
+                        </div>
+
+                        <div class="layout-user inline-block">
+                            <div class="ivu-dropdown">
+                                <div class="ivu-dropdown-rel">
+                                    <a href="javascript:void(0)" class="text-primary"><img src="/public/platform/images/index/22.png" class="avatar">
+                                        {if $user_info['user_name']}{$user_info['user_name']}{else}{$user_info['user_tel']}{/if}
+                                        <span class="caret"></span>
+                                    </a>
+                                </div>
+                                <div class="dropdown-menu qqqq">
+                                    <div class="ivu-dropdown-menu user-dropdown">
+                                        <div class="infos">
+                                            <div class="row">
+                                                <div class="col-md-3">
+                                                    <a class="avatar"><img src="/public/platform/images/index/22.png"></a>
+                                                </div>
+                                                <div class="col-md-9">
+                                                    <p class="names">{if $user_info['user_name']}{$user_info['user_name']}{else}{$user_info['user_tel']}{/if}</p>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="operations flex">
+                                            <a href="javascript:void(0)" target="_blank"><i class="icon icon-list mr-10"></i>工单管理</a>
+                                            <a href="javascript:void(0);" class="updatePass" data-toggle="modal" data-target="#password_modal"><i class="icon icon-password3 mr-10"></i>修改密码</a>
+                                        </div>
+                                        <div class="operations flex">
+                                            <a href="javascript:void(0);" class="delcache"><i class="icon icon-clear mr-10"></i>清除缓存</a>
+                                            <a href="{:__URL('ADMIN_MAIN/login/logout')}?website_id={$website_id}"><i class="icon icon-logout-l mr-10"></i>退出登录</a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+
+                    </div>
+
+
+                </div>
+            </div>
+        </div>
+        {/if}
+    
+    {/block}
+    <div class="v-main">
+        <div class="v-container">
+            {if $second_menu.desc}
+            <div class="alert alert-tips alert-dismissible" role="alert">
+                <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span>
+                </button>
+                {$second_menu.desc}{if $second_menu.jump}&nbsp;&nbsp;<a href="{$second_menu.jump}" class="checkDes">查看详情</a>{/if}
+            </div>
+            {/if}
+            {block name="main"}{/block}
+        </div>
+        <div class="copyrights"><a href="http://q.url.cn/s/EPvXzVm" target="_blank" class="text-primary">在线客服</a> | {if $logo_config.opera_copyright}{$logo_config.opera_copyright}{else}Copyright©2012-2019  All Rights Reserved 网站备案号：粤ICP备14084496号{/if}</div>
+    </div>
+</div>
+
+<!--修改密码弹出框 -->
+<div id="password_modal" class="modal fade" tabindex="-1" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog" style="width: 500px">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                <h3>修改密码</h3>
+            </div>
+            <div class="modal-body">
+                <form class="form-horizontal" role="form">
+                    <div class="form-group">
+                        <label class="col-sm-4 control-label" for="pwd0"><span class="red">*</span>原密码</label>
+                        <div class="col-sm-5">
+                            <input type="password" id="pwd0" placeholder="请输入原密码" class="form-control"/>
+                            <span class="help-block"></span>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-sm-4 control-label" for="pwd1"><span class="red">*</span>新密码</label>
+                        <div class="col-sm-5">
+                            <input type="password" id="pwd1" placeholder="请输入新密码" class="form-control"/>
+                            <span class="help-block"></span>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-sm-4 control-label" for="pwd2"><span class="red">*</span>再次输入密码</label>
+                        <div class="col-sm-5">
+                            <input type="password" id="pwd2" placeholder="请输入确认密码" class="form-control"/>
+                            <span class="help-block"></span>
+                        </div>
+                    </div>
+                    <div style="text-align: center; height: 20px;" id="show"></div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-primary submitPassword" style="display:inline-block;">保存</button>
+                <button class="btn" data-dismiss="modal" aria-hidden="true">关闭</button>
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+require(['utilAdmin'], function (utilAdmin) {
+    function loading(){
+        $.ajax({
+            type: "post",
+            url: "{:__URL('ADMIN_MAIN/index/getOrderCount')}",
+            async: true,
+            success: function (data) {
+                var total_tips=data['total_tips']>100?"99+":data['total_tips'];
+                $(".tip0").html(total_tips);
+                if(data['total_tips']>0){
+                    $(".no_count").addClass('hide');
+                }else{
+                    $(".no_count").removeClass('hide');
+                }
+                if(data['daifahuo']>0){
+                    $(".dai_count").removeClass('hide');
+                    $(".tip2").html(data['daifahuo']);
+                }
+                if(data['tuikuanzhong']>0){
+                    $(".after_count").removeClass('hide');
+                    $(".tip3").html(data['tuikuanzhong']);
+                }
+            }
+        });
+    }
+    loading();
+    // ie浏览器判断
+    function isIE() {
+        if (!!window.ActiveXObject || "ActiveXObject" in window){
+            location.href="{:__URL('ADMIN_MAIN/login/versionLow')}&website_id="+$('#website_id').val();
+        }
+     }
+     isIE();
+
+    $(".newsTips").hover(function(){
+        $(this).addClass("open");
+    },function(){
+        $(this).removeClass("open");
+    });
+
+    /**
+     * 清理缓存
+     */
+    function delcache() {
+        $.ajax({
+            url: __URL(ADMINMAIN + "/system/deletecache"),
+            type: "post",
+            data: {},
+            dataType: "json",
+            success: function (data) {
+                if (data) {
+                    utilAdmin.message("缓存更新成功！",'success',location.reload());
+                } else {
+                    utilAdmin.message("更新失败，请检查文件权限！", 'danger');
+                }
+            }
+        });
+    }
+    /**
+     * 修改密码
+     */
+    function submitPassword() {
+        var pwd0 = $("#pwd0").val();
+        var pwd1 = $("#pwd1").val();
+        var pwd2 = $("#pwd2").val();
+        if (pwd0 == '') {
+            $("#pwd0").focus();
+            // $("#pwd0").siblings("span").html("原密码不能为空");
+            utilAdmin.message('原密码不能为空');
+            return;
+            
+        } 
+        if (pwd1 == '') {
+            $("#pwd1").focus();
+            utilAdmin.message("密码不能为空");
+            return;
+        } else if ($("#pwd1").val().length < 6) {
+            $("#pwd1").focus();
+            utilAdmin.message("密码不能少于6位数");
+            return;
+        } else {
+            $("#pwd1").siblings("span").html("");
+        }
+        if (pwd2 == '') {
+            $("#pwd2").focus();
+            utilAdmin.message("密码不能为空");
+            return;
+        } else if ($("#pwd2").val().length < 6) {
+            $("#pwd2").focus();
+            utilAdmin.message("密码不能少于6位数");
+            return;
+        } else {
+            $("#pwd2").siblings("span").html("");
+        }
+        if (pwd1 != pwd2) {
+            $("#pwd2").focus();
+            utilAdmin.message("两次密码输入不一样，请重新输入");
+            return;
+        }
+        $.ajax({
+            url : __URL(PASSMAIN+"/index/modifypassword"),
+            type : "post",
+            data : {
+                "old_pass" : $("#pwd0").val(),
+                "new_pass" : $("#pwd1").val()
+            },
+            dataType : "json",
+            success : function(data) {
+                if (data['code'] > 0) {
+                                utilAdmin.message("密码修改成功！","success", function () {
+                                    location.href= __URL(PASSMAIN+"/login/logout");
+                                });
+                } else {
+                                utilAdmin.message(data['message'],"danger");
+                                return false;
+                }
+            }
+        });
+    }
+    $('body').on('click','.delcache',function(){
+        delcache();
+    })
+    $('body').on('click','.submitPassword',function(){
+        submitPassword();
+    })
+
+//指定要操作的元素的click事件停止传播—定义属性值data-stopPropagation的元素点击时停止传播事件
+    $("body").on('click','[data-stopPropagation]',function (e) {
+        e.stopPropagation();
+    });
+    $("#firstpane .menu_body:eq(0)").show();
+    $("#firstpane p.menu_head").click(function() {
+      if ($(this).hasClass("current")) {
+        $(this).removeClass("current");
+        $(this)
+          .nextAll("div.menu_body")
+          .eq(0)
+          .slideToggle(300)
+          .slideUp("slow");
+      } else {
+        $(this)
+          .addClass("current")
+          .next("div.menu_body")
+          .slideToggle(300)
+          .siblings("div.menu_body")
+          .slideUp("slow");
+        $(this)
+          .siblings()
+          .removeClass("current");
+      }
+    });
+
+})
+</script>
+{block name="script"}{/block}
+</body>
+</html>

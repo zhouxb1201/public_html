@@ -1,0 +1,178 @@
+<!--headerStart-->
+<import src="/common/wxParse/wxParse.wxml" />
+<view class="head">
+  <image mode="widthFix" class="bg" src="{{publicUrl}}/wap/static/images/microshop-head-bg.png"></image>
+  <view class="info">
+    <view class="img">
+      <image mode="widthFix" src="{{info.user_headimg}}"></image>
+    </view>
+    <view class="text">
+      <view class="name">亲爱的{{info.member_name}}</view>
+      <view class="message">{{pageType == 2 ? '购买下面任意礼包即可成为店主' : '购买商品晋升相应等级' }}</view>
+    </view>
+  </view>
+</view>
+<!--headerEnd-->
+
+<!--等级-->
+<view class="van-cell cell-panel" wx:if="{{pageType > 2}}">
+  <view class="van-cell__title">
+    <text>等级</text>
+  </view>
+  <view class="van-cell__value" wx:if="{{pageType == 3}}">
+    <text class="tag active">{{gradeInfo.level_name}}</text>
+  </view>
+  <view class="van-cell__value" wx:if="{{pageType == 4}}">
+    <text class="tag {{active == index ? 'active' : ''}}" wx:for="{{gradeInfo}}" wx:key="" bindtap="getItem" data-index='{{index}}'>{{item.level_name}}</text>
+  </view>
+</view>
+
+<!--等级商品信息-->
+<view class="cell-group van-cell-group">
+  <view class="van-cell">
+    <view class="van-cell__value van-cell__value--alone list">
+      <view class="item" wx:for="{{goods_list}}" wx:key="" bindtap="onGoods" data-index="{{index}}" data-goodsid="{{item.goods_id}}">
+        <view class="img">
+          <image mode="widthFix" src="{{item != '' ? item.goods_images[0]  : '/images/no-goods.png'}}"></image>
+        </view>
+        <view class="text-nowrap text-center">{{item.goods_name}}</view>
+      </view>
+    </view>
+  </view>
+</view>
+
+<!--商品详情-->
+<view class='cell-group van-cell-group'>
+  <swiper indicator-dots="{{indicatorDots}}" vertical="{{vertical}}" autoplay="{{autoplay}}" duration="100" interval='{{interval}}' circular="{{circular}}" style="height:{{imgheights[imgcurrent] > 750 ? 750 : imgheights[imgcurrent]}}rpx;">
+    <block wx:for='{{imgList}}' wx:key="{{index}}">
+      <swiper-item>
+        <image src="{{item != '' ? item : '/images/no-goods.png'}}" data-id='{{index}}' class="slide-image" mode="widthFix" lazy-load="true" bindload="imageLoad" binderror='imgError' />
+      </swiper-item>
+    </block>
+  </swiper>
+
+  <view class="van-cell">
+    <view class="van-cell__value van-cell__value--alone">
+      <view class="title">{{goods_detail.goods_name}}</view>
+      <view class="price">
+        <text>¥ {{goodsPrice}}</text>
+        <text class="stock">库存{{stockNum}}件</text>
+      </view>
+    </view>
+  </view>
+  <!--已选-->
+  <view class="van-cell" bindtap="skuBtnShow">
+    <view class="van-cell__title">
+      <text>已选：1</text>
+    </view>
+    <view class='icon iconfont v-icon-arrow-right'></view>
+  </view>
+</view>
+
+<!--店主权益-->
+<view class="divider cell-group">
+  <view class="divider-head">
+    <text>店主权益</text>
+  </view>
+  <view class="van-cell-group">
+    <view class="cell-cols van-cell">
+      <view class="van-cell__value van-cell__value--alone cols">
+        <view class="item" wx:for="{{cols}}" wx:key="">
+          <view class="img">
+            <view class="icon iconfont v-icon-{{item.icon}}"></view>
+          </view>
+          <text class="text">{{item.text}}</text>
+        </view>
+      </view>
+    </view>
+    <view class="van-cell">
+      <view class="van-cell__value van-cell__value--alone  text-maintone">
+        <view>购买以上任意礼包即可成为店主。成为店主后能享受权益如下：</view>
+        <view>1、拥有自己的专属微店。</view>
+        <view>2、店主在平台消费即可获得相对应的返利。</view>
+        <view>3、分享自己微店给朋友，销售后获得返利。</view>
+        <view>4、下级分销商成为店主获得返利。</view>
+        <view>5、下级销售产品后，亦可获得返利最大三级。</view>
+      </view>
+    </view>
+  </view>
+</view>
+
+<!--商品描述-->
+<view class="divider cell-group content">
+  <view class="divider-head">
+    <text>商品描述</text>
+  </view>
+  <view class='tabDetail'>
+    <template is="wxParse" data="{{wxParseData:description.nodes}}" />
+    <view class='no_detail' wx:if="{{goods_detail.description == ''}}">
+      <text>暂无详情</text>
+    </view>
+  </view>
+</view>
+
+<!--footButton-->
+<view class="foot-btn" bindtap="skuBtnShow">
+  <view class="btn">
+    <view class="btn-flex-column">
+      <view wx:if="{{pageType == 2}}">立即开店</view>
+      <view wx:elif="{{pageType == 3}}">立即续费</view>
+      <view wx:elif="{{pageType == 4}}">立即升级</view>
+      <view class="goods-name">
+        已选择：
+        <text class="text-nowrap">{{goods_detail.goods_name}}</text>
+      </view>
+    </view>
+  </view>
+</view>
+
+
+<!-- 规格弹出框 -->
+<van-popup show="{{ skuShow }}" position="bottom" custom-style="border-radius:30rpx 30rpx 0 0;" bind:click-overlay="skuOnclose">
+  <view class='goods_sku'>
+    <view class='goodHeader'>
+      <view class='goodHeaderImg'>
+        <image src='{{imgList[0]}}'></image>
+      </view>
+      <view class='goodHeaderTop'>
+        <view class='goodTitle'>
+          <view class='goods_name'>{{goods_detail.goods_name}}</view>
+          <view class="price">
+            ¥{{goodsPrice}}
+          </view>
+          <view class='icon_closeBtn'>
+            <van-icon name='close' color='#969799' size='20px' bindtap='skuOnclose' />
+          </view>
+        </view>
+      </view>
+    </view>
+
+    <view class=" {{sku.tree.length !=0 ? 'goods_sku_tree' : ''}}">
+      <block wx:if="{{sku.tree != ''}}">
+        <view class='goods_sku_tree_item' wx:for="{{sku.tree}}" wx:key='' wx:for-index='group_idx'>
+          <view class='goods_sku_tree_key'>{{item.k}}:</view>
+
+          <view wx:for="{{item.v}}" class="goods_sku_tree_value {{i.isSelect=='true' ? 'active_value': ''}}" wx:for-item='i' wx:for-index='index' data-attr-index="{{index}}" data-select-index="{{group_idx}}" data-attr-id="{{i.id}}" wx:key='item' catchtap="clickMenu"
+            data-isSelect="{{i.isSelect}}">
+            <text>{{i.name}}</text>
+          </view>
+        </view>
+      </block>
+    </view>
+
+    <view class='stock_num'>
+      <view class='buy_num'>
+        <view>购买数量：</view>
+        <van-stepper v-model="value" class='v_stepper' value="{{buyNum}}" max="{{maxBuy !='' ?maxBuy:stockNum}}" bind:change="changeBuynum" disable-input="true"/>
+      </view>
+      <view class='surplus_num'>剩余{{stockNum}}件
+        <text class='maxbuy' wx:if="{{maxBuy > 0 }}">每次限购{{maxBuy}}件</text>
+      </view>
+    </view>
+  </view>
+  <view class='bottomBtn' wx:if="{{goods_detail && goods_detail.state}}">
+    <view class='nocartbtn' wx:if="{{stockNum == 0}}">商品已售罄</view>
+    <view class='buyOn' wx:else bindtap='buyNowOrder'>立即购买</view>
+  </view>
+  <view class='nocartbtn' wx:else>商品已下架</view>
+</van-popup>

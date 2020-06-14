@@ -1,0 +1,95 @@
+page{
+  background-color: #f8f8f8;
+  font-size: 28rpx;
+}
+
+.group{
+  background-color: #fff;
+  margin: 20rpx;
+  border-radius: 20rpx;
+  box-shadow: 0 0 10px 0 rgba(0,0,0,.05);
+  overflow: hidden;
+  position: relative;
+}
+.group .hair_top{
+  display: flex;
+  padding: 20rpx 30rpx;
+  
+}
+.group .hair_top .hair_left{
+  width: 50%;
+  display: flex;
+}
+.group .hair_top .hair_right{
+  width: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  color: #969799;
+}
+.l_icon{
+  margin-right: 20rpx;
+  height: 24px;
+  line-height: 26px;  
+}
+.r_icon{
+  height: 24px;
+  line-height: 26px;
+}
+.r_text{
+  margin-right: 10rpx;
+  font-size: 24rpx;
+}
+.assets .foot_icon{
+  text-align: center;
+  color: rgb(144, 147, 153);
+  padding-bottom: 10rpx;
+}
+.cell_card{
+  display: flex;
+  padding: 20rpx 0;
+  margin-bottom: 10rpx;
+  color: #323233;
+  border-top: 1px solid #ebedf0;
+}
+.cell_card .card_item{  
+  text-align: center;  
+}
+.cell_card .item_cel_3{
+  width: 33%;
+}
+.cell_card .item_cel_5{
+  width: 20%;
+}
+.cell_card .card_item .card_text{
+  color: #f44;
+}
+.item_line_r{ 
+  border-right: 1rpx solid #ebedf0;
+}
+.card_icon{
+  font-size: 20px;
+  margin-bottom: 10rpx;
+  position: relative;
+}
+.card_icon .tipNum{
+  position: absolute;
+  top: -10rpx;
+  right: 25rpx;
+  background-color: #f44;
+  color: #fff;
+  max-width: 30rpx;
+  min-width: 20rpx;
+  max-height: 30rpx;
+  text-align: center;
+  line-height: 30rpx;
+  font-size: 18rpx;
+  padding: 3rpx 8rpx;
+  border-radius: 25px;
+}
+
+.set_nav{
+  padding: 20rpx;
+}
+
+

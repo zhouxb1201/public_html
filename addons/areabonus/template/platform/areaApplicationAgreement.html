@@ -1,0 +1,428 @@
+
+{block name="main"}
+		<!-- page -->
+		<ul class="nav nav-tabs v-nav-tabs" role="tablist">
+			<li role="presentation" ><a href="{:__URL('ADDONS_MAINareaBasicSetting')}"  class="flex-auto-center">基础设置</a></li>
+			<li role="presentation"><a href="{:__URL('ADDONS_MAINareaSettlementSetting')}"  class="flex-auto-center">结算设置</a></li>
+			<li role="presentation" {if $type==2}class="active"{/if}><a href="{:__URL('ADDONS_MAINareaApplicationAgreement')}&type=2"  class="flex-auto-center">申请协议</a></li>
+			<li role="presentation" {if $type==1}class="active"{/if}><a href="{:__URL('ADDONS_MAINareaApplicationAgreement')}&type=1"  class="flex-auto-center">文案样式</a></li>
+			<li role="presentation" {if $type==3}class="active"{/if}><a href="{:__URL('ADDONS_MAINareaApplicationAgreement')}&type=3"  class="flex-auto-center">推送通知</a></li>
+		</ul>
+		<div class="tab-content">
+			{if $type==1}
+			<div role="tabpanel" class="tab-pane tab-pane fade in active" id="protocols">
+				<form class="form-horizontal form-validate1 pt-15">
+					<div class="screen-title2" data-id="t2">
+						<span class="text">分红中心</span>
+						<span class="text1">全球分红、区域分红、团队分红共用文案，修改后将会同步。</span>
+					</div>
+					<div class="form-group">
+						<label class="col-md-2 control-label">分红中心</label>
+						<div class="col-md-5">
+							<div class="input-group">
+								<input type="text" class="form-control" id="bonus_name" placeholder="分红中心"  value="{if $websites.bonus_name}{$websites.bonus_name}{else}分红中心{/if}" >
+							</div>
+						</div>
+					</div>
+					<div class="form-group">
+						<label class="col-md-2 control-label">分红</label>
+						<div class="col-md-5">
+							<div class="input-group">
+								<input type="text" class="form-control" id="bonus" placeholder="分红"  value="{if $websites.bonus}{$websites.bonus}{else}分红{/if}" >
+							</div>
+						</div>
+					</div>
+					<div class="form-group">
+						<label class="col-md-2 control-label">已发放分红（总）</label>
+						<div class="col-md-5">
+							<div class="input-group">
+								<input type="text" class="form-control" id="withdrawals_bonus"  placeholder="已发放分红" value="{if $websites.withdrawals_bonus}{$websites.withdrawals_bonus}{else}已发放分红{/if}" >
+							</div>
+						</div>
+					</div>
+					<div class="form-group">
+						<label class="col-md-2 control-label">待发放分红（总）</label>
+						<div class="col-md-5">
+							<div class="input-group">
+								<input type="text" class="form-control" id="withdrawal_bonus" placeholder="待发放分红"  value="{if $websites.withdrawal_bonus}{$websites.withdrawal_bonus}{else}待发放分红{/if}" >
+							</div>
+						</div>
+					</div>
+					<div class="form-group">
+						<label class="col-md-2 control-label">冻结分红（总）</label>
+						<div class="col-md-5">
+							<div class="input-group">
+								<input type="text" class="form-control" id="frozen_bonus"  placeholder="冻结分红" value="{if $websites.frozen_bonus}{$websites.frozen_bonus}{else}冻结分红{/if}" >
+							</div>
+						</div>
+					</div>
+					<div class="form-group">
+						<label class="col-md-2 control-label">分红明细</label>
+						<div class="col-md-5">
+							<div class="input-group">
+								<input type="text" class="form-control" id="bonus_details"   placeholder="分红明细" value="{if $websites.bonus_details}{$websites.bonus_details}{else}分红明细{/if}" >
+							</div>
+						</div>
+					</div>
+					<div class="form-group">
+						<label class="col-md-2 control-label">分红金额</label>
+						<div class="col-md-5">
+							<div class="input-group">
+								<input type="text" class="form-control" id="bonus_money"   placeholder="分红金额" value="{if $websites.bonus_money}{$websites.bonus_money}{else}分红金额{/if}" >
+							</div>
+						</div>
+					</div>
+					<div class="form-group">
+						<label class="col-md-2 control-label">分红订单</label>
+						<div class="col-md-5">
+							<div class="input-group">
+								<input type="text" class="form-control" id="bonus_order"  placeholder="分红订单" value="{if $websites.bonus_order}{$websites.bonus_order}{else}分红订单{/if}" >
+							</div>
+						</div>
+					</div>
+					<div class="screen-title2" data-id="t2">
+						<span class="text">区域分红</span>
+						<span class="text1">分红中心涉及区域分红文案样式。</span>
+					</div>
+					<div class="form-group">
+						<label class="col-md-2 control-label"><span class="text-bright">*</span>注册成为区域代理头部海报</label>
+						<div class="col-md-5">
+							<div class="picture-list" id="Logo">
+								{if $website.logo}
+								<a href="javascript:;" class="close-box"><i class="icon icon-danger" title="删除"></i><img src="{if $website.logo}{:__IMG($website.logo)}{/if}"></a>
+								{else}
+								<a href="javascript:;" class="plus-box" data-toggle="singlePicture"><i class="icon icon-plus"></i></a>
+								{/if}
+							</div>
+							<div class="mb-0 help-block">
+								建议700 * 394，支持JPG\GIF\PNG格式
+							</div>
+						</div>
+					</div>
+					<div class="form-group">
+						<label class="col-md-2 control-label">区域代理</label>
+						<div class="col-md-5">
+							<div class="input-group">
+								<input type="text" class="form-control" id="area_agreement"  placeholder="区域代理" value="{if $website.area_agreement}{$website.area_agreement}{else}区域代理{/if}" >
+							</div>
+						</div>
+					</div>
+					<div class="form-group">
+						<label class="col-md-2 control-label">已发放分红</label>
+						<div class="col-md-5">
+							<div class="input-group">
+								<input type="text" class="form-control" id="withdrawals_area_bonus"  placeholder="已发放分红" value="{if $website.withdrawals_area_bonus}{$website.withdrawals_area_bonus}{else}已发放分红{/if}" >
+							</div>
+						</div>
+					</div>
+					<div class="form-group">
+						<label class="col-md-2 control-label">待发放分红</label>
+						<div class="col-md-5">
+							<div class="input-group">
+								<input type="text" class="form-control" id="withdrawal_area_bonus" placeholder="待发放分红"  value="{if $website.withdrawal_area_bonus}{$website.withdrawal_area_bonus}{else}待发放分红{/if}" >
+							</div>
+						</div>
+					</div>
+					<div class="form-group">
+						<label class="col-md-2 control-label">冻结分红</label>
+						<div class="col-md-5">
+							<div class="input-group">
+								<input type="text" class="form-control" id="frozen_area_bonus"  placeholder="冻结分红" value="{if $website.frozen_area_bonus}{$website.frozen_area_bonus}{else}冻结分红{/if}" >
+							</div>
+						</div>
+					</div>
+					<div class="form-group">
+						<label class="col-md-2 control-label">申请区域代理</label>
+						<div class="col-md-5">
+							<div class="input-group">
+								<input type="text" class="form-control" id="apply_area"  placeholder="申请区域代理" value="{if $website.apply_area}{$website.apply_area}{else}申请区域代理{/if}" >
+							</div>
+						</div>
+					</div>
+
+					<div class="form-group"></div>
+					<div class="form-group">
+						<label class="col-md-2 control-label"></label>
+						<div class="col-md-8">
+							<button class="btn btn-primary" type="submit">保存</button>
+							<a href="javascript:history.go(-1);" class="btn btn-default">返回</a>
+						</div>
+					</div>
+				</form>
+			</div>
+			{elseif $type==3}
+			<div class="tab-pane tab-pane fade in active" id="message"  >
+				<table class="table v-table table-auto-center">
+					<thead>
+					<tr>
+						<th>模版名称</th>
+						<th>模版类型</th>
+						<th>通知人</th>
+						<th>模版状态</th>
+						<th>模版</th>
+					</tr>
+					</thead>
+					<tbody id="list">
+
+					</tbody>
+				</table>
+			</div>
+			{else}
+			<div role="tabpanel" class="tab-pane tab-pane fade in active" id="protocol">
+				<form class="form-horizontal form-validate2 pt-15 widthFixedForm">
+					<div class="form-group">
+						<label class="col-md-2 control-label"><span class="text-bright">*</span>协议内容</label>
+						<div class="col-md-9">
+							<div id="UE-protocol" data-content='{if $website.content}{$website.content}{/if}'></div>
+						</div>
+					</div>
+					<div class="form-group"></div>
+					<div class="form-group">
+						<label class="col-md-2 control-label"></label>
+						<div class="col-md-8">
+							<button class="btn btn-primary" type="submit">保存</button>
+							<a href="javascript:history.go(-1);" class="btn btn-default">返回</a>
+						</div>
+					</div>
+				</form>
+			</div>
+			{/if}
+		</div>
+
+		<!-- page end -->
+{/block}
+{block name="script"}
+<script>
+    require(['util','insertContent'],function(util){
+        util.validate($('.form-validate1'),function(form){
+            var Logo = $("#Logo").find('img').attr('src');
+            if(Logo==''){
+                util.message('注册成为区域代理商海报不能为空','danger');
+                return false;
+            }
+            var bonus_name = $('#bonus_name').val();
+            if(bonus_name==''){
+                bonus_name = '分红中心';
+            }
+            var bonus = $('#bonus').val();
+            if(bonus==''){
+                bonus= '分红';
+            }
+            var withdrawals_bonus = $('#withdrawals_bonus').val();
+            if(withdrawals_bonus==''){
+                withdrawals_bonus= '已发放分红';
+            }
+            var withdrawal_bonus = $('#withdrawal_bonus').val();
+            if(withdrawal_bonus==''){
+                withdrawal_bonus= '待发放分红';
+            }
+            var frozen_bonus = $('#frozen_bonus').val();
+            if(frozen_bonus==''){
+                frozen_bonus= '冻结分红';
+            }
+            var bonus_details = $('#bonus_details').val();
+            if(bonus_details==''){
+                bonus_details= '分红明细';
+            }
+            var bonus_money = $('#bonus_money').val();
+            if(bonus_money==''){
+                bonus_money= '分红金额';
+            }
+            var bonus_order = $('#bonus_order').val();
+            if(bonus_order==''){
+                bonus_order= '分红订单';
+            }
+            var withdrawals_area_bonus = $('#withdrawals_area_bonus').val();
+            if(withdrawals_area_bonus==''){
+                withdrawals_area_bonus= '已发放分红';
+            }
+            var withdrawal_area_bonus = $('#withdrawal_area_bonus').val();
+            if(withdrawal_area_bonus==''){
+                withdrawal_area_bonus= '待发放分红';
+            }
+            var frozen_area_bonus = $('#frozen_area_bonus').val();
+            if(frozen_area_bonus==''){
+                frozen_area_bonus= '冻结分红';
+            }
+            var apply_area = $('#apply_area').val();
+            if(apply_area==''){
+                apply_area= '申请区域代理';
+            }
+            var area_agreement = $('#area_agreement').val();
+            if(area_agreement==''){
+                area_agreement= '区域代理';
+            }
+            $.ajax({
+                type:"post",
+                url:"{$areaApplicationAgreementUrl}",
+                data:{
+                    'type':1,
+                    'image':Logo,
+                    'bonus_name': bonus_name,
+                    'bonus':bonus,
+                    'withdrawals_bonus':withdrawals_bonus,
+                    'withdrawal_bonus':withdrawal_bonus,
+                    'frozen_bonus':frozen_bonus,
+                    'bonus_details':bonus_details,
+                    'bonus_money':bonus_money,
+                    'bonus_order':bonus_order,
+                    'withdrawals_area_bonus':withdrawals_area_bonus,
+                    'withdrawal_area_bonus':withdrawal_area_bonus,
+                    'frozen_area_bonus': frozen_area_bonus,
+                    'apply_area':apply_area,
+					'area_agreement':area_agreement
+                },
+                success:function(data){
+                    if (data['code'] > 0) {
+                        util.message(data["message"], 'success', "{:__URL('ADDONS_MAINareaApplicationAgreement')}&type=1");
+                    } else {
+                        util.message(data["message"], 'danger');
+                    }
+                }
+            });
+        })
+        util.validate($('.form-validate2'),function(form){
+            var content = $('#UE-protocol').data('content');
+            if(content==''){
+                util.message('协议内容不能为空','danger');
+                return false;
+            }
+            $.ajax({
+                type:"post",
+                url:"{$areaApplicationAgreementUrl}",
+                data:{
+                    'content':content
+                },
+                success:function(data){
+                    if (data['code'] > 0) {
+                        util.message(data["message"], 'success', "{:__URL('ADDONS_MAINareaApplicationAgreement')}");
+                    } else {
+                        util.message(data["message"], 'danger',"{:__URL('ADDONS_MAINareaApplicationAgreement')}");
+                    }
+                }
+            });
+        })
+        if({$type}==3){
+            $.ajax({
+                type:"post",
+                url:"{$areaMessagePushListUrl}",
+                success:function(data){
+                    var html = '';
+                    if(data){
+                        for(var i = 0; i < data.length; i++){
+                            html+='<tr>';
+                            html+='<td>'+data[i]['template_title']+'</td>';
+                            html+='<td>微信客服消息</td>';
+                            html+='<td>分销商</td>';
+                            html+='<td>';
+                            html+='<div class="checkbox">';
+                            if(data[i]['is_enable']==1){
+                                html+='<a href="javascript:void(0);" class="text-success message_is_open">已开启</a><br>';
+                            }else{
+                                html+='<a href="javascript:void(0);" class="text-danger message_is_open" >已关闭</a><br>';
+                            }
+                            html+='</td>';
+                            html+='<td>';
+                            html+='<a href="javascript:void(0);" class="text-primary vertical-top editMsg" data-id="'+data[i]['template_id']+'">编辑模板</a>';
+                            html+='</div>';
+                            html+='</td>';
+                            html+='</tr>';
+                        }
+                        $('#list').html(html);
+                    }
+                }
+            });
+        }
+        $('body').on('click','.variate-choice-code',function(){
+            var code = $(this).data('code');
+            var contents = $(this).parents('.variate-choice').siblings('#template_content');
+            contents.insertContent(code);
+        })
+        function replaceMark(str){
+            if(str){
+                var index = str.indexOf(';');
+                if(index>-1){
+                    var f = str.substring(0,index);
+                    var s = str.substring(index+1,str.length);
+                    str = f + '\n' + s;
+                    return replaceMark(str);
+                }else{
+                    return str;
+                }
+            }else{
+                return '';
+            }
+
+        }
+        //编辑短信模板
+        $('body').on('click','.editMsg',function(event){
+            var id = $(this).data('id');
+            $.ajax({
+                type:"post",
+                url:"{$areaEditMessageUrl}",
+                data:{
+                    'id':id,
+                },
+                async:true,
+                success:function (data) {
+                    var name = data['template_title'];
+                    strs = replaceMark(data['sample']);
+                    var html = '<form class="form-horizontal padding-15" id="">';
+                    if(data['is_enable']==1){
+                        html += '<div class="form-group"><label class="col-md-3 control-label">是否启用</label><div class="col-md-8"><div class="switch-inline"><input type="checkbox" id="sms_is_enable" checked ><label for="sms_is_enable" class=""></label></div>';
+                    }else{
+                        html += '<div class="form-group"><label class="col-md-3 control-label">是否启用</label><div class="col-md-8"><div class="switch-inline"><input type="checkbox" id="sms_is_enable" ><label for="sms_is_enable" class=""></label></div>';
+                    }
+                    html += '</div></div>';
+                    html += '<div class="form-group">'+
+                        '<label class="col-md-3 control-label"><span class="text-bright">*</span>内容</label>'+
+                        '<div class="col-md-8">'+
+                        '<div class="flex">'+
+                        '<textarea  class="form-control bbrr0" rows="8" id="template_content">'+data['template_content']+'</textarea>'+
+                        '<div class="variate-choice"><p>可选变量</p><div class="variate-choice-item">';
+                    for (var i = 0; i < data['sign'].length; i++) {
+                        html += '<a class="text-primary block variate-choice-code" href="javascript:void(0);" data-code="'+data['sign'][i]['replace_name']+'">['+data['sign'][i]['item_name']+']</a>';
+                    }
+                    html += '</div></div></div></div></div>';
+                    html += '<div class="form-group">'+
+                        '<label class="col-md-3 control-label"><span class="text-bright"></span>示例</label>'+
+                        '<div class="col-md-8">'+
+                        '<div class="flex">'+
+                        '<textarea disabled class="form-control bbrr0" rows="8">' +strs+'</textarea>';
+                    html += '</div></div></div></div>';
+                    html += '</form>';
+                    util.confirm(name+"模版",html,function(){
+                        if(this.$content.find('#sms_is_enable').is(':checked')){
+                            var is_enable =1;
+                        }
+                        var template_content = this.$content.find('#template_content').val();
+                        if(template_content==''){
+                            util.message('请填写模版内容','danger');
+                            this.$content.find('#template_content').focus();
+                            return false;
+                        }
+                        $.ajax({
+                            type:"post",
+                            url:"{$addAreaMessageUrl}",
+                            data:{
+                                'is_enable':is_enable,
+                                'id':id,
+                                'template_content':template_content
+                            },
+                            async:true,
+                            success:function (data) {
+                                if (data["code"] > 0) {
+                                    util.message( data["message"],'success',"{:__URL('ADDONS_MAINareaApplicationAgreement')}&type=3");
+                                }else{
+                                    util.message( data["message"],'danger');
+                                }
+                            }
+                        });
+
+                    },'large')
+                }
+            });
+        })
+    })
+</script>
+{/block}

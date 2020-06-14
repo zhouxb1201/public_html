@@ -1,0 +1,174 @@
+{extend name="platform/new_base" /}
+{block name="resource"}
+
+{/block}
+{block name="main"}
+        <!-- page -->
+        <div class="mb-20">
+            <a href="{:__URL('PLATFORM_MAIN/Goods/addGoodsSpec')}" class="btn btn-primary"><i class="icon icon-add1"></i> 添加规格</a>
+        </div>
+
+        <table class="table v-table table-auto-center">
+            <thead>
+            <tr>
+                <th>规格名称</th>
+                <th>关联品类</th>
+                <th>规格值</th>
+                <th>是否启用</th>
+                <th>排序</th>
+                <th class="col-md-2 pr-14 operationLeft">操作</th>
+            </tr>
+            </thead>
+            <tbody id="specList">
+
+            </tbody>
+        </table>
+        <input type="hidden" id="pageIndex">
+        <nav aria-label="Page navigation" class="clearfix">
+            <ul id="page" class="pagination pull-right"></ul>
+        </nav>
+        <!-- page end -->
+{/block}
+
+
+{block name="script"}
+<script>
+require(['util'],function(util){
+    util.initPage(LoadingInfo);
+
+    //加载信息
+    function LoadingInfo(pageIndex) {
+        $("#pageIndex").val(pageIndex);
+        $.ajax({
+            type: "post",
+            url: "{:__URL('PLATFORM_MAIN/goods/goodsspeclist')}",
+            async: true,
+            data: {
+                "page_index": pageIndex,
+            },
+            success: function (data) {
+                var html = '';
+
+                $("#pageNumber a").remove();
+                if (data["data"].length > 0) {
+                    for (var i = 0; i < data["data"].length; i++) {
+                        html +='<tr>';
+                        html +='<td>';
+                        html += data["data"][i]["spec_name"];
+                        html +='</td>';
+                        html += '<td>' + data["data"][i]["attr_value_list"] + '</td>';
+                        html +='<td><div class="inline-block max-w-300 break-word">';
+                        html += data["data"][i]["spec_value_name_list"];
+                        html +='</div></td>';
+                        html +='<td>';
+                        if(data["data"][i]["is_visible"]=='1'){
+                            if(data["data"][i]["is_platform"]){
+                                html +='<a href="javascript:void(0);" class="label label-success is_show" data-spec_id="'+data["data"][i]["spec_id"]+'" data-is_show="0">是</a>';
+                            }else{
+                                html +='<span class="label label-success">是</span>';
+                            }
+                        }else{
+                            if(data["data"][i]["is_platform"]){
+                                html +='<a href="javascript:void(0);" class="label label-danger is_show" data-spec_id="'+data["data"][i]["spec_id"]+'" data-is_show="1">否</a>';
+                            }else{
+                                html +='<span class="label label-danger">否</span>';
+                            }
+                        }
+                        html +='</td>';
+                        html += '<td><input type="text" class="form-control sort-form-control" data-spec_id="'+ data["data"][i]["spec_id"] +'" value="'+data["data"][i]["sort"]+'"></td>';
+                        html +='<td class="operationLeft">';
+                        if(data['data'][i]['shop_id'] == '0'){
+                            html +='<input type="hidden" name="spec_id" value="'+ data["data"][i]["spec_id"] +'">';
+                            html +='<a class="btn-operation" href="'+__URL('PLATFORM_MAIN/goods/updategoodsspec?spec_id=' + data["data"][i]["spec_id"]) + '">编辑</a><a class="btn-operation delete_brand text-red1" href="javascript:void(0);">删除</a>';
+                            
+                        }
+                        html +='</td>';
+                        html +='</tr>';
+                    }
+                } else {
+                    html += '<tr align="center"><td colspan="6" class="h-200">暂无符合条件的数据记录</td></tr>';
+                }
+                $("#specList").html(html);
+                util.tips();
+                $('#page').paginator('option', {
+                    totalCounts: data['total_count']  // 动态修改总数
+                });
+            }
+        });
+    }
+
+
+    //删除分类
+    $('#specList').on('click','.delete_brand', function (id) {
+        var spec_id = $(this).siblings("input[name='spec_id']").val();
+        util.alert('确认删除此规格吗 ？', function () {
+            $.ajax({
+                type: "post",
+                url: "{:__URL('PLATFORM_MAIN/goods/deletegoodsspec')}",
+                data: {
+                    'spec_id' : spec_id.toString()
+                },
+                success: function (data) {
+                    if (data["code"] > 0) {
+                        util.message(data["message"], 'success', LoadingInfo($('#pageIndex').val()));
+                    } else {
+                        util.message(data["message"], 'danger');
+                    }
+                }
+            })
+        })
+    })
+    //是否显示
+    $('#specList').on('click', '.is_show', function(){
+        // alert();
+
+        var is_visible = $(this).data('is_show');
+        // var status = $(this).data('is_show');
+        /*//0不显示
+        if(status == 0){
+            var is_visible = 0;
+            $msg = '确认修改为不启动？';
+        }else{
+            var is_visible = 1;
+            $msg = '确认修改为启动？';
+        }*/
+        var spec_id = $(this).data('spec_id');
+        // util.alert($msg, function () {
+            $.ajax({
+                type: "post",
+                url: "{:__URL('PLATFORM_MAIN/goods/updateGoodsspecShow')}",
+                data: {
+                    'spec_id' : spec_id.toString(), 'is_visible' : is_visible
+                },
+                success: function (data) {
+                    if (data["code"] > 0) {
+                        util.message(data["message"], 'success', LoadingInfo($('#pageIndex').val()));
+                    } else {
+                        util.message(data["message"], 'danger');
+                    }
+                }
+            })
+        // })
+    })
+    $("body").on('change', '.sort-form-control', function(){
+        var spec_id = $(this).data('spec_id');
+        var sort_val = $(this).val();
+        $.ajax({
+            type : "post",
+            url : "{:__URL('PLATFORM_MAIN/Goods/setgoodsspecfield')}",
+            async : true,
+            data : {id : spec_id,name: 'sort', value : sort_val},
+            success : function(data) {
+                if (data["code"] > 0) {
+                    util.message(data["message"],'success',LoadingInfo($('#pageIndex').val()));
+                }else{
+                    util.message(data["message"],'danger');
+                }
+            }
+        })
+    })
+
+
+})
+</script>
+{/block}

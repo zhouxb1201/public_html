@@ -1,0 +1,526 @@
+.page-wrap {
+  display: flex;
+  flex-direction: column;
+  background: #F5F5F5;
+  position: fixed;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  overflow: hidden;
+}
+
+.fix-Full-button {
+    bottom:68rpx!important;
+
+}
+.fix-Full-button::after {
+  content: '';
+  position: fixed;
+  bottom: 0!important;
+  height: 68rpx!important;
+  width: 100%;
+  background-color: #F5F5F5;
+}
+
+
+
+.chat-container {
+  flex: 1;
+  text-align: center;
+  overflow-y: auto;
+  padding-bottom: 200rpx;
+}
+
+.system-message {
+  font-size: 14px;
+  line-height: 14px;
+  color: #fff;
+  background: #cecece;
+  border-radius: 4px;
+  display: inline-block;
+  padding: 8rpx 15rpx;
+  margin: 30rpx 0 10rpx;
+}
+
+.message {
+  clear: both;
+}
+
+.user-message {
+  margin: 38rpx 20rpx 0;
+  text-align: left;
+  font-size: 0;
+  display: flex;
+}
+.already{
+  color: rgba(0, 0, 0, 0.411);
+}
+.not{
+  color: rgba(248, 129, 61, 0.781);
+}
+
+
+.user-message.me {
+  float: right;
+}
+.user-message.me .text{
+  margin-right: 20rpx;
+}
+.user-message.me .text .nickname {
+  text-align: right;
+}
+.user-message.me .text .read {
+  font-size: 24rpx;
+  margin: 10rpx 0;
+  text-align: right;
+}
+
+.user-message.me .text .content {
+  background: #01aaed;
+  color: #fff;
+  text-align: left;
+  min-height: 28rpx;  
+  padding: 16rpx 24rpx;
+  border-radius: 12rpx;
+  word-wrap: break-word;
+  display: inline-block;
+  overflow: hidden;
+}
+
+.left {
+  width: 100%;
+  display: flex;
+}
+
+.right {
+  width: 100%;
+  display: flex;
+}
+
+.avatar {
+  width: 84rpx;
+  height: 84rpx;
+  border: #a5a5a7 1rpx solid;
+  display: inline-block;
+  vertical-align: top;
+}
+
+.text {
+  display: inline-block;
+  vertical-align: top;
+}
+.user-message.other .text .read {
+  font-size: 24rpx;
+  margin: 10rpx 0;  
+}
+.user-message.other .text {
+  margin-left: 19rpx;
+}
+
+.user-message.other .text .content {
+  background: #fff;
+  min-height: 28rpx;
+  padding: 16rpx 24rpx;
+  border-radius: 12rpx;
+  word-wrap: break-word;
+  display: inline-block;
+  overflow: hidden;
+  color: #020202;
+}
+
+.user-message .text .audio_clear {
+  background: #fcfcfc !important;
+  padding: 0 !important;
+}
+
+/* .user-message.other .text view {
+  display: inline-block;
+} */
+
+.chat-avatars {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 70rpx;
+  height: 70rpx;
+  border-radius: 50%;
+  background-color: #eee;
+  vertical-align: top;
+  overflow: hidden;
+}
+
+.chat-avatars image {
+  width: 100%;
+  height: 100%;
+}
+
+.text .nickname {
+  color: #6666;
+  font-size: 24rpx;
+  margin-bottom: 6rpx;
+}
+
+.text .content {
+  font-size: 30rpx;
+  line-height: 36rpx;
+  padding: 20rpx;
+  position: relative;
+}
+
+.text .content .img {
+  width: 200rpx;
+  height: 200rpx;
+  overflow: hidden;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.text .content .faces_msg {
+  display: flex;
+}
+
+.text .content .faces {
+  width: 44rpx;
+  height: 44rpx;
+}
+
+.text .content image {
+  width: 100%;
+  height: 100%;
+}
+
+.text .nickname {
+  font-size: 24rpx;
+}
+
+.user-message.other .text .content::after,
+.user-message.other .text .content::before {
+  right: 100%;
+  border-right-style: solid;
+}
+
+.input-panel {
+  height: 100rpx;
+  box-sizing: border-box;
+  padding: 13rpx 20rpx 0;
+  background: #f5f5f7;
+  border-top: #d7d7d9 1rpx solid;
+  display: flex;
+}
+
+.buttom-box {
+  background: #f5f5f7;
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+}
+
+.send-input {
+  flex: 1;
+  height: 72rpx;
+  background: #fff;
+  border: #ddd 1rpx solid;
+  border-radius: 3px;
+  /* margin-right: 20rpx; */
+  box-sizing: border-box;
+  padding: 0 10rpx;
+}
+
+.say_word {
+  flex: 1;
+  height: 72rpx;
+  background: #fff;  
+  border-radius: 3px;
+  box-sizing: border-box;
+  line-height: 72rpx;
+}
+.say_word
+
+.me .nickname {
+  /* display: none; */
+}
+
+.img-panel {
+  margin-top: 5rpx;
+  margin-left: 20rpx;
+  width: 60rpx;
+  height: 60rpx;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.img-panel image {
+  width: 100%;
+  height: 100%;
+}
+
+.emoji {
+  margin-top: 5rpx;
+  margin-left: 20rpx;
+  width: 60rpx;
+  height: 60rpx;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.emoji image {
+  width: 100%;
+  height: 100%;
+}
+
+.voice {
+  margin-top: 5rpx;
+  margin-right: 20rpx;
+  width: 60rpx;
+  height: 60rpx;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.voice image {
+  width: 100%;
+  height: 100%;
+}
+
+.chat-log {
+  clear: both;
+}
+
+.goods {
+  clear: both;
+  padding: 20rpx 0;
+}
+
+.goods_box {
+  margin: 0 auto;
+  max-width: 600rpx;
+  background: #fff;
+  min-height: 28rpx;
+  padding: 16rpx 24rpx;
+  border-radius: 12rpx;
+  display: flex;
+  color: #020202;
+}
+
+.goods_box .good_img {
+  display: inline-block;
+  padding-right: 20rpx;
+  vertical-align: middle;
+}
+
+.goods_box .good_img image {
+  width: 120rpx;
+  height: 120rpx;
+}
+
+.goods_box .goods_info {
+  display: inline-block;
+  width: calc(100%-140rpx);
+  height: 120rpx;
+  font-size: 28rpx;
+  position: relative;
+  flex: 1;
+}
+
+.goods_box .goods_info .goods_name {
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+  overflow: hidden;
+  height: 60rpx;
+  line-height: 30rpx;
+  text-align: left;
+}
+
+.goods_box .goods_info .goods_price {
+  font-size: 26rpx;
+  color: #f00;
+  text-align: left;
+}
+
+.goods_box .goods_info .good_btn {
+  position: absolute;
+  right: 0;
+  bottom: 0;
+  background-color: #2c9cf0;
+  border: 1px solid #2c9cf0;
+  color: #fff;
+  border-radius: 200rpx;
+  padding: 6rpx 20rpx;
+  font-size: 26rpx;
+}
+
+.goods_log {
+  max-width: 400rpx;
+  color: #000;
+}
+
+.goods_log .goods_img {
+  width: 400rpx;
+  height: 400rpx;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.goods_log .goods_img image {
+  width: 100%;
+  height: 100%;
+}
+
+.goods_log .goods_name {
+  padding: 0 10rpx;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.goods_log .goods_price {
+  padding: 10rpx;
+  font-weight: 600;
+  color: #f44;
+}
+
+.faces_box {
+  padding: 10rpx 10rpx 50rpx 10rpx;
+  position: relative;
+}
+
+.faces_box .faces_list {
+  min-height: 488rpx;
+}
+
+.faces_box .faces_list .item_face {
+  min-width: 44rpx;
+  min-height: 44rpx;
+  padding: 16rpx 8rpx;
+  height: 44rpx;
+  width: 44rpx;
+  float: left;
+}
+
+.faces_box .faces_list .item_face image {
+  width: 100%;
+  height: 100%;
+}
+
+.sandFaces {
+  position: absolute;
+  right: 30rpx;
+  bottom: 20rpx;
+  background-color: #40bd1a;
+  color: #fff;
+  padding: 10rpx 10rpx;
+  border-radius: 10rpx;
+}
+
+.yuyin {
+  color: #000;
+}
+
+.output-audio {
+  width: 150rpx;
+}
+
+.output-audio .audio {
+  padding: 20rpx;
+  border-radius: 10rpx;
+  background-color: #fff;
+  border: 1px solid #f0f0f0;
+  overflow: hidden;
+}
+
+.output-audio .audio .ico {
+  width: 26rpx;
+  height: 30rpx;
+  float: left;
+}
+.output-audio .audio .ico.right{
+  float: right;
+  transform:rotateY(180deg);
+}
+
+.output-audio .audio .time {
+  float: right;
+  font-size: 24rpx;
+}
+
+.options_box {
+  padding: 10rpx 10rpx 50rpx 10rpx;
+}
+
+.options_box .option_list {
+  min-height: 400rpx;
+  transition: height 2s;
+}
+
+.options_box .option_list .option_item {
+  float: left;
+  margin: 20rpx 40rpx;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+}
+
+.options_box .option_list .option_item .option_img {
+  background: #fff;
+  width: 100rpx;
+  height: 100rpx;
+  border-radius: 20rpx;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.options_box .option_list .option_item .option_img .img_logo {
+  width: 50rpx;
+  height: 50rpx;
+}
+
+.options_box .option_list .option_item .option_text {
+  color: #7c7979;
+  margin-top: 5rpx;
+  font-size: 24rpx;
+}
+
+.microphone-box {
+  position: absolute;
+  top: 30%;
+  left: 25%;
+  overflow: hidden;
+  width: 350rpx;
+  height: 350rpx;
+  background-color: rgba(0, 0, 0, 0.678);
+  opacity: 0.5;
+  color: #fff;
+  border-radius: 50rpx;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+}
+
+.cancel-box {
+  background-color: #f0632c;
+}
+
+.microphone-box .microphone-img {
+  width: 200rpx;
+  height: 200rpx;
+}
+
+.microphone-box .microphone-img image {
+  width: 100%;
+  height: 100%;
+}
+
+.microphone-box .text {
+  margin-top: 20rpx;
+}

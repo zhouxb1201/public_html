@@ -1,0 +1,16 @@
+<!-- 上传图片 -->
+    <view class='custom customDisplay wx:if="{{customitem.required == true ? "custom_padd" : ""}}"'>
+      <view class='label_text'><text class="star" wx:if='{{customitem.required == true}}'>*</text>{{customitem.label}}</view>
+      <view class='customImg'>
+        <view class='customImgItem' wx:for='{{imgUrl}}' wx:key=''>
+          <van-icon name="close" class='btn_delete' data-index='{{index}}' bindtap='_deleteImg'/>
+          <view class='box_img' data-imglist='{{imgUrl}}' bindtap='_previewImg'>
+            <image mode='widthFix' src='{{item}}'></image>             
+          </view>          
+        </view>
+        <view class='customImg_btn' data-index="{{index}}" bindtap='customImgFun'>        
+          <van-icon name="photograph" size='40rpx'/>
+          <text class='customImg_num'>{{imgUrl.length}}/{{customitem.max}}</text>
+        </view>
+      </view>
+    </view>

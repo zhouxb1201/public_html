@@ -1,0 +1,100 @@
+<view>
+  <block wx:for="{{customform}}" wx:for-item="customitem" wx:key="">
+    <input-component 
+      index='{{index}}' 
+      wx:if="{{customitem.tag == 'input'}}" 
+      customform='{{customform}}' 
+      customitem='{{customitem}}'
+      bind:customformInfo='customformFun'>
+    </input-component>  
+    
+    <textarea-component
+      index='{{index}}' 
+      wx:if="{{customitem.tag == 'textarea'}}" 
+      customform='{{customform}}' 
+      customitem='{{customitem}}'
+      bind:customformInfo='customformFun'>
+    </textarea-component>  
+    
+    <select-component
+      index='{{index}}' 
+      wx:if="{{customitem.tag == 'select'}}" 
+      customitem='{{customitem}}'
+      customform='{{customform}}' 
+      bind:customformInfo='customformFun'>
+    </select-component> 
+
+    <radio-component
+      index='{{index}}' 
+      wx:if="{{customitem.tag == 'radio'}}" 
+      customform='{{customform}}' 
+      customitem='{{customitem}}'
+      bind:customformInfo='customformFun'>
+    </radio-component>
+
+    <checkbox-component
+      index='{{index}}' 
+      wx:if="{{customitem.tag == 'checkbox'}}" 
+      customform='{{customform}}' 
+      customitem='{{customitem}}'
+      bind:customformInfo='customformFun'>
+    </checkbox-component>
+
+    <img-component
+      index='{{index}}' 
+      wx:if="{{customitem.tag == 'img'}}" 
+      customform='{{customform}}' 
+      customitem='{{customitem}}'
+      bind:customformInfo='customformFun'>
+    </img-component>
+
+    <phone-component
+      index='{{index}}' 
+      wx:if="{{customitem.tag == 'phone'}}" 
+      customform='{{customform}}' 
+      customitem='{{customitem}}'
+      bind:customformInfo='customformFun'>
+    </phone-component>
+
+    <card-component
+      index='{{index}}' 
+      wx:if="{{customitem.tag == 'card'}}" 
+      customform='{{customform}}' 
+      customitem='{{customitem}}'
+      bind:customformInfo='customformFun'>
+    </card-component>
+
+    <date-component
+      index='{{index}}' 
+      wx:if="{{customitem.tag == 'date'}}" 
+      customform='{{customform}}' 
+      customitem='{{customitem}}'
+      bind:customformInfo='customformFun'>
+    </date-component>
+
+    <date-range-component
+      index='{{index}}' 
+      getTime='{{getTime}}'
+      wx:if="{{customitem.tag == 'date_range'}}" 
+      customform='{{customform}}' 
+      customitem='{{customitem}}'
+      bind:customformInfo='customformFun'>
+    </date-range-component>
+
+    <area-component
+      index='{{index}}' 
+      wx:if="{{customitem.tag == 'area'}}" 
+      customform='{{customform}}' 
+      customitem='{{customitem}}'
+      bind:customformInfo='customformFun'>
+    </area-component>
+
+     
+  </block>  
+</view>
+
+
+
+
+
+

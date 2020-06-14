@@ -1,0 +1,207 @@
+{extend name="admin/base" /}
+{block name="resources"/}
+<!--<link rel="stylesheet" href="__STATIC__/lib/bootstrap-daterangepicker-master/daterangepicker.css">-->
+{/block}
+{block name="main"}
+<!-- page -->
+
+<!--<div class="row goodsAnaly goodAs">
+    <div class="col-sm-6 text_center">
+        <span>商品名称</span>
+        <input type="text" name="goodsName" id="goods_name" class="goodsName ol_datewidth" placeholder="请输入搜索商品">
+    </div>
+    <div class="col-sm-6">
+        <span class="orderTime">下单时间</span>
+        <span class="pr">
+            <input type="text" id="startDate" name="startDate" placeholder="开始时间-结束时间" class="ol_datewidth" readonly>
+            <label for="startDate"><i class="fa icon-calendar"></i></label>
+        </span>
+
+    </div>
+    <div class="col-sm-12 text_center">
+        <span>排序方式</span>
+        <label class="radio-inline" style="padding-left:32px">
+                <input type="radio" name="sort" value="num">按销量排序
+            </label>
+        <label class="radio-inline" style="padding-left:32px">
+                <input type="radio" name="sort" value="sales"> 按销售额排序
+            </label>
+    </div>
+    <div class="col-sm-12 goodsAnaly_sch">
+        <a class="search_to" href="javascript:void(0);" ><i class="icon icon-search"></i> 搜索</a>
+    </div>
+</div>-->
+<form class="v-filter-container">
+    <div class="filter-fields-wrap">
+        <div class="filter-item clearfix">
+            <div class="filter-item__field">
+                <div class="v__control-group">
+                    <label class="v__control-label">商品名称</label>
+                    <div class="v__controls">
+                        <input type="text" id="goods_name" class="v__control_input" autocomplete="off">
+                    </div>
+                </div>
+
+                <div class="v__control-group">
+                    <label class="v__control-label">下单时间</label>
+                    <div class="v__controls v-date-input-control">
+                        <label for="orderTime">
+                            <input type="text" class="v__control_input pr-30" id="orderTime" placeholder="请选择时间" autocomplete="off" data-types="datetime">
+                            <i class="icon icon-calendar"></i>
+                            <input type="hidden" id="startDate">
+                            <input type="hidden" id="endDate">
+                        </label>
+                    </div>
+                </div>
+
+                <div class="v__control-group">
+                    <label class="v__control-label">排序方式</label>
+                    <div class="v__controls">
+                            <div class="inline-control">
+                                <label class="radio-inline">
+                                  <input type="radio" name="sort" value="num" checked> 按销量
+                                </label>
+                                <label class="radio-inline">
+                                  <input type="radio" name="sort" value="sales"> 按销售额
+                                </label>
+                            </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+        <div class="filter-item clearfix">
+            <div class="filter-item__field">
+                <div class="v__control-group">
+                    <label class="v__control-label"></label>
+                    <div class="v__controls">
+                        <a class="btn btn-primary search_to"><i class="icon icon-search"></i> 搜索</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</form>
+
+<div class="screen-title"><span class="text">数据列表</span></div>
+
+<div class="row dataList">
+    <div class="col-md-4">
+        <span class="dataList_title">总销售额</span>
+        <span class="num" id="account_money">0</span>
+    </div>
+    <div class="col-md-4">
+        <span class="dataList_title">总销量</span>
+        <span class="num" id="account_sum">0</span>
+    </div>
+    <div class="col-md-4">
+        <span class="dataList_title">商品总数</span>
+        <span class="num" id="account_goods">0</span>
+    </div>
+</div>
+
+<!--表格-->
+<table class="table v-table goods_table">
+    <thead>
+        <tr>
+            <th>排行</th>
+            <th>商品名称</th>
+            <th>销量</th>
+            <th>销售额</th>
+        </tr>
+    </thead>
+    <tbody id="list">
+    </tbody>
+</table>
+<div class="page clearfix">
+    <div class="M-box3 m-style fr">
+    </div>
+</div>
+<!-- page end -->
+{/block}
+{block name="script"}
+<script type="text/javascript">
+  require(['util','utilAdmin'], function (util,utilAdmin) {
+    $(function () {
+        LoadingInfo(1);
+    util.layDate('#orderTime',true,function(value, date, endDate){
+        var h=date.hours<10 ?"0"+date.hours : date.hours;
+        var m=date.minutes<10 ?"0"+date.minutes : date.minutes;
+        var s=date.seconds<10 ?"0"+date.seconds : date.seconds;
+        var h1=endDate.hours<10 ?"0"+endDate.hours : endDate.hours;
+        var m1=endDate.minutes<10 ?"0"+endDate.minutes : endDate.minutes;
+        var s1=endDate.seconds<10 ?"0"+endDate.seconds : endDate.seconds;
+        var date1=date.year+'-'+date.month+'-'+date.date+' '+h+":"+m+":"+s;
+        var date2=endDate.year+'-'+endDate.month+'-'+endDate.date+' '+h1+":"+m1+":"+s1;
+
+        if(value){
+            $('#startDate').val(date1);
+            $('#endDate').val(date2);
+        }
+        else{
+            $('#startDate').val('');
+            $('#endDate').val('');
+        }
+
+    });
+
+    });
+    function LoadingInfo(page_index,start_date,end_date) {
+        $('#page_index').val(page_index ? page_index : '1');
+        $.ajax({
+            type: "post",
+            url: "{:__URL('ADMIN_MAIN/statistics/goodsanalysis')}",
+            data: {
+                "page_index": page_index,
+                "page_size": $("#showNumber").val(),
+                "goods_name": $("#goods_name").val(),
+                'start_date': start_date,
+                'end_date': end_date,
+                'sort': $("input[name='sort']:checked").val()
+            },
+            success: function (data) {
+                $("#account_money").html(data['account'][0]);
+                $("#account_sum").html(data['account'][1]);
+                $("#account_goods").html(data['account'][2]);
+                var html = '';
+                if (data["data"]["data"].length > 0) {
+                    for (var i = 0; i < data["data"]["data"].length; i++) {
+                        html += '<tr>';
+                         if (i < 3) {
+                            html += '<td><span class="square top_three">' + (i + 1) + '</span></td>';
+                        } else {
+                            html += '<td><span class="square">' + (i + 1) + '</span></td>';
+                        }
+                        html += '<td class="picword_td">';
+                        // html += '<div class="col-sm-2 pic_td"><img src="' + __IMG(data["data"][i]["pic_cover_micro"]) + '" alt=""></div>';
+                        // html += '<div class="col-sm-9 word_td pt10">';
+                        // html += '<p class="tdTitles">' + data["data"][i]["goods_name"] + '</p>';
+                        // html += '</div>';
+
+                        html += '<div class="media text-left">';
+                        html += '<div class="media-left"><p><img src="' + __IMG(data["data"]["data"][i]["pic_cover_micro"]) + '" style="width:60px;height:60px;"></p></div>';
+                        html += '<div class="media-body max-w-300"><div class="line-2-ellipsis"><a href="javascript:;">' + data["data"]["data"][i]["goods_name"] + '</a></div>';
+                        html += '</div></div>';
+
+                        html += '</td>';
+                        html += '<td>' + data["data"]["data"][i]["sumCount"] + '</td>';
+                        html += '<td>' + data["data"]["data"][i]["sumMoney"] + '</td>';
+                        html += '</tr>';
+                    }
+                } else {
+                    html += '<tr><td colspan="4" class="h-200">暂无符合条件的数据记录</td></tr>';
+                }
+                $("#list").html(html);
+                utilAdmin.page(".M-box3", data['data']['total_count'], data['data']["page_count"], page_index, LoadingInfo);
+            }
+        });
+    }
+
+    $(".search_to").on("click",function(){
+        var start=$("#startDate").val();
+        var end=$("#endDate").val();
+        LoadingInfo(1,start,end);
+    })
+  })
+</script>
+{/block}

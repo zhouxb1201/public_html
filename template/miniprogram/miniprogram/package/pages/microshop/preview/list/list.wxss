@@ -1,0 +1,230 @@
+page {
+  background-color: #f8f8f8;
+  font-size: 28rpx;
+}
+
+.sort {
+  position: fixed;
+  width: 100%;
+  top: 0;
+  padding: 0;
+  background: #fff;
+  align-items: center;
+  display: flex;
+  z-index: 99;
+}
+
+.sort .item {
+  flex: 1;
+  position: relative;
+  text-align: center;
+  font-size: 28rpx;
+  padding: 25rpx 30rpx;
+  color: #666;
+  vertical-align: middle;
+}
+
+.sort .item:first-child {
+  border: 0;
+}
+
+.sort .item .icon {
+  display: inline-block;
+}
+
+.sort .item.on text {
+  color: #fd5454;
+}
+
+.sort .item.on .icon {
+  color: #fd5454;
+}
+
+.DESC {
+  transform: rotate(0deg);
+}
+
+.ASC {
+  transform: rotate(180deg);
+}
+
+.goodsRank {
+  margin-top: 100rpx;
+}
+
+.goodsRank .gooditem {
+  box-sizing: border-box;
+  width: calc(50% - 16rpx);
+  float: left;
+  margin: 8rpx;
+  background-color: #fff;
+  border-radius: 10px;
+  overflow: hidden;
+  -webkit-box-shadow: 0 0 20rpx 0 rgba(0, 0, 0, 0.05);
+  box-shadow: 0 0 20rpx 0 rgba(0, 0, 0, 0.05);
+}
+
+.goodsRank .goodbox::after {
+  display: block;
+  clear: both;
+  content: "";
+  visibility: hidden;
+  height: 0;
+}
+
+.goodsRank .gooditem .gooddetail {
+  padding: 10rpx;
+}
+
+.goodsRank .gooditem .goodimg {
+  height: 360rpx;
+  overflow: hidden;
+}
+
+.goodsRank .gooditem .goodname {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.goodsRank .gooditem .goodprice {
+  color: #ff454e;
+  font-size: 32rpx;
+  font-weight: 600;
+}
+
+.goodsRank .gooditem .marketprice {
+  text-decoration: line-through;
+  font-size: 26rpx;
+  margin-left: 20rpx;
+  color: rgba(119, 116, 116, 0.829);
+}
+
+.goodsRank .gooditem .bottom-group {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-pack: justify;
+  -ms-flex-pack: justify;
+  justify-content: space-between;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+}
+
+.goodsRank .gooditem .saleNum {
+  font-size: 24rpx;
+  color: rgb(129, 129, 129);
+}
+
+.goodsRank .gooditem .btn-mini {
+  color: #fff;
+  background-color: #f44;
+  border: 1px solid #f44;
+  display: inline-block;
+  height: 44rpx;
+  min-width: 100rpx;
+  font-size: 24rpx;
+  line-height: 40rpx;
+  box-sizing: border-box;
+  -webkit-appearance: none;
+  appearance: none;
+  border-radius: 2px;
+  text-align: center;
+}
+
+.goodsRank .gooditem .btn-mini.del {
+  color: #f44!important;
+  background-color: #fff!important;
+  border: 1px solid #f44!important;
+}
+
+.goodsRank .no_gooddata {
+  margin: 0 20rpx;
+  height: 100rpx;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.rightShow {
+  position: relative;
+  height: 100%;
+}
+
+.rightShow .rs_goods {
+  padding: 20rpx;
+  border-bottom: 1px solid rgba(102, 102, 102, 0.089);
+  display: flex;
+  flex-flow: wrap;
+}
+
+.rightShow .rs_goods .btn_box {
+  width: 45%;
+  padding: 8rpx;
+}
+
+.rightShow .rs_goods .text {
+  width: 100%;
+  border: 1px solid rgba(204, 204, 204, 0.658);
+  display: inline-block;
+  font-size: 25rpx;
+  text-align: center;
+  padding: 10rpx;
+  box-sizing: border-box;
+}
+
+.rightShow .rs_goods .active {
+  background-color: #ff454e;
+  color: #fff;
+  border-color: #ff454e;
+}
+
+.rightShow .priceRange {
+  padding: 20rpx;
+  border-bottom: 1px solid rgba(102, 102, 102, 0.089);
+}
+
+.rightShow .priceRange .rangeTitle {
+  font-size: 30rpx;
+  margin: 20rpx 0;
+}
+
+.rightShow .priceRange .range input {
+  display: inline-block;
+  border: 1px solid rgba(204, 204, 204, 0.658);
+  width: 150rpx;
+  height: 60rpx;
+  padding: 8rpx;
+}
+
+.rightShow .sign {
+  display: inline-block;
+  height: 60rpx;
+  line-height: 60rpx;
+  vertical-align: top;
+  margin: 0 20rpx;
+}
+
+.buttomBtn {
+  position: absolute;
+  bottom: 0;
+  width: 100%;
+}
+
+.buttomBtn .btn {
+  width: 50%;
+  display: inline-block;
+  text-align: center;
+  max-height: 100rpx;
+  line-height: 100rpx;
+}
+
+.buttomBtn .cancel {
+  background-color: #f8f8f8;
+}
+
+.buttomBtn .makesure {
+  background-color: #ff454e;
+  color: #fff;
+}

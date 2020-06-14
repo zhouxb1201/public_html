@@ -1,0 +1,155 @@
+<view class="head-nav">
+	<view class="head-nav-fixed">
+		<view class="head-info">
+			<image src="{{head_info.user_headimg ? head_info.user_headimg :  '/images/no-avatar.png'}}" class="img" />
+			<text class="name">{{head_info.thing_user_name ? head_info.thing_user_name : "匿名"}}</text>
+		</view>
+		<view class="head-nav__right">
+			<van-button plain round size="small" type="danger" wx-if="{{uid != user_id}}" bind:click="sensitiveOthers">{{head_info.is_attention ? '已关注' : '关注'}}</van-button>
+			<button class="btn" open-type="share">
+				<van-icon name="share" />
+			</button>
+		</view>
+	</view>
+</view>
+
+<view class="swipe-box">
+	<swiper class="banner" indicator-dots="{{true}}" autoplay="{{'auto'}}">
+		<swiper-item wx:for='{{bannerImg}}' wx:key="{{index}}">
+			<image src="{{item.pic_cover != '' ? item.pic_cover : '/images/no-goods.png'}}" class="img" mode="widthFix" lazy-load="true" />
+		</swiper-item>
+	</swiper>
+</view>
+
+<view class="goods-box" wx:if="{{goods_list.length}}">
+	<view class="item" wx:for="{{goods_list}}" wx:key="{{index}}" bindtap="toGoodsDetail" data-goodsid="{{item.goods_id}}">
+		<image src="{{item.goods_img ? item.goods_img : '/images/no-goods.png'}}" class="img" />
+		<view class="content">
+			<view class="title">{{item.goods_name}}</view>
+			<view class="bottom">
+				<text>￥{{item.price}}</text>
+				<text>￥{{item.market_price}}</text>
+			</view>
+		</view>
+	</view>
+</view>
+
+<view class="theme-wrap" wx:if="{{detail.id}}">
+	<view class="title" wx:if="detail.title">{{detail.title}}</view>
+	<view class="content">{{detail.content}}</view>
+	<view class="tag">
+		<view wx:if="{{detail.topic_title}}">
+			<text class="bol">#</text>
+			<text class="text">{{detail.topic_title}}</text>
+		</view>
+		<view class="sec" wx:if="{{detail.location}}">
+			<view class="icon">
+				<van-icon name="location" color="#fff" size="12px" />
+			</view>
+			<text class="text">{{detail.location}}</text>
+		</view>
+	</view>
+	<view class="bottom">
+		<view>{{detail.create_time}}</view>
+		<view>阅读 {{detail.reading_volumes ? detail.reading_volumes : 0}}</view>
+	</view>
+</view>
+
+<wxs src="./time.wxs" module="time" />
+
+<view class="comment">
+	<view class="item" wx:for="{{commentList}}" wx:for-index="index" wx:for-item="item" wx:key="index">
+		<!--commentInfo-->
+		<view class="comment-info">
+			<view class="user">
+				<view class="avatar avatar-M type-outline">
+					<view class="avatar-img">
+						<image src="{{item.user_headimg ? item.user_headimg : '/images/no-avatar.png'}}" />
+					</view>
+				</view>
+				<view class="user-info">
+					<view class="user-nickname">
+						<label>{{item.thing_user_name ? item.thing_user_name : '匿名'}}</label>
+						<van-tag type="danger" wx:if="{{item.is_author}}">作者</van-tag>
+					</view>
+					<text class="publish-time">{{time.getTimer(item.create_time)}}</text>
+				</view>
+			</view>
+
+			<view class="comment-stats" bindtap="onFabulous" data-item="{{item}}" data-index="{{index}}">
+				<view class="likes" >
+					<van-icon name="{{item.is_like ? 'like' : 'like-o'}}" color="{{item.is_like ? 'red' : ''}}" size="14px" />
+					<label>{{time.praise(item.like_count)}}</label>
+				</view>
+			</view>
+		</view>
+		<!--commentContentText-->
+		<view class="content-text" bindtap="onReflex" data-item="{{item}}" data-commentpid="{{item.id}}" data-index="{{index}}" data-hash="#parentComment">{{item.content}}</view>
+		<!--commmetReplies-->
+		<view class="replies" wx:if="{{item.reply_list.total_count > 0}}">
+			<view class="reply" wx:for="{{item.reply_list.data}}" wx:for-index="cindex" wx:for-item="child" wx:key="cindex">
+				<view class="replier">
+					<view class="cube-image">
+						<image src="{{child.user_headimg || '/images/no-avatar.png'}}" />
+					</view>
+					<view class="rep-name">
+						<label>{{child.thing_user_name ? child.thing_user_name : "匿名"}}</label>
+						<van-tag type="danger" wx:if="{{child.is_author}}">作者</van-tag>
+					</view>
+				</view>
+				<view class="rep-content" bindtap="onReflex" data-item="{{child}}" data-commentpid="{{item.id}}" data-index="{{index}}" data-cindex="{{cindex}}" data-hash="#childComment">
+					<text>回复</text>
+					<text class="to">{{child.to_thing_user_name ? child.to_thing_user_name : "匿名"}}</text>
+					：{{child.content}}
+				</view>
+				<view class="rep-stats" bindtap="onFabulous" data-item="{{child}}" data-index="{{index}}" data-cindex="{{cindex}}">
+					<van-icon name="{{child.is_like ? 'like' : 'like-o'}}" color="{{child.is_like ? 'red' : ''}}" size="14px" />
+					<text class="num">{{time.praise(child.comment_likes)}}</text>
+				</view>
+			</view>
+			<view class="sub-total" wx:if="{{item.reply_list.total_count > 1}}">
+				<text wx:if="{{is_more[index]}}" class="text" bindtap="onMoreReply" data-item="{{item}}" data-index="{{index}}" data-cindex="{{cindex}}" >展开更多回复</text>
+			</view>
+		</view>
+	</view>
+</view>
+
+<view class="bottom-wrap">
+	<view class="bom-fixed">
+		<view class="prt">
+			<view class="text-input" bindtap="onPopMessage">
+				<view class="icon"><van-icon name="edit" size="14px" /></view>
+				<text>说点什么...</text>
+			</view>
+			<view class="icon-w">
+				<van-icon
+					name="{{editorial.is_like ? 'like' : 'like-o'}}"
+					color="{{editorial.is_like ? 'red' : ''}}"
+					size="20px"
+					bindtap="onBottomFabulous"
+				/>
+				<text>{{time.praise(editorial.likes)}}</text>
+			</view>
+			<view class="icon-w">
+				<van-icon
+					name="{{editorial.is_collect ? 'star' : 'star-o'}}"
+					color="{{editorial.is_collect ? 'red' : ''}}"
+					size="20px"
+					bindtap="onBottomCollection"
+				/>
+				<text>{{time.praise(editorial.collects)}}</text>
+			</view>
+			<!-- <view class="icon-w" >
+				<van-icon name="chat" size="20px" />
+				<text></text>
+			</view> -->
+		</view>
+	</view>
+</view>
+
+<van-popup show="{{ popupOption.show }}" position="bottom" bind:click-overlay="popupClose">
+	<view class="popup-warp">
+		<input class="popup-input" auto-focus bindinput="onPopupInput" value="{{popupOption.value}}" placeholder="{{popupOption.placeholder}}"></input>
+		<text bindtap="onSend"  class="popup-text">发送</text>
+	</view>
+</van-popup>

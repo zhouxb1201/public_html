@@ -1,0 +1,18 @@
+<view class='fans_box'>
+  <view class="fans_list">
+    <view class="item" wx:for="{{focus_list}}" wx:key='index'>
+      <view class="left">
+        <view class="img">
+          <image src="{{item.user_headimg?item.user_headimg:'/images/no-avatar.png'}}"></image>
+        </view>
+        <view class="info">
+          <view class="name">{{item.uname}}</view>
+        </view>
+      </view>
+      <view class="right">
+        <view class="btn {{item.is_mutual_focus == false?'':'focused'}}" data-isfocus="{{item.is_mutual_focus}}" data-uid="{{item.uid}}" bindtap="addOrCancleFocus">
+        {{item.is_mutual_focus == false?'回粉':'互相关注'}}</view>
+      </view>
+    </view>
+  </view>
+</view>

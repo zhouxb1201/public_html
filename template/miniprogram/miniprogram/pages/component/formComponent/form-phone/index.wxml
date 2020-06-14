@@ -1,0 +1,5 @@
+<!-- 手机 -->
+    <view  class='custom customDisplay wx:if="{{customitem.required == true ? "custom_padd" : ""}}"'>
+      <view class='label_text'><text class="star" wx:if='{{customitem.required == true}}'>*</text>{{customitem.label}}</view>
+      <input type='number' maxlength='11' value='{{customitem.value}}' placeholder='{{customitem.placeholder}}' data-index="{{index}}" bindinput='onPhoneFun'></input>
+    </view>

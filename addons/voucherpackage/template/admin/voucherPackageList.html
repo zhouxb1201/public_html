@@ -1,0 +1,191 @@
+{block name="main"}
+<!--添加按钮和搜索框-->
+<div class="row addBtnSearch">
+    <div class="col-sm-6 add">
+        <a href="{:__URL('ADDONS_ADMIN_MAINaddVoucherPackage')}" class="add_btn"><i class="icon icon-add1"></i>
+            添加券包</a>
+    </div>
+    <div class="searchFr search">
+        <input type="text" class="searchs" id="search_text" placeholder="券包名称">
+        <button class="search_to">搜索</button>
+    </div>
+</div>
+<!--表格-->
+<table class="table table-hover v-table coupons">
+    <thead>
+    <tr>
+        <th>券包名称</th>
+        <th>发放数量</th>
+        <th>领取时间</th>
+        <th class="col-md-2 pr-14 operationLeft">操作</th>
+    </tr>
+    </thead>
+    <tbody class="trs" id="voucher_package_list">
+    </tbody>
+</table>
+<div class="page clearfix">
+    <div class="M-box3 m-style fr">
+    </div>
+</div>
+<!-- page end -->
+{/block}
+
+{block name="script"}
+<script id="shop_curr_list" type="text/html">
+    <%each data as item index%>
+    <tr>
+        <td><%item.voucher_package_name%></td>
+		<%if item.count == 0 %>
+        <td>无限</td>
+		<%else %>
+		<td><%item.count%></td>
+		<%/if%>
+        <td>
+            <span><%timeStampTurnTime(item.start_time)%></span>
+            ~
+            <span><%timeStampTurnTime(item.end_time)%></span>
+        </td>
+        <td class="fs-0 operationLeft">
+            <!--<a href="javascript:;" class="btn-operation copy" data-type="copy" data-clipboard-text="{$receiveUrl}?<%item.voucher_package_id%>">复制链接</a>-->
+            <a class="btn-operation link-pr" href="javascript:void(0);"> <span>链接</span>
+                <div class="link-pos">
+                    <div class="link-arrow">
+                        <form class="form-horizontal">
+                            <%if addon_status.wap_status == 1%>
+                            <div class="form-group"><label class="col-md-2 control-label">手机端</label>
+                                <div class="col-md-10">
+                                    <div class="input-group"><input class="form-control" type="text" disabled
+                                                                    value="<%__URLS('SHOP_MAIN/wap/voucherpackage/'+item.voucher_package_id)%>"> <span
+                                            class="input-group-btn btn btn-primary bbllrr0 copy"
+                                            data-clipboard-text="<%__URLS('SHOP_MAIN/wap/voucherpackage/'+item.voucher_package_id)%>">复制链接</span> </div>
+                                </div>
+                            </div>
+                            <%/if%>
+                            <%if addon_status.is_minipro == 1%>
+                            <div class="form-group"><label class="col-md-2 control-label">小程序端</label>
+                                <div class="col-md-10">
+                                    <div class="input-group"><input class="form-control" type="text" disabled
+                                                                    value="package/pages/voucherpackage/index/index?id=<%item.voucher_package_id%>"> <span
+                                            class="input-group-btn btn btn-primary bbllrr0 copy"
+                                            data-clipboard-text="package/pages/voucherpackage/index/index?id=<%item.voucher_package_id%>">复制链接</span> </div>
+                                </div>
+                            </div>
+                            <%/if%>
+                            <!--<%if addon_status.is_pc_use == 1%>-->
+                            <!--<div class="form-group"><label class="col-md-2 control-label">电脑端</label>-->
+                            <!--<div class="col-md-10">-->
+                            <!--<div class="input-group"><input class="form-control" type="text" disabled-->
+                            <!--value="<%__URLS('SHOP_MAIN/goods/goodsinfo&goodsid='+item.goods_id)%>"> <span-->
+                            <!--class="input-group-btn btn btn-primary bbllrr0 copy"-->
+                            <!--data-clipboard-text="<%__URLS('SHOP_MAIN/goods/goodsinfo&goodsid='+item.goods_id)%>">复制链接</span> </div>-->
+                            <!--</div>-->
+                            <!--</div>-->
+                            <!--<%/if%>-->
+                        </form>
+                        <div class="flex link-flex">
+                            <%if addon_status.wap_status == 1%>
+                            <div class="flex-1">
+                                <div class="mb-04"><img
+                                        src="<%__URL('admin/goods/getGoodsDetailQr')+'?voucher_package_id='+item.voucher_package_id +'&qr_type=1&wap_path=/wap/voucherpackage/'%>" style="width: 100px;height: 100px">
+                                </div>
+                                <p>(手机端二维码)</p></div>
+                            <%/if%>
+                            <%if addon_status.is_minipro == 1%>
+                            <div class="flex-1">
+                                <div class="mb-04"><img
+                                        src="<%__URL('admin/goods/getGoodsDetailQr')+'?voucher_package_id='+item.voucher_package_id +'&qr_type=2&mp_path=package/pages/voucherpackage/index/index'%>" style="width: 100px;height: 100px">
+                                </div>
+                                <p>(小程序二维码)</p>
+                            </div>
+                            <%/if%>
+                        </div>
+                    </div>
+                </div>
+            </a>
+            <a href="javascript:;" class="btn-operation" data-type="edit" data-voucher-package-id="<%item.voucher_package_id%>">编辑</a>
+            <a href="javascript:;" class="btn-operation" data-type="info" data-voucher-package-id="<%item.voucher_package_id%>" >详情</a>
+            <a href="javascript:;" data-voucher-package-id="<%item.voucher_package_id%>" class="btn-operation text-red1 del">删除</a>
+        </td>
+    </tr>
+    <%/each%>
+</script>
+
+<script type="text/javascript">
+    require(['utilAdmin', 'tpl'], function (utilAdmin, tpl) {
+        $(function () {
+            LoadingInfo(1);
+            utilAdmin.copy()
+            tpl.helper('__URLS',function(str){
+                return  __URLS(str)
+            })
+            tpl.helper('__URL',function(str){
+                return  __URL(str)
+            })
+        });
+
+        tpl.helper("timeStampTurnTime", function (value) {
+            return utilAdmin.timeStampTurnTime(value)
+        });
+
+        function LoadingInfo(page_index) {
+            $('#page_index').val(page_index ? page_index : '1');
+            $.ajax({
+                type: "post",
+                url: "{$voucherPackageListUrl}",
+                data: {
+                    "page_index": page_index,
+                    'page_size': $("#showNumber").val(),
+                    "search_text": $("#search_text").val(),
+                },
+                success: function (data) {
+                    if (tpl('shop_curr_list', data)) {
+                        $("#voucher_package_list").html(tpl('shop_curr_list', data));
+                        utilAdmin.page(".M-box3", data['total_count'], data["page_count"], page_index, LoadingInfo);
+                    } else {
+                        $("tbody").html('<tr><td class="h-200" colspan="4">暂无符合条件的数据记录</td></tr>');
+                    }
+                    utilAdmin.tips();
+                }
+            });
+        }
+
+        $('#voucher_package_list').on('click', '.del', function () {
+            var voucher_package_id = $(this).attr('data-voucher-package-id');
+            utilAdmin.alert('删除？', function () {
+                $.ajax({
+                    type: "post",
+                    url: "{$deleteVoucherPackageUrl}",
+                    data: {"voucher_package_id": voucher_package_id},
+                    dataType: "json",
+                    success: function (data) {
+                        if (data["code"] > 0) {
+                            utilAdmin.message(data["message"], 'success', LoadingInfo($('#page_index').val()));
+                        } else {
+                            utilAdmin.message(data['message']);
+                        }
+                    }
+                })
+            })
+        })
+
+        $('#voucher_package_list').on('click', '.btn-operation', function () {
+            var type = $(this).attr('data-type');
+            var voucher_package_id = $(this).attr('data-voucher-package-id');
+            switch (type) {
+                case 'edit':
+                    location.href = __URL('ADDONS_ADMIN_MAINupdateVoucherPackage&voucher_package_id=' + voucher_package_id);
+                    break;
+                case 'info':
+                    location.href = __URL('ADDONS_ADMIN_MAINvoucherPackageInfo&voucher_package_id=' + voucher_package_id);
+                    break;
+                case 'copy':
+                    break;
+            }
+        })
+        $("body").on("click", ".search_to", function () {
+            LoadingInfo(1);
+        });
+
+    })
+</script>
+{/block}

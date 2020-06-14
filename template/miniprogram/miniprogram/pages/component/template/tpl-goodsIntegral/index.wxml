@@ -1,0 +1,58 @@
+<view class='goodsIntegral' style='background:{{temDataitem.style.background}}' wx:if="{{temDataitem.params.recommendtype == 1}}">
+  <view wx:for="{{temDataitem.data}}" wx:key=''>
+    <view class='row-{{temDataitem.params.showtype?temDataitem.params.showtype:2}}'>
+      <view class='item' data-goodsid='{{item.goods_id}}' bindtap='ongoodsDetail'>
+        <view class='itemBox'>
+          <view class='goodsImg'>
+            <image class='image' mode='widthFix' src="{{item.pic_cover}}" binderror="errImg"></image>
+          </view>
+        </view>
+        <view class='gooddetail'>
+          <view class='goodname'>
+            <text class='tag'>{{item.type}}</text>{{item.goods_name}}</view>
+          <view class='tags'>
+            <view class='info' wx:if="{{item.point_exchange > 0}}">
+              <text class='strong'>{{item.point_exchange}}</text>
+              <text class='txt'>积分</text>
+            </view>
+            <view class='info' wx:if="{{item.price > 0}}">
+              <text class='symbol' wx:if="{{item.point_exchange > 0}}">+</text>
+              <text class='strong'>￥{{item.price}}</text>
+            </view>
+          </view>
+        </view>
+      </view>
+    </view>
+  </view>
+</view>
+<view class='goodsIntegral' style='background:{{temDataitem.style.background}}' wx:elif="{{temDataitem.params.recommendtype == 0}}" data-recommendnum="{{temDataitem.params.recommendnum}}">
+  <view wx:for="{{goodsList}}" wx:for-index="i" wx:key=''>
+    <view wx:if="{{i<temDataitem.params.recommendnum}}">
+      <view class='row-{{temDataitem.params.showtype?temDataitem.params.showtype:2}}'>
+        <view class='item'>
+          <navigator url="/package/pages/integral/goods/detail/detail?goodsId={{item.goods_id}}" hover-class='none'>
+            <view class='itemBox'>
+              <view class='goodsImg'>
+                <image class='image' mode='widthFix' wx:if='{{item.logo}}' src="{{item.logo != ''?item.logo:'/images/no-goods.png'}}" binderror='avatarError' data-imgindex="{{i}}"></image>
+              </view>
+              <view class='gooddetail'>
+                <view class='goodname'>
+                  <text class='tag'>{{item.type}}</text>{{item.goods_name}}</view>
+                <view class='tags'>
+                  <view class='info' wx:if="{{item.point_exchange > 0}}">
+                    <text class='strong'>{{item.point_exchange}}</text>
+                    <text class='txt'>积分</text>
+                  </view>
+                  <view class='info' wx:if="{{item.price > 0}}">
+                    <text class='symbol' wx:if="{{item.point_exchange > 0}}">+</text>
+                    <text class='strong'>￥{{item.price}}</text>
+                  </view>
+                </view>
+              </view>
+            </view>
+          </navigator>
+        </view>
+      </view>
+    </view>
+  </view>
+</view>

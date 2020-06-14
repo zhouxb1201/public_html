@@ -1,0 +1,86 @@
+<div class="goods-dialog" id="goods-dialog">
+    <ul class="nav nav-tabs v-nav-tabs pt-15" role="tablist">
+        <li role="presentation" class="active"><a href="#list" aria-controls="list" role="tab" data-toggle="tab" class="flex-auto-center">礼品券列表</a></li>
+        <div class="input-group search-input-group pull-right">
+            <input type="text" class="form-control" name="name" placeholder="礼品券名称">
+            <span class="input-group-btn"><button class="btn search search-color" >搜索</button></span>
+        </div>
+    </ul>
+    <div class="dialog-box tab-content">
+        <div role="tabpanel" class="tab-pane fade in active" id="list">
+            <table class="table v-table table-auto-center">
+                <thead>
+                    <tr>
+                        <th>礼品券名称</th>
+                        <th width="150">操作</th>
+                    </tr>
+                </thead>
+                <tbody id="content"></tbody>
+            </table>
+            <nav aria-label="Page navigation" class="clearfix">
+                <ul id="page_goods" class="pagination pull-right"></ul>
+            </nav>
+        </div>
+    </div>
+    <input type="hidden" id="selectedData">
+</div>
+<script id='gift_tpl_content' type='text/html'>
+    <%each data as item itemid%>
+    <tr>
+        <td>
+            <div class="media text-left">
+                <div class="media-body max-w-300">
+                    <div class="line-2-ellipsis"><%item.giftvoucher_name%></div>
+                </div>
+            </div>
+        </td>
+        <td>
+            <a href="javascript:;" class="text-primary selec_btn" data-gift_voucher_id="<%item.gift_voucher_id%>" >选择</a>
+        </td>
+    </tr>
+    <%/each%>
+</script>
+<script>
+require(['util','tpl'],function(util,tpl){
+    $('.btn-primary1').hide();
+    $('.btn-default1').hide();
+    var page_index = 1;
+    var all_data = {};
+    util.initPage(LoadingInfo,'page_goods')
+    function LoadingInfo(page_index){
+        var val = $('input[name="name"]').val();
+        $.ajax({
+            type: "post",
+            url: "{$modalIntegralGiftList}",
+            async: true,
+            data: {
+                "page_index": page_index,
+                "search_text": val
+            },
+            success: function (data) {
+                all_data = data;
+                if(tpl('goods_tpl_content',all_data)){
+                    $('#goods-dialog #content').html(tpl('gift_tpl_content',all_data));
+                }else{
+                    $('#goods-dialog #content').html('<tr><td colspan="2">暂无符合记录的礼品券</td></tr>')
+                }
+
+                $('#page_goods').paginator('option', {
+                    totalCounts: data.total_count
+                });
+            }
+        });
+    }
+    // 搜索
+    $('.search').on('click',function(){
+        LoadingInfo(1)
+    })
+    // 选择
+    $('#goods-dialog').on('click','.selec_btn',function(){
+        var gift_voucher_id = $(this).data('gift_voucher_id');
+        var integral_goods_id = '{$integral_goods_id}';
+        location.href="{:__URL('platform/Menu/addonmenu?addons=addIntegralGoods')}&gift_voucher_id=" + gift_voucher_id + '&goods_type=gift'+ '&integral_goods_id=' + integral_goods_id;
+        $('.jconfirm-closeIcon').click();
+    })
+})
+</script>

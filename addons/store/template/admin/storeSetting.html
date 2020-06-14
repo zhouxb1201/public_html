@@ -1,0 +1,150 @@
+{block name="main"}
+<!-- page -->
+<ul class="nav nav-tabs v-nav-tabs" role="tablist">
+     <li role="presentation" class="active"><a href="#basic" aria-controls="basic"  data-type="basic" role="tab" data-toggle="tab" class="flex-auto-center">基本设置</a></li>
+    <li role="presentation"><a href="#printer" aria-controls="printer" data-type="printer" role="tab" data-toggle="tab" class="flex-auto-center">小票机配置</a></li>
+</ul>
+<div class="tab-content pt-15">
+    <div role="tabpanel" class="tab-pane fade in active" id="basic" >
+        <form class="form-validate">
+            <div class="form-horizontal pt-15">
+                <div class="form-group">
+                    <label class="col-md-2 control-label"><span class="text-bright">*</span>线下自提</label>
+                    <div class="col-md-5">
+                        <div class="switch-inline">
+                            <input type="checkbox" name="is_use" id="is_use" {if $info.is_use == 1}checked{/if}>
+                                   <label for="is_use" class=""></label>
+                        </div>
+                        <p class="help-block">关闭后，确认订单页将无法选择“线下自提”收货方式</p>
+                    </div>
+                </div>
+
+                <!-- <div class="form-group">
+                    <label class="col-md-2 control-label"><span class="text-bright">*</span>门店库存</label>
+                    <div class="col-md-5">
+                        <div>
+                            <label class="radio-inline">
+                                <input type="radio" name="stock_type" value="1" {if $info.stock_type == 1}checked{/if}> 门店独立库存
+                            </label>
+                            <label class="radio-inline">
+                                <input type="radio" name="stock_type" value="2" {if $info.stock_type == 2}checked{/if}> 店铺统一库存
+                            </label>
+                        </div>
+                        <p class="help-block">店铺统一库存则门店无需设置库存，与店铺使用的是同一个库存，门店独立库存则需要店员在店员端设置库存并上架处理，下单后将扣除门店的库存</p>
+                    </div>
+                </div> -->
+                <div class="form-group">
+                    <label class="col-md-2 control-label"></label>
+                    <div class="col-md-8">
+                        <button class="btn btn-primary" type="submit">保存</button>
+                    </div>
+                </div>
+            </div>
+
+        </form>
+    </div>
+    <div role="tabpanel" class="tab-pane fade" id="printer" >
+        <form class="form-validate1">
+            <div class="form-horizontal pt-15">
+                <div class="form-group">
+                    <label class="col-md-2 control-label"><span class="text-bright">*</span>USER</label>
+                    <div class="col-md-5">
+                        <input type="text" class="form-control" name="user" id="user" value="{$printerInfo['user']}" required autocomplete="off">
+                        <p class="help-block">飞鹅小票机开放平台的UESR，没有账号？<a href="http://admin.feieyun.com/regist.php" class="text-primary" target="_blank">点击前往注册</a></p>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-md-2 control-label"><span class="text-bright">*</span>UKEY</label>
+                    <div class="col-md-5">
+                        <input type="text" class="form-control" name="ukey" id="ukey" value="{$printerInfo['ukey']}" required autocomplete="off">
+                        <p class="help-block">飞鹅小票机开放平台的UKEY</p>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-md-2 control-label">小票底部标语</label>
+                    <div class="col-md-5">
+                        <textarea class='form-control' rows="6" name="slogan" id="slogan">{$printerInfo['slogan']}</textarea>
+                        <p class="help-block">打印小票最底下的标语，不填则显示默认为“谢谢惠顾，欢迎下次光临!”</p>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-md-2 control-label"></label>
+                    <div class="col-md-8">
+                        <button class="btn btn-primary" type="submit">保存</button>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+
+
+{/block}
+{block name="script"}
+<script>
+    require(['util'], function (util) {
+        util.copy();
+        //提交数据
+        var flag = false;
+
+        util.validate($('.form-validate'), function (form) {
+            var is_use = $("input[name='is_use']").is(':checked') ? 1 : 0;
+            var stock_type = $('input[name=stock_type]:checked').val();
+
+            if (flag)
+                return;
+            var data = {};
+            flag = true;
+            data.is_use = is_use;
+            data.stock_type = stock_type;
+            $.ajax({
+                type: "post",
+                url: '{$storeSetUrl}',
+                data: data,
+                success: function (data) {
+                    if (data['code'] > 0) {
+                        util.message(data["message"], 'success', "{:__URL('ADDONS_ADMIN_MAINstoreSetting')}", function () {
+                            flag = false;
+                        });
+                    } else {
+                        util.message(data["message"], 'danger', function () {
+                            flag = false;
+                        });
+                    }
+                }
+            });
+        });
+        util.validate($('.form-validate1'), function (form) {
+            var user = $("#user").val();
+            var ukey = $("#ukey").val();
+            var slogan = $("#slogan").val();
+
+            if (flag)
+                return;
+            var data = {};
+            flag = true;
+            data.user = user;
+            data.ukey = ukey;
+            data.slogan = slogan;
+            $.ajax({
+                type: "post",
+                url: '{$saveSettingUrl}',
+                data: data,
+                success: function (data) {
+                    if (data['code'] > 0) {
+                        util.message(data["message"], 'success', "{:__URL('ADDONS_ADMIN_MAINstoreSetting')}", function () {
+                            flag = false;
+                        });
+                    } else {
+                        util.message(data["message"], 'danger', function () {
+                            flag = false;
+                        });
+                    }
+                }
+            });
+        });
+
+    })
+
+</script>
+{/block}

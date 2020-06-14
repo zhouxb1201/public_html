@@ -1,0 +1,175 @@
+{extend name="platform/new_base" /}
+{block name="resource"}
+
+{/block}
+{block name="main"}
+
+<style>
+    .w-60{width:60% !important;}
+    .sp-dd {
+        padding: 2px 0;
+        height: 16px;
+        line-height: 16px;
+        float: left;
+        font-size: 10px;
+    }
+    </style>
+                <!-- page -->
+                <form class="form-horizontal pt-15 form-validate widthFixedForm">
+
+                    <div class="form-group">
+                        <label class="col-md-2 control-label"><span class="text-bright">*</span>规格名称</label>
+                        <div class="col-md-5">
+                            <input type="text" class="form-control" id="spec_name" name="spec_name" value="{$info.spec_name}" autocomplete="off" required>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-md-2 control-label"><span class="text-bright">*</span>规格值</label>
+                        <div class="col-md-5">
+                            <textarea class="form-control" rows="8" id="spec_item" name="spec_item" required>{$info['spec_value_name_list']}</textarea>
+                            <p class="help-block">一行代表一个规格值，多个规格值回车换行添加</p>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-md-2 control-label">关联品类</label>
+                        <div class="col-md-5">
+                            <div class="checkbox_three">
+                                {volist name="attribute_list" id="vo"}
+                                <label class="checkbox-inline category-pr">
+                                    <input type="checkbox" name="attr_id" id="{$vo.attr_id}" value="{$vo.attr_id}" {if $vo['checked'] eq '1'} checked="checked" {/if}>{$vo.attr_name}
+                                    <div class="category-pos">
+                                        <div class="category-arrow">
+                                            <p>对应分类：</p>
+                                            {volist name="vo['categorys']" id="v1"}
+                                            <p>{$v1['category_names']}</p>
+                                            {/volist}
+                                        </div>
+                                    </div>
+                                </label>
+                                {/volist}
+
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-md-2 control-label">规格排序</label>
+                        <div class="col-md-5">
+                            <input type="text" class="form-control" id="sort" name="sort" value="{$info.sort}" autocomplete="off">
+                            <p class="help-block mb-0">规格排序，数字越大越靠前。</p>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-md-2 control-label">是否启用</label>
+                        <div class="col-md-5">
+                            <div class="switch-inline">
+                                <input type="checkbox" id="is_visible" name="is_visible" {eq name="info['is_visible']" value="1"}checked="checked"{/eq}>
+                                <label for="is_visible" class=""></label>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <input type="hidden" id="spec_id" name="spec_id" value="{$info['spec_id']}">
+                    <input type="hidden" name="seleted_attr" value="{$info['goods_attr_id']}">
+                    <div class="form-group"></div>
+                    <div class="form-group">
+                        <label class="col-md-2 control-label"></label>
+                        <div class="col-md-8">
+                            <button class="btn btn-primary add_spec" type="submit">保存</button>
+                            <a href="javascript:history.go(-1);" class="btn btn-default">返回</a>
+                        </div>
+                    </div>
+
+                </form>
+                
+                <!-- page end -->
+{/block}
+
+
+
+{block name="script"}
+<script type="text/javascript">
+
+require(['util'],function(util){
+
+    function checkRepeat(arr){
+        var hash = {};
+         for(var i in arr) {
+             if(hash[arr[i]])
+                 return true;
+             hash[arr[i]] = true;
+         }
+         return false;
+     }
+    var flag = false;
+    util.validate($('.form-validate'),function(form) {
+        var spec_item = $('#spec_item').val();
+        if(!spec_item){
+            util.message('请填写规格值！', 'danger');
+            return false;
+        }
+        var arr = spec_item.split(/[(\r\n)\r\n]+/);
+        if(checkRepeat(arr))
+        {
+            util.message('规格值不能重复！','danger');
+            return false;
+        }     
+        if(arr.length == 0){
+            util.message('请填写规格值！','danger');
+            return false;
+        }
+        var spec_value_str = '';
+        for(var i = 0; i < arr.length; i++){
+            if(arr[i]){
+                spec_value_str += ',' + arr[i];
+            }
+        }
+        spec_value_str = spec_value_str.substr(1);
+        var spec_name = $("input[name='spec_name']").val();
+        var attr_id =[];    
+        $('input[name="attr_id"]:checked').each(function(){    
+            attr_id.push($(this).val());    
+        });
+        var sort = $("#sort").val();
+        var spec_id = $("input[name='spec_id']").val();
+        var seleted_attr = $("input[name='seleted_attr']").val();
+        if ($("#is_visible").prop("checked")) {
+            var is_visible = 1;
+        } else {
+            var is_visible = 0;
+        }
+        if (spec_name == '') {
+            util.message('规格名称不能为空！','danger');
+            return false;
+        }
+        if(flag){
+            return false;
+        }
+        flag = true;
+        $.ajax({
+            type : "post",
+            url : "{:__URL('PLATFORM_MAIN/goods/updategoodsspec')}",
+            data : {
+                'spec_name' : spec_name,
+                'sort' : sort,
+                'is_visible' : is_visible,
+                "spec_id":spec_id,
+                'spec_value_str': spec_value_str,
+                'attr_id': attr_id,
+                'seleted_attr': seleted_attr
+            },
+            success : function(data) {
+                if (data["code"] > 0) {
+                    util.message('操作成功', "success","{:__URL('PLATFORM_MAIN/goods/goodsspeclist')}");
+                } else {
+                    util.message('操作失败！' + data['message'], "danger");
+                    flag = false;
+                }
+            }
+        });
+
+    })
+
+
+})
+</script>
+{/block}

@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+    <title>小程序轮播</title>
+    <link rel="stylesheet" href="../../../public/static/lib/bootstrap/css/bootstrap.min.css">
+    <link rel="stylesheet" href="../../../public/static/css/common.css">
+    <link rel="stylesheet" href="../../../public/shop/css/shop.css">
+    <link rel="stylesheet" href="../../../public/shop/lib/drag/layer.css">
+</head>
+
+<body>
+    <div class="v-layout">
+
+        <div class="v-sidebar">
+
+            <div class="v-nav">
+                <a class="v-logo" href="../Index/index.html" title="">
+					<img src="../../../public/static/img/logo.png" alt="">
+				</a>
+                <ul class="v-nav-list">
+                    <li><a href="../Index/index.html" class="item" title=""><i class="icon icon-home"></i> 首页</a></li>
+                    <li><a href="Shop/shopsInformation.html" class="item active" title=""><i class="icon icon-shop"></i> 店铺</a></li>
+                    <li><a href="../Goods/goodsList.html" class="item" title=""><i class="icon icon-data"></i> 商品</a></li>
+                    <li><a href="../Orders/ordersList.html" class="item" title=""><i class="icon icon-notice"></i> 订单</a></li>
+                    <li><a href="../Financial/shopIncome.html" class="item" title=""><i class="icon icon-mail"></i> 财务</a></li>
+                    <li><a href="../Statistics/goodsAnalysis.html" class="item" title=""><i class="icon icon-account"></i> 数据</a></li>
+                    <li><a href="../Auth/accountList.html" class="item" title=""><i class="icon icon-set"></i> 子账号</a></li>
+                    <li><a href="../System/freightTemplate.html" class="item" title=""><i class="icon icon-set"></i> 系统</a></li>
+                </ul>
+            </div>
+
+            <div class="v-subnav">
+                <div class="v-subnav-title">店铺管理</div>
+                <ul class="v-subnav-list">
+                    <li><a href="./shopsInformation.html" class="item">店铺信息</a></li>
+                    <li><a href="./indexDecorate.html" class="item">首页装修</a></li>
+                    <li><a href="./miniProCarousel.html" class="item active">小程序轮播</a></li>
+                </ul>
+            </div>
+        </div>
+        <div class="v-header">
+            <div class="v-header-box">
+                <div class="v-header-title">小程序轮播</div>
+                <div class="v-header-account">
+                    <div class="user-menu">
+                        <a href="javascript:void(0);" id="user-dLabel" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+							<i class="icon icon-home"></i> 
+							<sapn class="name">admin</sapn>
+							<span class="badge">1</span>
+							<span class="caret"></span>
+						</a>
+                        <a href="javascript:void(0);" class="clear-cache" title="更新缓存"><i class="icon icon-home"></i></a>
+                        <ul class="dropdown-menu" aria-labelledby="user-dLabel">
+                            <li><a href="#">站内信 <span class="badge">1</span></a></li>
+                            <li><a href="#">修改密码</a></li>
+                            <li role="separator" class="divider"></li>
+                            <li><a href="#">退出登录</a></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="v-main">
+            <div class="v-container">
+                <!-- page -->
+                <div class="alert alert-tips alert-dismissible" role="alert">
+                    <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>小程序首页轮播广告&nbsp;&nbsp;
+                    <a href="javascript:void(0);" class="checkDes">查看详情</a>
+                </div>
+                <!--全选删除添加轮播-->
+                <div class="allDelAdd row">
+                    <div class="col-sm-6">
+                        <label for="selectAll">
+                        <span class="allDel">
+                            <input type="checkbox" class="all" id="selectAll" name="selectAll">&nbsp;全选
+                        </span>
+                        </label>
+                        <span class="allDel dels">删除</span>
+                    </div>
+                    <div class="col-sm-6 addCarousel">
+                        <a href="./addCarousel.html">添加轮播</a>
+                    </div>
+                </div>
+                <!--表格-->
+                <table class="table table-hover v-table">
+                    <thead>
+                        <tr>
+                            <th></th>
+                            <th>图片</th>
+                            <th>点击跳转</th>
+                            <th>排序</th>
+                            <th>是否显示</th>
+                            <th>操作</th>
+                        </tr>
+                    </thead>
+                    <tbody class="tbodys trs">
+                        <tr>
+                            <td><input type="checkbox" name="test"></td>
+                            <td><img src="ADMIN_IMG/demo.png" alt=""></td>
+                            <td>商品1</td>
+                            <td>100</td>
+                            <td><input type="checkbox"></td>
+                            <td>
+                                <a href="javascript:void(0);">编辑</a>
+                                <!--<a href="#" data-href="delete.php?id=23" data-toggle="modal" data-target="#confirm-delete">删除</a>-->
+                                <a href="#" class="del">删除</a>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td><input type="checkbox" name="test"></td>
+                            <td><img src="ADMIN_IMG/demo.png" alt=""></td>
+                            <td>商品2</td>
+                            <td>100</td>
+                            <td><input type="checkbox"></td>
+                            <td>
+                                <a href="javascript:void(0);">编辑</a>
+                                <a href="#" class="del">删除</a>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td><input type="checkbox" name="test"></td>
+                            <td><img src="ADMIN_IMG/demo.png" alt=""></td>
+                            <td>商品3</td>
+                            <td>100</td>
+                            <td><input type="checkbox"></td>
+                            <td>
+                                <a href="javascript:void(0);">编辑</a>
+                                <a href="javascript:void(0);" class="del">删除</a>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <!-- page end -->
+            </div>
+        </div>
+
+    </div>
+</body>
+
+
+<script type="text/javascript" src="../../../public/static/lib/jquery/jquery.min.js"></script>
+<script type="text/javascript" src="../../../public/static/lib/bootstrap/js/bootstrap.min.js"></script>
+<script src="../../../public/shop/lib/drag/layer.js"></script>
+<script src="../../../public/shop/js/common.js"></script>
+<script>
+    // 表格行删除
+    trDel();
+    // 全选
+    $('input[name="selectAll"]').click(function () {
+        if ($(this).is(':checked')) {
+            $('input[name="test"]').each(function () {
+                //此处如果用attr，会出现第三次失效的情况  
+                $(this).prop("checked", true);
+            });
+        } else {
+            $('input[name="test"]').each(function () {
+                $(this).removeAttr("checked", false);
+            });
+        }
+    });
+    // 全删除
+    $(".dels").click(function (e) {
+        layer.confirm(
+            "确认要全部删除吗？", {
+                btn: ["确定", "取消"],
+                title: "系统提示"
+            },
+            function () {
+                time: 500,
+                layer.msg("删除成功", {
+                    time: 500,
+                    offset: ["50%", "50%"]
+                }),
+                e.preventDefault();
+                $("input[name='test']:checked").each(function () {
+                    n = $(this).parents("tr").index();
+                    $(".tbodys").find("tr:eq(" + n + ")").remove();
+                });
+            }
+        );
+    });
+</script>
+
+</html>

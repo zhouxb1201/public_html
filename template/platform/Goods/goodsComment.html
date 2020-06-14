@@ -1,0 +1,326 @@
+{extend name="platform/new_base" /}
+{block name="resource"}
+
+{/block}
+{block name="main"}
+<!-- page -->
+<div class="panel-row">
+    <div class="row">
+        <div class="col-md-4">
+            <div class="item flex-auto-center flex-v panel-bg-5">
+                <div class="num">{$haoping}</div>
+                好评
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="item flex-auto-center flex-v panel-bg-6">
+                <div class="num">{$zhongping}</div>
+                中评
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="item flex-auto-center flex-v panel-bg-7">
+                <div class="num">{$chaping}</div>
+                差评
+            </div>
+        </div>
+    </div>
+</div>
+<form class="v-filter-container">
+    <div class="filter-fields-wrap">
+        <div class="filter-item clearfix">
+            <div class="filter-item__field">
+
+                <div class="v__control-group">
+                    <label class="v__control-label">评价时间</label>
+                    <div class="v__controls v-date-input-control">
+                        <label for="orderTime">
+                            <input type="text" class="v__control_input pr-30" id="orderTime" placeholder="请选择时间" autocomplete="off" data-types="datetime">
+                            <i class="icon icon-calendar"></i>
+                            <input type="hidden" id="startDate">
+                            <input type="hidden" id="endDate">
+                        </label>
+                    </div>
+                </div>
+
+                <div class="v__control-group">
+                    <label class="v__control-label">评价用户</label>
+                    <div class="v__controls">
+                        <input type="text" id="member_name" class="v__control_input" placeholder="用户名称" autocomplete="off">
+                    </div>
+                </div>
+
+                <div class="v__control-group">
+                    <label class="v__control-label">评价类型</label>
+                    <div class="v__controls">
+                        <select class="v__control_input" id="explain_type">
+                            <option value="">全部</option>
+                            <option value="5">好评</option>
+                            <option value="3">中评</option>
+                            <option value="1">差评</option>
+                        </select>
+                    </div>
+                </div>
+
+
+
+            </div>
+        </div>
+        <div class="filter-item clearfix">
+            <div class="filter-item__field">
+                <div class="v__control-group">
+                    <label class="v__control-label"></label>
+                    <div class="v__controls">
+                        <a class="btn btn-primary search"><i class="icon icon-search"></i> 搜索</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</form>
+
+
+<table class="table v-table table-auto-center">
+    <thead>
+    <tr>
+        <th>评价</th>
+        <th>评论</th>
+        <th>评价人</th>
+        <th>商品信息</th>
+        <th>操作</th>
+    </tr>
+    </thead>
+    <tbody id="list">
+
+    </tbody>
+</table>
+<input type="hidden" id="pageIndex">
+<nav aria-label="Page navigation" class="clearfix">
+    <ul id="page" class="pagination pull-right"></ul>
+</nav>
+<!-- page end -->
+{/block}
+
+
+
+{block name="script"}
+<script>
+    require(['util'],function(util){
+        $(function () {
+            util.initPage(LoadingInfo);
+            // util.layDate('#startDate');
+            // util.layDate('#endDate');
+            util.layDate('#orderTime',true,function(value, date, endDate){
+                var h=date.hours<10 ?"0"+date.hours : date.hours;
+                var m=date.minutes<10 ?"0"+date.minutes : date.minutes;
+                var s=date.seconds<10 ?"0"+date.seconds : date.seconds;
+                var h1=endDate.hours<10 ?"0"+endDate.hours : endDate.hours;
+                var m1=endDate.minutes<10 ?"0"+endDate.minutes : endDate.minutes;
+                var s1=endDate.seconds<10 ?"0"+endDate.seconds : endDate.seconds;
+                var date1=date.year+'-'+date.month+'-'+date.date+' '+h+":"+m+":"+s;
+                var date2=endDate.year+'-'+endDate.month+'-'+endDate.date+' '+h1+":"+m1+":"+s1;
+
+                if(value){
+                    $('#startDate').val(date1);
+                    $('#endDate').val(date2);
+                }
+                else{
+                    $('#startDate').val('');
+                    $('#endDate').val('');
+                }
+            });
+
+            //加载信息
+            function LoadingInfo(pageIndex) {
+                var member_name = $("#member_name").val();
+                var start_date = $("#startDate").val();
+                var end_date = $("#endDate").val();
+                var explain_type = $('#explain_type option:selected') .val();
+                $("#pageIndex").val(pageIndex);
+                $.ajax({
+                    type: "post",
+                    url: "{:__URL('PLATFORM_MAIN/goods/goodscomment')}",
+                    async: true,
+                    data: {
+                        "page_index": pageIndex,
+                        'page_size': $("#showNumber").val(),
+                        "start_date": start_date,
+                        "end_date": end_date,
+                        "member_name": member_name,
+                        "explain_type": explain_type
+                    },
+                    success: function (data) {
+                        var html = '';
+                        $("#total_count_num").text(data["total_count"]);
+                        $("#page_count_num").text(data["page_count"]);
+                        $("#page_count").val(data["page_count"]);
+                        $("#pageNumber a").remove();
+                        if (data["data"].length > 0) {
+
+                            for (var i = 0; i < data["data"].length; i++) {
+                                html +='<tr>';
+
+                                html +='<td class="vertical-top">';
+                                switch (data["data"][i]["explain_type"]) {
+                                    case 5:
+                                        html += '好评';
+                                        break;
+                                    case 3:
+                                        html += '中评';
+                                        break;
+                                    case 1:
+                                        html += '差评';
+                                        break;
+                                }
+                                html +='</td>';
+                                html +='<td class="text-left w-300">';
+                                html +='<div>';
+                                html +='<a class="reply_content">'+data['data'][i]['content']+'</a>';
+
+                                if(data['data'][i]['image']!='') {
+                                    html +='<br/>';
+                                    var imgs_arr = data['data'][i]['image'].split(',');
+                                    for (var key in imgs_arr) {
+                                        // html += '<li data-src="' + __IMG(imgs_arr[key]) + '"> <img src="' + __IMG(imgs_arr[key]) + '"> <b class="tm-photos-arrow"></b></li>';
+                                        html += '<img src="' + __IMG(imgs_arr[key]) + '" style="width:50px;height:50px;">&nbsp;';
+                                    }
+                                }
+                                html +='</div>';
+                                html +='<div class="small-muted">['+timeStampTurnTime(data["data"][i]["addtime"])+']</div>';
+                                html +='<div class="bg-f5" >';
+                                if(data['data'][i]['explain_first']!='') {
+                                    html += '<span class="">[卖家回复]：</span><span class="text-buffing">' + data['data'][i]['explain_first'] + '</span>';
+                                }
+                                html +='</div>';
+                                if(data['data'][i]['explain_first']=='') {
+                                    html +='<a href="javascript:void(0)" class="text-primary reply"><br/>回复</a>';
+                                    html +='<input type="hidden" name="evaluate_id" value="'+data["data"][i]["id"]+'">';
+                                    html +='<input type="hidden" name="replyType" value="1">';
+                                }
+                                if(data['data'][i]['again_content']!='') {
+                                    html +='<div>';
+                                    html +='[追评内容]：<a class="reply_content">'+data['data'][i]['again_content']+'</a>';
+                                    if(data['data'][i]['again_image']!='') {
+                                        html +='<br/>';
+                                        var imgs_arr = data['data'][i]['again_image'].split(',');
+                                        for (var key in imgs_arr) {
+                                            // html += '<li data-src="' + __IMG(imgs_arr[key]) + '"> <img src="' + __IMG(imgs_arr[key]) + '"> <b class="tm-photos-arrow"></b></li>';
+                                            html += '<img src="' + __IMG(imgs_arr[key]) + '" style="width:50px;height:50px;">&nbsp;';
+                                        }
+                                    }
+                                    html +='</div>';
+                                    html +='<div class="small-muted">['+timeStampTurnTime(data["data"][i]["again_addtime"])+']</div>';
+                                }
+                                if(data['data'][i]['again_explain']!='') {
+                                    html += '<span class="">[追评回复]：</span><span class="text-buffing reply_content">' + data['data'][i]['again_explain'] + '</span>';
+                                }
+
+                                if(data['data'][i]['again_explain']==''&& data['data'][i]['again_content']!='') {
+                                    html +='<a></a>';
+                                    html +='<a href="javascript:void(0)" class="text-primary reply"><br/>追平回复</a>';
+                                    html +='<input type="hidden" name="evaluate_id" value="'+data["data"][i]["id"]+'">';
+                                    html +='<input type="hidden" name="replyType" value="2">';
+                                }
+                                html +='</td>';
+                                html +='<td class="vertical-top">';
+                                if(data["data"][i]["user_name"]){
+                                    html += data["data"][i]["user_name"];
+                                }else if(data["data"][i]["nick_name"]){
+                                    html += data["data"][i]["nick_name"];
+                                }else{
+                                    html += data["data"][i]["user_tel"];
+                                }
+                                html +='</td>';
+                                html +='<td class="w-300">';
+                                html += '<p><img src="'+ __IMG(data["data"][i]["goods_image"])+'" style="width:60px;height:60px;"></p>';
+                                html +=data["data"][i]["goods_name"];
+                                html +='<div class="text-bright">'+data["data"][i]["goods_price"]+' 元</div>';
+                                html +='</td>';
+                                html += '<td>';
+                                html +='<a class="btn-operation deleteEvaluate text-red1" data-id="' + data["data"][i]["id"] + '" href="javascript:void(0)">删除</a>';
+                                html += '</td>';
+                                html +='</tr>';
+                            }
+                        } else {
+                            html += '<tr align="center"><td colspan="4" class="h-200">暂无符合条件的数据记录</td></tr>';
+                        }
+                        $('#page').paginator('option', {
+                            totalCounts: data['total_count']  // 动态修改总数
+                        });
+                        $("#list").html(html);
+                        load_method();
+                    }
+                });
+            }
+
+
+
+            // 回复提交
+            function load_method() {
+                $('.reply').on('click', function () {
+                    var content = $(this).prev().prev().prev().children($('.reply_content')).html();
+                    var evaluate_id = $(this).next($("input[name='evaluate_id']")).val();
+                    var replyType = $(this).next().next().val(); //1为评价回复 2为追评回复
+                    var html = '<form class="form-horizontal padding-15" id="evaluateContent">';
+                    html += '<div class="form-group"><label class="col-md-3 control-label">评价内容</label><div class="col-md-8"><p class="form-control-static">' + content + '</p></div></div>';
+                    html += '<div class="form-group"><label class="col-md-3 control-label">回复内容</label><div class="col-md-8"><textarea class="form-control" rows="4" placeholder="输入回复的内容"></textarea></div></div>';
+                    html += '</form>';
+                    util.confirm('回复评价', html, function () {
+                        var textarea = this.$content.find('#evaluateContent textarea').val();
+
+                        if (!textarea) {
+                            util.alert('内容不为空！')
+                            return false;
+                        }
+                        $.ajax({
+                            type: "post",
+                            url: "{:__URL('PLATFORM_MAIN/goods/replyevaluateajax')}",
+                            data: {
+                                "evaluate_id": evaluate_id,
+                                "evaluate_reply": textarea,
+                                "replyType": replyType
+                            },
+                            success: function (data) {
+                                if (data['code'] > 0) {
+                                    util.message(data['message'],'success', function(){
+                                        location.reload();
+                                    });
+                                    //showMessage('success', , "{:__URL('PLATFORM_MAIN/goods/goodscomment')}");
+                                } else {
+                                    util.message("回复失败",'danger');
+                                }
+                            }
+                        });
+                    })
+                })
+                //搜索
+                $('.search').on('click',function(){
+                    util.initPage(LoadingInfo);
+                });
+            }
+            // 删除
+            $("body").on('click', '.deleteEvaluate', function () {
+                var evaluate_id = $(this).data('id');
+                util.alert('是否删除该评价？', function () {
+                    $.ajax({
+                        url: "{:__URL('PLATFORM_MAIN/goods/deleteGoodscomment')}",
+                        type: 'POST',
+                        dataType: "json",
+                        data:{"evaluate_id":evaluate_id},
+                        success:function (data) {
+                            if (data['code'] > 0) {
+                                util.message(data['message'],'success', function(){
+                                    location.reload();
+                                });
+                            } else {
+                                util.message("删除失败",'danger');
+            }
+                        }
+                    });
+                })
+            })
+        })
+    })
+
+</script>
+{/block}

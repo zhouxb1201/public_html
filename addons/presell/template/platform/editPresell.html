@@ -1,0 +1,617 @@
+{block name="main"}
+<!-- page -->
+<style>
+    .form_time{margin-left:15px !important;}
+    .red_font{color:#ff0000}
+</style>
+<form class="form-horizontal pt-15 form-validate widthFixedForm">
+    <div class="screen-title">
+        <span class="text">规则设置</span>
+    </div>
+    <div class="form-group">
+        <label class="col-md-2 control-label"><span class="red_font">*</span>活动标签</label>
+        <div class="col-md-5">
+            <input type="text" name="name" id="name" value="{$info[0]['name']}" required maxlength="4" class="form-control w-200">
+        </div>
+    </div>
+
+    <input type="hidden" name="presell_id" id="presell_id" value="{$info[0]['id']}">
+    <div class="form-group">
+        <label class="col-md-2 control-label"><span class="red_font">*</span>预售类型</label>
+        <div class="col-md-5">
+            <label class="radio-inline">
+                <input type="radio" name="type" value="2" checked> 定金+尾款
+            </label>
+        </div>
+    </div>
+
+    <div class="form-group ">
+        <label class="col-md-2 control-label"><span class="red_font">*</span>预售时间</label>
+        <div class="col-md-8">
+            <div class="v-datetime-input-control">
+                <label for="effect_time">
+                    <input type="text" class="form-control" id="effect_time" placeholder="请选择时间" autocomplete="off" name="effect_time" required value="{$info[0]['start_time']} - {$info[0]['end_time']}">
+                    <i class="icon icon-calendar"></i>
+                    <input type="hidden" id="start_time" name="start_time" value="{$info[0]['start_time']}">
+                    <input type="hidden" id="end_time" name="end_time" value="{$info[0]['end_time']}">
+                </label>
+            </div>
+            <div class="help-block mb-0">开始时间点为选中日期的0:00:00，结束时间点为选中日期的23:59:59</div>
+        </div>
+
+    </div>
+
+    <div class="form-group" id="sele_goods">
+        <label class="col-md-2 control-label"><span class="red_font">*</span>选择商品</label>
+    </div>
+
+    <div id="goods_info_box" class="form-group hidden">
+        <label class="col-md-2 control-label"></label>
+        <div class="col-md-3">
+            <div class="media text-left">
+                <div class="media-left goods-img">
+                    <img src="{$info[0]['pic_cover']}" onerror="this.src='http://iph.href.lu/60x60';" width="60" height="60">
+                </div>
+                <div class="media-body max-w-300">
+                    <div class="line-2-ellipsis goods-text">{$goods_name}</div>
+                    <div class="line-1-ellipsis text-danger strong goods-price"></div>
+                </div>
+            </div>
+            <input type="hidden" name="goods_id" id="goods_id" value="{$info[0]['goods_id']}">
+            <input type="hidden" name="sku_ids" id="sku_id" value="">
+            <input type="hidden" name="presell_goods_id" id="presell_goods_id" value="">
+        </div>
+    </div>
+    <div id="product_sku" class="hidden">
+        <div class="form-group">
+            <label class="col-md-2 control-label">活动库存 / 价格</label>
+            <div class="col-md-9">
+                <table class="table table-bordered table-auto-center v-separate" id="stock_table" required style="display: table;">
+
+                </table>
+            </div>
+        </div>
+    </div>
+    <div class="null_spec">
+    <div class="form-group">
+        <label class="col-md-2 control-label"><span class="red_font">*</span>预售价</label>
+        <div class="col-md-5">
+            <div class="input-group w-200">
+                <input class="form-control" min="0.01" type="number" name="show_all_money" id="show_all_money" value="{$info[0]['allmoney']}" required>
+                <div class="input-group-addon">元</div>
+            </div>
+            <div class="help-block mb-0">预售活动价，预售金额分为定金+尾款的方式支付。</div>
+        </div>
+    </div>
+
+    <div class="form-group">
+        <label class="col-md-2 control-label"><span class="red_font">*</span>定金</label>
+        <div class="col-md-5">
+            <div class="input-group w-200">
+                <input class="form-control" type="number" min="0.01" name="show_first_money" id="show_first_money"  value="{$info[0]['firstmoney']}" required>
+                <div class="input-group-addon">元</div>
+            </div>
+        </div>
+    </div>
+
+    <div class="form-group">
+        <label class="col-md-2 control-label"><span class="red_font">*</span>预售库存</label>
+        <div class="col-md-5">
+            <div class="input-group w-200">
+                <input class="form-control" type="number" min="1" name="show_presell_num" id="show_presell_num" value="{$info[0]['presellnum']}">
+                <div class="input-group-addon">件</div>
+            </div>
+            <div class="help-block mb-0">商品预售数量，与普通商品库存相互独立。</div>
+        </div>
+    </div>
+
+    <div class="form-group">
+        <label class="col-md-2 control-label">限购</label>
+        <div class="col-md-5">
+            <div class="input-group w-200">
+                <input class="form-control" type="number" min="0" name="show_max_buy" id="show_max_buy" value="{$info[0]['maxbuy']}">
+                <div class="input-group-addon">件</div>
+            </div>
+            <div class="help-block mb-0">用户最多购买此商品数量限制。</div>
+        </div>
+    </div>
+
+    <div class="form-group">
+        <label class="col-md-2 control-label">虚拟订购量</label>
+        <div class="col-md-5">
+            <div class="input-group w-200">
+                <input class="form-control" type="number" min="0" name="show_dummy_num" id="show_dummy_num" value="{$info[0]['vrnum']}">
+                <div class="input-group-addon">件</div>
+            </div>
+            <div class="help-block mb-0">活动开始后，前端订购量将会以实际订购量+虚拟订购量显示。</div>
+        </div>
+    </div>
+    </div>
+    <div class="form-group ">
+        <label class="col-md-2 control-label"><span class="red_font">*</span>尾款支付时间</label>
+        <div class="col-md-8">
+            <div class="v-datetime-input-control">
+                <label for="effect_time1">
+                    <input type="text" class="form-control" id="effect_time1" placeholder="请选择时间" autocomplete="off" name="effect_time1" required value="{$info[0]['pay_start_time']} - {$info[0]['pay_end_time']}">
+                    <i class="icon icon-calendar"></i>
+                    <input type="hidden" id="pay_start_time" name="pay_start_time" value="{$info[0]['pay_start_time']}">
+                    <input type="hidden" id="pay_end_time" name="pay_end_time" value="{$info[0]['pay_end_time']}">
+                </label>
+            </div>
+            <div class="help-block mb-0">开始时间点为选中日期的0:00:00，结束时间点为选中日期的23:59:59</div>
+        </div>
+
+    </div>
+
+    <div class="form-group ">
+        <label class="col-md-2 control-label"><span class="red_font">*</span>发货时间</label>
+        <div class="col-md-8">
+            <div class="v-datetime-input-control">
+                <label for="send_goods_time">
+                    <input type="text" class="form-control" required id="send_goods_time"  placeholder="请选择时间" value="{$info[0]['send_goods_time']}" autocomplete="off">
+                    <i class="icon icon-calendar"></i>
+                </label>
+            </div>
+            <div class="help-block mb-0">开始时间点为选中日期的0:00:00</div>
+        </div>
+
+    </div>
+
+    <div class="form-group" style="display:none;">
+        <label class="col-md-2 control-label"><span class="red_font">*</span>活动开关</label>
+        <div class="col-md-5">
+            <label class="radio-inline">
+                <input type="radio" name="active_status" value="1"checked> 开启
+            </label>
+        </div>
+    </div>
+
+    <!--<div class="form-group">-->
+        <!--<label class="col-md-2 control-label"><span class="red_font">*</span>预售状态</label>-->
+        <!--<div class="col-md-5">-->
+            <!--{if $info[0]['status'] eq 1}-->
+            <!--<label class="radio-inline">-->
+                <!--<input type="radio" name="status" value="1" checked> 进行中-->
+            <!--</label>-->
+            <!--{/if}-->
+
+            <!--{if $info[0]['status'] eq 2}-->
+            <!--<label class="radio-inline">-->
+                <!--<input type="radio" name="status" value="2" checked> 未开始-->
+            <!--</label>-->
+            <!--{/if}-->
+
+            <!--{if $info[0]['status'] eq 3}-->
+            <!--<label class="radio-inline">-->
+                <!--<input type="radio" name="status" value="3" checked> 已结束-->
+            <!--</label>-->
+            <!--{/if}-->
+        <!--</div>-->
+    <!--</div>-->
+
+
+    <div id="sub_val">
+        <div class="form-group">
+            <label class="col-md-2 control-label"></label>
+            <div class="col-md-8">
+                <button class="btn btn-primary-diy editPresell" type="submit" id="submit">保存</button>
+                <a href="javascript:history.go(-1);" class="btn btn-default-diy">返回</a>
+            </div>
+        </div>
+    </div>
+    <div id="sku_list" data-sku_list="{$groupDetail['sku_list']}"></div>
+
+</form>
+
+<!-- page end -->
+{/block}
+{block name="script"}
+<script>
+    require(['util'], function (util) {
+        // util.layDate("#start_time");
+        // util.layDate("#end_time");
+        util.layDate('#effect_time',true,function(value, date, endDate){
+            var month=date.month<10?"0"+date.month:date.month;
+            var endMonth=endDate.month<10?"0"+endDate.month:endDate.month;
+            var date1=date.year+'-'+month+'-'+date.date;
+            var date2=endDate.year+'-'+endMonth+'-'+endDate.date;
+            if(value){
+                $('#start_time').val(date1);
+                $('#end_time').val(date2);
+                $('#effect_time').parents('.form-group').removeClass('has-error');
+            }
+            else{
+                $('#start_time').val('');
+                $('#end_time').val('');
+            }
+        });
+
+        util.layDate('#effect_time1',true,function(value, date, endDate){
+            var month=date.month<10?"0"+date.month:date.month;
+            var endMonth=endDate.month<10?"0"+endDate.month:endDate.month;
+            var date1=date.year+'-'+month+'-'+date.date;
+            var date2=endDate.year+'-'+endMonth+'-'+endDate.date;
+            if(value){
+                $('#pay_start_time').val(date1);
+                $('#pay_end_time').val(date2);
+                $('#effect_time1').parents('.form-group').removeClass('has-error');
+            }
+            else{
+                $('#pay_start_time').val('');
+                $('#pay_end_time').val('');
+            }
+        });
+
+
+        // util.layDate("#pay_start_time");
+        // util.layDate("#pay_end_time");
+
+        util.layDate("#send_goods_time");
+
+
+        getSku();
+        function getSku(){
+            var goods_id = $('#goods_id').val();
+            var presell_id = {$info[0]['id']};
+            if(goods_id){
+                $.ajax({
+                    type: "post",
+                    url: "{:__URL('platform/addons/execute/addons/presell/controller/Presell/action/get_sku_list')}",
+                    async: true,
+                    data: {
+                        "goods_id": goods_id,
+                        "presell_id":presell_id
+                    },
+                    success: function (data) {
+
+                        $('#sku_list').attr('data-sku_list', JSON.stringify(data));
+                        setSku($('#sku_list'));
+                    }
+                });
+            }
+        }
+
+
+        function setSku(obj){
+            var sku_list = obj.data('sku_list');
+            $('#goods_info_box').removeClass('hidden');
+            $('#goods_info_box').addClass('show');
+            if(sku_list.sku_name != undefined){
+                sku_list.sku_name = (sku_list.sku_name).replace(/^\s+|\s+$/g,"");
+            }
+            if(sku_list.sku_name === undefined || sku_list.sku_name !== ''){
+                $('.null_spec').hide();
+                $('#product_sku').removeClass('hidden');
+                $('#product_sku').addClass('show');
+                var html = '<thead>';
+                for(var sku_ids in sku_list){
+                    if(sku_ids == 0){
+                        var th_name_str = sku_list[sku_ids]['th_name_str'];
+                        var th_name_str_arr = th_name_str.split(' ');
+                        for(var th_id in th_name_str_arr){
+                            html += '<th class="vertical-middle">'+th_name_str_arr[th_id]+'</th>\n';
+                        }
+                        html += ' <th class="vertical-middle">售价</th>\n' +
+                            '<th class="vertical-middle">库存</th>\n' +
+                            '<th class="vertical-middle th-price">预售价</th>\n' +
+                            '<th class="vertical-middle th-price">定金</th>\n'+
+                            '<th class="vertical-middle th-price">预售库存</th>\n' +
+                            '<th class="vertical-middle th-price">限购</th>\n' +
+                            '<th class="vertical-middle th-price">虚拟订购量</th>\n';
+
+                        html += '</thead>\n';
+                        html += '<tbody>\n';
+                    }
+                    //处理规格
+                    var spec_val = sku_list[sku_ids]['new_im_str'];
+                    var spec_show_type = sku_list[sku_ids]['show_type_str'];
+                    var spec_arr = spec_val.split('§');
+                    var spec_show_arr = spec_show_type.split(' ');
+                    html += '<tr skuid="'+sku_list[sku_ids]['attr_value_items']+'" id="">\n';
+                    // console.log(spec_arr);
+                    for(var spec_id in spec_arr){
+                        //判断展示类型是不是图片
+                        if(spec_show_arr[spec_id] == '3'){
+                            var spec_val_arr = spec_arr[spec_id].split('=');
+                            // html +='<td skuchild="'+spec_val_arr[0]+'"><img src="'+spec_val_arr[1]+'" style="width:60px;height:60px"></td>\n';
+                            html +='<td skuchild="'+spec_val_arr[0]+'">'+spec_val_arr[1]+'</td>\n';//暂时显示中文
+                        }else{
+                            var spec_val_arr = spec_arr[spec_id].split('=');
+                            html +='<td skuchild="'+spec_val_arr[0]+'">'+spec_val_arr[1]+'</td>\n';
+                        }
+                    }
+                    html += '<td>'+sku_list[sku_ids]['price']+'</td>\n' +
+                        '<td>'+sku_list[sku_ids]['stock']+'</td>\n' +
+                        '<td><input type="number" min="0" step="0.01"  name="all_money" class="form-control mw-68" value="'+sku_list[sku_ids]['all_money']+'"></td>\n' +
+                        '<td><input type="number" min="0" step="0.01"  name="first_money" class="form-control mw-68" value="'+sku_list[sku_ids]['first_money']+'"></td>\n' +
+                        '<td><input type="number" min="1" step="1"  name="presell_num" class="form-control mw-68" value="'+sku_list[sku_ids]['presell_num']+'"></td>\n' +
+                        '<td><input type="number" min="1" step="1"  name="max_buy" class="form-control mw-68" value="'+sku_list[sku_ids]['max_buy']+'"></td>\n' +
+                        '<td><input type="number" min="0" step="1"  name="vr_num" class="form-control mw-68" value="'+sku_list[sku_ids]['vr_num']+'"></td>\n' +
+                        '<input type="hidden" name="presell_goods_id" class="form-control" value="'+ sku_list[sku_ids]['presell_goods_id'] +'">\n' +
+                        '<input type="hidden" name="sku_id" class="form-control" value="'+ sku_list[sku_ids]['sku_id'] +'">\n' +
+                        '</tr>\n';
+                }
+                html += '<tbody>\n';
+                html += '<tfoot>\n' +
+                    '<tr>\n' +
+                    '<td colspan="10" class="text-left">\n' +
+                    '批量修改：\n' +
+                    '<a href="javascript:;" class="text-primary batchSet" data-batch_type="all_money" required>预售</a>\n' +
+                    '<a href="javascript:;" class="text-primary batchSet" data-batch_type="first_money">定金</a>\n' +
+                    '<a href="javascript:;" class="text-primary batchSet" data-batch_type="presell_num">预售库存</a>\n' +
+                    '<a href="javascript:;" class="text-primary batchSet" data-batch_type="max_buy">限购</a>\n' +
+                    '<a href="javascript:;" class="text-primary batchSet" data-batch_type="vr_num">虚拟订购量</a>\n' +
+                    '</td>\n' +
+                    '</tr>\n' +
+                    '</tfoot>';
+                $('#stock_table').html(html);
+                // 合并单元格
+                merge_cell();
+                $('#product_sku').removeClass('hidden');
+                $('#product_sku').addClass('show');
+                $('#four-select').remove('show');
+                $('#four-select').addClass('hidden');
+            }else{
+                $('.null_spec').show();
+                $('#sku_id').val(sku_list.sku_id);
+                $('#group_price').val(sku_list.group_price);
+                $('#group_limit_buy').val(sku_list.group_limit_buy);
+                $('#presell_goods_id').val(sku_list.presell_goods_id);
+                $('#product_sku').removeClass('show');
+                $('#product_sku').addClass('hidden');
+                $('#four-select').removeClass('hidden');
+                $('#four-select').addClass('show');
+            }
+            if($('#sele_goods').hasClass('has-error')){
+                $('#sele_goods').removeClass('has-error');
+                $('#sele_goods #group-error').remove();
+            }
+        }
+
+
+        //添加
+        util.validate($('.form-validate'), function (form) {
+            //判断商品是否选择了
+            var goods_id = $('#goods_id').val();
+            if(goods_id == ''){
+                $('#sele_goods').addClass('has-error');
+                var info = '<span id="group-error" class="help-block-error">请选择商品</span>';
+                $('#selectGoods').after(info);
+                return;
+            }
+            var data = {};
+            if($('#product_sku').hasClass('hidden')){
+                var goods_info = {};
+            }
+            var presell_id = $('#presell_id').val();
+            var name = $('#name').val();    //标签
+            var start_time = $('#start_time').val();  //开始时间
+            var end_time = $('#end_time').val();  //结束时间
+            var pay_start_time = $('#pay_start_time').val();  //尾款支付时间
+            var pay_end_time = $('#pay_end_time').val();  //尾款结束时间
+            var send_goods_time = $('#send_goods_time').val();  //发货时间
+            var active_status = $('input[name="active_status"]:checked').val();  //活动状态
+            var all_money = $('#show_all_money').val();    //预售价
+            var first_money = $('#show_first_money').val();    //定金
+            var presell_num = $('#show_presell_num').val();    //预售库存
+            var vr_num = $('#show_dummy_num').val();    //虚拟库存
+            var max_buy = $('#show_max_buy').val();    //限购
+
+
+            if(parseFloat(all_money)<=parseFloat(first_money)){
+                util.message('预售价格必须大于定金', 'danger');
+                return;
+            }
+
+            if(util.DateTurnTime(start_time) > util.DateTurnTime(end_time)){
+                util.message('开始时间不能大于结束时间', 'danger');
+                return;
+            }
+
+            if(util.DateTurnTime(pay_start_time) > util.DateTurnTime(pay_end_time)){
+                util.message('尾款支付时间不能大于结束时间', 'danger');
+                return;
+            }
+
+            if(util.DateTurnTime(pay_start_time) < util.DateTurnTime(start_time)){
+                util.message('支付开始时间不能小于活动开始时间', 'danger');
+                return;
+            }
+            if(util.DateTurnTime(pay_end_time) < util.DateTurnTime(end_time)){
+                util.message('支付结束时间不能小于活动结束时间', 'danger');
+                return;
+            }
+
+            if(util.DateTurnTime(send_goods_time) < util.DateTurnTime(pay_end_time)){
+                util.message('发货时间不能小于支付时间', 'danger');
+                return;
+            }
+            try{
+                $('input[name="all_money"]').each(function(){
+                    var val = $(this).val();
+                    if(val==''){
+                        throw '1';
+                        return false;
+                    }
+                }); 
+                $('input[name="first_money"]').each(function(){
+                    var val = $(this).val();
+                    if(val==''){
+                        throw '2';
+                        return false;
+                    }
+                }); 
+                $('input[name="presell_num"]').each(function(){
+                    var val = $(this).val();
+                    if(val==''){
+                        throw '3';
+                        return false;
+                    }
+                }); 
+                $('input[name="max_buy"]').each(function(){
+                    var val = $(this).val();
+                    if(val==''){
+                        throw '4';
+                        return false;
+                    }
+                }); 
+                $('input[name="vr_num"]').each(function(){
+                    var val = $(this).val();
+                    if(val==''){
+                        throw '5';
+                        return false;
+                    }
+                }); 
+            }
+            catch(err){
+                if(err=='1'){
+                    util.message('请填写预售价','danger');
+                    return false;
+                }
+                if(err=='2'){
+                    util.message('请填写定金','danger');
+                    return false;
+                }
+                if(err=='3'){
+                    util.message('请填写预售库存','danger');
+                    return false;
+                }
+                if(err=='4'){
+                    util.message('请填写限购','danger');
+                    return false;
+                }
+                if(err=='5'){
+                    util.message('请填写虚拟订购量','danger');
+                    return false;
+                }
+            }
+
+            data.presell_id = presell_id;
+            data.type = 2;
+            data.goods_id = goods_id;
+            data.name = name;
+            data.start_time = start_time;
+            data.end_time = end_time;
+            data.pay_start_time = pay_start_time;
+            data.pay_end_time = pay_end_time;
+            data.send_goods_time = send_goods_time;
+            data.active_status = active_status;
+            data.allmoney = all_money;
+            data.firstmoney = first_money;
+            data.presellnum = presell_num;
+            data.vrnum = vr_num;
+            data.maxbuy = max_buy;
+            //活动库存
+            if($('#product_sku').hasClass('hidden')){
+
+                var sku_id = $('#sku_id').val();
+                var goods_id = $('#goods_id').val();
+
+                data.sku_id = sku_id;
+                data.goods_id = goods_id
+                // data.goods_info = '';
+                //无规格也需设置商品预售信息
+                var sku_id = $("#sku_id").val();
+                //console.log($(this).find("input[name='all_money']"));
+                var all_money = $("input[name='show_all_money']").val();
+                var first_money = $("input[name='show_first_money']").val();
+                var presell_num = $("input[name='show_presell_num']").val();
+                var max_buy = $("input[name='show_max_buy']").val();
+                var vr_num = $("input[name='show_dummy_num']").val();
+                var presell_goods_id = $("input[name='presell_goods_id']").val();
+                sku_data = "§"+sku_id+","+all_money+","+first_money+","+presell_num+","+max_buy+","+vr_num+","+presell_goods_id;
+                data.goods_info = sku_data;
+            }else{
+
+                //这里是有sku的区间，先获取当前商品有多少个sku_id
+                var obj = $("#stock_table tbody tr");
+                var goods_list = {};
+                //  console.log(sku_obj);
+                // console.log(all_money);
+                var sku_data = '';
+                obj.each(function (i) {
+
+                    var sku_id = $(this).find("input[name='sku_id']").val();
+                    //console.log($(this).find("input[name='all_money']"));
+                    var all_money = $(this).find("input[name='all_money']").val();
+                    var first_money = $(this).find("input[name='first_money']").val();
+                    var presell_num = $(this).find("input[name='presell_num']").val();
+                    var max_buy = $(this).find("input[name='max_buy']").val();
+                    var vr_num = $(this).find("input[name='vr_num']").val();
+                    var presell_goods_id = $(this).find("input[name='presell_goods_id']").val();
+                    // alert(all_money);
+                    // goods_list[sku_id].all_money = all_money;
+                    // // goods_list[sku_id].first_money = first_money;
+                    // // goods_list[sku_id].presell_num = presell_num;
+                    // // goods_list[sku_id].max_buy = max_buy;
+                    // // goods_list[sku_id].vr_num = vr_num;
+                    // console.log(goods_list);
+                    sku_data += "§"+sku_id+","+all_money+","+first_money+","+presell_num+","+max_buy+","+vr_num+","+presell_goods_id;
+                });
+                data.goods_info = sku_data;
+            }
+            $('.editPresell').attr({disabled: "disabled"}).html('保存中...');
+            $.post('{:__URL(\'platform/Menu/addonmenu?addons=addpresell\')}',
+                data,
+                function(res){
+                    if (res["code"] > 0) {
+                        util.message('保存成功', 'success', "{:__URL('platform/Menu/addonmenu?addons=presellList')}");
+                    } else {
+                        util.message(res["message"], 'danger');
+                    }
+                });
+        })
+
+        //选择商品
+        $('#selectGoods').click(function () {
+            util.message("无法更换商品");
+            // util.goodsDialog('url:/platform/addons/execute/addons/presell/controller/Presell/action/presellGoodsList',function(data){
+            // });
+        });
+        // 批量设置
+        $('#stock_table').on('click','.batchSet',function(){
+            var batch_text = $(this).text();
+            var batch_type = $(this).data('batch_type');
+            var html = '<form class="form-horizontal padding-15">';
+            html += '<div class="form-group"><label class="col-md-3 control-label">'+batch_text+'</label><div class="col-md-8">';
+            html += '<input type="number" min="0" oninput="if(value.length>9)value=value.slice(0,9)" name="batch_'+batch_type+'" class="form-control">';
+            html += '</div></div></form>';
+            util.confirm('批量修改'+batch_text,html,function(){
+                var val;
+                var maxNum = 9999999.99;
+                var currInput = $('#stock_table input[name="'+batch_type+'"]');
+                val = this.$content.find('input[name="batch_'+batch_type+'"]').val();
+                if(!val || val == ''){
+                    util.message(batch_text+'不能为空');
+                    return false;
+                }else if(val > maxNum && batch_type !== 'goods_code'){
+                    util.message('价格最大为 '+maxNum);
+                    return false;
+                }
+                currInput.each(function(i,e){
+                    e.value = val;
+                });
+            });
+
+        });
+
+        //合并单元格
+        function merge_cell(){
+            var td = $(' #stock_table td');
+            for(var i=0;i<td.length;i++){
+                var td_skuchild = $(td[i]).attr('skuchild');
+                if(td_skuchild != undefined){
+                    var td_box = $('td[skuchild="'+td_skuchild+'"]');
+                    if(td_box.length>1){
+                        $(td_box[0]).attr('rowspan',td_box.length);
+                        for(var j=1;j<td_box.length;j++){
+                            td_box[j].remove();
+                        }
+                    }
+                }
+            }
+        }
+
+    });
+</script>
+{/block}

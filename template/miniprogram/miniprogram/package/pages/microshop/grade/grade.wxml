@@ -1,0 +1,67 @@
+<view class="head-wrap">
+  <view class="head">
+    <view class="h4">{{shopkeeper_level_name}}</view>
+    <view class="time">{{shopkeeper_level_time == '无期限' ? shopkeeper_level_time : '将于'+shopkeeper_level_time+ '到期'}}</view>
+    <view class="btn-wrap">
+      <view class="btn" wx:if="{{is_default_shopkeeper == 0}}" bindtap="onRenew">
+        <text>立即续费</text>
+      </view>
+      <view class="btn" bindtap="onUpGrade">
+        <text>提升等级</text>
+      </view>
+    </view>
+  </view>
+</view>
+<!--等级权益-->
+<view class="grade-introduce">
+  <view class="h4">等级权益介绍</view>
+  <view class="grade-table">
+    <view class="ul grade-th">
+      <view class="li">等级
+        <view class="bd-left"></view>
+      </view>
+      <view class="li">专属店铺</view>
+      <view class="li">自购返利</view>
+      <view class="li">开店返利</view>
+    </view>
+    <view class="table-wrap">
+      <view class="table">
+        <view class="ul" wx:for="{{items}}" style="{{styles}}" wx:key="">
+          <view class="li">{{item.level_name}}</view>
+          <view class="li">拥有</view>
+          <view class="li">
+            <text wx:if="{{item.selfpurchase_rebate > 0}}">{{filter.toNumber(item.selfpurchase_rebate)}}%</text>
+            <text wx:else>无</text>
+          </view>
+          <view class="li">
+            <text wx:if="{{item.shop_rebate > 0}}">{{filter.toNumber(item.shop_rebate)}}%</text>
+            <text wx:else>无</text>
+          </view>
+        </view>
+      </view>
+    </view>
+  </view>
+  <view class="tips">
+    <view>
+      <text>店主升级：店主通过购买升级礼包升级。</text>
+    </view>
+    <view>
+      <text>店主降级：等级过期后，将会降至默认等级。</text>
+    </view>
+    <view>
+      <text>专属店铺：拥有自己的专属微店。</text>
+    </view>
+    <view>
+      <text>自购返利：店主在平台消费，获得返利。</text>
+    </view>
+    <view>
+      <text>销售返利：消费者通过店主微店消费，获得返利。</text>
+    </view>
+    <view>
+      <text>开店返利：下线开店获得相应返利。</text>
+    </view>
+  </view>
+
+</view>
+
+<wxs src='../../../../utils/addmul.wxs' module='filter' />

@@ -1,0 +1,94 @@
+page{
+  background-color: #f4f4f4;
+  font-size: 28rpx;
+}
+
+.group_box{
+  margin: 30rpx;
+  box-sizing: border-box;
+  border-radius: 30rpx;
+  overflow: hidden;
+  box-shadow: 0 0 10px 0 rgba(0,0,0,.05);
+}
+.bonus_amount_group{
+  background-color: rgb(255, 69, 78);
+  color: #fff;  
+}
+
+.amount_cell .head_total_cell{
+  padding: 20rpx 30rpx;
+}
+.amount_cell .head_total_cell .top_text{
+  margin: 20rpx 0;
+}
+.amount_cell .head_total_cell .put_total_num{
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin: 10rpx 0;
+}
+.amount_cell .head_total_cell .put_total_num .log_btn{
+  border: 1rpx solid #fff;
+  padding: 5rpx 10rpx;
+  border-radius: 10rpx;
+}
+.amount_cell .head_total_cell .put_total_num .num{
+  font-size: 36rpx;
+
+}
+.amount_cell .foot_cell{
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+}
+.amount_cell .foot_cell .item{
+  padding: 40rpx;
+  flex: 1;
+  text-align: center;
+  line-height: 45rpx;
+}
+.white_line_r{
+  border-right: 1px solid #fff;
+}
+.white_line_b{
+  border-bottom: 1px solid #fff;
+}
+
+.gray_line_r{
+  border-right: 1px solid #f4f4f4;
+}
+.gray_line_b{
+  border-bottom: 1px solid #f4f4f4;
+}
+
+.group_box{
+  margin-top: 20rpx;
+  background-color: #fff;
+}
+
+.amount_cell .head_cell{
+  padding: 20rpx 30rpx;
+}
+.amount_cell .head_cell .top_text{
+  margin: 20rpx 0;
+  text-align: center;
+}
+.amount_cell .head_cell .put_num{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin: 10rpx 0;
+}
+.amount_cell .head_cell .put_num .num{
+  font-size: 36rpx;
+  color: #f44;
+}
+
+.amount_cell .item .money{
+  font-size: 24rpx;
+  color: #f44;
+}
+.amount_cell .item .text{
+  font-size: 24rpx;
+  color: #A9A9A9;
+}

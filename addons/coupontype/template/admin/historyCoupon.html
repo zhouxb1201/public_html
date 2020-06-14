@@ -1,0 +1,87 @@
+{block name="resources"}
+<style>
+    .table-class thead tr th {
+        text-align: left;
+    }
+</style>
+{/block}
+
+{block name="main"}
+<div class="row addBtnSearch">
+    <div class="searchFr search">
+        <input type="text" id="search_text" class="searchs" placeholder="优惠券名称/券号/订单号">
+        <button id="search" class="search_to">搜索</button>
+    </div>
+</div>
+<table class="table table-hover v-table">
+    <thead>
+    <tr>
+        <th>使用店铺</th>
+        <th>订单号</th>
+        <th>使用用户</th>
+        <th>优惠券号码</th>
+        <th>优惠金额</th>
+        <th>使用时间</th>
+    </tr>
+    </thead>
+    <tbody class="trs"></tbody>
+</table>
+<div class="page clearfix">
+    <div class="M-box3 m-style fr">
+    </div>
+</div>
+{/block}
+
+{block name="script"}
+<script>
+require(['utilAdmin'], function (utilAdmin) {    
+    $(function () {
+        LoadingInfo(1)
+        $("#search").on('click', function () {
+            LoadingInfo(1);
+        });
+    });
+
+    function LoadingInfo(page_index) {
+        $('#page_index').val(page_index ? page_index : '1');
+        $.ajax({
+            type: "post",
+            url: '{$historyCouponUrl}'+'&coupon_type_id='+{$coupon_type_id},
+            data: {
+                'search_text': $("#search_text").val(),
+                'page_index': page_index,
+                'website_id': '{$website_id}',
+                'instance_id': '{$instance_id}'
+            },
+            success: function (data) {
+                var html = '';
+                if (data["total_count"] > 0) {
+                    $.each(data['data'], function (k, v) {
+                        html += '<tr style="align: center;">';
+                        if (v.shop_id > 0) {
+                            html += '<td>' + v.shop_name + '</td>';
+                        } else {
+                            html += '<td>直营店</td>';
+                        }
+                        html += '<td>' + v.order_no + '</td>';
+                        html += '<td>' + v.user_tel + '</td>';
+                        html += '<td>' + v.coupon_code + '</td>';
+                        if (v.money != 0) {
+                            html += '<td>' + v.money + '元</td>';
+                        } else {
+                            html += '<td>' + v.discount + '折</td>';
+                        }
+                        html += '<td>' + utilAdmin.timeStampTurnTime(v.use_time) + '</td>';
+                        html += '</tr>';
+                    });
+                } else {
+                    html += '<tr align="center"><td colspan="6" class="h-200">暂无符合条件的数据记录</td></tr>';
+                }
+                $("tbody").html(html);
+                utilAdmin.page(".M-box3", data['total_count'], data["page_count"], page_index, LoadingInfo);
+            }
+        });
+    }
+})
+</script>
+{/block}

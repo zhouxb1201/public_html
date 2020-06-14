@@ -1,0 +1,26 @@
+<view class='assemble_list'>
+  <view class='list'>
+    <navigator wx:for='{{group_shopping_list}}' wx:key='' url='/pages/goods/detail/index?goodsId={{item.goods_id}}'>
+      <view class='item'>
+        <view class='good_img'>
+          <image src="{{item.pic_cover_mid != '' ? item.pic_cover_mid :'/images/rectangle-error.png'}}"></image>
+        </view>
+        <view class='good_info'>
+          <view class='good_name'>{{item.goods_name}}</view>
+          <view class='already_num'>已拼{{item.goods_total}}件</view>
+          <view class='price_logo'>
+            <view class='price'>¥ {{item.sku_price.min_price}}</view>
+            <view class='logo_group'>
+              <view class='img' wx:for='{{item.user}}' wx:key='' wx:for-item='userItem'>
+                <image src="{{userItem.user_img != '' ? userItem.user_img : '/images/no-avatar.png'}}"></image>
+              </view>
+            </view>
+          </view>
+        </view>
+      </view>
+    </navigator>
+  </view>
+  <view class='foot'>
+    <view class='noMore'>没有更多了</view>
+  </view>
+</view>

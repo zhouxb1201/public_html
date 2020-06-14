@@ -1,0 +1,5 @@
+<!-- 多行文本 -->
+    <view class='custom customDisplay wx:if="{{customitem.required == true ? "custom_padd" : ""}}"'>
+      <view class='label_text'><text class="star" wx:if='{{customitem.required == true}}'>*</text>{{customitem.label}}</view>
+      <textarea class='customTextarea' data-index="{{index}}" value='{{customitem.value}}' placeholder='{{customitem.placeholder}}' bindinput='customTextareaFun'></textarea>
+    </view>

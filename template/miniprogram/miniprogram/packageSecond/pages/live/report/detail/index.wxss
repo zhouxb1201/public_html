@@ -1,0 +1,87 @@
+page {
+  background-color: #f8f8f8;
+  font-size: 28rpx;
+}
+
+.content {
+  background-color: #fff;
+}
+
+.content .row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 20rpx 30rpx;
+  border-bottom: 1px solid #e2e2e2;
+}
+
+.content .txt {
+  margin: 20rpx;
+  border: 1px solid #e2e2e2;
+}
+
+.cell_item .cell_value {
+  padding: 20rpx 30rpx;
+}
+
+.cell_item .cell_value  .img_group {
+}
+
+.cell_item .cell_value .img_group .uploader {
+  display: flex;
+  flex-direction: column;
+  width: 120rpx;
+  height: 120rpx;
+  text-align: center;
+  font-size: 24rpx;
+  color: #666;
+  border: 1px dashed #ddd;
+  line-height: 1.2;
+}
+
+.cell_item .cell_value .img_group .uploader .upload_icon {
+  font-size: 75rpx;
+  padding: 5rpx 0;
+}
+
+.cell_item .cell_value .img_list .item {
+  position: relative;
+  width: calc(20% - 16rpx);
+  float: left;
+  margin: 8rpx;
+}
+
+.cell_item .cell_value .img_list .item .box_img {
+  width: 120rpx;
+  height: 120rpx;
+  overflow: hidden;
+  background-color: #f9f9f9;
+  display: flex;
+  justify-content: flex-start;
+}
+
+.cell_item .cell_value .img_list .item .btn_delete {
+  position: absolute;
+  top: -10rpx;
+  right: -10rpx;
+  background-color: #fff;
+  z-index: 10;
+  border-radius: 50%;
+  border: 1px solid #969799;
+  font-size: 14rpx;
+  width: 24rpx;
+  height: 24rpx;
+  line-height: 24rpx;
+  text-align: center;
+}
+
+.foot{
+  margin: 30rpx;
+}
+.foot .btn{
+  border-radius: 50rpx;
+  background-color: #f44;
+  color: #fff;
+  text-align: center;
+  padding: 20rpx;
+}

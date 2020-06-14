@@ -1,0 +1,202 @@
+/* package/pages/microshop/component/mine/mine.wxss */
+@import "/css/iconfont.wxss";
+
+page {
+  font-size: 28rpx;
+  background-color: #f8f8f8;
+}
+
+.content {
+  padding-bottom: 140rpx;
+}
+
+.head {
+  position: relative;
+  overflow: hidden;
+  width: 100%;
+  height: 260rpx;
+  display: flex;
+  background: #d03840;
+}
+
+.head .info {
+  display: flex;
+  align-items: center;
+  z-index: 1;
+  margin-left: 60rpx;
+}
+
+.head .info .img {
+  width: 120rpx;
+  height: 120rpx;
+  overflow: hidden;
+  border-radius: 50%;
+  border: 4rpx solid #fff;
+}
+
+.head .info .img image {
+  width: 100%;
+  height: 100%;
+}
+
+.head .info .text {
+  margin-left: 20rpx;
+  color: #fff3d1;
+  line-height: 1.6;
+}
+
+.distribution {
+  background-color: #fff;
+  margin: 20rpx;
+  border-radius: 20rpx;
+  overflow: hidden;
+  box-shadow: 0 0 10px 0 rgba(0, 0, 0, 0.05);
+}
+
+.distribution .top {
+  padding: 20rpx 30rpx;
+  display: flex;
+  justify-content: space-between;
+  border-bottom: 1rpx solid #ebedf0;
+}
+
+.distribution .top .btn_group {
+  display: flex;
+}
+
+.distribution .top .btn_group .btn {
+  background-color: #f44;
+  color: #fff;
+  margin-left: 12rpx;
+  padding: 5rpx 20rpx;
+  font-size: 24rpx;
+  border-radius: 5rpx;
+}
+
+.distribution .top .btn_group .abled {
+  color: #999 !important;
+  background-color: #e8e8e8 !important;
+  border: 1px solid #e5e5e5 !important;
+}
+
+.cell_card {
+  display: flex;
+  padding: 20rpx 0;
+  margin-bottom: 20rpx;
+}
+
+.cell_card .card_item {
+  text-align: center;
+}
+
+.cell_card .item_cel_3 {
+  width: 33%;
+}
+
+.cell_card .item_cel_5 {
+  width: 20%;
+}
+
+.cell_card .card_item .card_text {
+  color: #f44;
+}
+
+.item_line_r {
+  border-right: 1rpx solid #ebedf0;
+}
+
+.cell_card .item {
+  min-width: 25%;
+  text-align: center;
+  position: relative;
+  line-height: 40rpx;
+}
+
+.cell_card .item::after {
+  border-right-width: 1px;
+}
+
+.cell_card .item:last-child:after {
+  border-right: none;
+}
+
+.cell_card .item .box-icon {
+  font-size: 40rpx;
+  color: #333;
+  width: 60rpx;
+  height: 60rpx;
+  line-height: 60rpx;
+  text-align: center;
+  margin: auto;
+}
+
+.cell_card .item .title {
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  overflow: hidden;
+  height: 40rpx;
+}
+
+.card-group-box {
+  margin: 20rpx;
+  border-radius: 20rpx;
+  overflow: hidden;
+  box-shadow: 0 0 10px 0 rgba(0, 0, 0, 0.05);
+  background-color: #fff;
+}
+
+/****van-cell*******/
+
+.van-cell {
+  position: relative;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  width: 100%;
+  overflow: hidden;
+  -webkit-box-sizing: border-box;
+  box-sizing: border-box;
+  color: #323233;
+  font-size: 28rpx;
+  line-height: 48rpx;
+  background-color: #fff;
+  padding: 20rpx 30rpx;
+}
+
+.van-cell__title, .van-cell__value {
+  -webkit-box-flex: 1;
+  -ms-flex: 1;
+  flex: 1;
+}
+
+.van-cell__value {
+  color: #969799;
+  overflow: hidden;
+  text-align: right;
+  position: relative;
+  vertical-align: middle;
+}
+.van-cell__value text{
+  font-size:24rpx;
+}
+.icon.v-icon-arrow-right {
+  font-size: 24rpx;
+  font-weight: 500;
+  color: #969799b9;
+  height: 48rpx;
+  line-height: 48rpx;
+}
+
+.van-cell:not(:last-child)::after {
+  content: ' ';
+  position: absolute;
+  pointer-events: none;
+  -webkit-box-sizing: border-box;
+  box-sizing: border-box;
+  left: 30rpx;
+  right: 0;
+  bottom: 0;
+  -webkit-transform: scaleY(0.5);
+  transform: scaleY(0.5);
+  border-bottom: 1px solid #ebedf0;
+}

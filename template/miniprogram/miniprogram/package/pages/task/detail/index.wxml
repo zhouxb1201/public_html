@@ -1,0 +1,106 @@
+<import src="/common/wxParse/wxParse.wxml"/>
+<view class='detail_box'>
+  <view class="head card_group_box">
+    <image mode="widthFix" src="{{head_bg}}"></image>
+    <view class="box">
+      <view class="info">
+        <view class="img">
+          <image src="{{task_detail.task_img}}"></image>
+        </view>
+        <view class="text">
+          <view class="name">{{task_detail.task_name}}</view>
+          <view class="name">
+            <text wx:if='{{task_detail.task_kind == 1}}'>单次任务</text>
+            <text wx:if='{{task_detail.task_kind == 2}}'>多次任务</text>
+          </view>
+        </view>
+      </view>
+    </view>
+  </view>
+
+  <view class="cell_group">
+    <view>任务时间</view>
+    <view class="time">{{task_detail.start_task_time}}~{{task_detail.end_task_time}}</view>
+  </view>
+
+  <view class="cell_group">
+    <view>任务要求</view>
+    <view class="text_regular">领取后 <text>{{task_detail.task_limit_time}}</text>小时内完成</view>
+  </view>
+
+  <view wx:for='{{task_detail.task_rule_reward}}' wx:key=''>
+    <view class="cell_group">
+      <view>任务规则</view>
+      <view class="list">
+        <view class="cell" wx:for='{{item.task_rule}}' wx:key='' wx:for-item='ruleItem'>
+          <view class="item {{ruleItem.is_complete == 1?'success':'fail'}}" wx:if='{{ruleItem.referrals}}'>
+            ● 推荐人数达 {{ruleItem.referrals}} 人
+          </view>
+          <view class="item {{ruleItem.is_complete == 1?'success':'fail'}}" wx:if='{{ruleItem.distribution_commission}}'>
+            ● 分销佣金达 {{ruleItem.distribution_commission}} 元
+          </view>
+          <view class="item {{ruleItem.is_complete == 1?'success':'fail'}}" wx:if='{{ruleItem.distribution_orders}}'>
+            ● 分销订单达 {{ruleItem.distribution_orders}} 笔
+          </view>
+          <view class="item {{ruleItem.is_complete == 1?'success':'fail'}}" wx:if='{{ruleItem.order_total_money}}'>
+            ● 订单满额 {{ruleItem.order_total_money}} 元
+          </view>
+          <view class="item {{ruleItem.is_complete == 1?'success':'fail'}}" wx:if='{{ruleItem.order_total_sum}}'>
+            ● 订单累计 {{ruleItem.order_total_sum}} 元
+          </view>
+          <view class="item {{ruleItem.is_complete == 1?'success':'fail'}}" wx:if='{{ruleItem.pay_order_total_num}}'>
+            ● 订单支付达{{ruleItem.pay_order_total_num}} 笔
+          </view>
+          <view class="item {{ruleItem.is_complete == 1?'success':'fail'}}" wx:if='{{ruleItem.goods_name}}'>
+            ● 购买 {{ruleItem.goods_name}} 商品
+          </view>
+          <view class="item {{ruleItem.is_complete == 1?'success':'fail'}}" wx:if='{{ruleItem.goods_comment_num}}'>
+            ● 累计评价 {{ruleItem.goods_comment_num}} 次
+          </view>
+          <view class="item {{ruleItem.is_complete == 1?'success':'fail'}}" wx:if='{{ruleItem.total_recharge}}'>
+            ● 累计充值达 {{ruleItem.total_recharge}} 元
+          </view>
+          <view class="item {{ruleItem.is_complete == 1?'success':'fail'}}" wx:if='{{ruleItem.single_recharge}}'>
+            ● 单次充值满 {{ruleItem.single_recharge}} 元
+          </view>
+        </view>      
+      </view>
+    </view>
+
+    <view class="cell_group">
+      <view>任务奖励</view>
+      <view class="cell">
+        <view class="item text_secondary" wx:if='{{item.task_reward.point}}'>
+          {{item.task_reward.point}}个积分
+        </view>
+        <view class="item text_secondary" wx:if='{{item.task_reward.balance}}'>
+          {{item.task_reward.balance}}元余额
+        </view>
+        <view class="item text_secondary" wx:if='{{item.task_reward.wchat_red_packet}}'>
+          {{item.task_reward.wchat_red_packet}}元微信红包
+        </view>
+        <view class="item text_secondary" wx:if='{{item.task_reward.growth}}'>
+          {{item.task_reward.growth}}成长值
+        </view>
+        <view class="item text_secondary" wx:if='{{item.task_reward.gift_voucher_id}}'>
+          {{item.task_reward.gift_voucher_name}}礼品卷
+        </view>
+        <view class="item text_secondary" wx:if='{{item.task_reward.coupon_type_id}}'>
+          {{item.task_reward.coupon_name}}优惠券
+        </view>
+      </view>
+    </view>
+
+    <view class="cell_group">
+      <view>任务说明</view>
+      <view class="cell">
+        <template is="wxParse" data="{{wxParseData:description.nodes}}" />    
+      </view>
+    </view>
+
+    <view class="foot"></view>
+  </view>
+  
+
+
+</view>

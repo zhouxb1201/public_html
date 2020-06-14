@@ -1,0 +1,116 @@
+page{
+  background-color: #f8f8f8;
+  font-size: 28rpx;
+}
+
+.cell_group{
+  border-radius: 20rpx;
+  margin: 20rpx;
+  overflow: hidden;
+  box-shadow: 0 0 10px 0 rgba(0,0,0,.05);
+  
+}
+.cell_group .cell_item{
+  display: flex;
+  padding: 20rpx 30rpx;
+  background-color: #fff;
+  box-sizing: border-box;
+  align-items: center;
+}
+.cell_group .cell_item .text{
+  font-size: 28rpx;
+}
+
+
+.cell_group .cell_goods{
+  display: flex;  
+   padding: 20rpx 30rpx;
+  background-color: #fff;
+  box-sizing: border-box;
+}
+.cell_group .cell_goods .card_logo{
+  width: 180rpx;
+  height: 180rpx;
+  overflow: hidden;
+  margin-right: 20rpx;  
+}
+.cell_group .cell_goods .card_logo image{
+  width: 100%;
+  height: 100%;
+}
+.cell_group .cell_goods .card_name{
+  flex: 1;
+}
+.cell_group .cell_goods .card_name .card_title{
+  word-break:break-all;
+  max-height: 64rpx;
+  height: 64rpx;
+  font-weight: 700;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+}
+
+.address_buy{
+  padding: 20rpx 30rpx;
+  border-top: 1px solid #ebedf0;
+  background-color: #fff;  
+}
+.address_buy .buy_info{  
+  display: flex;
+  width: 100%;
+  box-sizing: border-box;
+  justify-content: space-between;
+  margin-bottom: 10rpx;
+}
+.address_buy .buy_info .phone{
+  color: #909399;
+}
+.cell_row{
+  display: flex;
+  align-items: center;
+  line-height: 52rpx;
+}
+.cell_row .cell_text{
+  width: 160rpx;
+}
+.cell_row .cell_value{
+  flex: 1;
+}
+.cell_row .cell_value text{
+  color: #f44;
+}
+.box{
+  background-color: #fff; 
+  display: flex;
+  align-items: center;
+  padding: 30rpx; 
+  justify-content: center;
+  flex-direction: column;
+}
+.box .img{
+  width: 324rpx;
+  height: 324rpx;
+}
+.box .img image{
+  width: 100%;
+  height: 100%;
+}
+.box .card_code{
+  padding: 8rpx 16rpx;
+  background-color: #f8f8f8;
+  text-align: center;
+  margin-top: 20rpx;
+}
+.wechat_card{
+  display: flex;
+  background-color: #fff;
+  padding: 20rpx 30rpx;
+  align-items: center;
+}
+.wechat_card .icon{
+  font-size: 2.5em;
+  color: rgb(255, 151, 106);
+  margin-right: 20rpx;
+}

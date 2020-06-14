@@ -1,0 +1,273 @@
+{block name="main"}
+<div class="row addBtnSearch">
+    <div class="col-sm-6 add">
+        <a href="" class="add_btn J-add" data-toggle="modal" data-target="#new_template">
+            <i class="icon icon-add1"></i> 新增页面
+        </a>
+    </div>
+    <div class="searchFr search">
+        <input type="text" class="searchs" id="search_text" placeholder="模板名称" autocomplete="off">
+        <button class="search_to">搜索</button>
+    </div>
+</div>
+
+<ul class="nav nav-tabs v-nav-tabs" role="tablist">
+    <li role="presentation" class="active"><a href="#base" aria-controls="base" role="tab" data-toggle="tab"
+                                              class="flex-auto-center">基础页</a></li>
+    <li role="presentation"><a href="#diy" aria-controls="diy" role="tab" data-toggle="tab"
+                               class="flex-auto-center">自定义页</a></li>
+</ul>
+
+
+<table class="table v-table table-auto-center">
+    <thead>
+    <tr>
+        <th>页面名称</th>
+        <th>页面模版</th>
+        <th id="status">状态</th>
+        <th>更新时间</th>
+        <th class="col-md-2 pr-14 operationLeft">操作</th>
+    </tr>
+    </thead>
+    <tbody id="list">
+    </tbody>
+</table>
+<input type="hidden" id="page_index">
+<div class="page clearfix">
+    <div class="M-box3 m-style fr">
+    </div>
+</div>
+
+{/block}
+{block name="script"}
+<script>
+    require(['utilAdmin', 'util'], function (utilAdmin, util) {
+        //点击修改页面名称
+        $("body").on("click",".editIcon-pa",function(){
+            $(this).siblings(".editInput3").show();
+            $(this).siblings(".editInput3").focus();
+            $(this).siblings(".editSpan").hide();
+        });
+        $("body").on("blur",".editInput3",function(){
+            $(this).hide();
+            $(this).siblings(".editSpan").show();
+            var code = $(this).siblings('.code').val();
+            var default_code_name = $(this).siblings('.code_name').val();
+            var code_name = $(this).val();
+            if(default_code_name != code_name){
+                $.ajax({
+                    type: "post",
+                    url:"{$editMpUrl}",
+                    data: {"id": code, "name":code_name},
+                    dataType: "json",
+                    async: true,
+                    success: function (data) {
+                        if (data["code"] > 0) {
+                            util.message(data["message"], 'success', LoadingInfo($('#page_index').val()));
+                        } else {
+                            util.message(data["message"], 'danger');
+                        }
+                    }
+                });
+            }
+        });
+        util.initPage(LoadingInfo)
+        $(function () {
+            $('.btn-search').on('click', function () {
+                LoadingInfo(1)
+            })
+
+            $('.J-add').on('click', function () {
+                var url = "{$mpTemplateDialogUrl}";
+
+                util.confirm2('新增页面', 'url:' + url, 'col-md-10', function () {
+                })
+            })
+
+            LoadingInfo(1);
+
+            //切换基础、自定义页面
+            $('a[href="#diy"],a[href="#base"]').on('shown.bs.tab', function () {
+                LoadingInfo(1);
+            })
+
+            //设置使用
+            $('#list').on('click', '.useCustomTemplate', function () {
+                var id = $(this).attr('data-id');
+                var type = $(this).attr('data-type');
+                $.ajax({
+                    type: "post",
+                url: "{$useMpCustomTemplateUrl}",
+                    async: true,
+                    data: {
+                        "id": id,
+                        "type": type
+                    },
+                    success: function (data) {
+                        if (data["code"] > 0) {
+                            utilAdmin.message(data["message"], 'success', LoadingInfo($('#page_index').val()));
+                        } else {
+                            utilAdmin.message(data["message"], 'danger', LoadingInfo($('#page_index').val()));
+                        }
+                    }
+                })
+            })
+
+            //删除页面
+            $('#list').on('click', '.removeTemplate', function () {
+                var id = [];
+                id.push($(this).attr('data-id'));
+                utilAdmin.alert('确定要删除该模板？', function () {
+                    $.ajax({
+                        type: "post",
+                    url: "{$deleteMpCustomTemplateUrl}",
+                        data: {
+                            "id": id
+                        },
+                        success: function (data) {
+                            if (data["code"] > 0) {
+                                utilAdmin.message(data["message"], 'success', function () {
+                                    LoadingInfo($('#page_index').val());
+                                });
+                            } else {
+                                utilAdmin.message(data["message"], 'danger');
+                            }
+                        }
+                    })
+                })
+            })
+        })
+
+        function LoadingInfo(page_index) {
+            var template_type = $('li[role=presentation].active').find('a').attr('aria-controls');
+            $("#page_index").val(page_index);
+            $.ajax({
+                type: "post",
+                data: {
+                    "page_index": page_index,
+                    "page_size": $("#showNumber").val(),
+                    "template_type": template_type,
+                    "template_name": $("#search_text").val()
+                },
+                url: "{$mpCustomTemplateListUrl}",
+                success: function (data) {
+                    var html = "";
+                    if (data['data'].length > 0) {
+                        for (var i = 0; i < data['data'].length; i++) {
+                            var curr = data['data'][i];
+                            html += '<tr>';
+                            html += '<td class="td-left editChange">';
+                            if (curr.is_default == 1) {
+                                html += '<i class="icon icon-mo text-danger" title="默认模板"></i> ';
+                            }
+                            html += '<div class="editIcon-pa" style="width:auto;height:auto"><i class="icon icon-edit"></i></div>';
+                            html += '<input type="text" class="editInput3" value='+ curr.template_name +' style="width: 40%; display: none;">';
+                            html += '<input type="hidden" class="code" value='+ curr.id+'>';
+                            html += '<input type="hidden" class="code_name" value='+ curr.template_name +'>';
+                            html += '<span class="editSpan">'+curr.template_name + '</span></td>';
+                            html += curr.template_name + '</td>';
+                            switch (curr.type) {
+                                case 1:
+                                    html += '<td>商城首页</td>';
+                                    break;
+                                case 2:
+                                    html += '<td>店铺首页</td>';
+                                    break;
+                                case 3:
+                                    html += '<td>商品详情</td>';
+                                    break;
+                                case 4:
+                                    html += '<td>会员中心</td>';
+                                    break;
+                                case 5:
+                                    html += '<td>分销中心</td>';
+                                    break;
+                                case 6:
+                                    html += '<td>自定义页面</td>';
+                                    break;
+                                default:
+                                    html += '<td>商城首页</td>';
+                            }
+
+                            if (template_type == 'base') {
+                                $("#status").show();
+                                html += '<td>';
+                                if (curr.in_use == 1) {
+                                    html += '<span class="label label-success">使用中</span>';
+                                } else {
+                                    html += '<span class="label label-danger">未使用</span>';
+                                }
+                                html += '</td>';
+                            } else {
+                                $("#status").hide();
+                            }
+
+                            html += '<td>' + utilAdmin.timeStampTurnTime(curr.modify_time) + '</td>';
+                            html += '<td class="operationLeft fs-0">';
+                            if (curr.in_use == 0 && curr.type != 6) {
+                                html += '<a href="javascript:void(0);" class="btn-operation useCustomTemplate" data-id = \'' + curr.id + '\' data-type=\'' + curr.type + '\'>设为使用</a>';
+                            }
+                            html += '<a class="btn-operation" href="' + __URL('ADDONS_ADMIN_MAINminiProgramCustom&id=' + curr.id) + '">装修</a>';
+                            // if (curr.type == 6) {
+                            //     //自定义页面
+                            //     // html += '<input type="text" style = "display:none;width:1px;border: 0px;" id="hidden_img_' + curr.id + '" value="' + __URL("APP_MAIN/" + curr.website_id + "/diy/" + curr.id) + '"/>';
+                            //     html += '<a class="btn-operation copy" href="javascript:void(0)" data-clipboard-text="' + __URL("APP_MAIN/" + curr.website_id + "/diy/" + curr.id) + '">复制链接</a>';
+                            //     utilAdmin.copy();
+                            // }
+                            if (curr.is_default == 0 && curr.in_use == 0) {
+                                html += '<a href="javascript:void(0);" class="btn-operation removeTemplate text-red1" data-id=\'' + curr.id + '\'>删除</a>';
+                            }
+
+                            html += '</td>';
+                            html += '</tr>';
+                        }
+                    } else {
+                        html += '<tr align="center"><td colspan="5" class="h-200">暂无符合条件的数据记录</td></tr>';
+                    }
+                    $("#list").html(html);
+                    utilAdmin.tips();
+                    utilAdmin.page('.M-box3', data['total_count'], data["page_count"], page_index, LoadingInfo);
+                }
+            });
+        }
+
+        function createNewTemplate() {
+            var template_type = $("#modal_template_type").val();
+            var template_name = $("#modal_template_name").val();
+            if (template_name && template_name !== ' ') {
+                $.ajax({
+                    type: 'post',
+                    // todo... 模板路径
+                    url: '{$mpTemplateDialogUrl}',
+                    data: {
+                        'type': template_type,
+                        'template_name': template_name
+                    },
+                    success: function (res) {
+                        if (res.code > 0) {
+                            // todo... 模板路径
+                            //$("#new_template").modal('hide');
+                            utilAdmin.message(res.message, 'success', function () {
+                                location.href = __URL("{$createCustomTemplateUrl}?id=" + res.data.id);
+                            });
+                        } else {
+                            utilAdmin.message(res.message, 'danger');
+                        }
+                    }
+                });
+            } else {
+                layer.msg('页面名称不能空！', 'danger');
+                return false
+            }
+        }
+
+
+        $('body').on('click', '.search_to', function () {
+            LoadingInfo(1)
+        });
+        $('body').on('click', '.addSure', function () {
+            var type = $(this).attr('data-type');
+        });
+    })
+</script>
+{/block}

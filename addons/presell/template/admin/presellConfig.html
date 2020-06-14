@@ -1,0 +1,227 @@
+{block name="main"}
+
+        <form class="form-horizontal pt-15 form-validate">
+            <div class="form-group">
+                <label class="col-md-2 control-label">商品预售</label>
+                <div class="col-md-2">
+                    <label class="radio-inline">
+                        <input type="radio" name="is_group_shopping" id="on" {if $addons_data.is_use==1}checked{/if} value="1"> 开启
+                    </label>
+                    <label class="radio-inline">
+                        <input type="radio" name="is_group_shopping" id="off" value="0" {if $addons_data.is_use==0}checked{/if}> 关闭
+                    </label>
+                </div>
+                <span class="info">关闭后所有商品预售活动均不生效</span>
+            </div>
+            {if $has_distribution}
+            <div class="form-group">
+                <label class="col-md-2 control-label">是否参与分销</label>
+                <div class="col-md-2">
+                    <label class="radio-inline">
+                        <input type="radio" name="is_distribution" value="1" {if $addons_data.is_distribution==1}checked{/if}> 参与
+                    </label>
+                    <label class="radio-inline">
+                        <input type="radio" name="is_distribution" value="0" {if $addons_data.is_distribution==0}checked{/if}> 不参与
+                    </label>
+                </div>
+                <span class="info">开启分销后默认所有商品参加</span>
+            </div>
+            <div class="form-group">
+                <label class="col-md-2 control-label">独立分销佣金规则</label>
+                <div class="col-md-2">
+                    <label class="checkbox-inline" style="float:left;margin-left: 5px;width: 60px;">
+                        <input type="checkbox" value="1" {if $addons_data.rule_commission==1} checked {/if} name="rule_commission">开启
+                    </label>
+                </div>
+                <span class="info">不开启则使用默认佣金，开启后必填</span>
+            </div>
+            <div class="form-group {if $addons_data.rule_commission != 1}hide{/if}" id="distribution_input">
+                <label class="col-md-2"></label>
+                <div class="col-md-6">
+                    <div class="input-group w-400">
+                        <div class="input-group-addon">一级返佣</div>
+                        <input type="number" name="first_rebate" class="form-control" min="0" value="{$addons_data.first_rebate}"  {if $addons_data.rule_commission==1} required{/if}>
+                        <div class="input-group-addon">%,二级返佣</div>
+                        <input type="number" name="second_rebate" class="form-control" min="0" value="{$addons_data.second_rebate}"  {if $addons_data.rule_commission==1} required{/if}>
+                        <div class="input-group-addon">%,三级返佣</div>
+                        <input type="number" name="third_rebate" class="form-control" min="0" value="{$addons_data.third_rebate}"  {if $addons_data.rule_commission==1} required{/if}>
+                        <div class="input-group-addon">%</div>
+                    </div>
+                </div>
+            </div>
+            {/if}
+            {if $has_global}
+            <div class="form-group">
+                <label class="col-md-2 control-label">是否参与全球分红</label>
+                <div class="col-md-2">
+                    <label class="radio-inline">
+                        <input type="radio" name="is_global_bonus" {if $addons_data.is_global_bonus==1}checked{/if} value="1"> 参与
+                    </label>
+                    <label class="radio-inline">
+                        <input type="radio" name="is_global_bonus" value="0" {if $addons_data.is_global_bonus==0}checked{/if}> 不参与
+                    </label>
+                </div>
+                <span class="info">开启全球分红后默认所有商品参加</span>
+            </div>
+            {/if}
+            {if $has_area}
+            <div class="form-group">
+                <label class="col-md-2 control-label">是否参与区域分红</label>
+                <div class="col-md-2">
+                    <label class="radio-inline">
+                        <input type="radio" name="is_area_bonus" {if $addons_data.is_area_bonus==1}checked{/if} value="1"> 参与
+                    </label>
+                    <label class="radio-inline">
+                        <input type="radio" name="is_area_bonus" value="0" {if $addons_data.is_area_bonus==0}checked{/if}> 不参与
+                    </label>
+                </div>
+                <span class="info">开启区域分红后默认所有商品参加</span>
+            </div>
+            {/if}
+            {if $has_team}
+            <div class="form-group">
+                <label class="col-md-2 control-label">是否参与团队分红</label>
+                <div class="col-md-2">
+                    <label class="radio-inline">
+                        <input type="radio" name="is_team_bonus" {if $addons_data.is_team_bonus==1}checked{/if} value="1"> 参与
+                    </label>
+                    <label class="radio-inline">
+                        <input type="radio" name="is_team_bonus" value="0" {if $addons_data.is_team_bonus==0}checked{/if}> 不参与
+                    </label>
+                </div>
+                <span class="info">开启团队分红后默认所有商品参加</span>
+            </div>
+            {/if}
+            {if $has_team || $has_area || $has_global}
+            <div class="form-group">
+                <label class="col-md-2 control-label">独立分红佣金规则</label>
+                <div class="col-md-2">
+                    <label class="checkbox-inline" style="float:left;margin-left: 5px;width: 60px;">
+                        <input type="checkbox" value="1" {if $addons_data.rule_bonus==1} checked {/if} name="rule_bonus">开启
+                    </label>
+                </div>
+                <span class="info">不开启则使用默认分红，开启后必填</span>
+            </div>
+            {/if}
+            <div class="form-group {if $addons_data.rule_bonus != 1}hide{/if}" id="bonus_input">
+                <label class="col-md-2"></label>
+                <div class="col-md-8">
+                    <table class="table v-table table-auto-center table-bordered">
+                        <thead>
+                        <tr>
+                            {if $has_global}
+                            <th class="w-200">全球分红</th>
+                             {/if}
+                            {if $has_area}
+                            <th class="w-600">区域分红</th>
+                             {/if}
+                            {if $has_team}
+                            <th class="w-200">团队分红</th>
+                            {/if}
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr>
+                            {if $has_global}
+                            <td>
+                                <div class="input-group">
+                                    <input type="number" name="global_bonus" class="form-control" min="0" value="{$addons_data.global_bonus}" {if $addons_data.rule_bonus==1} required {/if}>
+                                    <div class="input-group-addon">%</div>
+                                </div>
+                            </td>
+                            {/if}
+                            {if $has_area}
+                            <td>
+                                <div class="input-group">
+                                    <div class="input-group-addon">省级</div>
+                                    <input type="number" name="province_bonus" class="form-control" min="0" value="{$addons_data.province_bonus}" {if $addons_data.rule_bonus==1} required {/if}>
+                                    <div class="input-group-addon">%,市级</div>
+                                    <input type="number" name="city_bonus" class="form-control" min="0" value="{$addons_data.city_bonus}" {if $addons_data.rule_bonus==1} required {/if}>
+                                    <div class="input-group-addon">%,区级</div>
+                                    <input type="number" name="district_bonus" class="form-control" value="{$addons_data.district_bonus}" min="0" {if $addons_data.rule_bonus==1} required {/if}>
+                                    <div class="input-group-addon">%</div>
+                                </div>
+                            </td>
+                            {/if}
+                            {if $has_team}
+                            <td>
+                                <div class="input-group">
+                                    <input type="number" name="team_bonus" class="form-control" min="0" value="{$addons_data.team_bonus}" {if $addons_data.rule_bonus==1} required {/if}>
+                                    <div class="input-group-addon">%</div>
+                                </div>
+                            </td>
+                            {/if}
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <div class="form-group"></div>
+            <div class="form-group">
+                <label class="col-md-2 control-label"></label>
+                <div class="col-md-8">
+                    <button class="btn btn-primary save" id="save" type="submit">保存</button>
+                    <a href="javascript:history.go(-1);" class="btn btn-default">返回</a>
+                </div>
+            </div>
+        </form>
+
+{/block}
+{block name="script"}
+<script>
+    require(['util'], function (util) {
+
+        $("input[name='rule_commission']").on('change', function () {
+            if ($(this).is(':checked')) {
+                $("#distribution_input").removeClass('hide');
+                $("#distribution_input").find('input').attr('required', true);
+            } else {
+                $("#distribution_input").addClass('hide');
+                $("#distribution_input").find('input').removeAttr('required', true);
+            }
+        });
+
+        $("input[name='rule_bonus']").on('change', function () {
+            if ($(this).is(':checked')) {
+                $("#bonus_input").removeClass('hide');
+                $("#bonus_input").find('input').attr('required', true);
+            } else {
+                $("#bonus_input").addClass('hide');
+                $("#bonus_input").find('input').removeAttr('required', true);
+            }
+        });
+
+        util.validate($('.form-validate'), function (form) {
+            $.ajax({
+                type: 'POST',
+                dataType: 'json',
+                url : "{:__URL('platform/Menu/addonmenu?addons=presellconfig')}",
+                data: {
+                    'is_presell': $("input[name='is_group_shopping']:checked").val(),//是否开启拼团
+                    'is_distribution' : $("input[name='is_distribution']:checked").val(),//是否参与分销
+                    'rule_commission' : $("input[name='rule_commission']:checked").val(),//是否设置独立分销佣金规则
+                    'first_rebate' : $("input[name='first_rebate']").val(),//一级佣金比例
+                    'second_rebate' : $("input[name='second_rebate']").val(),//二级佣金比例
+                    'third_rebate' : $("input[name='third_rebate']").val(),//三级佣金比例
+                    'is_global_bonus' : $("input[name='is_global_bonus']:checked").val(),//是否参与全球分红
+                    'is_area_bonus' : $("input[name='is_area_bonus']:checked").val(),//是否参与区域分红
+                    'is_team_bonus' : $("input[name='is_team_bonus']:checked").val(),//是否参与团队分红
+                    'rule_bonus' : $("input[name='rule_bonus']:checked").val(),//是否设置独立分红佣金规则
+                    'global_bonus' : $("input[name='global_bonus']").val(),//全球分红比例
+                    'province_bonus' : $("input[name='province_bonus']").val(),//省级分红比例
+                    'city_bonus' : $("input[name='city_bonus']").val(),//市级分红比例
+                    'district_bonus' : $("input[name='district_bonus']").val(),//区级分红比例
+                    'team_bonus' : $("input[name='team_bonus']").val() //团队分红比例
+                },
+                success: function (data) {
+                    if (data['code'] > 0) {
+                        util.message(data["message"], 'success');
+                    } else {
+                        util.message(data["message"], 'danger');
+                    }
+                }
+            });
+        });
+    });
+</script>
+{/block}

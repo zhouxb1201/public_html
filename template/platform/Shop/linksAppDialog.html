@@ -1,0 +1,340 @@
+<div class="links-dialog">
+
+    <ul class="nav nav-tabs v-nav-tabs pt-15" role="tablist">
+        <li role="presentation" class="active"><a href="#mall" aria-controls="mall" role="tab" data-toggle="tab" class="flex-auto-center">商城页面</a></li>
+        <li role="presentation"><a href="#active" aria-controls="active" role="tab" data-toggle="tab" class="flex-auto-center">活动链接</a></li>
+        <li role="presentation"><a href="#category" aria-controls="category" role="tab" data-toggle="tab" class="flex-auto-center">商品分类</a></li>
+        <li role="presentation"><a href="#shopGoods" aria-controls="shopGoods" role="tab" data-toggle="tab" class="flex-auto-center">商品</a></li>
+    </ul>
+    <div class="tab-content min-h-200">
+        <div role="tabpanel" class="tab-pane fade in active" id="mall">
+
+
+
+            <div class="" id="custom">
+                <div class="linkDialog-title">商城基础</div>
+                <a href="javascript:void(0);" class="btn btn-default selectedPage" data-link="mall_home">商城首页</a>
+                <a href="javascript:void(0);" class="btn btn-default selectedPage" data-link="category">商品分类</a>
+                <a href="javascript:void(0);" class="btn btn-default selectedPage" data-link="goods_list">商品列表</a>
+                <a href="javascript:void(0);" class="btn btn-default selectedPage" data-link="shopping_cart">购物车</a>
+                {if $config['shop']}
+<!--                <a href="javascript:void(0);" class="btn btn-default selectedPage" data-link="shop_home">店铺首页</a>-->
+                <a href="javascript:void(0);" class="btn btn-default selectedPage" data-link="shop_street">店铺街</a>
+                <a href="javascript:void(0);" class="btn btn-default selectedPage" data-link="merchants_settled">商家入驻</a>
+                {/if}
+
+
+                <div class="linkDialog-title">会员中心</div>
+                <a href="javascript:void(0);" class="btn btn-default selectedPage" data-link="member">会员中心</a>
+                <a href="javascript:void(0);" class="btn btn-default selectedPage" data-link="order_list">订单列表</a>
+                <a href="javascript:void(0);" class="btn btn-default selectedPage" data-link="assets">会员资产</a>
+                <a href="javascript:void(0);" class="btn btn-default selectedPage" data-link="balance">余额</a>
+                <a href="javascript:void(0);" class="btn btn-default selectedPage" data-link="balance_withdraw">余额提现</a>
+                <a href="javascript:void(0);" class="btn btn-default selectedPage" data-link="balance_recharge">余额充值</a>
+                <a href="javascript:void(0);" class="btn btn-default selectedPage" data-link="balance_details">余额明细</a>
+                <a href="javascript:void(0);" class="btn btn-default selectedPage" data-link="integral">积分</a>
+                {if $config['coupontype']}
+                <a href="javascript:void(0);" class="btn btn-default selectedPage" data-link="coupon_list">优惠券列表</a>
+                {/if}
+                <a href="javascript:void(0);" class="btn btn-default selectedPage" data-link="voucher_list">礼品券列表</a>
+                <a href="javascript:void(0);" class="btn btn-default selectedPage" data-link="consumer_card_list">消费卡列表</a>
+                <a href="javascript:void(0);" class="btn btn-default selectedPage" data-link="bank_account">提现账户</a>
+                {if $config['shop']}
+                <a href="javascript:void(0);" class="btn btn-default selectedPage" data-link="shop_collection">店铺收藏</a>
+                {/if}
+                <a href="javascript:void(0);" class="btn btn-default selectedPage" data-link="goods_collection">商品收藏</a>
+                <a href="javascript:void(0);" class="btn btn-default selectedPage" data-link="address_list">收货地址</a>
+                <a href="javascript:void(0);" class="btn btn-default selectedPage" data-link="accoun_setting">账号设置</a>
+
+
+                {if $config['seckill'] ||  $config['bargain'] || $config['presell'] || $config['groupshopping'] || $config['coupontype'] || $config['signin'] || $config['memberprize'] }
+                <div class="linkDialog-title">营销活动</div>
+                {/if}
+                {if $config['seckill']}
+                <a href="javascript:void(0);" class="btn btn-default selectedPage" data-link="spike_list">秒杀列表</a>
+                {/if}
+                {if $config['bargain']}
+                <a href="javascript:void(0);" class="btn btn-default selectedPage" data-link="bargain_list">砍价列表</a>
+                {/if}
+                {if $config['presell']}
+                <!--<a href="javascript:void(0);" class="btn btn-default selectedPage" data-link="">预售列表</a>-->
+                {/if}
+                {if $config['groupshopping']}
+                <a href="javascript:void(0);" class="btn btn-default selectedPage" data-link="group_list">拼团列表</a>
+                {/if}
+                {if $config['coupontype']}
+                <a href="javascript:void(0);" class="btn btn-default selectedPage" data-link="coupon_centre">领券中心</a>
+                {/if}
+<!--                {if $config['signin']}-->
+<!--                <a href="javascript:void(0);" class="btn btn-default selectedPage" data-link="/signin">签到中心</a>-->
+<!--                {/if}-->
+<!--                {if $config['memberprize']}-->
+<!--                <a href="javascript:void(0);" class="btn btn-default selectedPage" data-link="/prize/list">我的奖品</a>-->
+<!--                {/if}-->
+
+                {if $config['distribution']}
+                <div class="linkDialog-title">分销业务</div>
+                <a href="javascript:void(0);" class="btn btn-default selectedPage" data-link="distribution_center">分销中心</a>
+                <a href="javascript:void(0);" class="btn btn-default selectedPage" data-link="distribution_order">分销订单</a>
+                <a href="javascript:void(0);" class="btn btn-default selectedPage" data-link="distribution_commission">分销佣金</a>
+                <a href="javascript:void(0);" class="btn btn-default selectedPage" data-link="commission_withdraw">佣金提现</a>
+                <a href="javascript:void(0);" class="btn btn-default selectedPage" data-link="commission_detail">佣金明细</a>
+                <a href="javascript:void(0);" class="btn btn-default selectedPage" data-link="distribution_team">分销团队</a>
+                <a href="javascript:void(0);" class="btn btn-default selectedPage" data-link="distribution_customer">分销客户</a>
+                <a href="javascript:void(0);" class="btn btn-default selectedPage" data-link="distribution_promotion_code">分销推广码</a>
+                {/if}
+                {if $config['areabonus']}
+                <div class="linkDialog-title">分红业务</div>
+                <a href="javascript:void(0);" class="btn btn-default selectedPage" data-link="dividend_center">分红中心</a>
+                <a href="javascript:void(0);" class="btn btn-default selectedPage" data-link="dividend_bonus">分红金额</a>
+                <a href="javascript:void(0);" class="btn btn-default selectedPage" data-link="dividend_detail">分红明细</a>
+                <a href="javascript:void(0);" class="btn btn-default selectedPage" data-link="dividend_order">分红订单</a>
+                {/if}
+
+                {if $config['integral']}
+                <div class="linkDialog-title">积分商城</div>
+                <a href="javascript:void(0);" class="btn btn-default selectedPage" data-link="points_home">商城首页</a>
+                <a href="javascript:void(0);" class="btn btn-default selectedPage" data-link="points_ category">商品分类</a>
+                <a href="javascript:void(0);" class="btn btn-default selectedPage" data-link="points_goods_list">商品列表</a>
+                {/if}
+
+                {if $config['channel'] ||  $config['microshop'] }
+                <div class="linkDialog-title">其他模块</div>
+                {/if}
+                {if $config['channel']}
+                <a href="javascript:void(0);" class="btn btn-default selectedPage" data-link="micro_business_center">微商中心</a>
+                {/if}
+                {if $config['microshop']}
+                <a href="javascript:void(0);" class="btn btn-default selectedPage" data-link="micro_shop_center">微店中心</a>
+                {/if}
+                <!--<a href="javascript:void(0);" class="btn btn-default selectedPage" data-link="signin_center">任务中心</a>
+                <a href="javascript:void(0);" class="btn btn-default selectedPage" data-link="my_prize">奖品列表</a>-->
+            </div>
+
+        </div>
+        <div role="tabpanel" class="tab-pane fade" id="active">
+            <div class="linkDialog-title">领取优惠券</div>
+            <div id="coupon_receive">
+            </div>
+            <div class="linkDialog-title">领取礼品券</div>
+            <div id="voucher_receive">
+            </div>
+        </div>
+        <div role="tabpanel" class="tab-pane fade" id="category">
+            <p class="form-control-static">请选择要跳转的分类页<span class="pull-right small-muted">你选择的分类是：<b id="selectedSort"></b></span></p>
+            <div class="category-group flex">
+                <div class="list flex-1" id="sort1"></div>
+                <div class="list flex-1" id="sort2"></div>
+                <div class="list flex-1" id="sort3"></div>
+            </div>
+        </div>
+        <div role="tabpanel" class="tab-pane fade" id="shopGoods">
+            <p class="form-control-static">请选择要跳转的商品</p>
+            <form class="form-horizontal">
+                <div class="input-group mb-10">
+                    <input type="text" class="form-control" id="search_text" placeholder="请输入商品名称">
+                    <span class="input-group-btn"><button type="button" class="btn btn-primary" id="search_goods">搜索</button></span>
+                </div>
+                <div class="links-list">
+                </div>
+            </form>
+        </div>
+    </div>
+    <input type="hidden" id="selectedData">
+</div>
+
+<script>
+    getCustomOfCoupon();//优惠券
+    getCustomOfVoucher();//优惠券
+    //获取优惠券链接
+    function getCustomOfCoupon() {
+        $.ajax({
+            type: "post",
+            url: __URL('platform/addons/execute/addons/coupontype/controller/Coupontype/action/couponTypeList'),
+            data: {
+                "page_size": 0,
+                "end_receive_time": true //领取结束时间大于当前时间才行
+            },
+            success: function (data) {
+                var html = "";
+                if (data['addon_status']['is_appshop'] == 1) {
+                    if (data['data'].length > 0) {
+                        for (var i = 0; i < data['data'].length; i++) {
+                            var curr = data['data'][i];
+                            html += '<a href="javascript:void(0);" class="btn btn-default selectedCouponPage" data-link="coupon_receive/'+curr.coupon_type_id+'" data-id="'+curr.coupon_type_id+'" ">' + curr.coupon_name + '</a> ';
+                        }
+                    } else {
+                        html += '<div class="padding-15" style="text-align: center">暂无符合条件的数据记录</div>';
+                    }
+                }
+                $("#coupon_receive").html(html);
+            }
+        });
+    };
+    //获取礼品券链接
+    function getCustomOfVoucher() {
+        $.ajax({
+            type: "post",
+            url: __URL('platform/addons/execute/addons/giftvoucher/controller/Giftvoucher/action/giftvoucherList'),
+            data: {
+                "page_size": 0,
+                "end_receive_time": true //领取结束时间大于当前时间才行
+            },
+            success: function (data) {
+                var html = "";
+                if (data['addon_status']['is_appshop'] == 1) {
+                    if (data['data'].length > 0) {
+                        for (var i = 0; i < data['data'].length; i++) {
+                            var curr = data['data'][i];
+                            html += '<a href="javascript:void(0);" class="btn btn-default selectedVoucherPage" data-link="voucher_receive/'+curr.promotion_gift_id+'"  data-id="'+curr.promotion_gift_id+'" ">' + curr.giftvoucher_name + '</a> ';
+                        }
+                    } else {
+                        html += '<div class="padding-15" style="text-align: center">暂无符合条件的数据记录</div>';
+                    }
+                }
+                $("#voucher_receive").html(html);
+            }
+        });
+    };
+
+$(function () {
+    var dataJson;
+    var l1 = 0,
+        l2 = 0;
+    var cname1, cname2, cname3;
+    var canClose = !1;
+
+    // 获取分类数据
+    $.ajax({
+        type: "post",
+        data: {},
+        url: __URL(PLATFORMMAIN + '/custom_template_api/getshopcategory'),
+        success: function (res) {
+            dataJson = res;
+            fillData();
+        }
+    });
+    // 搜索商品
+    $("#search_goods").on('click', function () {
+        $.ajax({
+            type: "post",
+            data: {
+                "search_text": $("#search_text").val()
+            },
+            url: __URL(PLATFORMMAIN + '/shop/getSearchGoods'),
+            success: function (res) {
+                var data = res['data'];
+                var html = "";
+                if (data.length > 0) {
+                    for (var i = 0; i < data.length; i++) {
+                        var curr = data[i];
+                        html += '<div class="item">';
+                        html += '<div class="media">';
+                        html += '<div class="media-left">';
+                        if (curr["picture_info"] != null) {
+                            html += '<img src="' + __IMG(curr["picture_info"]['pic_cover_micro']) + '" alt="" width="60" height="60">';
+                        } else {
+                            html += '<img src="http://iph.href.lu/60x60?text=60x60" alt="" width="60" height="60">'
+                        }
+                        html += '</div>';
+                        html += '<div class="media-body max-w-300">';
+                        html += '<div class="line-2-ellipsis">' + curr["goods_name"] + '</div>';
+                        html += '<div class="line-1-ellipsis text-danger">' + curr['price'] + '</div>';
+                        html += '<div class="line-1-ellipsis">' + curr['shop_name'] + '</div>';
+                        html += '</div>';
+                        html += '</div>';
+                        html += '<a href="javascript:void(0);" class="btn btn-default selectedGoods" data-goods-name="' + curr["goods_name"] + '" data-id="' + curr["goods_id"] + '">选择</a>';
+                        html += '</div>';
+                    }
+                } else {
+                    html += '暂无符合条件的数据记录';
+                }
+                $("#shopGoods").find(".links-list").html(html);
+            }
+        });
+    })
+    // 选中商品
+    $('.links-dialog').on('click','.selectedGoods', function () {
+        //console.log($(this).data('id'));
+        selecteddata('goods', $(this).data('id'), '商品：' + $(this).data('goods-name'))
+    })
+    // 选中页面
+    $('.links-dialog').on('click','.selectedPage',function(){
+        $(this).siblings().removeClass('btn-primary');
+        $(this).addClass('btn-primary');
+        selecteddata('page',$(this).data('link'), '页面：' + $(this).html())
+    })
+    // 优惠券选中页面
+    $('.links-dialog').on('click','.selectedCouponPage',function(){
+        $(this).siblings().removeClass('btn-primary');
+        $(this).addClass('btn-primary');
+        selecteddata('page',$(this).data('link'), $(this).html())
+    })
+    // 礼品券选中页面
+    $('.links-dialog').on('click','.selectedVoucherPage',function(){
+        $(this).siblings().removeClass('btn-primary');
+        $(this).addClass('btn-primary');
+        selecteddata('page',$(this).data('link'), $(this).html())
+    })
+
+    $('#sort1').on('click', '.item', function() {
+        $(this).addClass('active').siblings().removeClass('active');
+        $('#sort3').html('');
+        fillData($(this).index());
+        l1 = $(this).index();
+        cname1 = $(this).text();
+        cid1 = $(this).data('id');
+        canClose = !1;
+        // console.log('一级分类id==>',cid1);
+        $('#selectedSort').html(cname1);
+        selecteddata('category', cid1, '分类：' + cname1);
+    });
+    $('#sort2').on('click', '.item', function() {
+        $(this).addClass('active').siblings().removeClass('active');
+        fillData(l1, $(this).index());
+        l2 = $(this).index();
+        cname2 = $(this).text();
+        cid2 = $(this).data('id');
+        canClose = !1;
+        // console.log('一级分类id==>',cid1 + '；二级分类id==>' + cid2);
+        $('#selectedSort').html(cname1 +' > '+ cname2);
+        selecteddata('category', cid2, '分类：' + cname2);
+    });
+    $('#sort3').on('click', '.item', function() {
+        $(this).addClass('active').siblings().removeClass('active');
+        cname3 = $(this).text();
+        cid3 = $(this).data('id');
+        canClose = !0;
+        // console.log('一级分类id==>',cid1 + '；二级分类id==>' + cid2 + '；三级分类id==>' + cid3);
+        $('#selectedSort').html(cname1 +' > '+ cname2 +' > '+ cname3);
+        selecteddata('category', cid3, '分类：' +  cname3);
+    });
+    function fillData(l1, l2) {
+        var temp_html = "";
+        if (typeof(dataJson.data) != 'undefined' && arguments.length == 0) {
+            $.each(dataJson.data, function(i, e) {
+                temp_html += '<a href="javascript:void(0);" class="item" data-id="' + e.category_id + '">' + e.short_name + '</a>';
+            });
+        } else if (typeof(dataJson.data[l1].child_list) != 'undefined' && arguments.length == 1) {
+            $.each(dataJson.data[l1].child_list, function(i, e) {
+                temp_html += '<a href="javascript:void(0);" class="item" data-id="' + e.category_id + '">' + e.short_name + '</a>';
+            });
+        } else if (typeof(dataJson.data[l1].child_list[l2].child_list) != 'undefined' && arguments.length == 2) {
+            $.each(dataJson.data[l1].child_list[l2].child_list, function(i, e) {
+                temp_html += '<a href="javascript:void(0);" class="item" data-id="' + e.category_id + '">' + e.short_name + '</a>';
+            });
+        }
+        $('.category-group .list:eq(' + arguments.length + ')').html(temp_html);
+    }
+
+    function selecteddata(type,params,name){
+        var selecteddata = {
+            type:type,
+            params:params,
+            name: name,
+        }
+        $('#selectedData').data(selecteddata);
+    }
+    
+})
+</script>

@@ -1,0 +1,557 @@
+{block name="main"}
+		<!-- page -->
+		<form class="form-horizontal form-validate pt-15 widthFixedForm">
+			<input type="hidden" id=channel_grade_id value="{$list.channel_grade_id}" name="channel_grade_id">
+			<div class="form-group">
+				<label class="col-md-2 control-label"><span class="text-bright">*</span>等级名称</label>
+				<div class="col-md-5">
+					<input type="text" class="form-control" name="channel_grade_name" required value="{if $list.channel_grade_name}{$list.channel_grade_name}{/if}" >
+				</div>
+			</div>
+			<div class="form-group">
+				<label class="col-md-2 control-label"><span class="text-bright">*</span>进货折扣</label>
+				<div class="col-md-5">
+					<div class="input-group w-200">
+						<input type="number" class="form-control" min="0" name="purchase_discount" required value="{if $list.purchase_discount}{$list.purchase_discount}{/if}" >
+						<div class="input-group-addon">%</div>
+					</div>
+					<div class="help-block mb-0">该等级权重从总店进货的折扣，只填0-100的数字即可。例：50代表50%</div>
+				</div>
+			</div>
+			<div class="form-group hide" id="flat_first">
+				<label class="col-md-2 control-label"><span class="text-bright">*</span>平一级奖</label>
+				<div class="col-md-5">
+					<div class="input-group">
+						<input type="number" class="form-control" min="0" name="flat_first" required value="{if $list.flat_first}{$list.flat_first}{/if}" >
+						<div class="input-group-addon">%</div>
+					</div>
+					<div class="help-block mb-0">进货价 * 平一级奖百分比 = 平一级奖</div>
+				</div>
+			</div>
+			<div class="form-group hide" id="flat_second">
+			<label class="col-md-2 control-label"><span class="text-bright">*</span>平二级奖</label>
+			<div class="col-md-5">
+				<div class="input-group">
+					<input type="number" class="form-control" min="0" name="flat_second" required value="{if $list.flat_second}{$list.flat_second}{/if}" >
+					<div class="input-group-addon">%</div>
+				</div>
+				<div class="help-block mb-0">进货价 * 平二级奖百分比 = 平二级奖</div>
+			</div>
+		</div>
+			<div class="form-group hide" id="flat_third">
+				<label class="col-md-2 control-label"><span class="text-bright">*</span>平三级奖</label>
+				<div class="col-md-5">
+					<div class="input-group">
+						<input type="number" class="form-control" min="0" name="flat_third" required value="{if $list.flat_third}{$list.flat_third}{/if}" >
+						<div class="input-group-addon">%</div>
+					</div>
+					<div class="help-block mb-0">进货价 * 平三级奖百分比 = 平三级奖</div>
+				</div>
+			</div>
+			<div class="form-group hide" id="cross_level">
+				<label class="col-md-2 control-label"><span class="text-bright">*</span>跨级奖</label>
+				<div class="col-md-5">
+					<div class="input-group">
+						<input type="number" class="form-control" min="0" name="cross_level" required value="{if $list.cross_level}{$list.cross_level}{/if}" >
+						<div class="input-group-addon">%</div>
+					</div>
+					<div class="help-block mb-0">进货价 * 跨级奖百分比 = 跨级奖</div>
+				</div>
+			</div>
+			<div class="form-group">
+				<label class="col-md-2 control-label"><span class="text-bright">*</span>最小进货金额</label>
+				<div class="col-md-5">
+					<div class="input-group w-200">
+						<input type="number" class="form-control" min="0" name="minimum_purchase_amount" required value="{if $list.minimum_purchase_amount}{$list.minimum_purchase_amount}{/if}" >
+						<div class="input-group-addon">元</div>
+					</div>
+				</div>
+			</div>
+			{if $list.weight != 1}
+			<div class="form-group">
+				<label class="col-md-2 control-label">自动升级</label>
+				<div class="col-md-5">
+					<div class="switch-inline">
+						<input type="checkbox" id="upgrade-switch" value="" name="auto_upgrade" {if $list.auto_upgrade==1}checked{/if}>
+						<label for="upgrade-switch"></label>
+					</div>
+				</div>
+			</div>
+			<div id="isupgrade" class="{if $list.auto_upgrade!=1}hide{/if}">
+				<div class="form-group">
+					<label class="col-md-2 control-label"><span class="text-bright"></span>升级条件</label>
+					<div class="col-md-5">
+						<div>
+						<label class="radio-inline">
+							<input type="radio"   value="all" checked name="upgrade_condition" {if $list.upgrade_condition=='all'}checked{/if}> 满足所有勾选条件
+						</label>
+						<label class="radio-inline">
+							<input type="radio"  value="single" name="upgrade_condition" {if $list.upgrade_condition=='single'}checked{/if}> 满足勾选条件之一即可
+						</label>
+						</div>
+					</div>
+				</div>
+				<div class="form-group" id="upgrade-condition">
+					<label class="col-md-2 control-label"></label>
+					<div class="col-md-8">
+						<div class="form-additional" style="width: auto">
+							<div class="form-group">
+								<label class="col-md-4 control-label"><input type="checkbox" name="upgradeconditions" value="up_total_purchase_num"> 累计采购量</label>
+								<div class="col-md-7 control-group">
+									<div class="input-group">
+										<input type="number" class="form-control" min="0" name="up_total_purchase_num" value="{if $list.upgrade_val.up_total_purchase_num>0}{$list.upgrade_val.up_total_purchase_num}{/if}">
+										<div class="input-group-addon">件</div>
+									</div>
+								</div>
+							</div>
+							<div class="form-group">
+								<label class="col-md-4 control-label"><input type="checkbox" name="upgradeconditions" value="up_total_purchase_amount"> 累计采购金额</label>
+								<div class="col-md-7 control-group">
+									<div class="input-group">
+										<input type="number" class="form-control" min="0" name="up_total_purchase_amount" value="{if $list.upgrade_val.up_total_purchase_amount}{$list.upgrade_val.up_total_purchase_amount}{/if}">
+										<div class="input-group-addon">元</div>
+									</div>
+								</div>
+							</div>
+							<div class="form-group">
+								<label class="col-md-4 control-label"><input type="checkbox" name="upgradeconditions" value="up_total_order_num"> 累计采购单</label>
+								<div class="col-md-7 control-group">
+									<div class="input-group">
+										<input type="number" class="form-control" min="0" name="up_total_order_num" value="{if $list.upgrade_val.up_total_order_num}{$list.upgrade_val.up_total_order_num}{/if}">
+										<div class="input-group-addon">笔</div>
+									</div>
+								</div>
+							</div>
+							<div class="form-group">
+								<label class="col-md-4 control-label"><input type="checkbox" name="upgradeconditions" value="goods_id"> 购买指定商品</label>
+								<div class="col-md-7 control-group">
+									<!--<div class="picture-list">
+										<a href="javascript:;" class="plus-box search_goods">
+											{if $list.upgrade_val.pic}
+											<img src="{:__IMG($list.upgrade_val.pic)}" style='width:80px;height:80px;'>
+											{else}
+											<i class="icon icon-plus"></i>
+											{/if}
+										</a>
+									</div>-->
+									<div class="picture-list">
+										<a href="javascript:;" class="{if $list.upgrade_val.pic}close-box1 has-pic{else}plus-box search_goods{/if}">
+											{if $list.upgrade_val.pic}
+											<i class='icon icon-danger' title='删除'></i><img src="{:__IMG($list.upgrade_val.pic)}" style='width:80px;height:80px;margin:0;'>
+											{else}
+											<i class="icon icon-plus"></i>
+											{/if}
+										</a>
+										<input type="text" class="visibility" data-visi-type="singlePicture" name="picture-Logo">
+									</div>
+									<input type="hidden" name='pic_id' id="pic_id" value="">
+									<input type="hidden" name='selectgoods_id' id="selectgoods_id" value="{$list.upgrade_val.goods_id}">
+									<div class="input-group selectid">
+										{if($list.upgrade_val.goods_id)}指定商品：{$list.upgrade_val.goods_name}{/if}
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="form-group">
+				<label class="col-md-2 control-label">自动降级</label>
+				<div class="col-md-5">
+					<div class="switch-inline">
+						<input type="checkbox" id="downgrade-switch" value="1" name="auto_downgrade" {if $list.auto_downgrade==1}checked{/if}>
+						<label for="downgrade-switch"></label>
+					</div>
+				</div>
+			</div>
+			<div id="isdowngrade" class="{if $list.auto_downgrade!=1}hide{/if}">
+				<div class="form-group">
+					<label class="col-md-2 control-label"><span class="text-bright"></span>降级条件</label>
+					<div class="col-md-5">
+						<div>
+						<label class="radio-inline">
+							<input type="radio"  value="all" checked name="downgrade_condition" {if $list.downgrade_condition=='all'}checked{/if}> 满足所有勾选条件
+						</label>
+						<label class="radio-inline">
+							<input type="radio" value="single" name="downgrade_condition" {if $list.downgrade_condition=='single'}checked{/if}> 满足勾选条件之一即可
+						</label>
+						</div>
+					</div>
+				</div>
+				<div class="form-group" id="downgrade-condition">
+					<label class="col-md-2 control-label"></label>
+					<div class="col-md-8">
+						<div class="form-additional" style="width: auto">
+							<div class="form-group">
+								<label class="col-md-4 control-label"><input type="checkbox" name="downgradeconditions" value="down_total_purchase_num_cond"> 累计采购量</label>
+								<div class="col-md-7 control-group">
+									<div class="input-group">
+										<input type="number" class="form-control" min="0" name="down_total_purchase_num_day" value="{if $list.downgrade_val.down_total_purchase_num_day}{$list.downgrade_val.down_total_purchase_num_day}{/if}">
+										<div class="input-group-addon">天内，少于</div>
+										<input type="number" class="form-control" min="0" name="down_total_purchase_num" value="{if $list.downgrade_val.down_total_purchase_num}{$list.downgrade_val.down_total_purchase_num}{/if}">
+										<div class="input-group-addon">件</div>
+									</div>
+								</div>
+							</div>
+							<div class="form-group">
+								<label class="col-md-4 control-label"><input type="checkbox" name="downgradeconditions" value="down_total_purchase_amount_cond"> 累计采购金额</label>
+								<div class="col-md-7 control-group">
+									<div class="input-group">
+										<input type="number" class="form-control" min="0" name="down_total_purchase_amount_day" value="{if $list.downgrade_val.down_total_purchase_amount_day}{$list.downgrade_val.down_total_purchase_amount_day}{/if}">
+										<div class="input-group-addon">天内，少于</div>
+										<input type="number" class="form-control" min="0" name="down_total_purchase_amount" value="{if $list.downgrade_val.down_total_purchase_amount>0}{$list.downgrade_val.down_total_purchase_amount}{/if}">
+										<div class="input-group-addon">元</div>
+									</div>
+								</div>
+							</div>
+							<div class="form-group">
+								<label class="col-md-4 control-label"><input type="checkbox" name="downgradeconditions" value="down_total_order_num_cond"> 累计采购单</label>
+								<div class="col-md-7 control-group">
+									<div class="input-group">
+										<input type="number" class="form-control" min="0" name="down_total_order_num_day" value="{if $list.downgrade_val.down_total_order_num_day}{$list.downgrade_val.down_total_order_num_day}{/if}">
+										<div class="input-group-addon">天内，少于</div>
+										<input type="number" class="form-control" min="0" name="down_total_order_num" value="{if $list.downgrade_val.down_total_order_num>0}{$list.downgrade_val.down_total_order_num}{/if}">
+										<div class="input-group-addon">笔</div>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="form-group">
+				<label class="col-md-2 control-label"><span class="text-bright">*</span>权重</label>
+				<input type="hidden" name="hide_weight" id="weight" value="{$list.weight}">
+				<div class="col-md-5">
+					<input type="number" min="1" class="form-control" name="weight" required value="{if $list.weight}{$list.weight}{/if}">
+					<div class="mb-0 help-block">等级权重，数字越大级别越高。按设置的权重大小从低到高进行升级。</div>
+				</div>
+			</div>
+			{/if}
+
+			<div class="form-group">
+				<label class="col-md-2 control-label"></label>
+				<div class="col-md-8">
+					{if $list.channel_grade_id}
+					<button class="btn btn-primary add" type="submit">保存</button>
+					{else}
+					<button class="btn btn-primary add" type="submit">添加</button>
+					{/if}
+
+					<a href="javascript:history.go(-1);" class="btn btn-default">返回</a>
+				</div>
+			</div>
+		</form>
+
+
+		<input type="hidden" value="{$level_weight}" id="level_weight" name="level_weight">
+
+		<!-- page end -->
+{/block}
+{block name="script"}
+<script>
+    require(['util'],function(util){
+        loading();
+        function loading() {
+            //是否开启了平级奖
+			var peers_status = "{$channel_config.peers_status}";
+            //控制平二级、平三级比例是否显示
+			var channel_peers = "{$channel_config.channel_peers}";
+			if(peers_status == 1){
+                if(channel_peers == 2){
+                    $('#flat_first').removeClass('hide');
+                    $('#flat_first').addClass('show');
+                    $('#flat_second').removeClass('hide');
+                    $('#flat_second').addClass('show');
+                    $('input[name=flat_third]').attr('required', false);
+                }else if(channel_peers == 1){
+                    $('#flat_first').removeClass('hide');
+                    $('#flat_first').addClass('show');
+                    $('input[name=flat_second]').attr('required', false);
+                    $('input[name=flat_third]').attr('required', false);
+                }else if(channel_peers == 3){
+                    $('#flat_first').removeClass('hide');
+                    $('#flat_first').addClass('show');
+                    $('#flat_second').removeClass('hide');
+                    $('#flat_second').addClass('show');
+                    $('#flat_third').removeClass('hide');
+                    $('#flat_third').addClass('show');
+				}
+			}else{
+                $('input[name=flat_first]').attr('required', false);
+                $('input[name=flat_second]').attr('required', false);
+                $('input[name=flat_third]').attr('required', false);
+			}
+			//是否开启了跨级奖
+			var cross_status = "{$channel_config.cross_status}";
+			if(cross_status == 1){
+				$('#cross_level').removeClass('hide');
+				$('#cross_level').addClass('show');
+			}else{
+                $('input[name=cross_level]').attr('required', false);
+			}
+			// 显示勾选等级条件复选框
+            var upgradeconditions = "{$list.upgrade_conditions}";
+            upgradeconditions = upgradeconditions.split(',');
+            for (var i = 0; i < upgradeconditions.length; i++) {
+                $('[name="upgradeconditions"][value="' + upgradeconditions[i] + '"]').prop("checked", true);
+            }
+            var downgradeconditions = "{$list.downgrade_conditions}";
+            downgradeconditions = downgradeconditions.split(',');
+            for (var i = 0; i < downgradeconditions.length; i++) {
+                $('[name="downgradeconditions"][value="' + downgradeconditions[i] + '"]').prop("checked", true);
+            }
+        }
+        //只要勾选了自动升降级，则升降级条件必选
+        $("#upgrade-switch").change(function () {
+            var auto_upgrade = $(this).is(':checked')?1:2;
+            if(auto_upgrade==1){
+                $("input[name='upgrade_condition']").attr("required",true);
+				$("#isupgrade").removeClass("hide");
+            }else{
+                $("input[name='upgrade_condition']").removeAttr("required",true);
+				$("#isupgrade").addClass("hide");
+            }
+        })
+        $("#downgrade-switch").change(function () {
+            var auto_downgrade = $(this).is(':checked')?1:2;
+            if(auto_downgrade==1){
+                $("input[name='downgrade_condition']").attr("required",true);
+				$("#isdowngrade").removeClass("hide");
+            }else{
+                $("input[name='downgrade_condition']").removeAttr("required",true);
+				$("#isdowngrade").addClass("hide");
+            }
+        })
+
+		//勾选了条件值前面的复选框，则条件值必填
+        $("input[name='upgradeconditions']").click(function () {
+			var vals = $(this).val();
+			if(vals != 'goods_id'){
+				if($(this).is(':checked')){
+					$(this).parent(".control-label").siblings(".control-group").find("input").attr("required",true);
+				} else{
+					$(this).parents(".form-group").removeClass('has-error');
+					$(this).parents(".form-group").find('.help-block-error').html('');
+					$(this).parent(".control-label").siblings(".control-group").find("input").removeAttr("required",true);
+				}
+			}else{
+				if($(this).is(':checked')){
+					if($('.close-box1').hasClass('has-pic')){
+
+					}else{
+						$(this).parent(".control-label").siblings(".control-group").find("input").attr("required",true);
+					}
+				}else{
+					$(this).parents(".form-group").removeClass('has-error');
+					$(this).parents(".form-group").find('.help-block-error').html('');
+					$(this).parent(".control-label").siblings(".control-group").find("input").removeAttr("required",true);
+				}
+			}
+
+        })
+        $("input[name='downgradeconditions']").click(function () {
+            if($(this).is(':checked')){
+                $(this).parent(".control-label").siblings(".control-group").find("input").attr("required",true);
+            } else{
+                $(this).parents(".form-group").removeClass('has-error');
+                $(this).parents(".form-group").find('.help-block-error').html('');
+                $(this).parent(".control-label").siblings(".control-group").find("input").removeAttr("required",true);
+            }
+        })
+
+        //设置具体的值，自动勾选前面的条件选项
+        $("input[name='upgradeconditions']").parent(".control-label").siblings(".control-group").find("input").change(function(){
+            if($(this).val() != ''){
+                $(this).parent().parent().siblings().find('input').attr('checked',true);
+            }else{
+                $(this).parent().parent().siblings().find('input').attr('checked',false);
+            }
+        })
+        //设置具体的值，自动勾选前面的条件选项
+        $("input[name='downgradeconditions']").parent(".control-label").siblings(".control-group").find("input").change(function(){
+            if($(this).val() != ''){
+                $(this).parent().parent().siblings().find('input').attr('checked',true);
+            }else{
+                $(this).parent().parent().siblings().find('input').attr('checked',false);
+            }
+        })
+
+		//验证权重是否存在
+        $("input[name='weight']").on('blur',function () {
+            var default_weight = $("#weight").val();
+            var weight = $("input[name='weight']").val();
+            var arr = $("#level_weight").val();
+            for(var i = 0; i < arr.length; i++){
+                if(parseInt(weight) === parseInt(arr[i]) && default_weight != weight){
+					util.message('该等级权重值已存在','danger');
+					$("input[name='weight']").val('');
+					return false;
+                }
+            }
+        })
+		//提交值进行添加修改
+        util.validate($('.form-validate'),function(form){
+            data = {};
+            //等级id
+            var channel_grade_id = $("input[id='channel_grade_id']").val();
+            data.channel_grade_id = channel_grade_id;
+            //等级名称
+            var channel_grade_name = $("input[name='channel_grade_name']").val();
+			data.channel_grade_name = channel_grade_name;
+            //进货折扣
+			var purchase_discount = $("input[name='purchase_discount']").val();
+            data.purchase_discount = purchase_discount;
+			//平一级奖
+            var flat_first = $("input[name='flat_first']").val();
+            data.flat_first = flat_first;
+            //平二级奖
+            var flat_second = $("input[name='flat_second']").val();
+            data.flat_second = flat_second;
+            //平三级奖
+            var flat_third = $("input[name='flat_third']").val();
+            data.flat_third = flat_third;
+            //跨级奖
+			var cross_level = $("input[name='cross_level']").val();
+            data.cross_level = cross_level;
+			//最小进货金额
+			var minimum_purchase_amount = $("input[name='minimum_purchase_amount']").val();
+            data.minimum_purchase_amount = minimum_purchase_amount;
+			//勾选的顶级条件（单选框）
+			if($('input[name=auto_upgrade]').is(':checked')){
+                //是否开启自动升级
+                data.auto_upgrade = 1;
+                var upgrade_condition = $("input[name='upgrade_condition']:checked").val();
+                if(upgrade_condition === undefined){
+                    util.message('请勾选升级条件','danger');
+                    return false;
+                }
+                data.upgrade_condition = upgrade_condition;
+                //勾选的具体升级条件，用逗号连接
+                var upgrade_conditions = $("input:checkbox[name='upgradeconditions']:checked").map(function(index,elem) {
+                    return $(elem).val();
+                }).get().join(',');
+                if(upgrade_condition !== undefined && upgrade_conditions == ''){
+                    util.message('请至少选择一个升级勾选条件','danger');
+                    return false;
+                }
+                data.upgrade_conditions = upgrade_conditions;
+                //填写的具体升级条件值
+                //累计采购量
+                var up_total_purchase_num = $("input[name='up_total_purchase_num']").val();
+                data.up_total_purchase_num = up_total_purchase_num;
+                //累计采购金额
+                var up_total_purchase_amount = $("input[name='up_total_purchase_amount']").val();
+                data.up_total_purchase_amount = up_total_purchase_amount;
+                //累计采购单
+                var up_total_order_num = $("input[name='up_total_order_num']").val();
+                data.up_total_order_num = up_total_order_num;
+                //商品id
+                var goods_id = $("input[name='selectgoods_id']").val();
+                data.goods_id = goods_id;
+			}else{
+                data.auto_upgrade = 0;
+			}
+
+            if($('input[name=auto_downgrade]').is(':checked')){
+                //是否开启自动降级
+                data.auto_downgrade = 1;
+                //勾选的顶级条件（单选框）
+                var downgrade_condition = $("input[name='downgrade_condition']:checked").val();
+                if(downgrade_condition === undefined){
+                    util.message('请勾选降级条件','danger');
+                    return false;
+                }
+                data.downgrade_condition = downgrade_condition;
+                //勾选的具体升级条件，用逗号连接
+                var downgrade_conditions = $("input:checkbox[name='downgradeconditions']:checked").map(function(index,elem) {
+                    return $(elem).val();
+                }).get().join(',');
+                if(downgrade_condition !== undefined && downgrade_conditions == ''){
+                    util.message('请至少选择一个升级勾选条件','danger');
+                    return false;
+                }
+                data.downgrade_conditions = downgrade_conditions;
+                //填写的具体降级条件值
+                //累计采购量
+				// if($("input:checkbox[name='downgradeconditions']").eq(0).is('checked'))
+				if($("input[value='down_total_purchase_num_cond']").is(':checked')){
+                    var down_total_purchase_num_day = $("input[name='down_total_purchase_num_day']").val();
+                    var down_total_purchase_num = $("input[name='down_total_purchase_num']").val();
+                    var down_total_purchase_num_cond = down_total_purchase_num_day + ',' + down_total_purchase_num;
+                    data.down_total_purchase_num_cond = down_total_purchase_num_cond;
+                }
+                if($("input[value='down_total_purchase_amount_cond']").is(':checked')){
+                    //累计采购金额
+                    var down_total_purchase_amount_day = $("input[name='down_total_purchase_amount_day']").val();
+                    var down_total_purchase_amount = $("input[name='down_total_purchase_amount']").val();
+                    var down_total_purchase_amount_cond = down_total_purchase_amount_day + ',' + down_total_purchase_amount;
+                    data.down_total_purchase_amount_cond = down_total_purchase_amount_cond;
+				}
+				if($("input[value='down_total_order_num_cond']").is(':checked')){
+                    //累计采购单
+                    var down_total_order_num_day = $("input[name='down_total_order_num_day']").val();
+                    var down_total_order_num = $("input[name='down_total_order_num']").val();
+                    var down_total_order_num_cond = down_total_order_num_day + ',' + down_total_order_num;
+                    data.down_total_order_num_cond = down_total_order_num_cond;
+				}
+			}else{
+                //是否开启自动降级
+                data.auto_downgrade = 0;
+			}
+			//权重
+			var weight = $("input[name='weight']").val();
+			data.weight = weight;
+            $.ajax({
+                type: "post",
+                url: "{$updateChannelGrade}",
+                data: data,
+                async: true,
+                success: function (data) {
+                    if (data['code'] > 0) {
+                        util.message(data["message"], 'success', "{:__URL('ADDONS_MAINchannelGradeList')}");
+                    } else {
+                        util.message(data["message"], 'danger');
+                    }
+                }
+            });
+
+        })
+		//选择商品
+        // $('.search_goods').on('click', function () {
+        //     var url = "{:__URL('PLATFORM_MAIN/goods/selectGoodsList')}";
+        //     var obj = $(this);
+        //     util.confirm('选择商品','url:'+url, function () {
+        //         var data = this.$content.find('.goods_val').val();
+        //         var pic = $('#pic_id').val();
+        //         $(".selectid").html('指定商品：'+data);
+        //         html='';
+        //         html += "<img src="+__IMG(pic)+" style='width:80px;height:80px;'>";
+        //         $(".search_goods").html(html);
+        //         if(pic != ''){
+        //             obj.parent().parent().parent().find('input[type=checkbox]').attr('checked',true);
+        //         }
+        //     })
+
+        // })
+
+        $('body').on('click','.search_goods', function () {
+            var url = "{:__URL('PLATFORM_MAIN/goods/selectGoodsList')}";
+            util.confirm('选择商品','url:'+url, function () {
+                var data = this.$content.find('.goods_val').val();
+                var pic = $('#pic_id').val();
+                $(".selectid").html('指定商品：'+data);
+                html='';
+                html += "<i class='icon icon-danger' title='删除'></i><img src="+__IMG(pic)+" style='width:80px;height:80px;margin:0;'>";
+                $(".search_goods").html(html);
+                $(".search_goods").find('.visibility').removeAttr("required");
+                $(".search_goods").addClass('close-box1').addClass('has-pic').removeClass('plus-box').removeClass('search_goods');
+                $(".close-box1").html(html);
+                $(".close-box1").siblings('.visibility').removeAttr("required");
+            },'large')
+
+        })
+
+    })
+</script>
+{/block}

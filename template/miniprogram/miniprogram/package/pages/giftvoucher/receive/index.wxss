@@ -1,0 +1,144 @@
+page{
+  font-size: 28rpx;
+  background-color: #ff454e;
+}
+
+.giftvoucher_detail_box{  
+  padding: 20rpx 30rpx;
+  color: #fff;
+}
+.giftvoucher_detail_box .info{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+}
+.giftvoucher_detail_box .info .logo{
+  width: 120rpx;
+  height: 120rpx;
+  border-radius: 50%;
+  border: 2px solid #fff;
+  overflow: hidden;
+}
+.giftvoucher_detail_box .info .logo image{
+  width: 100%;
+  height: 100%;
+}
+.giftvoucher_detail_box .info .name{
+  margin: 10rpx 0;
+}
+.giftvoucher_detail_box .info .time{
+  color: #ccc;
+  font-size: 24rpx;
+}
+
+.giftvoucher_box{
+  background-color: #fff;
+  margin: 30rpx 40rpx;
+  padding: 40rpx 30rpx;
+  display: flex;
+  align-items: center;
+  color: #ffab33;
+  border-radius: 4px;
+  justify-content: space-between;
+  position: relative;
+}
+.giftvoucher_box::after{
+  content: '';
+  display: block;
+  position: absolute;
+  width: 32rpx;
+  height: 32rpx;
+  background-color: #f44;
+  border-radius: 50%;
+  top: 50%;
+  left: -10rpx;
+  margin-top: -16rpx; 
+}
+.giftvoucher_box::before{
+  content: '';
+  display: block;
+  position: absolute;
+  width: 32rpx;
+  height: 32rpx;
+  background-color: #f44;
+  border-radius: 50%;
+  top: 50%;
+  right: -10rpx;
+  margin-top: -16rpx;  
+}
+.no_giftvoucher{
+  color: #999;
+}
+.giftvoucher_box .giftvoucher_r{
+  display: flex;
+  align-items: center;
+}
+.giftvoucher_box .giftvoucher_r .giftvoucher_img{
+  width: 120rpx;
+  height: 120rpx;
+  background-color: #f8f8f8;
+}
+.giftvoucher_box .giftvoucher_r .giftvoucher_img image{
+  width: 100%;
+  height: 100%;
+}
+.giftvoucher_box .giftvoucher_r .giftvoucher_text{
+  margin-left: 30rpx;
+}
+.giftvoucher_box .giftvoucher_btn .btn{
+  height: 48rpx;
+  min-width: 120rpx;
+  border-radius: 50rpx;
+  text-align: center;
+  line-height: 48rpx;
+  padding: 0 16rpx;
+}
+.giftvoucher_box .giftvoucher_btn .receive_btn{
+  background-color: #ffab33;  
+  color: #fff;
+}
+.giftvoucher_box .giftvoucher_btn .received_btn{
+  background-color: #e8e8e8;
+  color: #999;
+}
+
+.auto_shop_box .title{  
+  display: flex;
+  justify-content: center;  
+  color: #fff;
+}
+.auto_shop{
+  margin: 20rpx 30rpx;
+  background-color: #fff;
+  border-radius: 20rpx;
+  padding: 24rpx 20rpx 0;
+  max-height: 600rpx;
+  overflow-x: hidden;
+  overflow-y: auto;
+}
+.auto_shop .no_more{
+  color: #969799;
+  display: flex;
+  justify-content: center;
+  padding: 20rpx 30rpx;
+} 
+
+.auto_shop .store_list{
+  margin: 10rpx;
+}
+.auto_shop .store_list .head{
+  color: #f44;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin: 10rpx;
+}
+.auto_shop .store_list .head .store_name{
+  font-weight: 700;
+}
+.auto_shop .store_list .address{
+  display: flex;
+  align-items: center;
+  color: #969799;
+}

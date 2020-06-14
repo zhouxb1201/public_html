@@ -1,0 +1,1884 @@
+{extend name="platform/new_base" /}
+{block name="main"}
+<!-- page -->
+<!--tab栏切换-->
+<ul class="nav nav-tabs v-nav-tabs add_tab1" role="tablist">
+    <li role="presentation" class="active" ><a href="#goods_info" aria-controls="goods_info" role="tab" data-toggle="tab" class="flex-auto-center">基本信息</a></li>
+    {if($goods_info['goods_type']==4)}
+    <li role="presentation" class="pay_content"><a href="#pay_content" aria-controls="pay_content" role="tab" data-toggle="tab" class="flex-auto-center pay_content">付费内容</a></li>
+    {/if}
+    {if $goods_info['goods_type']}
+    <li role="presentation"><a href="#goods_attribute" aria-controls="goods_attribute" role="tab" data-toggle="tab" class="flex-auto-center {if($goods_info['goods_type']==4)}hide{/if}">规格/属性</a></li>
+    {/if}
+    <li role="presentation"><a href="#goods_detail" aria-controls="goods_detail" role="tab" data-toggle="tab" class="flex-auto-center">商品详情</a></li>
+    {if $distributionExist==1 || $globalExist==1 || $areaExist==1 || $teamExist==1}
+    <li role="presentation"><a href="#distribution_bonus" aria-controls="distribution_bonus" role="tab" data-toggle="tab" class="flex-auto-center">分销分红</a></li>
+    {/if}
+    {if($goods_info['goods_type']==0)}
+    <li role="presentation" class="timing_rule"><a href="#timing_rule" aria-controls="timing_rule" role="tab" data-toggle="tab" class="flex-auto-center">计时/次规则</a></li>
+    <li role="presentation" class="wechat_card"><a href="#wechat_card" aria-controls="wechat_card" role="tab" data-toggle="tab" class="flex-auto-center">微信卡券</a></li>
+    {/if}
+    <li role="presentation"><a href="#integral_rule" aria-controls="integral_rule" role="tab" data-toggle="tab" class="flex-auto-center">营销抵扣</a></li>
+    <li role="presentation"><a href="#discount_rule" aria-controls="discount_rule" role="tab" data-toggle="tab" class="flex-auto-center">权限折扣</a></li>
+    {if $store eq '1'}
+    <li role="presentation"><a href="#cancel_store" aria-controls="cancel_store" role="tab" data-toggle="tab" class="flex-auto-center {if($goods_info['goods_type']==4 || $goods_info['goods_type']==3)}hide{/if}">核销门店</a></li>
+    {/if}
+    <li role="presentation" class="cancel_store"><a href="#goods_poster" aria-controls="cancel_store" role="tab" data-toggle="tab" class="flex-auto-center">商品海报</a></li>
+</ul>
+<form class="form-horizontal form-validate widthFixedForm">
+    <input type="hidden" id="goodsId" name="a" value="{$goods_id}" />
+
+    <div id="myTabContent" class="tab-content">
+
+        <div class="tab-pane fade tab-1 active in" id="goods_info">
+            <div class="screen-title2" data-id="t2">
+                <span class="text">商品类型</span>
+                <span class="text1">商品类型，商品保存后无法修改，请谨慎选择。</span>
+            </div>
+
+            <ul class="mb-20 type-select-radio clearfix goods-ts-radio">
+                {if $goods_info.goods_type eq 1}
+                <li class="goodType1 active">
+                    <div class="radio-label-div">
+                        <div class="">
+                            <div>实物商品</div>
+                            <p class="p1">(物流发货/线下自提)</p>
+                        </div>
+                        <!--<img src="/public/platform/images/goodType6.png" alt="" class="">-->
+                    </div>
+                    <span class="icon-success-sel"><img src="/public/platform/images/goodTypeSel.png" alt=""></span>
+                </li>
+                {elseif  $goods_info.goods_type eq 3}
+                <li class="goodType3  active">
+                    <div class="radio-label-div">
+                        <div class="">
+                            <div>虚拟商品</div>
+                            <p class="p1">(无需物流)</p>
+                        </div>
+                        <!--<img src="/public/platform/images/goodType1.png" alt="" class="">-->
+                    </div>
+                    <span class="icon-success-sel"><img src="/public/platform/images/goodTypeSel.png" alt=""></span>
+                </li>
+                {elseif  $goods_info.goods_type eq 4}
+                <li class="goodType4 active">
+                    <div class="radio-label-div">
+                        <div class="">
+                            <div>知识付费</div>
+                            <p class="p1">(无需物流)</p>
+                        </div>
+                        <!--<img src="/public/platform/images/goodType7.png" alt="" class="">-->
+                    </div>
+                    <span class="icon-success-sel"><img src="/public/platform/images/goodTypeSel.png" alt=""></span>
+                </li>
+                {else}
+                {if $store eq '1'}
+                {if $goods_info.goods_type eq 0}
+                <li class="goodType2 active">
+                    <div class="radio-label-div">
+                        <div class="">
+                            <div>计时/次商品</div>
+                            <p class="p1">(线下消费核销码)</p>
+                        </div>
+                        <!--<img src="/public/platform/images/goodType2.png" alt="" class="">-->
+                    </div>
+                    <span class="icon-success-sel"><img src="/public/platform/images/goodTypeSel.png" alt=""></span>
+                </li>
+                {/if}
+                {/if}
+                {/if}
+
+            </ul>
+
+            <div class="screen-title2" data-id="t2">
+                <span class="text">基本信息</span>
+            </div>
+            <div class="form-group">
+                <label class="col-md-2 control-label"><span class="text-bright">*</span> 商品分类</label>
+                <input type="hidden" id="category" name="a" value="{$goods_info.category_id}">
+                <div class="col-md-5">
+                    <input type="text"  value="{$goods_info.category_name}" id="select_cname" name="select_cname" class="form-control J-selectCategory promotion_type" placeholder="请选择分类"  required>
+                </div>
+                <div class="col-sm-8" id="tbcNameCategory" data-flag="category" cid="{$goods_info.category_id}" data-attr-id="{$goods_info.goods_attribute_id}" cname="{$goods_info.category_name}" data-goods-id="{$goodsid}">
+                <input type="hidden" id="category_id_1" name="category_id_1" value="{$goods_info.category_id_1}">
+                <input type="hidden" id="category_id_2" name="category_id_2" value="{$goods_info.category_id_2}">
+                <input type="hidden" id="category_id_3" name="category_id_3" value="{$goods_info.category_id_3}">
+                <input type="hidden" id="select_name_hidden" name="select_name_hidden" value="{$goods_info.category_name}">
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-md-2 control-label">其他分类</label>
+                <div class="col-md-5">
+                    <div class="other-category clearfix">
+                        {if condition="count($goods_info['extend_category']) gt 0" }
+                            {foreach $goods_info["extend_category"]  as $vo}
+                            <div class="field-item field-item-remove J-extend-category " data-cid="{$vo['extend_category_id']}">{$vo['extend_category_name']}<span><i class="fa fa-remove icon-danger icon"></i></span></div>
+                            {/foreach}
+                        {/if}
+                        
+                    </div>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-md-2 control-label"><span class="text-bright">*</span> 商品名称</label>
+                <div class="col-md-8">
+                    <input type="text" class="form-control" name="title" id="txtProductTitle" required value="{$goods_info.goods_name}">
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-md-2 control-label"><span class="text-bright">*</span> 销售价</label>
+                <div class="col-md-8">
+                    <div class="input-group w-200">
+                        <input type="number" class="form-control promotion_type" min="0" step="0.01" name="txtProductSalePrice" id="txtProductSalePrice" value="{$goods_info.price}" required>
+                        <span class="input-group-addon">元</span>
+                    </div>
+                    <div class="help-block mb-0">启用规格后销售价需要在相应规格设置，商城将以该价格销售。</div>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-md-2 control-label"><span class="text-bright">*</span> 市场价</label>
+                <div class="col-md-8">
+                    <div class="input-group w-200">
+                        <input type="number" class="form-control promotion_type" min="0" step="0.01" name="txtProductMarketPrice" id="txtProductMarketPrice" value="{$goods_info.market_price}">
+                        <span class="input-group-addon">元</span>
+                    </div>
+                    <div class="help-block mb-0">启用规格后市场价需要在相应规格设置，商城将以该价格划线展示突出与售价的差价。</div>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-md-2 control-label">成本价</label>
+                <div class="col-md-8">
+                    <div class="input-group w-200">
+                        <input type="number" class="form-control promotion_type" min="0" step="0.01" name="txtProductCostPrice" id="txtProductCostPrice" value="{$goods_info.cost_price}">
+                        <span class="input-group-addon">元</span>
+                    </div>
+                    <div class="help-block mb-0">启用规格后成本价需要在相应规格设置，该价格用于计算利润，请如实填写。</div>
+                </div>
+
+            </div>
+            <div class="form-group">
+                <label class="col-md-2 control-label"><span class="text-bright">*</span> 总库存</label>
+                <div class="col-md-8">
+                    <div class="input-group w-200">
+                        <input type="number" class="form-control promotion_type" min="0" name="txtProductCount" id="txtProductCount" value="{$goods_info.stock}" required>
+                        <span class="input-group-addon">件</span>
+                    </div>
+                    <div class="help-block mb-0">启用规格后总库存将自动统计规格所填写的库存</div>
+                </div>
+            </div>
+
+            <div class="fold-btn mb-20" data-status="1"><i class="icon icon-drop-down mr-04"></i><span class="text-primary set-more">收起更多设置</span></div>
+            <div class="fold-field">
+                <div class="form-group">
+                    <label class="col-md-2 control-label">商品品牌</label>
+                    <div class="col-md-8">
+                        <input type="hidden" id="select_brand_hidden" name="select_brand_hidden" value="{$goods_info.brand_id}">
+                        <select class="form-control" name="brandId" id="brand_id">
+                            <option value="0">请选择商品品牌</option>
+                            
+                        </select>
+                        <div class="help-block mb-0">商品品牌需要先关联商品品类，请先把商品品类与商品分类进行关联，即可选择相关联的品牌。</div>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-md-2 control-label"><span class="text-bright"></span> 商品编号</label>
+                    <div class="col-md-8">
+                        <input type="text" class="form-control" name="txtProductCodeA" id="txtProductCodeA" value="{$goods_info.code}" autocomplete="off" notChinese="true">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-md-2 control-label">商品货号</label>
+                    <div class="col-md-8">
+                        <input type="text" class="form-control" name="item_no" id="item_no" value="{$goods_info.item_no}">
+                        <div class="help-block mb-0">启用规格后不能设置</div>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-md-2 control-label">虚拟销量</label>
+                    <div class="col-md-8">
+                        <div class="input-group w-200">
+                            <input type="number" class="form-control" min="0" value="{$goods_info.real_sales}" step="1" name="BasicSales" id="BasicSales">
+                            <span class="input-group-addon">件</span>
+                        </div>
+                        <div class="help-block mb-0">前端显示销量 = 虚拟销量 + 实际销量</div>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="col-md-2 control-label">商品排序</label>
+                    <div class="col-md-8">
+                        <input type="number" class="form-control w-200" min="0" name="sort" id="goodsSort" value="{$goods_info.sort}">
+                        <div class="help-block mb-0">商品排序只会影响店铺商品列表的排序，不会影响商城商品列表排序，越大越靠前。</div>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-md-2 control-label">库存预警</label>
+                    <div class="col-md-8">
+                        <div class="input-group w-200">
+                            <span class="input-group-addon">低于</span>
+                            <input type="number" class="form-control" min="0" name="txtMinStockLaram" id="txtMinStockLaram" value="{$goods_info.min_stock_alarm}">
+                            <span class="input-group-addon">件</span>
+                        </div>
+                        <div class="help-block mb-0">商品库存预警数量。可在后台“首页”、“商品=>自营商品=>库存预警”进行查看</div>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="col-md-2 control-label">商品标签</label>
+                    <div class="col-md-8">
+                        <div class="checkbox_three">
+                            <label class="checkbox-inline"><input type="checkbox" name="goods_labels" id="is_recommend" {if $goods_info['is_recommend'] eq 1}checked{/if}>推荐</label>
+                            <label class="checkbox-inline"><input type="checkbox" name="goods_labels" id="is_new" {if $goods_info['is_new'] eq 1}checked{/if}>新品</label>
+                            <label class="checkbox-inline"><input type="checkbox" name="goods_labels" id="is_hot" {if $goods_info['is_hot'] eq 1}checked{/if}>热卖</label>
+                            <label class="checkbox-inline"><input type="checkbox" name="goods_labels" id="is_promotion" {if $goods_info['is_promotion'] eq 1}checked{/if}>促销</label>
+                            <label class="checkbox-inline"><input type="checkbox" name="goods_labels" id="is_shipping_free" {if $goods_info['is_shipping_free'] eq 1}checked{/if}>包邮</label>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 信息 end -->
+            <div class="screen-title2" data-id="t4">
+                <span class="text">商品图片</span>
+            </div>
+            <div class="form-group">
+                <label class="col-md-2 control-label"><span class="text-bright">*</span>商品图片</label>
+                <div class="col-md-8">
+                    <div class="">
+                        <div class="">
+                            <div class="picture-list" id="J-goodspic">
+                                {if condition="count($goods_info['img_temp_array']) gt 0" }
+                                {foreach $goods_info["img_temp_array"]  as $vo}
+                                <a href="javascript:void(0);" id="goods_pic_list" style="margin-right:10px;">
+                                    <i class="icon icon-danger" style="right:-15px;" title="删除"></i>
+                                    <img src="{:__IMG($vo['pic_cover'])}" />
+
+                                </a>
+                                <input type="hidden" name="upload_img_id" value="{$vo['pic_id']}" />
+                                {/foreach}
+                                {else /}
+                                <div class="upload-thumb" id="default_uploadimg">
+                                    <img src="ADMIN_IMG/album/default_goods_image_240.gif" />
+                                </div>
+                                {/if}
+                                <a href="javascript:void(0);" class="plus-box" data-toggle="multiPicture"><i class="icon icon-plus"></i></a>
+                            </div>
+                        </div>
+                        <p class="small-muted">第一张为主图，最多上传5张，支持同时上传多张，建议700*700，支持JPG\GIF\PNG格式，最大不超过1M</p>
+                    </div>
+                    <input type="text" class="visibility" id="visibility1" name="picture" data-visi-type="multiPicture">
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="col-md-2 control-label">主图视频</label>
+                <div class="col-md-8">
+                    <div class="picture-list" id="pc_video_adv">
+                        {if $goods_info['video']}
+                        <a href="javascript:void(0);" class="close-box" style="margin-right:10px;">
+                            <i class="icon icon-danger" style="right:-15px;" title="删除"></i>
+                            <video width="100px" height="100px" src="{:__IMG($goods_info['video'])}"></video>
+
+                        </a>
+                        <input type="hidden" name="upload_video_id" value="{$goods_info['video_id']}" />
+                        {else /}
+                        <a href="javascript:void(0);" class="plus-box" data-toggle="singleVideo"><i class="icon icon-plus"></i></a>
+                        {/if}
+                    </div>
+                    <p class="help-block">建议尺寸为1:1，最好控制在10-30秒以内，视频不能超过5M</p>
+                </div>
+            </div>
+
+            <!-- 图片 end -->
+            <div class="screen-title2 {if($goods_info['goods_type']!=1)}hide{/if}" data-id="t7" >
+                <span class="text" id="shipping_fee_title">物流/其他</span>
+            </div>
+            <div class="isgoods_type_1 {if($goods_info['goods_type']!=1)}hide{/if}" id="shipping_fee_data">
+                <div class="form-group">
+                    <label class="col-md-2 control-label"><span class="text-bright">*</span>运费设置</label>
+                    <div class="col-md-8">
+                        <div class="radio">
+                            <label>
+                                <input type="radio" name="shipping_fee_type" value="0" {if condition = "$goods_info.shipping_fee_type  eq 0"} checked {/if}> 包邮
+                            </label>
+                        </div>
+                        <div class="radio">
+                            <label>
+                                <input type="radio" name="shipping_fee_type" value="1" {if condition = "$goods_info.shipping_fee_type  eq 1"} checked {/if}> 统一邮费
+                            </label>
+                            <div class="inline-block ml-10 w15">
+                                <input type="number" class="form-control number-form-control w-200" id="shipping_fee" value="{$goods_info.shipping_fee}" name="shipping_fee" min="0" placeholder="￥" {if condition = "$goods_info.shipping_fee_type  neq 1"} disabled {/if} data-visi-type="prices_1" {if condition = "$goods_info.shipping_fee_type  eq 1"} required {/if}>
+                            </div>
+                        </div>
+                        <div class="radio">
+                            <label>
+                                <input type="radio" name="shipping_fee_type" value="2" {if condition = "$goods_info.shipping_fee_type  eq 2"} checked {/if}> 运费模板
+                            </label>
+                            <div class="inline-block ml-10">
+                                <select min="0" class="form-control select-form-control" id="shipping_fee_id" name="shipping_fee_id" {if condition = "$goods_info.shipping_fee_type  neq 2"} disabled {/if} {if condition = "$goods_info.shipping_fee_type  eq 2"} required {/if}>
+                                    {foreach name="shipping_list" item="vo"}
+                                    <option value="{$vo.shipping_fee_id}" type="{$vo.calculate_type}" {if $goods_info.shipping_fee_id eq $vo.shipping_fee_id}selected="selected"{/if}>{$vo.shipping_fee_name}{if $vo.is_default == 1}【默认】 {/if}</option>
+                                    {/foreach}
+                                </select>
+                            </div>
+                            <div class="help-block mb-0"> 没有运费模板？去<a href="{:__URL('PLATFORM_MAIN/express/freighttemplatelist')}" target="_blank" class="text-primary">新建</a>，新建完点 <a href="javascript:void(0);" class="text-primary J-refresh" data-shipping="{$goods_info.shipping_fee_id}">刷新</a>  重新加载数据</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group is_shipping_fee_id hidden">
+                    <label class="col-md-2 control-label"></label>
+                    <div class="col-md-8">
+                        <div class="input-group w-200">
+                            <div class="input-group-addon">商品重量</div>
+                            <input type="number" class="form-control" name="goods_weight" id="goods_weight" min="0" step="0.01" value="{$goods_info.goods_weight}">
+                            <div class="input-group-addon">kg</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group is_shipping_fee_id_volume hidden">
+                    <label class="col-md-2 control-label"></label>
+                    <div class="col-md-8">
+                        <div class="input-group w-200">
+                            <div class="input-group-addon">商品体积</div>
+                            <input type="number" class="form-control" name="goods_volume" id="goods_volume" min="0" step="0.01" value="{$goods_info.goods_volume}">
+                            <div class="input-group-addon">m²</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-group is_shipping_fee_id_num hidden">
+                    <label class="col-md-2 control-label"></label>
+                    <div class="col-md-8">
+                        <div class="input-group w-200">
+                            <div class="input-group-addon">商品数量</div>
+                            <input type="number" class="form-control" name="goods_count" id="goods_count" min="0" step="1" value="{$goods_info.goods_count}">
+                            <div class="input-group-addon">件</div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+            <div class="form-group">
+                <label class="col-md-2 control-label">是否上架</label>
+                <div class="col-md-8">
+                    <div class="radio">
+                        <label>
+                            <input type="radio" name="state" value="1" {if condition = "$goods_info.state eq 1"}checked{/if}> 立即上架
+                        </label>
+                    </div>
+                    <div class="radio">
+                        <label>
+                            <input type="radio" name="state" value="0" {if condition = "$goods_info.state eq 0"}checked{/if}> 放入仓库
+                        </label>
+                    </div>
+                </div>
+            </div><!-- 物流/其他 end -->
+
+        </div>
+        <div class="tab-pane fade tab-2" id="goods_attribute">
+
+            
+            <div class="isgoods_type_0 hidden">
+                <div class="form-group">
+                    <label class="col-md-2 control-label">下单留言</label>
+                    <div class="col-md-5">
+                        <div class="messageBox">
+                            <input type="text" class="form-control" name="message" placeholder="留言字段名" >
+                        </div>
+                        <a href="javascript:void(0);" class="text text-primary block mt-15" id="addMessage">增加一个</a>
+                    </div>
+                    <div class="col-md-5 help-block">
+                        下单时候填写的留言信息
+                    </div>
+                </div>
+            </div>
+            <div class="isgoods_type_1">
+                <input type="hidden" name="goods_attribute_id" id="goods_attribute_id" value="{$goods_info.goods_attribute_id}">
+                <div id="isgoods_attribute" class="hidden">
+                    <div class="screen-title2">
+                        <span class="text">商品规格</span>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-md-1 control-label"></label>
+                        <div class="col-md-10">
+                            <div class="flex spec-tips">
+                                <div style="width: 70px">规格须知：</div>
+                                <div>
+                                    <p>1、若当前商品没有可选的“规格”与“属性”，请先前往“<a href="javascript:void(0);" class="text-primary">商品品类</a>”进行关联绑定，商品品类最后需要关联到“<a href="javascript:void(0);" class="text-primary">商品分类</a>”才能触发使用。</p>
+                                    <p>2、商品发布成功后，若通过“<span class="text-red">商品规格</span>”栏目修改规格名或规格值，该商品规格值还是会保留发布时的规格名与规格值不会变化。</p>
+                                    <p>3、如需修改该商品的规格名与规格值，只需双击对应规格名或规格值的文字即可编辑，保存后只会影响该商品。</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-md-1 control-label"></label>
+                        <div class="col-md-10">
+                            <table class="table v-table table-auto-center table-bordered" id="spec_list">
+                                <thead>
+                                <th class="w-120">规格名</th>
+                                <th class="w-120">展示方式</th>
+                                <th>规格项</th>
+                                </thead>
+                                <tbody>
+                                    <tr class="last-tr">
+                                        <td colspan="3" class="text-left"><a href="javascript:void(0);" class="goods-value-add" data-show-type="10"><i class="icon icon-add1 mr-04"></i>添加规格</a></td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                            <table class="table table-bordered table-auto-center v-table" id="stock_table">
+                                <thead></thead>
+                                <tbody></tbody>
+                                <tfoot>
+                                    <tr>
+                                        <td colspan="10" class="text-left">
+                                            批量修改：
+                                            <a href="javascript:void(0);" class="text-primary batchSet" data-batch_type="sku_price">销售价</a>
+                                            <a href="javascript:void(0);" class="text-primary batchSet" data-batch_type="market_price">市场价</a>
+                                            <a href="javascript:void(0);" class="text-primary batchSet" data-batch_type="cost_price">成本价</a>
+                                            <a href="javascript:void(0);" class="text-primary batchSet" data-batch_type="stock_num">库存</a>
+                                            <a href="javascript:void(0);" class="text-primary batchSet" data-batch_type="code">商品货号</a>
+                                        </td>
+                                    </tr>
+                                </tfoot>
+                            </table>
+                        </div>
+                    </div>
+                    <div class="screen-title2">
+                        <span class="text">商品属性</span>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-md-1 control-label"></label>
+                        <div class="col-md-10">
+                            <table class="table v-table table-auto-center table-bordered" id="attribute_list">
+                                <thead>
+                                <th class="w-120">属性名</th>
+                                <th>属性值</th>
+                                </thead>
+                                <tbody>
+                                    <tr class="last-tr">
+                                        <td colspan="2" class="text-left">
+                                            <a href="javascript:void(0);" class="goods-value-add" data-show-type="11"><i class="icon icon-add1 mr-04"></i>添加属性</a>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div><!-- 规格/属性 end -->
+            </div>
+
+        </div>
+        <div class="tab-pane fade tab-3" id="goods_detail">
+            <div class="screen-title2" data-id="t5">
+                <span class="text">详情描述</span>
+            </div>
+            <div class="form-group" >
+                <label class="col-md-2 control-label"><span class="text-bright">*</span>商品详情</label>
+                <div class="col-md-9">
+                    <div id="UE-detail" data-content='{$goods_info.description}'></div>
+                </div>
+            </div><!-- 商品详情 end -->
+        </div>
+        {if $distributionExist==1 || $globalExist==1 || $areaExist==1 || $teamExist==1}
+        <div class="tab-pane fade tab-4" id="distribution_bonus">
+            {if $distributionExist==1}
+            <div class="screen-title2" data-id="t3">
+                <span class="text">分销</span>
+            </div>
+            <div class="form-group">
+                <label class="col-md-2 control-label">是否参与分销</label>
+                <div class="col-md-8" >
+                    <label class="radio-inline">
+                        <input type="radio" name="is_distribution" class="is_distribution"  value="1" {if $goods_info.is_distribution} {if $goods_info.is_distribution==1}checked{/if}{else}checked{/if}> 参与
+                    </label>
+                    <label class="radio-inline">
+                        <input type="radio" name="is_distribution" class="is_distribution" value="2"  {if $goods_info.is_distribution} {if $goods_info.is_distribution==2}checked{/if}{/if}> 不参与
+                    </label>
+                    <div class="mb-0 help-block">
+                        开启分销后该商品默认开启参与分销。关闭则不参与分销，该商品不产生分销佣金。
+                    </div>
+                </div>
+
+            </div>
+            <div class="form-group distribution_rules {if $goods_info.is_distribution}{if $goods_info.is_distribution==2}hide{/if}{/if}">
+                <label class="col-md-2 control-label">独立分销佣金规则</label>
+                <input type="hidden" id="d_rule" value="{$goods_info.distribution_rule}" name="d_rule">
+                <div class="col-md-8" >
+                    <!--<label class="radio-inline">
+                        <input type="radio" name="distribution_rule" class="check_type"  value="1" {if $goods_info.distribution_rule}{if $goods_info.distribution_rule==1}checked{/if}{/if}> 开启
+                    </label>
+                    <label class="radio-inline">
+                        <input type="radio" name="distribution_rule" class="check_type"  value="2" {if $goods_info.distribution_rule}{if $goods_info.distribution_rule==2}checked{/if}{else}checked{/if} > 关闭
+                    </label>-->
+
+                    <div class="switch-inline">
+                        <input type="checkbox" name="distribution_rule" id="distribution_rule" {if $goods_info.distribution_rule}{if $goods_info.distribution_rule==1}checked{/if}{/if}>
+                               <label for="distribution_rule" class=""></label>
+                    </div>
+
+                    <div class="mb-0 help-block">
+                        不开启则使用默认佣金设置规则；开启则该商品使用独立佣金比例规则，不受分销商等级比例限制。
+                    </div>
+                </div>
+
+            </div>
+            <div class="form-group {if $goods_info.is_distribution==1 && $goods_info.distribution_rule && $goods_info.distribution_rule==1}{else}hide{/if}" id="level_rules">
+                <label class="col-md-2 control-label">开启等级返佣</label>
+                <div class="col-md-8" >
+                    <div class="switch-inline">
+                        <input type="checkbox" name="level_rule" id="level_rule" {if $goods_info.distribution_rule_val && $goods_info.distribution_rule_val.level_rule==1}checked{/if}>
+                               <label for="level_rule" class=""></label>
+                    </div>
+                    <div class="mb-0 help-block">
+                        不开启则使用默认佣金设置规则；开启则该商品使用独立等级返佣规则，不受分销商等级返佣限制。
+                    </div>
+                </div>
+            </div>
+            <div class="form-group {if $goods_info.is_distribution==1 && $goods_info.distribution_rule && $goods_info.distribution_rule==1 }{else}hide{/if}" id="recommend_type">
+                <label class="col-md-2 control-label">返佣类型</label>
+                <div class="col-md-8" >
+                    <label class="radio-inline">
+                        <input type="radio" name="recommend_type" class="recommend_type" {if $goods_info.distribution_rule_val && $goods_info.distribution_rule_val.recommend_type && $goods_info.distribution_rule_val.recommend_type==1}checked{/if} value="1"> 比例返佣
+                    </label>
+                    <label class="radio-inline">
+                        <input type="radio" name="recommend_type" class="recommend_type" {if $goods_info.distribution_rule_val && $goods_info.distribution_rule_val.recommend_type && $goods_info.distribution_rule_val.recommend_type==2}checked{/if} value="2"  > 固定返佣
+                    </label>
+                </div>
+            </div>
+            <div class="form-group {if $goods_info.is_distribution==1 && $goods_info.distribution_rule && $goods_info.distribution_rule==1  && $goods_info.distribution_rule_val && $goods_info.distribution_rule_val.recommend_type && $goods_info.distribution_rule_val.recommend_type==1 && $goods_info.distribution_rule_val.level_rule && $goods_info.distribution_rule_val.level_rule==2}{else}hide{/if}" id="distribution_input">
+                <label class="col-md-2"></label>
+                <div class="col-md-5">
+                    <div class="input-group">
+                        <div class="input-group-addon">一级返佣</div>
+                        <input type="number" name="first_rebate" id="first_rebate" class="form-control rebate" min="0"  value="{if $goods_info.distribution_rule_val && $goods_info.distribution_rule_val.first_rebate && $goods_info.distribution_rule_val.level_rule && $goods_info.distribution_rule_val.level_rule==2}{if $goods_info.distribution_rule_val.first_rebate}{$goods_info.distribution_rule_val.first_rebate}{else}0{/if}{else}0{/if}"  style="min-width: 74px">
+                        <div class="input-group-addon">%,二级返佣</div>
+                        <input type="number" name="second_rebate" id="second_rebate" class="form-control rebate" min="0"   value="{if $goods_info.distribution_rule_val && $goods_info.distribution_rule_val.second_rebate && $goods_info.distribution_rule_val.level_rule && $goods_info.distribution_rule_val.level_rule==2}{if $goods_info.distribution_rule_val.second_rebate}{$goods_info.distribution_rule_val.second_rebate}{else}0{/if}{else}0{/if}" style="min-width: 74px">
+                        <div class="input-group-addon">%,三级返佣</div>
+                        <input type="number" name="third_rebate" id="third_rebate" class="form-control rebate" min="0" value="{if $goods_info.distribution_rule_val && $goods_info.distribution_rule_val.third_rebate && $goods_info.distribution_rule_val.level_rule && $goods_info.distribution_rule_val.level_rule==2}{if $goods_info.distribution_rule_val.third_rebate}{$goods_info.distribution_rule_val.third_rebate}{else}0{/if}{else}0{/if}" style="min-width: 74px">
+                        <div class="input-group-addon">%</div>
+                    </div>
+                    <br>
+                    <div class="input-group">
+                        <div class="input-group-addon">一级返积分</div>
+                        <input type="number" name="first_point" id="first_point" class="form-control rebate" min="0"  value="{if $goods_info.distribution_rule_val && $goods_info.distribution_rule_val.first_point && $goods_info.distribution_rule_val.level_rule && $goods_info.distribution_rule_val.level_rule==2}{if $goods_info.distribution_rule_val.first_point}{$goods_info.distribution_rule_val.first_point}{else}0{/if}{else}0{/if}"  style="min-width: 74px">
+                        <div class="input-group-addon">%,二级返积分</div>
+                        <input type="number" name="second_point" id="second_point" class="form-control rebate" min="0"   value="{if $goods_info.distribution_rule_val && $goods_info.distribution_rule_val.second_point && $goods_info.distribution_rule_val.level_rule && $goods_info.distribution_rule_val.level_rule==2}{if $goods_info.distribution_rule_val.second_point}{$goods_info.distribution_rule_val.second_point}{else}0{/if}{else}0{/if}" style="min-width: 74px">
+                        <div class="input-group-addon">%,三级返积分</div>
+                        <input type="number" name="third_point" id="third_point" class="form-control rebate" min="0" value="{if $goods_info.distribution_rule_val && $goods_info.distribution_rule_val.third_point && $goods_info.distribution_rule_val.level_rule && $goods_info.distribution_rule_val.level_rule==2}{if $goods_info.distribution_rule_val.third_point}{$goods_info.distribution_rule_val.third_point}{else}0{/if}{else}0{/if}" style="min-width: 74px">
+                        <div class="input-group-addon">%</div>
+                    </div>
+                </div>
+            </div>
+            <div class="form-group {if $goods_info.is_distribution==1 && $goods_info.distribution_rule && $goods_info.distribution_rule==1  && $goods_info.distribution_rule_val && $goods_info.distribution_rule_val.recommend_type && $goods_info.distribution_rule_val.recommend_type==2 && $goods_info.distribution_rule_val.level_rule && $goods_info.distribution_rule_val.level_rule==2}{else}hide{/if}" id="distribution_input1">
+                <label class="col-md-2"></label>
+                <div class="col-md-5">
+                    <div class="input-group">
+                        <div class="input-group-addon">一级返佣金</div>
+                        <input type="number" name="first_rebate1" id="first_rebate1" class="form-control rebate" min="0"  value="{if $goods_info.distribution_rule_val && $goods_info.distribution_rule_val.first_rebate1 && $goods_info.distribution_rule_val.level_rule && $goods_info.distribution_rule_val.level_rule==2}{if $goods_info.distribution_rule_val.first_rebate1}{$goods_info.distribution_rule_val.first_rebate1}{else}0{/if}{else}0{/if}"  style="min-width: 74px">
+                        <div class="input-group-addon">元,二级返佣金</div>
+                        <input type="number" name="second_rebate1" id="second_rebate1" class="form-control rebate" min="0"   value="{if $goods_info.distribution_rule_val && $goods_info.distribution_rule_val.second_rebate1 && $goods_info.distribution_rule_val.level_rule && $goods_info.distribution_rule_val.level_rule==2}{if $goods_info.distribution_rule_val.second_rebate1}{$goods_info.distribution_rule_val.second_rebate1}{else}0{/if}{else}0{/if}" style="min-width: 74px">
+                        <div class="input-group-addon">元,三级返佣金</div>
+                        <input type="number" name="third_rebate1" id="third_rebate1" class="form-control rebate" min="0" value="{if $goods_info.distribution_rule_val && $goods_info.distribution_rule_val.third_rebate1 && $goods_info.distribution_rule_val.level_rule && $goods_info.distribution_rule_val.level_rule==2}{if $goods_info.distribution_rule_val.third_rebate1}{$goods_info.distribution_rule_val.third_rebate1}{else}0{/if}{else}0{/if}" style="min-width: 74px">
+                        <div class="input-group-addon">元</div>
+                    </div>
+                    <br>
+                    <div class="input-group">
+                        <div class="input-group-addon">一级返积分</div>
+                        <input type="number" name="first_point1" id="first_point1" class="form-control rebate" min="0"  value="{if $goods_info.distribution_rule_val && $goods_info.distribution_rule_val.first_point1 && $goods_info.distribution_rule_val.level_rule && $goods_info.distribution_rule_val.level_rule==2}{if $goods_info.distribution_rule_val.first_point1}{$goods_info.distribution_rule_val.first_point1}{else}0{/if}{else}0{/if}"  style="min-width: 74px">
+                        <div class="input-group-addon">积分,二级返积分</div>
+                        <input type="number" name="second_point1" id="second_point1" class="form-control rebate" min="0"   value="{if $goods_info.distribution_rule_val && $goods_info.distribution_rule_val.second_point1 && $goods_info.distribution_rule_val.level_rule && $goods_info.distribution_rule_val.level_rule==2}{if $goods_info.distribution_rule_val.second_point1}{$goods_info.distribution_rule_val.second_point1}{else}0{/if}{else}0{/if}" style="min-width: 74px">
+                        <div class="input-group-addon">积分,三级返积分</div>
+                        <input type="number" name="third_point1" id="third_point1" class="form-control rebate" min="0" value="{if $goods_info.distribution_rule_val && $goods_info.distribution_rule_val.third_point1 && $goods_info.distribution_rule_val.level_rule && $goods_info.distribution_rule_val.level_rule==2}{if $goods_info.distribution_rule_val.third_point1}{$goods_info.distribution_rule_val.third_point1}{else}0{/if}{else}0{/if}" style="min-width: 74px">
+                        <div class="input-group-addon">积分</div>
+                    </div>
+                </div>
+            </div>
+            <div class="form-group {if $goods_info.is_distribution==1 && $goods_info.distribution_rule && $goods_info.distribution_rule==1  && $goods_info.distribution_rule_val && $goods_info.distribution_rule_val.recommend_type && $goods_info.distribution_rule_val.recommend_type==1 && $goods_info.distribution_rule_val.level_rule && $goods_info.distribution_rule_val.level_rule==1}{else}hide{/if}" id="distribution_input2">
+                {if $level_list}
+                {foreach $level_list as $k=>$v}
+                <div class="form-group">
+                    <label class="col-md-2"></label>
+                    <div class="col-md-5">
+                        <div class="input-group">
+                            <div class="input-group-addon">{$v['level_name']}一级返佣</div>
+                            <input type="number" name="level_first_rebate_{$v['id']}" id="level_first_rebate_{$v['id']}" class="form-control rebate" min="0"  value="{if $goods_info.distribution_rule_val && $goods_info.distribution_rule_val.level_ids}{foreach $goods_info.distribution_rule_val.level_ids as $k1=>$v1}{if $v1==$v['id']}{if $goods_info.distribution_rule_val.first_rebate[$k1]}{$goods_info.distribution_rule_val.first_rebate[$k1]}{else}0{/if}{/if}{/foreach}{else}0{/if}"  style="min-width: 74px">
+                            <div class="input-group-addon">%,{$v['level_name']}二级返佣</div>
+                            <input type="number" name="level_second_rebate_{$v['id']}" id="level_second_rebate_{$v['id']}" class="form-control rebate" min="0"   value="{if $goods_info.distribution_rule_val && $goods_info.distribution_rule_val.level_ids}{foreach $goods_info.distribution_rule_val.level_ids as $k1=>$v1}{if $v1==$v['id']}{if $goods_info.distribution_rule_val.second_rebate[$k1]}{$goods_info.distribution_rule_val.second_rebate[$k1]}{else}0{/if}{/if}{/foreach}{else}0{/if}" style="min-width: 74px">
+                            <div class="input-group-addon">%,{$v['level_name']}三级返佣</div>
+                            <input type="number" name="level_third_rebate_{$v['id']}" id="level_third_rebate_{$v['id']}" class="form-control rebate" min="0" value="{if $goods_info.distribution_rule_val && $goods_info.distribution_rule_val.level_ids}{foreach $goods_info.distribution_rule_val.level_ids as $k1=>$v1}{if $v1==$v['id']}{if $goods_info.distribution_rule_val.third_rebate[$k1]}{$goods_info.distribution_rule_val.third_rebate[$k1]}{else}0{/if}{/if}{/foreach}{else}0{/if}" style="min-width: 74px">
+                            <div class="input-group-addon">%</div>
+                        </div>
+                        <br>
+                        <div class="input-group">
+                            <div class="input-group-addon">{$v['level_name']}一级返积分</div>
+                            <input type="number" name="level_first_point_{$v['id']}" id="level_first_point_{$v['id']}" class="form-control rebate" min="0"  value="{if $goods_info.distribution_rule_val && $goods_info.distribution_rule_val.level_ids}{foreach $goods_info.distribution_rule_val.level_ids as $k1=>$v1}{if $v1==$v['id']}{if $goods_info.distribution_rule_val.first_point[$k1]}{$goods_info.distribution_rule_val.first_point[$k1]}{else}0{/if}{/if}{/foreach}{else}0{/if}"  style="min-width: 74px">
+                            <div class="input-group-addon">%,{$v['level_name']}二级返积分</div>
+                            <input type="number" name="level_second_point_{$v['id']}" id="level_second_point_{$v['id']}" class="form-control rebate" min="0"   value="{if $goods_info.distribution_rule_val && $goods_info.distribution_rule_val.level_ids}{foreach $goods_info.distribution_rule_val.level_ids as $k1=>$v1}{if $v1==$v['id']}{if $goods_info.distribution_rule_val.second_point[$k1]}{$goods_info.distribution_rule_val.second_point[$k1]}{else}0{/if}{/if}{/foreach}{else}0{/if}" style="min-width: 74px">
+                            <div class="input-group-addon">%,{$v['level_name']}三级返积分</div>
+                            <input type="number" name="level_third_point_{$v['id']}" id="level_third_point_{$v['id']}" class="form-control rebate" min="0" value="{if $goods_info.distribution_rule_val && $goods_info.distribution_rule_val.level_ids}{foreach $goods_info.distribution_rule_val.level_ids as $k1=>$v1}{if $v1==$v['id']}{if $goods_info.distribution_rule_val.third_point[$k1]}{$goods_info.distribution_rule_val.third_point[$k1]}{else}0{/if}{/if}{/foreach}{else}0{/if}" style="min-width: 74px">
+                            <div class="input-group-addon">%</div>
+                        </div>
+                    </div>
+                </div>
+                {/foreach}
+                {/if}
+            </div>
+            <div class="form-group {if $goods_info.is_distribution==1 && $goods_info.distribution_rule && $goods_info.distribution_rule==1  && $goods_info.distribution_rule_val && $goods_info.distribution_rule_val.recommend_type && $goods_info.distribution_rule_val.recommend_type==2 && $goods_info.distribution_rule_val.level_rule && $goods_info.distribution_rule_val.level_rule==1}{else}hide{/if}" id="distribution_input3">
+                {if $level_list}
+                {foreach $level_list as $k=>$v}
+                <div class="form-group">
+                    <label class="col-md-2"></label>
+                    <div class="col-md-5">
+                        <div class="input-group">
+                            <div class="input-group-addon">{$v['level_name']}一级返佣金</div>
+                            <input type="number" name="level_first_rebate1_{$v['id']}" id="level_first_rebate1_{$v['id']}" class="form-control rebate" min="0"  value="{if $goods_info.distribution_rule_val && $goods_info.distribution_rule_val.level_ids}{foreach $goods_info.distribution_rule_val.level_ids as $k1=>$v1}{if $v1==$v['id']}{if $goods_info.distribution_rule_val.first_rebate1[$k1]}{$goods_info.distribution_rule_val.first_rebate1[$k1]}{else}0{/if}{/if}{/foreach}{else}0{/if}"  style="min-width: 74px">
+                            <div class="input-group-addon">元,{$v['level_name']}二级返佣金</div>
+                            <input type="number" name="level_second_rebate1_{$v['id']}" id="level_second_rebate1_{$v['id']}" class="form-control rebate" min="0"   value="{if $goods_info.distribution_rule_val && $goods_info.distribution_rule_val.level_ids}{foreach $goods_info.distribution_rule_val.level_ids as $k1=>$v1}{if $v1==$v['id']}{if $goods_info.distribution_rule_val.second_rebate1[$k1]}{$goods_info.distribution_rule_val.second_rebate1[$k1]}{else}0{/if}{/if}{/foreach}{else}0{/if}" style="min-width: 74px">
+                            <div class="input-group-addon">元,{$v['level_name']}三级返佣金</div>
+                            <input type="number" name="level_third_rebate1_{$v['id']}" id="level_third_rebate1_{$v['id']}" class="form-control rebate" min="0" value="{if $goods_info.distribution_rule_val && $goods_info.distribution_rule_val.level_ids}{foreach $goods_info.distribution_rule_val.level_ids as $k1=>$v1}{if $v1==$v['id']}{if $goods_info.distribution_rule_val.third_rebate1[$k1]}{$goods_info.distribution_rule_val.third_rebate1[$k1]}{else}0{/if}{/if}{/foreach}{else}0{/if}" style="min-width: 74px">
+                            <div class="input-group-addon">元</div>
+                        </div>
+                        <br>
+                        <div class="input-group">
+                            <div class="input-group-addon">{$v['level_name']}一级返积分</div>
+                            <input type="number" name="level_first_point1_{$v['id']}" id="level_first_point1_{$v['id']}" class="form-control rebate" min="0"  value="{if $goods_info.distribution_rule_val && $goods_info.distribution_rule_val.level_ids}{foreach $goods_info.distribution_rule_val.level_ids as $k1=>$v1}{if $v1==$v['id']}{if $goods_info.distribution_rule_val.first_point1[$k1]}{$goods_info.distribution_rule_val.first_point1[$k1]}{else}0{/if}{/if}{/foreach}{else}0{/if}"  style="min-width: 74px">
+                            <div class="input-group-addon">积分,{$v['level_name']}二级返积分</div>
+                            <input type="number" name="level_second_point1_{$v['id']}" id="level_second_point1_{$v['id']}" class="form-control rebate" min="0"   value="{if $goods_info.distribution_rule_val && $goods_info.distribution_rule_val.level_ids}{foreach $goods_info.distribution_rule_val.level_ids as $k1=>$v1}{if $v1==$v['id']}{if $goods_info.distribution_rule_val.second_point1[$k1]}{$goods_info.distribution_rule_val.second_point1[$k1]}{else}0{/if}{/if}{/foreach}{else}0{/if}" style="min-width: 74px">
+                            <div class="input-group-addon">积分,{$v['level_name']}三级返积分</div>
+                            <input type="number" name="level_third_point1_{$v['id']}" id="level_third_point1_{$v['id']}" class="form-control rebate" min="0" value="{if $goods_info.distribution_rule_val && $goods_info.distribution_rule_val.level_ids}{foreach $goods_info.distribution_rule_val.level_ids as $k1=>$v1}{if $v1==$v['id']}{if $goods_info.distribution_rule_val.third_point1[$k1]}{$goods_info.distribution_rule_val.third_point1[$k1]}{else}0{/if}{/if}{/foreach}{else}0{/if}" style="min-width: 74px">
+                            <div class="input-group-addon">积分</div>
+                        </div>
+                    </div>
+                </div>
+                {/foreach}
+                {/if}
+            </div>
+            <!-- 复购设置 -->
+            <div class="c {if $goods_info.is_distribution}{if $goods_info.is_distribution==2}hide{/if}{/if}" id="buyagain_rules">
+                <div class="form-group " >
+                    <label class="col-md-2 control-label">复购返佣</label>
+                    <div class="col-md-5">
+                        <div class="switch-inline">
+                            <input type="checkbox" id="buyagain-switch" value="1" name="buyagain" {if $goods_info.buyagain}{if $goods_info.buyagain==1}checked{/if}{/if}>
+                            <label for="buyagain-switch"></label>
+                        </div>
+                        <div class="mb-0 help-block">开启后分销商下线再次购买商城商品时则按照复购返佣规则计算佣金</div>
+                    </div>
+                </div>
+                <div class="buyagain_commission {if $goods_info.is_distribution==1 && $goods_info.buyagain && $goods_info.buyagain==1 }{else}hide{/if} " >
+                    <div class="form-group " id="buyagain_level_rules">
+                        <label class="col-md-2 control-label">开启等级返佣</label>
+                        <input type="hidden" id="buyagain_l_rule"  name="buyagain_l_rule">
+                        <div class="col-md-8" >
+                            <div class="switch-inline">
+                                <input type="checkbox" name="buyagain_level_rule" id="buyagain_level_rule" {if $goods_info.buyagain_level_rule}{if $goods_info.buyagain_level_rule==1}checked{/if}{/if}>
+                                <label for="buyagain_level_rule" class=""></label>
+                            </div>
+                            <div class="mb-0 help-block">
+                                不开启则使用默认佣金设置规则；开启则该商品使用独立等级返佣规则，不受分销商等级返佣限制。
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group " id="buyagain_recommend_type">
+                        <label class="col-md-2 control-label">返佣类型</label>
+                        <div class="col-md-8" >
+                            <label class="radio-inline">
+                                <input type="radio" name="buyagain_recommend_type" checked  class="buyagain_recommend_type" {if $goods_info.buyagain_recommend_type}{if $goods_info.buyagain_recommend_type==1}checked{/if}{/if} value="1"> 比例返佣
+                            </label>
+                            <label class="radio-inline">
+                                <input type="radio" name="buyagain_recommend_type" class="buyagain_recommend_type" {if $goods_info.buyagain_recommend_type}{if $goods_info.buyagain_recommend_type==2}checked{/if}{/if} value="2"  > 固定返佣
+                            </label>
+                        </div>
+                    </div>
+                    
+                    <div class="form-group {if $goods_info.buyagain==1 && $goods_info.buyagain_distribution_val && $goods_info.buyagain_recommend_type && $goods_info.buyagain_recommend_type==1 && $goods_info.buyagain_level_rule && $goods_info.buyagain_level_rule==2}{else}hide{/if}" id="buyagain_distribution_input">
+                        <label class="col-md-2"></label>
+                        <div class="col-md-5">
+                            <div class="input-group">
+                                <div class="input-group-addon">一级返佣</div>
+                                <input type="number" name="buyagain_first_rebate" id="buyagain_first_rebate" class="form-control rebate" min="0"  style="min-width: 74px" value="{if $goods_info.buyagain_distribution_val && $goods_info.buyagain_distribution_val.buyagain_first_rebate && $goods_info.buyagain_distribution_val.buyagain_level_rule && $goods_info.buyagain_distribution_val.buyagain_level_rule==2}{if $goods_info.buyagain_distribution_val.buyagain_first_rebate}{$goods_info.buyagain_distribution_val.buyagain_first_rebate}{else}0{/if}{else}0{/if}">
+                                <div class="input-group-addon">%,二级返佣</div>
+                                <input type="number" name="buyagain_second_rebate" id="buyagain_second_rebate" class="form-control rebate" min="0"   style="min-width: 74px" value="{if $goods_info.buyagain_distribution_val && $goods_info.buyagain_distribution_val.buyagain_second_rebate && $goods_info.buyagain_distribution_val.buyagain_level_rule && $goods_info.buyagain_distribution_val.buyagain_level_rule==2}{if $goods_info.buyagain_distribution_val.buyagain_second_rebate}{$goods_info.buyagain_distribution_val.buyagain_second_rebate}{else}0{/if}{else}0{/if}">
+                                <div class="input-group-addon">%,三级返佣</div>
+                                <input type="number" name="buyagain_third_rebate" id="buyagain_third_rebate" class="form-control rebate" min="0" style="min-width: 74px" value="{if $goods_info.buyagain_distribution_val && $goods_info.buyagain_distribution_val.buyagain_third_rebate && $goods_info.buyagain_distribution_val.buyagain_level_rule && $goods_info.buyagain_distribution_val.buyagain_level_rule==2}{if $goods_info.buyagain_distribution_val.buyagain_third_rebate}{$goods_info.buyagain_distribution_val.buyagain_third_rebate}{else}0{/if}{else}0{/if}">
+                                <div class="input-group-addon">%</div>
+                            </div>
+                            <br>
+                            <div class="input-group">
+                                <div class="input-group-addon">一级返积分</div>
+                                <input type="number" name="buyagain_first_point" id="buyagain_first_point" class="form-control rebate" min="0"  value="{if $goods_info.buyagain_distribution_val && $goods_info.buyagain_distribution_val.buyagain_first_point && $goods_info.buyagain_distribution_val.buyagain_level_rule && $goods_info.buyagain_distribution_val.buyagain_level_rule==2}{if $goods_info.buyagain_distribution_val.buyagain_first_point}{$goods_info.buyagain_distribution_val.buyagain_first_point}{else}0{/if}{else}0{/if}"  style="min-width: 74px">
+                                <div class="input-group-addon">%,二级返积分</div>
+                                <input type="number" name="buyagain_second_point" id="buyagain_second_point" class="form-control rebate" min="0"   value="{if $goods_info.buyagain_distribution_val && $goods_info.buyagain_distribution_val.buyagain_second_point && $goods_info.buyagain_distribution_val.buyagain_level_rule && $goods_info.buyagain_distribution_val.buyagain_level_rule==2}{if $goods_info.buyagain_distribution_val.buyagain_second_point}{$goods_info.buyagain_distribution_val.buyagain_second_point}{else}0{/if}{else}0{/if}" style="min-width: 74px">
+                                <div class="input-group-addon">%,三级返积分</div>
+                                <input type="number" name="buyagain_third_point" id="buyagain_third_point" class="form-control rebate" min="0" value="{if $goods_info.buyagain_distribution_val && $goods_info.buyagain_distribution_val.buyagain_third_point && $goods_info.buyagain_distribution_val.buyagain_level_rule && $goods_info.buyagain_distribution_val.buyagain_level_rule==2}{if $goods_info.buyagain_distribution_val.buyagain_third_point}{$goods_info.buyagain_distribution_val.buyagain_third_point}{else}0{/if}{else}0{/if}" style="min-width: 74px">
+                                <div class="input-group-addon">%</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group {if $goods_info.buyagain==1 && $goods_info.buyagain_distribution_val && $goods_info.buyagain_recommend_type && $goods_info.buyagain_recommend_type==2 && $goods_info.buyagain_level_rule && $goods_info.buyagain_level_rule==2}{else}hide{/if}" id="buyagain_distribution_input1">
+                        <label class="col-md-2"></label>
+                        <div class="col-md-5">
+                            <div class="input-group">
+                                <div class="input-group-addon">一级返佣金</div>
+                                <input type="number" name="buyagain_first_rebate1" id="buyagain_first_rebate1" class="form-control rebate" min="0"  value="{if $goods_info.buyagain_distribution_val && $goods_info.buyagain_distribution_val.buyagain_first_rebate1 && $goods_info.buyagain_distribution_val.buyagain_level_rule && $goods_info.buyagain_distribution_val.buyagain_level_rule==2}{if $goods_info.buyagain_distribution_val.buyagain_first_rebate1}{$goods_info.buyagain_distribution_val.buyagain_first_rebate1}{else}0{/if}{else}0{/if}"  style="min-width: 74px">
+                                <div class="input-group-addon">元,二级返佣金</div>
+                                <input type="number" name="buyagain_second_rebate1" id="buyagain_second_rebate1" class="form-control rebate" min="0"   value="{if $goods_info.buyagain_distribution_val && $goods_info.buyagain_distribution_val.buyagain_second_rebate1 && $goods_info.buyagain_distribution_val.buyagain_level_rule && $goods_info.buyagain_distribution_val.buyagain_level_rule==2}{if $goods_info.buyagain_distribution_val.buyagain_second_rebate1}{$goods_info.buyagain_distribution_val.buyagain_second_rebate1}{else}0{/if}{else}0{/if}" style="min-width: 74px">
+                                <div class="input-group-addon">元,三级返佣金</div>
+                                <input type="number" name="buyagain_third_rebate1" id="buyagain_third_rebate1" class="form-control rebate" min="0" value="{if $goods_info.buyagain_distribution_val && $goods_info.buyagain_distribution_val.buyagain_third_rebate1 && $goods_info.buyagain_distribution_val.buyagain_level_rule && $goods_info.buyagain_distribution_val.buyagain_level_rule==2}{if $goods_info.buyagain_distribution_val.buyagain_third_rebate1}{$goods_info.buyagain_distribution_val.buyagain_third_rebate1}{else}0{/if}{else}0{/if}" style="min-width: 74px">
+                                <div class="input-group-addon">元</div>
+                            </div>
+                            <br>
+                            <div class="input-group">
+                                <div class="input-group-addon">一级返积分</div>
+                                <input type="number" name="buyagain_first_point1" id="buyagain_first_point1" class="form-control rebate" min="0"  value="{if $goods_info.buyagain_distribution_val && $goods_info.buyagain_distribution_val.buyagain_first_point1 && $goods_info.buyagain_distribution_val.buyagain_level_rule && $goods_info.buyagain_distribution_val.buyagain_level_rule==2}{if $goods_info.buyagain_distribution_val.buyagain_first_point1}{$goods_info.buyagain_distribution_val.buyagain_first_point1}{else}0{/if}{else}0{/if}"  style="min-width: 74px">
+                                <div class="input-group-addon">积分,二级返积分</div>
+                                <input type="number" name="buyagain_second_point1" id="buyagain_second_point1" class="form-control rebate" min="0"   value="{if $goods_info.buyagain_distribution_val && $goods_info.buyagain_distribution_val.buyagain_second_point1 && $goods_info.buyagain_distribution_val.buyagain_level_rule && $goods_info.buyagain_distribution_val.buyagain_level_rule==2}{if $goods_info.buyagain_distribution_val.buyagain_second_point1}{$goods_info.buyagain_distribution_val.buyagain_second_point1}{else}0{/if}{else}0{/if}" style="min-width: 74px">
+                                <div class="input-group-addon">积分,三级返积分</div>
+                                <input type="number" name="buyagain_third_point1" id="buyagain_third_point1" class="form-control rebate" min="0" value="{if $goods_info.buyagain_distribution_val && $goods_info.buyagain_distribution_val.buyagain_third_point1 && $goods_info.buyagain_distribution_val.buyagain_level_rule && $goods_info.buyagain_distribution_val.buyagain_level_rule==2}{if $goods_info.buyagain_distribution_val.buyagain_third_point1}{$goods_info.buyagain_distribution_val.buyagain_third_point1}{else}0{/if}{else}0{/if}" style="min-width: 74px">
+                                <div class="input-group-addon">积分</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="{if $goods_info.buyagain==1 && $goods_info.buyagain_distribution_val && $goods_info.buyagain_recommend_type && $goods_info.buyagain_recommend_type==1 && $goods_info.buyagain_level_rule && $goods_info.buyagain_level_rule==1}{else}hide{/if}" id="buyagain_distribution_input2">
+                        {if $level_list}
+                        {foreach $level_list as $k=>$v}
+                        <div class="form-group">
+                            <label class="col-md-2"></label>
+                            <div class="col-md-5">
+                                <div class="input-group">
+                                    <div class="input-group-addon">{$v['level_name']}一级返佣</div>
+                                    <input type="number" name="buyagain_level_first_rebate_{$v['id']}" id="buyagain_level_first_rebate_{$v['id']}" class="form-control rebate" min="0"  value="{if $goods_info.buyagain_distribution_val && $goods_info.buyagain_distribution_val.level_ids}{foreach $goods_info.buyagain_distribution_val.level_ids as $k1=>$v1}{if $v1==$v['id']}{if $goods_info.buyagain_distribution_val.buyagain_first_rebate[$k1]}{$goods_info.buyagain_distribution_val.buyagain_first_rebate[$k1]}{else}0{/if}{/if}{/foreach}{else}0{/if}"  style="min-width: 74px">
+                                    <div class="input-group-addon">%,{$v['level_name']}二级返佣</div>
+                                    <input type="number" name="buyagain_level_second_rebate_{$v['id']}" id="buyagain_level_second_rebate_{$v['id']}" class="form-control rebate" min="0"   value="{if $goods_info.buyagain_distribution_val && $goods_info.buyagain_distribution_val.level_ids}{foreach $goods_info.buyagain_distribution_val.level_ids as $k1=>$v1}{if $v1==$v['id']}{if $goods_info.buyagain_distribution_val.buyagain_second_rebate[$k1]}{$goods_info.buyagain_distribution_val.buyagain_second_rebate[$k1]}{else}0{/if}{/if}{/foreach}{else}0{/if}" style="min-width: 74px">
+                                    <div class="input-group-addon">%,{$v['level_name']}三级返佣</div>
+                                    <input type="number" name="buyagain_level_third_rebate_{$v['id']}" id="buyagain_level_third_rebate_{$v['id']}" class="form-control rebate" min="0" value="{if $goods_info.buyagain_distribution_val && $goods_info.buyagain_distribution_val.level_ids}{foreach $goods_info.buyagain_distribution_val.level_ids as $k1=>$v1}{if $v1==$v['id']}{if $goods_info.buyagain_distribution_val.buyagain_third_rebate[$k1]}{$goods_info.buyagain_distribution_val.buyagain_third_rebate[$k1]}{else}0{/if}{/if}{/foreach}{else}0{/if}" style="min-width: 74px">
+                                    <div class="input-group-addon">%</div>
+                                </div>
+                                <br>
+                                <div class="input-group">
+                                    <div class="input-group-addon">{$v['level_name']}一级返积分</div>
+                                    <input type="number" name="buyagain_level_first_point_{$v['id']}" id="buyagain_level_first_point_{$v['id']}" class="form-control rebate" min="0"  value="{if $goods_info.buyagain_distribution_val && $goods_info.buyagain_distribution_val.level_ids}{foreach $goods_info.buyagain_distribution_val.level_ids as $k1=>$v1}{if $v1==$v['id']}{if $goods_info.buyagain_distribution_val.buyagain_first_point[$k1]}{$goods_info.buyagain_distribution_val.buyagain_first_point[$k1]}{else}0{/if}{/if}{/foreach}{else}0{/if}"  style="min-width: 74px">
+                                    <div class="input-group-addon">%,{$v['level_name']}二级返积分</div>
+                                    <input type="number" name="buyagain_level_second_point_{$v['id']}" id="buyagain_level_second_point_{$v['id']}" class="form-control rebate" min="0"   value="{if $goods_info.buyagain_distribution_val && $goods_info.buyagain_distribution_val.level_ids}{foreach $goods_info.buyagain_distribution_val.level_ids as $k1=>$v1}{if $v1==$v['id']}{if $goods_info.buyagain_distribution_val.buyagain_second_point[$k1]}{$goods_info.buyagain_distribution_val.buyagain_second_point[$k1]}{else}0{/if}{/if}{/foreach}{else}0{/if}" style="min-width: 74px">
+                                    <div class="input-group-addon">%,{$v['level_name']}三级返积分</div>
+                                    <input type="number" name="buyagain_level_third_point_{$v['id']}" id="buyagain_level_third_point_{$v['id']}" class="form-control rebate" min="0" value="{if $goods_info.buyagain_distribution_val && $goods_info.buyagain_distribution_val.level_ids}{foreach $goods_info.buyagain_distribution_val.level_ids as $k1=>$v1}{if $v1==$v['id']}{if $goods_info.buyagain_distribution_val.buyagain_third_point[$k1]}{$goods_info.buyagain_distribution_val.buyagain_third_point[$k1]}{else}0{/if}{/if}{/foreach}{else}0{/if}" style="min-width: 74px">
+                                    <div class="input-group-addon">%</div>
+                                </div>
+                            </div>
+                        </div>
+                        {/foreach}
+                        {/if}
+                    </div>
+                    <div class="{if $goods_info.buyagain==1 && $goods_info.buyagain_distribution_val && $goods_info.buyagain_recommend_type && $goods_info.buyagain_recommend_type==2 && $goods_info.buyagain_level_rule && $goods_info.buyagain_level_rule==1}{else}hide{/if}" id="buyagain_distribution_input3">
+                        {if $level_list}
+                        {foreach $level_list as $k=>$v}
+                        <div class="form-group">
+                            <label class="col-md-2"></label>
+                            <div class="col-md-5">
+                                <div class="input-group">
+                                    <div class="input-group-addon">{$v['level_name']}一级返佣金</div>
+                                    <input type="number" name="buyagain_level_first_rebate1_{$v['id']}" id="buyagain_level_first_rebate1_{$v['id']}" class="form-control rebate" min="0"  value="{if $goods_info.buyagain_distribution_val && $goods_info.buyagain_distribution_val.level_ids}{foreach $goods_info.buyagain_distribution_val.level_ids as $k1=>$v1}{if $v1==$v['id']}{if $goods_info.buyagain_distribution_val.buyagain_first_rebate1[$k1]}{$goods_info.buyagain_distribution_val.buyagain_first_rebate1[$k1]}{else}0{/if}{/if}{/foreach}{else}0{/if}"  style="min-width: 74px">
+                                    <div class="input-group-addon">元,{$v['level_name']}二级返佣金</div>
+                                    <input type="number" name="buyagain_level_second_rebate1_{$v['id']}" id="buyagain_level_second_rebate1_{$v['id']}" class="form-control rebate" min="0"   value="{if $goods_info.buyagain_distribution_val && $goods_info.buyagain_distribution_val.level_ids}{foreach $goods_info.buyagain_distribution_val.level_ids as $k1=>$v1}{if $v1==$v['id']}{if $goods_info.buyagain_distribution_val.buyagain_second_rebate1[$k1]}{$goods_info.buyagain_distribution_val.buyagain_second_rebate1[$k1]}{else}0{/if}{/if}{/foreach}{else}0{/if}" style="min-width: 74px">
+                                    <div class="input-group-addon">元,{$v['level_name']}三级返佣金</div>
+                                    <input type="number" name="buyagain_level_third_rebate1_{$v['id']}" id="buyagain_level_third_rebate1_{$v['id']}" class="form-control rebate" min="0" value="{if $goods_info.buyagain_distribution_val && $goods_info.buyagain_distribution_val.level_ids}{foreach $goods_info.buyagain_distribution_val.level_ids as $k1=>$v1}{if $v1==$v['id']}{if $goods_info.buyagain_distribution_val.buyagain_third_rebate1[$k1]}{$goods_info.buyagain_distribution_val.buyagain_third_rebate1[$k1]}{else}0{/if}{/if}{/foreach}{else}0{/if}" style="min-width: 74px">
+                                    <div class="input-group-addon">元</div>
+                                </div>
+                                <br>
+                                <div class="input-group">
+                                    <div class="input-group-addon">{$v['level_name']}一级返积分</div>
+                                    <input type="number" name="buyagain_level_first_point1_{$v['id']}" id="buyagain_level_first_point1_{$v['id']}" class="form-control rebate" min="0"  value="{if $goods_info.buyagain_distribution_val && $goods_info.buyagain_distribution_val.level_ids}{foreach $goods_info.buyagain_distribution_val.level_ids as $k1=>$v1}{if $v1==$v['id']}{if $goods_info.buyagain_distribution_val.buyagain_first_point1[$k1]}{$goods_info.buyagain_distribution_val.buyagain_first_point1[$k1]}{else}0{/if}{/if}{/foreach}{else}0{/if}"  style="min-width: 74px">
+                                    <div class="input-group-addon">积分,{$v['level_name']}二级返积分</div>
+                                    <input type="number" name="buyagain_level_second_point1_{$v['id']}" id="buyagain_level_second_point1_{$v['id']}" class="form-control rebate" min="0"   value="{if $goods_info.buyagain_distribution_val && $goods_info.buyagain_distribution_val.level_ids}{foreach $goods_info.buyagain_distribution_val.level_ids as $k1=>$v1}{if $v1==$v['id']}{if $goods_info.buyagain_distribution_val.buyagain_second_point1[$k1]}{$goods_info.buyagain_distribution_val.buyagain_second_point1[$k1]}{else}0{/if}{/if}{/foreach}{else}0{/if}" style="min-width: 74px">
+                                    <div class="input-group-addon">积分,{$v['level_name']}三级返积分</div>
+                                    <input type="number" name="buyagain_level_third_point1_{$v['id']}" id="buyagain_level_third_point1_{$v['id']}" class="form-control rebate" min="0" value="{if $goods_info.buyagain_distribution_val && $goods_info.buyagain_distribution_val.level_ids}{foreach $goods_info.buyagain_distribution_val.level_ids as $k1=>$v1}{if $v1==$v['id']}{if $goods_info.buyagain_distribution_val.buyagain_third_point1[$k1]}{$goods_info.buyagain_distribution_val.buyagain_third_point1[$k1]}{else}0{/if}{/if}{/foreach}{else}0{/if}" style="min-width: 74px">
+                                    <div class="input-group-addon">积分</div>
+                                </div>
+                            </div>
+                        </div>
+                        {/foreach}
+                        {/if}
+                    </div>
+                </div>
+            </div>
+            
+            {/if}
+            {if $globalExist==1 || $areaExist==1 || $teamExist==1}
+            <div class="screen-title2" data-id="t3">
+                <span class="text">分红</span>
+            </div>
+            {if $globalExist==1}
+            <div class="form-group">
+                <label class="col-md-2 control-label">是否参与全球分红</label>
+                <div class="col-md-8" >
+                    <label class="radio-inline">
+                        <input type="radio" name="is_bonus_global" class="is_bonus_global"  value="1" {if $goods_info.is_bonus_global}{if $goods_info.is_bonus_global==1}checked{/if}{/if}> 参与
+                    </label>
+                    <label class="radio-inline">
+                        <input type="radio" name="is_bonus_global" class="is_bonus_global" value="2" {if $goods_info.is_bonus_global}{if $goods_info.is_bonus_global==2}checked{/if}{else}checked{/if}> 不参与
+                    </label>
+                    <div class="mb-0 help-block">
+                        开启全球分红后该商品默认开启参与分红。关闭则不参与分红，该商品不产生分红奖金。
+                    </div>
+                </div>
+
+            </div>
+            {/if}
+            {if $areaExist==1}
+            <div class="form-group">
+                <label class="col-md-2 control-label">是否参与区域分红</label>
+                <div class="col-md-8" >
+                    <label class="radio-inline">
+                        <input type="radio" name="is_bonus_area" class="is_bonus_area"  value="1" {if $goods_info.is_bonus_area}{if $goods_info.is_bonus_area==1}checked{/if}{/if}> 参与
+                    </label>
+                    <label class="radio-inline">
+                        <input type="radio" name="is_bonus_area" class="is_bonus_area" value="2" {if $goods_info.is_bonus_area}{if $goods_info.is_bonus_area==2}checked{/if}{else}checked{/if}> 不参与
+                    </label>
+                    <div class="mb-0 help-block">
+                        开启区域分红后该商品默认开启参与分红。关闭则不参与分红，该商品不产生分红奖金。
+                    </div>
+                </div>
+
+            </div>
+            {/if}
+            {if $teamExist==1}
+            <div class="form-group">
+                <label class="col-md-2 control-label">是否参与团队分红</label>
+                <div class="col-md-8" >
+                    <label class="radio-inline">
+                        <input type="radio" name="is_bonus_team" class="is_bonus_team"  value="1" {if $goods_info.is_bonus_team}{if $goods_info.is_bonus_team==1}checked{/if}{/if}> 参与
+                    </label>
+                    <label class="radio-inline">
+                        <input type="radio" name="is_bonus_team" class="is_bonus_team" value="2" {if $goods_info.is_bonus_team}{if $goods_info.is_bonus_team==2}checked{/if}{else}checked{/if}> 不参与
+                    </label>
+                    <div class="mb-0 help-block">
+                        开启团队分红后该商品默认开启参与分红。关闭则不参与分红，该商品不产生分红奖金。
+                    </div>
+                </div>
+
+            </div>
+            {/if}
+            <div class="form-group {if $goods_info.is_bonus_global && $goods_info.is_bonus_global==2 && $goods_info.is_bonus_area && $goods_info.is_bonus_area==2 && $goods_info.is_bonus_team && $goods_info.is_bonus_team==2}hide{/if}" id="bounsRules">
+                <label class="col-md-2 control-label">独立分红规则</label>
+                <input type="hidden" id="b_rule" value="{$goods_info.bonus_rule}" name="b_rule">
+                <div class="col-md-8" >
+                    <div class="switch-inline">
+                        <input type="checkbox" name="bonus_rule" id="bonus_rule" {if $goods_info.bonus_rule}{if $goods_info.bonus_rule==1}checked{/if}{/if}>
+                               <label for="bonus_rule" class=""></label>
+                    </div>
+
+                    <div class="mb-0 help-block">
+                        不开启则使用默认分红设置格则；开启则该商品使用独立分红比例规则，不受分红全球股东/区域代理/团队队长等级比例限制。
+                    </div>
+                </div>
+
+            </div>
+
+            <div class="form-group {if $goods_info.bonus_rule}{if $goods_info.bonus_rule!=1}hide{/if}{else}hide{/if}" id="bonus_input">
+                <label class="col-md-2"></label>
+                <div class="col-md-8">
+                    <table class="table v-table table-auto-center table-bordered">
+                        <thead>
+                            <tr>
+                                {if $globalExist==1}
+                                <th class="w-200 bonus-td1 {if $goods_info.is_bonus_global}{if $goods_info.is_bonus_global==2}hide{/if}{/if}">全球分红</th>
+                                {/if}
+                                {if $areaExist==1}
+                                <th class="w-600 bonus-td2 {if $goods_info.is_bonus_area}{if $goods_info.is_bonus_area==2}hide{/if}{/if}">区域分红</th>
+                                {/if}
+                                {if $teamExist==1}
+                                <th class="w-200 bonus-td3 {if $goods_info.is_bonus_team}{if $goods_info.is_bonus_team==2}hide{/if}{/if}">团队分红</th>
+                                {/if}
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                {if $globalExist==1}
+                                <td class="bonus-td1 {if $goods_info.is_bonus_global}{if $goods_info.is_bonus_global==2}hide{/if}{/if}">
+                                    <div class="input-group">
+                                        <input style="min-width: 74px" type="number"  name="global_bonus" id="global_bonus" class="form-control global_bonus" min="0"  value="{if $goods_info.bonus_rule_val && $goods_info.bonus_rule_val.global_bonus}{$goods_info.bonus_rule_val.global_bonus}{/if}">
+                                        <div class="input-group-addon">%</div>
+                                    </div>
+                                </td>
+                                {/if}
+                                {if $areaExist==1}
+                                <td class="bonus-td2 {if $goods_info.is_bonus_area}{if $goods_info.is_bonus_area==2}hide{/if}{/if}">
+                                    <div class="input-group">
+                                        <div class="input-group-addon">省级</div>
+                                        <input style="min-width: 74px" type="number" name="province_bonus" value="{if $goods_info.bonus_rule_val && $goods_info.bonus_rule_val.province_bonus}{$goods_info.bonus_rule_val.province_bonus}{/if}" id="province_bonus" class="form-control area_bonus" min="0"  >
+                                        <div class="input-group-addon">%,市级</div>
+                                        <input style="min-width: 74px" type="number" name="city_bonus"  id="city_bonus" class="form-control area_bonus" min="0" value="{if $goods_info.bonus_rule_val && $goods_info.bonus_rule_val.city_bonus}{$goods_info.bonus_rule_val.city_bonus}{/if}" >
+                                        <div class="input-group-addon">%,区级</div>
+                                        <input style="min-width: 74px" type="number" name="district_bonus"  id="district_bonus" class="form-control area_bonus" value="{if $goods_info.bonus_rule_val && $goods_info.bonus_rule_val.district_bonus}{$goods_info.bonus_rule_val.district_bonus}{/if}" min="0" >
+                                        <div class="input-group-addon">%</div>
+                                    </div>
+                                </td>
+                                {/if}
+                                {if $teamExist==1}
+                                <td class="bonus-td3 {if $goods_info.is_bonus_team}{if $goods_info.is_bonus_team==2}hide{/if}{/if}">
+                                    <div class="input-group">
+                                        <input style="min-width: 74px" type="number" name="team_bonus"  id="team_bonus" class="form-control team_bonus" min="0"  value="{if $goods_info.bonus_rule_val && $goods_info.bonus_rule_val.team_bonus}{$goods_info.bonus_rule_val.team_bonus}{/if}" >
+                                        <div class="input-group-addon">%</div>
+                                    </div>
+                                </td>
+                                {/if}
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            {/if}
+        </div>
+        {/if}
+
+        <!--营销抵扣-->
+        <div class="tab-pane fade tab-5" id="integral_rule">
+            <div class="screen-title2" data-id="t3">
+                <span class="text">积分业务</span>
+            </div>
+            <div class="form-group">
+                <label class="col-md-2 control-label">购物返积分</label>
+                <div class="col-md-5">
+                    <div class="input-group w-200">
+                        <input type="number" class="form-control number-form-control" name="point_return_max" id="point_return_max" value="{$goods_info.point_return_max}"  min="0">
+                        <div class="input-group-addon">%</div>
+                    </div>
+                    <p class="help-block mb-0 w-800">购买该商品返多少积分，0则该商品不参与赠送，不填则按商城设置>交易设置规则赠送，设置赠送优先级 “商品 > 商城配置”</p>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-md-2 control-label">积分最大抵扣</label>
+                <div class="col-md-5">
+                    <div class="input-group w-200">
+                        <input type="number" class="form-control number-form-control" name="point_deduction_max" id="point_deduction_max" value="{$goods_info.point_deduction_max}"  min="0" max="100">
+                        <div class="input-group-addon">%</div>
+                    </div>
+                    <p class="help-block mb-0 w-800">该商品最多抵扣多少积分，0则该商品不参与抵扣，不填则按商城设置>交易设置规则抵扣，设置抵扣优先级 “商品 > 商城配置”</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="tab-pane fade tab-7" id="discount_rule">
+            <div class="screen-title2" data-id="t3">
+                <span class="text">浏览权限</span>
+            </div>
+            <div class="form-group">
+                <label class="col-md-2 control-label">会员等级</label>
+                <div class="col-md-5">
+                    <div class="checkbox_three">
+                        <label class="checkbox-inline"><input type="checkbox" name="member_level_all" id="member_level_all" value="0"
+                            {if $good_discount['discount_look_obj']['member_level_id']}
+                                {if $good_discount['discount_look_obj']['member_level_id'][0] !== 0}
+                                {if count($member_level) eq count($good_discount['discount_look_obj']['member_level_id'])}checked{/if}{/if}
+                            {elseif $good_discount['discount_look_obj']['member_level_id'] === 0}
+                            {else/} checked
+                            {/if}
+                            >全部</label>
+                        {volist name="member_level" id="v1"}
+                        <label class="checkbox-inline member_level">
+                            <input type="checkbox" name="member_level_id"  value="{$v1.level_id}"
+                                   {if $good_discount.discount_look_obj}
+                                   {foreach $good_discount.discount_look_obj.member_level_id as $m1}
+                                   {if $v1['level_id'] eq $m1} checked="checked" {/if}
+                                   {/foreach}
+                                   {/if}>
+                            {$v1.level_name}
+                        </label>
+                        {/volist}
+                    </div>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-md-2 control-label">分销商等级</label>
+                <div class="col-md-5">
+                    <div class="checkbox_three">
+                        <label class="checkbox-inline"><input type="checkbox" name="distributor_level_all" id="distributor_level_all" value="0"
+                            {if $good_discount['discount_look_obj']['distributor_level_id']}
+                                {if $good_discount['discount_look_obj']['distributor_level_id'][0] !== 0}
+                            {if count($distributor_level) eq count($good_discount['discount_look_obj']['distributor_level_id'])}checked{/if}{/if}
+                            {elseif $good_discount['discount_look_obj']['distributor_level_id'] === 0}
+                            {else/} checked
+                            {/if}
+                            >全部</label>
+                        {volist name="distributor_level" id="v2"}
+                        <label class="checkbox-inline distributor_level">
+                            <input type="checkbox" name="distributor_level_id"  value="{$v2.id}"
+                                   {if $good_discount.discount_look_obj}
+                                   {foreach $good_discount.discount_look_obj.distributor_level_id as $m2}
+                                   {if $v2['id'] eq $m2} checked="checked" {/if}
+                                   {/foreach}
+                                   {/if}>
+                            {$v2.level_name}
+                        </label>
+                        {/volist}
+                    </div>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-md-2 control-label">会员标签</label>
+                <div class="col-md-5">
+                    <div class="checkbox_three">
+                        <label class="checkbox-inline"><input type="checkbox" name="user_group_level_all" id="user_group_level_all" value="0"
+                        {if $good_discount['discount_look_obj']['user_group_level_id']}
+                            {if $good_discount['discount_look_obj']['user_group_level_id'][0] !== 0}
+                            {if count($user_group_level) eq count($good_discount['discount_look_obj']['user_group_level_id'])}checked{/if}{/if}
+                            {elseif $good_discount['discount_look_obj']['user_group_level_id'] === 0}
+                        {else/} checked
+                        {/if}
+                        >全部</label>
+                        {volist name="user_group_level" id="v3"}
+                        <label class="checkbox-inline user_group_level">
+                            <input type="checkbox" name="user_group_level_id"  value="{$v3.group_id}"
+                                   {if $good_discount.discount_look_obj}
+                                   {foreach $good_discount.discount_look_obj.user_group_level_id as $m3}
+                                   {if $v3['group_id'] eq $m3} checked="checked" {/if}
+                                   {/foreach}
+                                   {/if}>
+                            {$v3.group_name}
+                        </label>
+                        {/volist}
+                    </div>
+                </div>
+            </div>
+            <div class="screen-title2" data-id="t3">
+            <span class="text">购买权限</span>
+            </div>
+            <div class="form-group">
+                <label class="col-md-2 control-label">会员等级</label>
+                <div class="col-md-5">
+                    <div class="checkbox_three">
+                        <label class="checkbox-inline"><input type="checkbox" name="member_level_all2" id="member_level_all2" value="0"
+                        {if $good_discount['discount_buy_obj']['member_level_id2']}
+                            {if $good_discount['discount_buy_obj']['member_level_id2'][0] !== 0}
+                            {if count($member_level) eq count($good_discount['discount_buy_obj']['member_level_id2'])}checked{/if}{/if}
+                            {elseif $good_discount['discount_buy_obj']['member_level_id2'] === 0}
+                        {else/} checked
+                        {/if}
+                        > 全部</label>
+                        {volist name="member_level" id="w1"}
+                        <label class="checkbox-inline member_level2">
+                            <input type="checkbox" name="member_level_id2"  value="{$w1.level_id}"
+                                   {if $good_discount.discount_buy_obj}
+                                   {foreach $good_discount.discount_buy_obj.member_level_id2 as $n1}
+                                   {if $w1['level_id'] eq $n1} checked="checked" {/if}
+                                   {/foreach}
+                                   {/if}>
+                             {$w1.level_name}
+                        </label>
+                        {/volist}
+                    </div>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-md-2 control-label">分销商等级</label>
+                <div class="col-md-5">
+                    <div class="checkbox_three">
+                        <label class="checkbox-inline"><input type="checkbox" name="distributor_level_all2" id="distributor_level_all2" value="0"
+                        {if $good_discount['discount_buy_obj']['distributor_level_id2']}
+                            {if $good_discount['discount_buy_obj']['distributor_level_id2'][0] !== 0}
+                            {if count($distributor_level) eq count($good_discount['discount_buy_obj']['distributor_level_id2'])}checked{/if}{/if}
+                            {elseif $good_discount['discount_buy_obj']['distributor_level_id2'] === 0}
+                        {else/} checked
+                        {/if}
+                            > 全部</label>
+                        {volist name="distributor_level" id="w2"}
+                        <label class="checkbox-inline distributor_level2">
+                            <input type="checkbox" name="distributor_level_id2" value="{$w2.id}"
+                                   {if $good_discount.discount_buy_obj}
+                                   {foreach $good_discount.discount_buy_obj.distributor_level_id2 as $n2}
+                                   {if $w2['id'] eq $n2} checked="checked" {/if}
+                                   {/foreach}
+                                   {/if}>
+                            {$w2.level_name}
+                        </label>
+                        {/volist}
+                    </div>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-md-2 control-label">会员标签</label>
+                <div class="col-md-5">
+                    <div class="checkbox_three">
+                        <label class="checkbox-inline"><input type="checkbox" name="user_group_level_all2" id="user_group_level_all2" value="0"
+                        {if $good_discount['discount_buy_obj']['user_group_level_id2']}
+                            {if $good_discount['discount_buy_obj']['user_group_level_id2'][0] !== 0}
+                            {if count($user_group_level) eq count($good_discount['discount_buy_obj']['user_group_level_id2'])}checked{/if}{/if}
+                            {elseif $good_discount['discount_buy_obj']['user_group_level_id2'] === 0}
+                        {else/} checked
+                        {/if}
+                        > 全部</label>
+                        {volist name="user_group_level" id="w3"}
+                        <label class="checkbox-inline user_group_level2">
+                            <input type="checkbox" name="user_group_level_id2"  value="{$w3.group_id}"
+                                   {if $good_discount.discount_buy_obj}
+                                   {foreach $good_discount.discount_buy_obj.user_group_level_id2 as $n3}
+                                   {if $w3['group_id'] eq $n3} checked="checked" {/if}
+                                  {/foreach}
+                                  {/if}>
+                            {$w3.group_name}
+                        </label>
+                        {/volist}
+                    </div>
+                </div>
+            </div>
+            <div class="screen-title2" data-id="t3">
+                <span class="text">独立折扣</span>
+            </div>
+            <div class="form-group distribution_rules">
+                <label class="col-md-2 control-label">会员折扣</label>
+                <input type="hidden" id="user_discount" value="" name="user_discount">
+                <div class="col-md-8" >
+                    <div class="switch-inline">
+                        <input type="checkbox" name="is_member_discount" id="is_member_discount" {if $good_discount.is_member_discount_open}{if $good_discount.is_member_discount_open==1}checked{/if}{/if}>
+                        <label for="is_member_discount" class=""></label>
+                    </div>
+                    <div class="mb-0 help-block">
+                        关闭后该商品不参与会员等级折扣优惠
+                    </div>
+                </div>
+            </div>
+            <div class="form-group {if !$good_discount || $good_discount.is_member_discount_open==2}hide{/if}" id="user_independents" >
+                <label class="col-md-2 control-label">会员独立折扣</label>
+                <div class="col-md-8" >
+                    <div class="switch-inline">
+                        <input type="checkbox" name="user_independent" id="user_independent" {if $good_discount.is_user_obj_open && $good_discount.is_user_obj_open==1}checked{/if}>
+                        <label for="user_independent" class=""></label>
+                    </div>
+                    <div class="mb-0 help-block">
+                        开启后会员折扣将优先按独立折扣计算价格，若未开启则按照会员等级设置的折扣计算。
+                    </div>
+                </div>
+            </div>
+            <div class="form-group {if !$good_discount || $good_discount.is_member_discount_open==2 || $good_discount.is_user_obj_open==2}hide{/if}" id="user_discount_choices">
+                <label class="col-md-2 control-label">折扣方式</label>
+                <div class="col-md-8" >
+                    <label class="radio-inline">
+                        <input type="radio" name="user_discount_choice" class="user_discount_choice"  value="1"
+                               {if !$good_discount || !$good_discount.user_obj.u_discount_choice || $good_discount.user_obj.u_discount_choice == 1} checked {/if}> 打折
+                    </label>
+                    <label class="radio-inline">
+                        <input type="radio" name="user_discount_choice" class="user_discount_choice" value="2"
+                               {if $good_discount.user_obj.u_discount_choice == 2} checked {/if}> 固定金额
+                    </label>
+                </div>
+            </div>
+            <div class="form-group {if !$good_discount || $good_discount.is_member_discount_open==2 || $good_discount.is_user_obj_open==2 || $good_discount.user_obj.u_discount_choice==2 }hide{/if}" id="user_independent_levels">
+                <label class="col-md-2 control-label">会员等级</label>
+                <div class="col-md-8">
+                {if $good_discount.user_obj}
+                    {foreach name="$good_discount.user_obj.u_level_data" item="vo1" key="k1" }
+                    {if $good_discount.user_obj.u_discount_choice==1}
+                    <div class="input-group w-300">
+                        <span class="input-group-addon">{$vo1.name}</span>
+                        <input type="number" class="form-control" min="0.01" max="10" name="user_independent_level" value="{$vo1.val}" data-uid="{$k1}" data-uname="{$vo1.name}" >
+                        <span class="input-group-addon">折</span>
+                    </div>
+                    <br>
+                    {else/}
+                    <div class="input-group w-300">
+                        <span class="input-group-addon">{$vo1.name}</span>
+                        <input type="number" class="form-control" min="0.01" max="10" name="user_independent_level" value="" data-uid="{$k1}" data-uname="{$vo1.name}" >
+                        <span class="input-group-addon">折</span>
+                    </div>
+                    <br>
+                    {/if}
+                    {/foreach}
+                {else/}
+                    {volist name="member_level" id="k1"}
+                    <div class="input-group w-300">
+                        <span class="input-group-addon">{$k1.level_name}</span>
+                        <input type="number" class="form-control" min="0.01" max="10" name="user_independent_level"  value="{$k1.goods_discount}" data-uid="{$k1.level_id}" data-uname="{$k1.level_name}">
+                        <span class="input-group-addon">折</span>
+                    </div>
+                    <br>
+                    {/volist}
+                {/if}
+                <div class="mb-0 help-block"> 数值越大，优惠折扣越小, 推荐1-9.9之间的数字,10不打折</div>
+                </div>
+            </div>
+            <div class="form-group {if !$good_discount || $good_discount.is_member_discount_open==2 || $good_discount.is_user_obj_open==2 || $good_discount.user_obj.u_discount_choice==1}hide{/if}" id="user_independent_levels2">
+                <label class="col-md-2 control-label">会员等级</label>
+                <div class="col-md-8">
+                {if $good_discount.user_obj}
+                    {foreach name="$good_discount.user_obj.u_level_data" item="vo1" key="k1" }
+                    {if $good_discount.user_obj.u_discount_choice==2}
+                    <div class="input-group w-300">
+                        <span class="input-group-addon">{$vo1.name}</span>
+                        <input type="number" class="form-control" min="0" name="user_independent_level2"  value="{$vo1.val}" data-uid="{$k1}" data-uname="{$vo1.name}" >
+                        <span class="input-group-addon">元</span>
+                    </div>
+                    <br>
+                    {else/}
+                    <div class="input-group w-300">
+                        <span class="input-group-addon">{$vo1.name}</span>
+                        <input type="number" class="form-control" min="0" name="user_independent_level2" value="" data-uid="{$k1}" data-uname="{$vo1.name}" >
+                        <span class="input-group-addon">元</span>
+                    </div>
+                    <br>
+                    {/if}
+                    {/foreach}
+                 {else/}
+                    {volist name="member_level" id="k1"}
+                    <div class="input-group w-300">
+                        <span class="input-group-addon">{$k1.level_name}</span>
+                        <input type="number" class="form-control" min="0" name="user_independent_level2" value="" data-uid="{$k1.level_id}" data-uname="{$k1.level_name}" >
+                        <span class="input-group-addon">元</span>
+                    </div>
+                    <br>
+                    {/volist}
+                 {/if}
+                </div>
+            </div>
+            <div class="form-group {if !$good_discount || $good_discount.is_member_discount_open==2 || $good_discount.is_user_obj_open==2 || $good_discount.user_obj.u_discount_choice==2}hide{/if}" id="user_independent_switchs">
+                <label class="col-md-2 control-label">小数取整</label>
+                <div class="col-md-5">
+                    <div class="switch-inline">
+                        <input type="checkbox" id="user_independent_switch" name="is_label_user" value="{$good_discount.user_obj.u_is_label}"  {if $good_discount.user_obj.u_is_label == 1 }checked{/if}>
+                        <label for="user_independent_switch"></label>
+                    </div>
+                    <div class="help-block mb-0" >折扣后价格小数四舍五入取整，例：198.55取整后199.00，198.46取整后198.00</div>
+                </div>
+            </div>
+            <div class="form-group {if !$good_discount || $good_discount.is_member_discount_open==2}hide{/if}" id="distributor_independents">
+                <label class="col-md-2 control-label">分销商独立折扣</label>
+                <div class="col-md-8" >
+                    <div class="switch-inline">
+                        <input type="checkbox" name="distributor_independent" id="distributor_independent" {if $good_discount.is_distributor_obj_open==1}checked{/if}>
+                        <label for="distributor_independent" class=""></label>
+                    </div>
+                    <div class="mb-0 help-block">
+                        开启后商品折扣优先以分销商折扣计算，若会员不是分销商则按会员折扣计算
+                    </div>
+                </div>
+            </div>
+            <div class="form-group {if !$good_discount || $good_discount.is_member_discount_open==2 || $good_discount.is_distributor_obj_open==2}hide{/if}" id="distributor_discount_choices">
+                <label class="col-md-2 control-label">折扣方式</label>
+                <div class="col-md-8" >
+                    <label class="radio-inline">
+                        <input type="radio" name="distributor_discount_choice" class="distributor_discount_choice"  value="1" {if !$good_discount || !$good_discount.distributor_obj.d_discount_choice || $good_discount.distributor_obj.d_discount_choice == 1}checked{/if}> 打折
+                    </label>
+                    <label class="radio-inline">
+                        <input type="radio" name="distributor_discount_choice" class="distributor_discount_choice" value="2"  {if $good_discount.distributor_obj.d_discount_choice == 2}checked{/if}> 固定金额
+                    </label>
+                </div>
+            </div>
+            <div class="form-group {if !$good_discount || $good_discount.is_member_discount_open==2 || $good_discount.is_distributor_obj_open==2 || $good_discount.distributor_obj.d_discount_choice==2 }hide{/if}" id="distributor_independent_levels">
+                <label class="col-md-2 control-label">分销商等级</label>
+                <div class="col-md-8">
+                {if $good_discount.distributor_obj}
+                    {foreach name="$good_discount.distributor_obj.d_level_data" item="vo2" key="k2" }
+                    {if $good_discount.distributor_obj.d_discount_choice==1}
+                    <div class="input-group w-300">
+                        <span class="input-group-addon">{$vo2.name}</span>
+                        <input type="number" class="form-control" min="0.01" max="10" name="distributor_independent_level"  value="{$vo2.val}" data-uid="{$k2}" data-uname="{$vo2.name}">
+                        <span class="input-group-addon">折</span>
+                    </div>
+                    <br>
+                    {else/}
+                    <div class="input-group w-300">
+                        <span class="input-group-addon">{$vo2.name}</span>
+                        <input type="number" class="form-control" min="0.01" max="10" name="distributor_independent_level" value="" data-uid="{$k2}" data-uname="{$vo2.name}">
+                        <span class="input-group-addon">折</span>
+                    </div>
+                    <br>
+                    {/if}
+                    {/foreach}
+                {else/}
+                    {volist name="distributor_level" id="k2"}
+                    <div class="input-group w-300">
+                        <span class="input-group-addon">{$k2.level_name}</span>
+                        <input type="number" class="form-control" min="0.01" max="10" name="distributor_independent_level"  value="" data-uid="{$k2.id}" data-uname="{$k2.level_name}">
+                        <span class="input-group-addon">折</span>
+                    </div>
+                    <br>
+                    {/volist}
+                {/if}
+                 <div class="mb-0 help-block"> 数值越大，优惠折扣越小, 推荐1-9.9之间的数字,10不打折</div>
+                </div>
+            </div>
+            <div class="form-group {if !$good_discount || $good_discount.is_member_discount_open==2 || $good_discount.is_distributor_obj_open==2 || $good_discount.distributor_obj.d_discount_choice==1}hide{/if}" id="distributor_independent_levels2">
+                <label class="col-md-2 control-label">分销商等级</label>
+                <div class="col-md-8">
+                {if $good_discount.distributor_obj}
+                    {foreach name="$good_discount.distributor_obj.d_level_data" item="vo2" key="k2" }
+                    {if $good_discount.distributor_obj.d_discount_choice==2}
+                    <div class="input-group w-300">
+                        <span class="input-group-addon">{$vo2.name}</span>
+                        <input type="number" class="form-control" min="0" name="distributor_independent_level2" value="{$vo2.val}" data-uid="{$k2}" data-uname="{$vo2.name}">
+                        <span class="input-group-addon">元</span>
+                    </div>
+                    <br>
+                    {else/}
+                    <div class="input-group w-300">
+                        <span class="input-group-addon">{$vo2.name}</span>
+                        <input type="number" class="form-control" min="0" name="distributor_independent_level2" value="" data-uid="{$k2}" data-uname="{$vo2.name}">
+                        <span class="input-group-addon">元</span>
+                    </div>
+                    <br>
+                    {/if}
+                    {/foreach}
+                {else/}
+                    {volist name="distributor_level" id="k2"}
+                    <div class="input-group w-300">
+                        <span class="input-group-addon">{$k2.level_name}</span>
+                        <input type="number" class="form-control" min="0" name="distributor_independent_level2"  value="" data-uid="{$k2.id}" data-uname="{$k2.level_name}">
+                        <span class="input-group-addon">元</span>
+                    </div>
+                    <br>
+                    {/volist}
+                {/if}
+                </div>
+            </div>
+            <div class="form-group {if !$good_discount || $good_discount.is_member_discount_open==2 || $good_discount.is_distributor_obj_open==2 || $good_discount.distributor_obj.d_discount_choice==2}hide{/if}" id="distributor_independent_switchs">
+                <label class="col-md-2 control-label">小数取整</label>
+                <div class="col-md-5">
+                    <div class="switch-inline">
+                        <input type="checkbox" id="distributor_independent_switch"  name="is_label_distributor" value="{$good_discount.distributor_obj.d_is_label}" {if $good_discount.distributor_obj.d_is_label == 1}checked{/if}>
+                        <label for="distributor_independent_switch"></label>
+                    </div>
+                    <div class="help-block mb-0" >折扣后价格小数四舍五入取整，例：198.55取整后199.00，198.46取整后198.00</div>
+                </div>
+            </div>
+            <!--渠道商权限-->
+            {if $channel_level_list}
+            <div class="screen-title2" data-id="t3">
+                <span class="text">渠道商权限</span>
+            </div>
+            <div class="form-group">
+                <label class="col-md-2 control-label">渠道商采购等级</label>
+                <div class="col-md-5">
+                    <div class="checkbox_three">
+                        <label class="checkbox-inline"><input type="checkbox" name="channel_level_all" id="channel_level_all" value="0"
+                                                              {if $good_discount}
+                            {if $good_discount['discount_channel_obj']['channel_level_id']}
+                            {if $good_discount['discount_channel_obj']['channel_level_id'][0] !== 0}
+                            {if count($channel_level_list) eq count($good_discount['discount_channel_obj']['channel_level_id'])}checked{/if}{/if}
+                            {elseif $good_discount['discount_channel_obj']['channel_level_id'] === 0}
+                            {else/} checked
+                            {/if}
+                            {/if}
+                            >全部</label>
+                        {volist name="channel_level_list" id="c1"}
+                        <label class="checkbox-inline channel_level">
+                            <input type="checkbox" name="channel_level_id"  value="{$c1.channel_grade_id}"
+                                   {if $good_discount.discount_channel_obj}
+                                   {foreach $good_discount.discount_channel_obj.channel_level_id as $m1}
+                                   {if $c1['channel_grade_id'] eq $m1} checked="checked" {/if}
+                            {/foreach}
+                            {/if}>
+                            {$c1.channel_grade_name}
+                        </label>
+                        {/volist}
+                    </div>
+                </div>
+            </div>
+            {/if}
+        </div>
+        <!--计时/次规则-->
+        <div class="tab-pane fade tab-5" id="timing_rule">
+            <div class="screen-title2" data-id="t3">
+                <span class="text">计时/次规则</span>
+            </div>
+            <div class="form-group">
+                <label class="col-md-2 control-label"><span class="text-bright">*</span> 单个商品核销次数</label>
+                <div class="col-md-5">
+                    <input type="number" class="form-control" min="0" name="verification_num" id="verification_num" value="{$goods_info.cancle_times}">
+                    <div class="mb-0 help-block">0代表不限次数</div>
+                </div>
+
+            </div>
+            <div class="form-group">
+                <label class="col-md-2 control-label"><span class="text-bright">*</span> 卡包模式</label>
+                <div class="col-md-5">
+                    <label class="radio-inline"><input type="radio" name="card_models" id="card_models1" value="1" {if $goods_info.cart_type eq 1}checked{/if}> 单卡模式</label>
+                    <label class="radio-inline"><input type="radio" name="card_models" id="card_models2" value="2" {if $goods_info.cart_type eq 2}checked{/if}> 多卡模式</label>
+                    <div class="mb-0 help-block">购买多件时，生成卡券的数量，每张卡券核销次数 = 有单个商品核销次数</div>
+                </div>
+
+            </div>
+            <div class="form-group">
+                <label class="col-md-2 control-label"><span class="text-bright">*</span> 有效类型</label>
+                <div class="col-md-5">
+                    <label class="radio-inline"><input type="radio" name="effective_type" id="fixed_day" value="1" {if $goods_info.valid_type eq 1}checked{/if} disabled> 固定天数</label>
+                    <label class="radio-inline"><input type="radio" name="effective_type" id="overdue_day" value="2" {if $goods_info.valid_type eq 2}checked{/if} disabled> 指定过期日期</label>
+                    <div class="mb-0 help-block">商品创建后，不能再选择，请谨慎选择</div>
+                </div>
+            </div>
+            {if($goods_info['valid_type']==1)}
+            <div class="form-group effectiveTime">
+                <label class="col-md-2 control-label"><span class="text-bright">*</span> 有效时间</label>
+                <div class="col-md-5">
+                    <div class="input-group">
+                        <input type="number" name="effective_day" id="effective_day" class="form-control" min="1" value="{$goods_info.valid_days}">
+                        <div class="input-group-addon">天</div>
+                    </div>
+                </div>
+            </div>
+            {else}
+            <div class="form-group expirationTime hovers">
+                <label class="col-md-2 control-label"><span class="text-bright">*</span> 过期时间</label>
+                <div class="col-md-5">
+                    <div class="date-input-control" style="width: 100%">
+                        <input type="text" class="form-control" name="expiration_time" readonly id="expiration_time" placeholder="过期时间" value="{$goods_info.invalid_time}" data-mindate="{$goods_info.invalid_time}"><i class="icon icon-calendar"></i>
+                    </div>
+                    <div class="mb-0 help-block">过期时间修改时，不能小于当前已保存的过期时间</div>
+                </div>
+            </div>
+            {/if}
+
+        </div>
+
+        <!--微信卡券-->
+        <div class="tab-pane fade tab-6" id="wechat_card">
+            <div class="form-group">
+                <label class="col-md-2 control-label"><span class="text-bright">*</span> 是否开启</label>
+                <div class="col-md-5">
+                    <!--{if $goods_info.is_wxcard eq '1'}<label class="radio-inline"><input type="radio" name="card_switch" id="card_model1" value="1" checked> 开启</label>{/if}
+                    {if $goods_info.is_wxcard eq '2'}<label class="radio-inline"><input type="radio" name="card_switch" id="card_model2" value="2" checked> 关闭</label>{/if}-->
+                    <div class="switch-inline">
+                        <input type="checkbox" id="card_switch" name="card_switch" {if $goods_info.is_wxcard eq '1'}checked{/if} onclick="return false;">
+                               <label for="card_switch" class=""></label>
+                    </div>
+                    <div class="mb-0 help-block">开启后,用户可以领取微信核销卡券,商品创建后此选项则无法修改</div>
+                </div>
+
+            </div>
+            <div class="wxCard-container flex flex-pack-center mb-20">
+                <div class="wxCard-view">
+                    <div class="wxCard-bg"></div>
+                    <div class="view-main">
+                        <div class="view-main-logo" >
+                            <img src="/public/platform/images/wx_logo.png" alt="">
+                        </div>
+                        <div class="padding-15 flex flex-pack-justify word_white mb-20" >
+                            <div><</div>
+                            <div>...</div>
+                        </div>
+                        <div class="view-main-content">
+                            <div class="wxCard_company">广州领客信息科技股份有限公司</div>
+                            <div class="wxCard_title line-1-ellipsis">卡券标题</div>
+                            <div class="wxCard_used"><a href="javascript:;" class="btn">立即使用</a></div>
+                            <div class="wxCard_tips">使用条件：<span>满100使用</span></div>
+                            <div class="wxCard_tips">可用时间：<span>周一至周日</span></div>
+                            <div class="padding-15 wxCard_imagesTexts">
+                                <div class="item-head">
+                                    <img src="{$ticket_info.pic_cover}" class="max-w-auto">
+                                    <p class="line-1-ellipsis wxCard_describe">详情简述</p>
+                                </div>
+                            </div>
+                            <div class="wxCard_items clearfix">公众号<span class="pull-right" style="padding-top: 2px"><i class="icon icon-right-arrow"></i></span></div>
+                            <div class="wxCard_items clearfix">核销情况<span class="pull-right" style="padding-top: 2px"><i class="icon icon-right-arrow"></i></span></div>
+                        </div>
+                    </div>
+                </div>
+                <div class="wxCard-editor">
+                    <div class="editor-main">
+
+                        <div class="form-group">
+                            <div class="col-sm-2 control-label"><span class="text-bright">*</span>卡券标题</div>
+                            <div class="col-sm-9">
+                                <input class="form-control input-sm diy-bind" id="wxCard_setTitle" disabled value="{$ticket_info.card_title}" name="wxCard_setTitle" value="卡券标题" maxlength="9" placeholder="请输入卡券标题">
+                                <p class="help-block mb-0">卡券标题长度不超过9个字</p>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="col-sm-2 control-label"><span class="text-bright">*</span>卡券库存</div>
+                            <div class="col-sm-9">
+                                <input class="form-control input-sm diy-bind" id="wxCard_stock" disabled value="{$goods_info.stock}" name="stock">
+                                <p class="help-block mb-0">同步商品库存</p>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="col-sm-2 control-label"><span class="text-bright">*</span>卡券颜色</div>
+                            <div class="col-sm-9">
+                                <div class="date-input-control" style="width: 100%">
+                                    <input class="form-control input-sm diy-bind cart_color" id="cart_color" readonly style="color:{$ticket_info.card_color};background:{$ticket_info.card_color}" name="cart_color" disabled>
+                                    <i class="icon icon-bottom"></i>
+                                    <div class="wx_colorBox">
+                                        <a href="javascript:void(0);" class="wx_colorBox_item" data-color="Color010" data-colorNmme="#63b359"></a>
+                                        <a href="javascript:void(0);" class="wx_colorBox_item" data-color="Color020" data-colorNmme="#2c9f67"></a>
+                                        <a href="javascript:void(0);" class="wx_colorBox_item" data-color="Color030" data-colorNmme="#509fc9"></a>
+                                        <a href="javascript:void(0);" class="wx_colorBox_item" data-color="Color040" data-colorNmme="#5885cf"></a>
+                                        <a href="javascript:void(0);" class="wx_colorBox_item" data-color="Color050" data-colorNmme="#9062c0"></a>
+                                        <a href="javascript:void(0);" class="wx_colorBox_item" data-color="Color060" data-colorNmme="#d09a45"></a>
+                                        <a href="javascript:void(0);" class="wx_colorBox_item" data-color="Color070" data-colorNmme="#e4b138"></a>
+                                        <a href="javascript:void(0);" class="wx_colorBox_item" data-color="Color080" data-colorNmme="#ee903c"></a>
+                                        <a href="javascript:void(0);" class="wx_colorBox_item" data-color="Color081" data-colorNmme="#f08500"></a>
+                                        <a href="javascript:void(0);" class="wx_colorBox_item" data-color="Color082" data-colorNmme="#a9d92d"></a>
+                                        <a href="javascript:void(0);" class="wx_colorBox_item" data-color="Color090" data-colorNmme="#dd6549"></a>
+                                        <a href="javascript:void(0);" class="wx_colorBox_item" data-color="Color100" data-colorNmme="#cc463d"></a>
+                                        <a href="javascript:void(0);" class="wx_colorBox_item" data-color="Color101" data-colorNmme="#cf3e36"></a>
+                                        <a href="javascript:void(0);" class="wx_colorBox_item" data-color="Color102" data-colorNmme="#5E6671"></a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="col-sm-2 control-label"><span class="text-bright">*</span>详情封面</div>
+                            <div class="col-sm-9">
+                                <div class="picture-list" id="wx_des_pic">
+                                    <img src="{$ticket_info.pic_cover}" style="width:100px;height:100px;">
+                                    <input type="text" class="visibility" data-visi-type="singlePicture" name="picture-wx_des_pic">
+                                </div>
+                                <p class="help-block mb-0">图片建议尺寸：850像素*350像素，大小不超过2M。</p>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="col-sm-2 control-label"><span class="text-bright">*</span>详情简述</div>
+                            <div class="col-sm-9">
+                                <input class="form-control input-sm diy-bind" id="wxCard_des" name="wxCard_des" disabled value="{$ticket_info.card_descript}" maxlength="12">
+                                <p class="help-block mb-0">封面简介长度不超过12个字</p>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="col-sm-2 control-label">商户服务</div>
+                            <div class="col-sm-10">
+                                <div class="checkbox_three">
+                                    {php}$store_service = ['BIZ_SERVICE_FREE_WIFI'=>'免费wifi','BIZ_SERVICE_WITH_PET'=>'可带宠物','BIZ_SERVICE_FREE_PARK'=>'停车位','BIZ_SERVICE_DELIVER'=>'外卖服务'];{/php}
+                                    {volist name="ticket_info['store_service']" id="vo"}
+                                    <label class="checkbox-inline">{$store_service[$vo]}</label>
+                                    {/volist}
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="col-sm-2 control-label"><span class="text-bright">*</span>操作提示</div>
+                            <div class="col-sm-9">
+                                <input class="form-control input-sm diy-bind" id="op_tips" name="op_tips" disabled value="{$ticket_info.op_tips}" maxlength="16">
+                                <p class="help-block mb-0">建议引导用户到店出示卡券，由店员完成核销操作，长度不超过16个字</p>
+                            </div>
+                        </div>
+                        <div class="form-group hide">
+                            <div class="col-sm-2 control-label">转赠设置</div>
+                            <div class="col-sm-8">
+                                <div>
+                                    <label class="radio-inline"><input type="radio" name="make_money" value="1" {if $ticket_info.send_set eq 1}checked{/if} disabled> 开启</label>
+                                    <label class="radio-inline"><input type="radio" name="make_money" value="2" {if $ticket_info.send_set eq 2}checked{/if} disabled> 关闭</label>
+                                </div>
+                                <p class="help-block mb-0">开启后，卡券可以转赠给好友</p>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!--核销门店-->
+        <div class="tab-pane fade tab-5" id="cancel_store">
+            <div class="screen-title2" data-id="t3">
+                <span class="text">核销门店</span>
+            </div>
+            <div class="form-group">
+                <label class="col-md-2 control-label">核销门店</label>
+                <div class="col-md-8" style="width: 740px;">
+                    <div class="transfer-box">
+                        <div class="item">
+                            <div class="transfer-title">
+                                <div class="checkbox line-1-ellipsis">
+                                    <label><input type="checkbox" name="store_unselect_all" value="">未选中门店</label>
+                                </div>
+                            </div>
+                            <div class="transfer-search">
+                                <div class="transfer-search-div padding-10" style="padding-bottom: 0">
+                                    <input type="text" name="store_unselect_search" class="form-control" placeholder="请选择门店" id="store_unselect_search">
+                                    <i class="icon icon-custom-search search_button"></i>
+                                </div>
+                            </div>
+                            <div id="store_unselect" class="heights"></div>
+                        </div>
+                        <div class="item">
+                            <div class="transfer-title">
+                                <div class="checkbox line-1-ellipsis">已选中门店</div>
+                            </div>
+                            <div class="transfer-search">
+                                <div class="transfer-search-div padding-10" style="padding-bottom: 0">
+                                    <input type="text" name="store_select_search" class="form-control" placeholder="请选择门店" id="store_select_search">
+                                    <i class="icon icon-custom-search search_button"></i>
+                                </div>
+                            </div>
+                            <div id="store_select" class="heights"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!--商品海报-->
+        <div class="tab-pane fade tab-5" id="goods_poster">
+            <div class="screen-title2" data-id="t3">
+                <span class="text">商品海报</span>
+            </div>
+            <div class="form-group">
+                <label class="col-md-2 control-label">是否开启</label>
+                <div class="col-md-5">
+                    <div class="switch-inline">
+                        <input type="checkbox" id="is_goods_poster_open" name="is_goods_poster_open" {if $goods_info.is_goods_poster_open == 1}checked{/if}>
+                        <label for="is_goods_poster_open" class=""></label>
+                    </div>
+                    <p class="help-block">开启后该商品将按下方设置的内容生成海报</p>
+                </div>
+
+
+                <div class="template-list tab-content">
+                    <div class="tab-pane fade active in" id="poster_design">
+                        <ul class="template-list-ul clearfix">
+                            <table style="width:80%;margin-left:130px;">
+                                <tbody><tr>
+                                    <td style="width:320px;" valign="top">
+                                        <div id="poster" {if $goods_info['px_type'] == 2} style="width:360px;height:640px;"{/if}>
+                                            <img src="" class="bg">
+                                        </div>
+                                    </td>
+                                    <td valign="top">
+                                        <div class="panel panel-default" style="min-height: 504px">
+                                            <div class="panel-body">
+                                                <div class="form-group" id="pxselect">
+                                                    <label class="col-sm-2 control-label">分辨率</label>
+                                                    <label class="radio-inline" style="padding-left:38px;">
+                                                        <input type="radio" name="pxselect" value="1" checked="" {if $goods_info['px_type'] == 1}checked{/if}> 640 * 1008
+                                                    </label>
+                                                    <label class="radio-inline">
+                                                        <input type="radio" name="pxselect" value="2" {if $goods_info['px_type'] == 2}checked{/if}> 1080 * 1920
+                                                    </label>
+                                                </div>
+                                                <div class="form-group" id="bgset">
+                                                    <label class="col-sm-2 control-label">背景图片</label>
+                                                    <div class="col-sm-8">
+                                                        <div class="input-group ">
+                                                            <input type="text" name="bg" value="" class="form-control goods-pic" autocomplete="off" readonly="">
+                                                            <span class="input-group-btn">
+                                                        <a href="javascript:void(0);" id="" class="btn btn-primary mr-04" data-toggle="editPosterPicture">选择图片</a>
+                                                        <a href="javascript:void(0);" class="btn btn-primary clearPic">清除图片</a>
+			                                        </span>
+                                                        </div>
+                                                        <!--<p class="help-block mb-0">背景图片建议尺寸640 * 1008</p>-->
+                                                    </div>
+                                                </div>
+                                                <div class="form-group">
+                                                    <label class="col-sm-2 control-label">海报元素</label>
+                                                    <div class="col-sm-8">
+                                                        <button class="btn btn-default btn-com" type="button" data-type="head">
+                                                            头像
+                                                        </button>
+                                                        <button class="btn btn-default btn-com" type="button" data-type="nickname">昵称
+                                                        </button>
+                                                        <button class="btn btn-default btn-com" type="button" data-type="qr">
+                                                            二维码
+                                                        </button>
+                                                        <button class="btn btn-default btn-com" type="button" data-type="img">
+                                                            图片
+                                                        </button>
+                                                        <span id="goodsparams" class="">
+                                                                <button class="btn btn-default btn-com" type="button" data-type="title">商品名称</button>
+                                                                <button class="btn btn-default btn-com" type="button" data-type="goods-img">商品图片</button>
+                                                                <button class="btn btn-default btn-com" type="button" data-type="marketprice">商品现价</button>
+                                                                <button class="btn btn-default btn-com" type="button" data-type="productprice">商品原价</button>
+                                                            </span>
+                                                        <button class="btn btn-default btn-com" type="button" data-type="words">
+                                                            文字</button>
+                                                    </div>
+                                                </div>
+                                                <div id="wordset" style="display:none">
+                                                    <div class="form-group">
+                                                        <label class="col-sm-2 control-label">字体颜色</label>
+                                                        <div class="col-sm-8 wid100">
+                                                            <div class="input-group">
+                                                                <input class="form-control" type="text" name="color" placeholder="请选择颜色" value="">
+                                                                <span class="input-group-addon" style="width:35px;border-left:none;background-color:"></span>
+                                                                <span class="input-group-btn">
+										                    <button class="btn btn-default colorpicker" type="button">选择颜色 ▼</button>
+                                                        </span>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="form-group">
+                                                        <label class="col-sm-2 control-label">字体大小</label>
+                                                        <div class="col-sm-8">
+                                                            <div class="input-group wid100">
+                                                                <input type="number" name="namesize" id="namesize1" class="form-control namesize" placeholder="例如: 14,16">
+                                                                <div class="input-group-addon">px</div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="form-group">
+                                                        <label class="col-sm-2 control-label">文字内容</label>
+                                                        <div class="col-sm-8">
+                                                            <div class="flex">
+                                                                <textarea class="form-control bbrr0" rows="8" name="wordContent" id="wordContent">文字内容111</textarea>
+                                                                <div class="variate-choice">
+                                                                    <p>添加变量</p>
+                                                                    <div class="variate-choice-item">
+                                                                        <a class="text-primary block variate-choice-code" href="javascript:void(0);" data-code="[昵称]">昵称</a>
+                                                                        <a class="text-primary block variate-choice-code" href="javascript:void(0);" data-code="[等级]">等级</a>
+                                                                        <a class="text-primary block variate-choice-code" href="javascript:void(0);" data-code="[手机号]">手机号</a>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+
+                                                </div>
+
+                                                <div id="nameset" style="display:none">
+                                                    <div class="form-group">
+                                                        <label class="col-sm-2 control-label">昵称颜色</label>
+                                                        <div class="col-sm-8 wid100">
+                                                            <div class="input-group">
+                                                                <input class="form-control" type="text" name="color" placeholder="请选择颜色" value="">
+                                                                <span class="input-group-addon" style="width:35px;border-left:none;background-color:"></span>
+                                                                <span class="input-group-btn">
+										                    <button class="btn btn-default colorpicker" type="button">选择颜色 ▼</button>
+                                                        </span>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="form-group">
+                                                        <label class="col-sm-2 control-label">昵称大小</label>
+                                                        <div class="col-sm-8">
+                                                            <div class="input-group wid100">
+                                                                <input type="number" name="namesize" id="namesize" class="form-control namesize" placeholder="例如: 14,16">
+                                                                <div class="input-group-addon">px</div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="form-group" id="imgset" style="display:none">
+                                                    <label class="col-sm-2 control-label">图片设置</label>
+                                                    <div class="col-sm-8">
+                                                        <div class="input-group ">
+                                                            <input type="text" name="img" value="" class="form-control goods-pic" autocomplete="off" readonly="">
+                                                            <span class="input-group-btn">
+									                    <a class="btn btn-primary mr-04" data-toggle="editPosterPicture1">选择图片</a>
+                                                                <!--<a href="javascript:void(0);" class="btn btn-primary clearPic1">清除图片</a>-->
+								                    </span>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </td>
+                                </tr>
+                                </tbody></table>
+                        </ul>
+                    </div>
+                                </div>
+                
+            </div>
+        </div>
+        <!--知识付费-->
+        <div class="tab-pane fade tab-8" id="pay_content">
+            <div class="screen-title2">
+                <span class="text">付费内容</span>
+            </div>
+
+            <div class="form-group">
+                <label class="col-md-1 control-label"></label>
+                <div class="col-md-10">
+                    <a href="javascript:void(0);" class="btn btn-primary" id="" data-toggle="singlePicVideo">从素材空间选择内容</a>
+                    <a href="javascript:void(0);" class="btn btn-primary cloudDisk">从网络云盘选择内容</a>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="col-md-1 control-label"></label>
+                <div class="col-md-10 addgoods-sortable">
+
+                    <div class="divTable goodsTable">
+                        <div class="divThead">
+                            <div class="divTh">内容名称</div>
+                            <div class="divTh">内容</div>
+                            <div class="divTh">类型</div>
+                            <div class="divTh">试学</div>
+                            <div class="divTh">操作</div>
+                        </div>
+                        <div class="divTbody ui-sortable" id="curr-list">
+                            {if($goods_info['goods_type']==4)}
+                            {foreach $payment_content as $val}
+                              <div class="divTr">
+                                  <div class="divTd divTd1"><input type="text" class="form-control" name="payContentName" data-content="{$val['content']}" data-type="{$val['type']}" data-is_see="{$val['is_see']}" value="{$val['name']}"></div>
+                                  <div class="divTd">{$val['content']}</div>
+                                  <div class="divTd">{if $val['type']==1}视频{elseif $val['type']==2}音频{elseif $val['type']==3}图片{/if}</div>
+                                  <div class="divTd divTd4">{if $val['is_see']==-1}不支持{elseif $val['is_see']==0}完全试学{else}试学{$val['is_see']}分钟{/if}</div>
+                                  <div class="divTd divTd5 operationLeft fs-0">
+                                      {if $val['type']==3}
+                                      <a href="javascript:void(0);" class="btn-operation tryView" data-type="{if $val['is_see']==0 || $val['is_see']>0}1{else}0{/if}" data-pic="pic">
+                                          {if $val['is_see']==0 || $val['is_see']>0}取消试学{else}试学{/if}</a>
+                                      <a href="javascript:void(0);" class="viewDel btn-operation text-red1">删除</a>
+                                      <a href="javascript:void(0);" class="btn-operation moveItem ui-sortable-handle">拖动排序</a>
+                                      {else}
+                                      <a href="javascript:void(0);" class="btn-operation tryView" data-type="{if $val['is_see']==0 || $val['is_see']>0}1{else}0{/if}">
+                                          {if $val['is_see']==0 || $val['is_see']>0}取消试学{else}试学{/if}</a>
+                                      <a href="javascript:void(0);" class="viewDel btn-operation text-red1">删除</a>
+                                      <a href="javascript:void(0);" class="btn-operation moveItem ui-sortable-handle">拖动排序</a>
+                                      {/if}
+                                  </div>
+                              </div>
+                            {/foreach}
+                            {/if}
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+
+        </div>
+        
+    <div class="form-group">
+        <label class="col-md-2 control-label"></label>
+        <div class="col-md-8">
+            <button class="btn btn-primary" type="submit" id="submitsData">保存</button>
+            <a href="javascript:history.go(-1);" class="btn btn-default">返回</a>
+        </div>
+    </div>
+</form>
+<input id="level_ids" type="hidden" name="level_ids" value="{$level_ids}">
+<input type="hidden" id="default_distribution_rule"  name="default_distribution_rule"  value="{if $goods_info.distribution_rule}{$goods_info.distribution_rule}{else}2{/if}">
+<input type="hidden" id="default_bonus_rule" name="default_bonus_rule" value="{if $goods_info.bonus_rule}{$goods_info.bonus_rule}{else}2{/if}">
+<input type="hidden" id="promotion_type" name="promotion_type" value="{if $goods_info.promotion_type}{$goods_info.promotion_type}{else}0{/if}" />
+
+<!--<div class="list-group side-catalog"></div>-->
+<!-- page end  -->
+</div>
+</div> 
+{/block}
+
+{block name="script"}
+
+<script>
+	var storeListUrl = "{$storeListUrl}";
+	var storeStatus =  "{$store}";
+    require(['util', 'platformAddgood', 'sotr-selector', 'poster'], function (util, platformAddgood) {
+        var obj = {$goods_info};
+        platformAddgood.goodsSkuCreate(obj);
+        util.layDate("#expiration_time");
+        //点击分辨率，切换宽高 360*640
+        $('input[name=pxselect]').change(function(){
+            if($(this).val() == '1'){
+                //320*504
+                $('#poster').attr('style','width:320px;height:504px;')
+                var drag = $('.drag');
+                drag.each(function(i, v){
+                    var width1 = 320;
+                    var height1 = 504;
+                    var this_top = parseFloat($(this).css('top')) + parseFloat($(this).css('height'));
+                    var this_left = parseFloat($(this).css('left')) + parseFloat($(this).css('width'));
+                    var last_top = parseFloat($(this).css('top'));
+                    var last_left =parseFloat($(this).css('left'));
+                    if(this_top > height1){
+                        last_top = height1 - parseFloat($(this).css('height'));
+                    }
+                    if(this_left > width1){
+                        last_left = width1 - parseFloat($(this).css('width'));
+                    }
+                    $(this).css('left', last_left);
+                    $(this).css('top', last_top);
+                })
+            }else{
+                //360*640
+                $('#poster').attr('style','width:360px;height:640px;')
+            }
+        })
+    })
+</script>
+{/block}

@@ -1,0 +1,148 @@
+{block name="main"}
+<!-- page -->
+<table class="table v-table table-auto-center">
+    <thead>
+    <tr>
+        <th>商品</th>
+        <th>采购价</th>
+        <th>数量</th>
+        <th>采购来源</th>
+        <th>剩余库存</th>
+        <th>采购时间</th>
+    </tr>
+    </thead>
+    <tbody id="list">
+
+
+
+
+    </tbody>
+</table>
+<input type="hidden" id="page_index" value="">
+<nav aria-label="Page navigation" class="clearfix">
+    <ul id="page" class="pagination pull-right"></ul>
+</nav>
+
+<!-- page end -->
+{/block}
+{block name="script"}
+<script>
+    require(['util'],function(util){
+        util.initPage(getList);
+        function getList(page_index){
+            $("#page_index").val(page_index);
+            var channel_id = '{$channel_id}';
+            var goods_id = '{$goods_id}';
+            var sku_id = '{$sku_id}';
+            $.ajax({
+                type : "post",
+                url : '{$purchaseRecordList}',
+                async : true,
+                data : {
+                    "page_index" :page_index, "channel_id" : channel_id, "goods_id" : goods_id, "sku_id" : sku_id
+                },
+                success : function(data) {
+                    // console.log(data);return;
+                    if(data["channel_info"]){
+                        $('#nick_name').html(data["channel_info"]['name']);
+                        $('#channel_real_name').html(data["channel_info"]['channel_name']);
+                        $('#channel_p').html(data["channel_info"]['channel_phone']);
+                        $('#channel_number').html(data["channel_info"]['channel_num']);
+                    }
+                    var html = '';
+                    var key = Object.keys(data["data"]['channel_goods_info']);
+                    data["data"] = data["data"]['channel_goods_info'];
+                    if (key.length>0) {
+                        for (var i = 0; i < key.length; i++) {
+                            html += '<tr>';
+                            html += '<td><div class="media text-left"><div class="media-left"><img src="'+data['data'][i]['pic_cover']+'" onerror="this.src="";" width="60" height="60"></div><div class="media-body max-w-300"><div class="line-2-ellipsis">'+data['data'][i]['goods_name']+'</div><div class="line-1-ellipsis">'+data['data'][i]['sku_name']+'</div></div></div></td>';
+                            //采购价
+                            html += '<td>'+data['data'][i]['price']+'</td>';
+                            //数量
+                            html += '<td>'+data['data'][i]['total_num']+'</td>';
+                            //采购来源
+                            html += '<td>'+data['data'][i]['purchase_from']+'</td>';
+                            //剩余库存
+                            html += '<td>'+data['data'][i]['num']+'</td>';
+                            //采购时间
+                            html += '<td>'+data['data'][i]['create_time_date']+'</td>';
+                            html += '</tr>';
+                        }
+                    } else {
+                        html += '<tr><td class="h-200" colspan="6">暂无符合条件的数据记录</td></tr>';
+                    }
+                    $('#page').paginator('option', {
+                        totalCounts: data['total_count']  // 动态修改总数
+                    });
+                    $("#list").html(html);
+                }
+            });
+        }
+        $('.search').on('click',function(){
+            util.initPage(getList);
+        });
+
+        $('body').on('click','.save',function(){
+            var status = $(this).data('type');
+            var channel_id = $(this).data('channel_id');
+            if(status==-1){
+                util.alert('确定审核不通过？',function(){
+                    $.ajax({
+                        type : "post",
+                        url : "{$channelCheckStatus}",
+                        data:{'channel_id':channel_id,'status':status},
+                        async : true,
+                        success : function(data) {
+                            if(data["code"] > 0 ){
+                                util.message(data["message"], 'success', getList($("#page_index").val()));
+                            }else{
+                                util.message(data["message"], 'danger', getList($("#page_index").val()));
+                            }
+                        }
+                    });
+                })
+            }else{
+                util.alert('确定审核通过？',function(){
+                    $.ajax({
+                        type : "post",
+                        url : "{$channelCheckStatus}",
+                        data:{'channel_id':channel_id,'status':status},
+                        async : true,
+                        success : function(data) {
+                            if(data["code"] > 0 ){
+                                util.message(data["message"], 'success', getList($("#page_index").val()));
+                            }else{
+                                util.message(data["message"], 'danger', getList($("#page_index").val()));
+                            }
+                        }
+                    });
+                })
+            }
+        })
+        $('body').on('click','.pass',function(){
+            var status = $(this).data('type');
+            var channel_id = $(this).data('channel_id');
+            $.ajax({
+                type : "post",
+                url : "{$channelCheckStatus}",
+                data:{'channel_id':channel_id,'status':status},
+                async : true,
+                success : function(data) {
+                    if(data["code"] > 0 ){
+                        util.message(data["message"], 'success', getList($("#page_index").val()));
+                    }else{
+                        util.message(data["message"], 'danger', getList($("#page_index").val()));
+                    }
+                }
+            });
+        })
+        $('body').on('click','.channel_status',function(){
+            var status = $(this).parent().data('status');
+            //实现点击某一个按钮，颜色就选中
+            $(this).parent().addClass('active').siblings().removeClass('active');
+            $('#search_status').val(status);
+            getList($("#page_index").val())
+        })
+    })
+</script>
+{/block}

@@ -1,0 +1,154 @@
+{block name="main"}
+
+<div class="mb-20">
+    <a href="{:__URL('platform/Menu/addonmenu?addons=addGeneralTask')}" class="btn btn-primary"><i class="icon icon-add1"></i>
+        添加任务</a>
+    <div class="input-group search-input-group ml-10" style="float:right">
+        <input type="text" class="form-control" placeholder="任务名称" id="search_text" value="">
+        <span class="input-group-btn">
+                    <button class="btn btn-primary search" type="button">搜索</button>
+                </span>
+    </div>
+</div>
+<table class="table v-table table-auto-center">
+    <thead>
+    <tr>
+        <th>任务名称</th>
+        <th>任务类型</th>
+        <th>开启时间</th>
+        <th>状态</th>
+        <th class="col-md-2 pr-14 operationLeft">操作</th>
+    </tr>
+    </thead>
+    <tbody id="general_task_list">
+    </tbody>
+</table>
+<input type="hidden" id="page_index">
+<nav aria-label="Page navigation" class="clearfix">
+    <ul id="page" class="pagination pull-right"></ul>
+</nav>
+{/block}
+{block name="script"}
+<script id="shop_curr_list" type="text/html">
+    <%each data as item index%>
+    <tr>
+        <td>
+                <p><%item.task_name%></p>
+        </td>
+
+        <td>
+            <%if item.task_kind==1%>
+            <a href="javascript:;" class="label label-info">单次任务</a>
+            <%/if%>
+            <%if item.task_kind==2%>
+            <a href="javascript:;" class="label label-warning">周期任务</a>
+            <%/if%>
+        </td>
+        <td>
+            <%item.start_task_date%><br>~<br>
+            <%item.end_task_date%>
+        </td>
+        <td>
+            <%if item.time_status==1%>
+                <a href="javascript:;" class="label label-success" data-general_task_id="<%item.general_task_id%>">进行中</a>
+            <%/if%>
+            <%if item.time_status==2%>
+                <a href="javascript:;" class="label label-info" data-general_task_id="<%item.general_task_id%>">待开始</a>
+            <%/if%>
+            <%if item.time_status==3%>
+                <a href="javascript:;" class="label label-danger" data-general_task_id="<%item.general_task_id%>">已关闭</a>
+            <%/if%>
+        </td>
+
+        <td class="fs-0 operationLeft">
+            <%if item.time_status==1 || item.time_status==2%>
+            <a href="javascript:;" class="btn-operation J-close" data-general_poster_id="<%item.general_poster_id%>">关闭</a>
+            <a href="ADDONS_MAINeditGeneralTask&general_poster_id=<%item.general_poster_id%>" class="btn-operation J-edit">编辑</a>
+            <%/if%>
+            <a href="javascript:;" class="btn-operation text-red1 J-general_task_del" data-general_poster_id="<%item.general_poster_id%>">删除</a>
+        </td>
+    </tr>
+    <%/each%>
+</script>
+<script>
+    require(['util', 'tpl'], function (util, tpl) {
+        util.initPage(LoadingInfo);
+        $('.search').click(function(){
+            LoadingInfo($('#page_index').val());
+        })
+        function LoadingInfo(page_index) {
+            $("#page_index").val(page_index);
+            var type = $('#bargain_tab').val();
+            var bargain_type = type;
+            $.ajax({
+                type: "post",
+                url: "{$generalTaskList}",
+                data: {
+                    "page_index": page_index,
+                    "search_text": $("#search_text").val(),
+                    "bargain_type": bargain_type
+                },
+                success: function (data) {
+                    var html = '<tr><td class="h-200" colspan="5">暂无符合条件的数据记录</td></tr>';
+                    if(data.data){
+                        if (tpl('shop_curr_list', data)) {
+                            $("#general_task_list").html(tpl('shop_curr_list', data));
+                        } else {
+                            $("#general_task_list").html(html);
+                        }
+                        $('#page').paginator('option', {
+                            totalCounts: data['total_count']  // 动态修改总数
+                        });
+                    }else{
+                        $("#general_task_list").html(html);
+                    }
+                }
+            });
+        }
+        //删除普通任务
+        $('body').on('click','.J-general_task_del', function(){
+            var general_poster_id = $(this).data('general_poster_id');
+            util.alert('确认删除该模板吗？', function () {
+                $.ajax({
+                    'url':'{$deleteGeneralPoster}',
+                    'type':'post',
+                    'data':{general_poster_id:general_poster_id},
+                    success:function(data){
+                        if(data['code'] > 0){
+                            // util.message('添加成功', 'success', "{:__URL('platform/Menu/addonmenu?addons=bargainList')}");
+                            util.message('删除成功', 'success', LoadingInfo(1));
+                        }else{
+                            util.message(data["message"], 'danger');
+                        }
+                    }
+                })
+            })
+        })
+        //关闭普通任务
+        $('body').on('click','.J-close', function(){
+            var general_poster_id = $(this).data('general_poster_id');
+            if(!general_poster_id){
+                return;
+            }
+            util.alert('关闭任务后不可恢复，确认删除？', function () {
+                // alert();return;
+                $.ajax({
+                    'url':'{$closeGeneralPoster}',
+                    'type':'post',
+                    'data':{general_poster_id:general_poster_id},
+                    success:function(data){
+                        if(data['code'] > 0){
+                            // util.message('添加成功', 'success', "{:__URL('platform/Menu/addonmenu?addons=bargainList')}");
+                            util.message('关闭成功', 'success', LoadingInfo(1));
+                        }else{
+                            util.message(data["message"], 'danger');
+                        }
+                    }
+                })
+            });
+        })
+    });
+
+
+</script>
+{/block}

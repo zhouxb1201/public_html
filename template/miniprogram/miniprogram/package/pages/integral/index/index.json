@@ -1,0 +1,9 @@
+{
+  "usingComponents": {
+    "login-component": "/pages/component/login/login",
+    "tem-component": "/pages/component/tem/index",
+    "copyright-component": "/pages/component/copyright/index",
+    "topnav-component": "/pages/component/topnav/topnav"
+  },
+  "navigationBarTitleText": "积分商城"
+}

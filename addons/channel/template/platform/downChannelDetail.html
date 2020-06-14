@@ -1,0 +1,196 @@
+{block name="main"}
+<!-- page -->
+<div class="screen-title">
+	<span class="text">基本信息</span>
+	<input type="hidden" id="distributor_id" value="{$distributor_id}">
+</div>
+<div class="panel-detail">
+	<div class="item">
+		<div class="media">
+			<div class="media-left">
+				<img src="" width="160px" height="160px" id="user_headimg" >
+			</div>
+			<div class="media-body">
+				<p class="p">昵称：<span id="member_name"></span></p>
+				<p class="p">姓名：<span id="real_name"></span></p>
+				<p class="p">手机号码：<span id="mobile"></span></p>
+				<p class="p">分销等级：<span id="level_name"></span></p>
+				<p class="p">下级分销商：<span class="text-bright" id="distributor_number"></span>人（一级：<span class="text-bright" id="number1"></span>人，二级：<span class="text-bright" id="number2"></span>人，三级：<span class="text-bright" id="number3"></span>人）</p>
+			</div>
+		</div>
+	</div>
+</div>
+
+<form class="v-filter-container">
+    <div class="filter-fields-wrap">
+        <div class="filter-item clearfix">
+            <div class="filter-item__field">
+                <div class="v__control-group">
+                    <label class="v__control-label">分销商</label>
+                    <div class="v__controls">
+                        <input type="text" id="search_text" class="v__control_input" autocomplete="off">
+                    </div>
+                </div>
+
+                <div class="v__control-group">
+                    <label class="v__control-label">手机</label>
+                    <div class="v__controls">
+                        <input type="text" id="iphone" class="v__control_input" autocomplete="off">
+                    </div>
+                </div>
+
+                <div class="v__control-group">
+                    <label class="v__control-label">分销等级</label>
+                    <div class="v__controls">
+                        <select class="v__control_input" id="level">
+                            <option value="">请选择等级...</option>
+                            {foreach name="distributor_level" item="value"}
+                            <option value="{$value.id}">{$value.level_name}</option>
+                            {/foreach}
+                        </select>
+                    </div>
+                </div>
+
+                <div class="v__control-group">
+                    <label class="v__control-label">状态</label>
+                    <div class="v__controls">
+                        <select class="v__control_input" id="status">
+                            <option value="">请选择分销商状态</option>
+                            <option value="-1">已拒绝</option>
+                            <option value="2">已审核</option>
+                            <option value="1">待审核</option>
+                        </select>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+        <div class="filter-item clearfix">
+            <div class="filter-item__field">
+                <div class="v__control-group">
+                    <label class="v__control-label"></label>
+                    <div class="v__controls">
+                        <a class="btn btn-primary search"><i class="icon icon-search"></i> 搜索</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</form>
+
+<div class="screen-title">
+	<span class="text">信息列表</span>
+</div>
+<table class="table v-table table-auto-center">
+	<thead>
+	<tr>
+		<th>推荐人</th>
+		<th>分销商</th>
+		<th>姓名/手机</th>
+		<th>分销等级/下级人数</th>
+		<th>累积佣金/提现佣金</th>
+		<th>状态</th>
+		<th class="col-md-2 pr-14 operationLeft">操作</th>
+	</tr>
+	</thead>
+	<tbody id="list">
+
+
+
+	</tbody>
+</table>
+<input type="hidden" id="page_index" value="">
+<nav aria-label="Page navigation" class="clearfix">
+	<ul id="page" class="pagination pull-right"></ul>
+</nav>
+
+<!-- page end -->
+{/block}
+{block name="script"}
+<script>
+    require(['util'],function(util){
+        util.initPage(getList);
+        function getList(page_index) {
+            $("#page_index").val(page_index);
+            var level = $("#level").val();
+            var search_text = $("#search_text").val();
+            var iphone = $("#iphone").val();
+            var referee = $("#referee").val();
+            var status = $("#status").val();
+            var uid = $("#distributor_id").val();
+            $.ajax({
+                type : "post",
+                url : '{$lowerDistributorListUrl}',
+                async : true,
+                data : {
+                    "uid":uid, "page_index" : page_index, "search_text" : search_text, "level_id" : level, "isdistributor" : status,"iphone":iphone,"referee":referee
+                },
+                success : function(data) {
+                    $("#distributor_number").html(data["agentcount"]);
+                    $("#number1").html(data["number1"]);
+                    $("#number2").html(data["number2"]);
+                    $("#number3").html(data["number3"]);
+                    $("#member_name").html(data["member_name"]);
+                    $("#real_name").html(data["real_name"]);
+                    $("#level_name").html(data["level_name"]);
+                    $("#mobile").html(data["mobile"]);
+                    $("#user_headimg").attr('src',__IMG(data["user_heading"]));
+                    var html = '';
+                    if (data["data"].length>0) {
+                        for (var i = 0; i < data["data"].length; i++) {
+                            html += '<tr>';
+                            if(data['data'][i]["referee_id"]==null || data['data'][i]["referee_id"]==0){
+                                html += '<td>总店</td>';
+                            }else{
+                                html += '<td><img src="' + data['data'][i]["referee_heading"] + '" width="30" height="30">';
+                                html += '<span class="block mt-04">' + data['data'][i]["referee_name"] + '</span></td>';
+                            }
+                            html += '<td><img src="' + __IMG(data['data'][i]["user_headimg"]) + '" width="30" height="30">';
+                            html += '<span class="block mt-04">' + data['data'][i]["member_name"] + '</span></td>';
+                            if(data["data"][i]['isdistributor'] == 3){
+                                html += '<td>需要完善分销资料</td>';
+                            }else{
+                                html += '<td><span class="block">' + data['data'][i]["real_name"] + '</span>';
+                                html += '<span class="block">' + data['data'][i]["mobile"] + '</span></td>';
+                                html += '<td><span class="block">' + data['data'][i]["level_name"] + '</span>';
+                                html += '<span class="block">' + data['data'][i]["distributor_number"] + '</span></td>';
+                                html += '<td><p class="p">';
+                                html += '<span class="label label-success">累积：'+ data["data"][i]["commission"] +'元</span>';
+                                html += '</p>';
+                                html += '<span class="label label-danger">提现：'+ data["data"][i]["withdrawals"] +'元</span></td>';
+                                if(data["data"][i]['isdistributor'] == 2){
+                                    html += '<td><a href="javascript:;" class="label label-success">已审核</a></td>';
+                                    html += '<td class="fs-0 operationLeft"><a class="btn-operation" href="'+__URL('ADDONS_MAINdistributorInfo?distributor_id='+ data['data'][i]['uid']) +'">详情</a>';
+                                    html += '<a class="btn-operation" href="' +__URL('ADDONS_MAINdistributorOrderList?distributor_id='+ data['data'][i]['uid']) +'">分销订单</a>';
+                                    if(data['data'][i]['lower_id'].length>0){
+                                        html += '<a class="btn-operation" href="' +__URL('ADDONS_MAINlowerDistributorList?distributor_id='+ data['data'][i]['uid']) +'">下级分销商</a>';
+                                    }
+                                    html += '<a class="btn-operation update_referee" href="javascript:;" data-id="' + data['data'][i]['uid'] +'"  data-name="'+data['data'][i]['referee_name'] +'">修改上级</a>';
+                                    html += '<a class="btn-operation del" href="javascript:;" data-id="' + data['data'][i]['uid'] +'">移除</a>';
+                                    html += '</td>';
+                                }else if(data["data"][i]['isdistributor'] == 1){
+                                    html += '<td><a href="javascript:;" class="label label-danger">待审核</a></td>';
+                                    html += '<td class="fs-0 operationLeft"><a href="javascript:;" class="btn-operation save" data-type=2 data-id="'+ data["data"][i]['uid']+'">通过</a><a href="javascript:void(0);" class="btn-operation save" data-type=-1 data-id="'+ data["data"][i]['uid']+'">拒绝</a></td>';
+                                }else if(data["data"][i]['isdistributor'] == -1){
+                                    html += '<td><a href="javascript:;" class="label label-danger">已拒绝</a></td>';
+                                    html += '<a class="btn-operation text-red1 del" data-id="' + data['data'][i]['uid'] +'">删除</a>';
+                                }
+                            }
+                            html += '</tr>';
+                        }
+                    } else {
+                        html += '<tr><td class="h-200" colspan="7">暂无符合条件的数据记录</td></tr>';
+                    }
+                    $('#page').paginator('option', {
+                        totalCounts: data['total_count']  // 动态修改总数
+                    });
+                    $("#list").html(html);
+                }
+            });
+        }
+        $('.search').on('click',function(){
+            util.initPage(getList);
+        });
+    })
+</script>
+{/block}

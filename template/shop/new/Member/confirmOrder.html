@@ -1,0 +1,436 @@
+<{extend name="shop/new/base" /}
+{block name="head"}
+<!--头部-->
+<div class="header shopHeader">
+    <div class="w w1200 clearfix">
+
+        <div class="fl oneItem">
+            <div class="logo">
+                <a href="{:__URL('SHOP_MAIN')}" class="logo_a"><img src="{$pc_info['logo']}" alt=""></a>
+            </div>
+        </div>
+
+        <div class="stepbar-box step2"></div>
+
+
+
+    </div>
+</div>
+<!--分隔线-->
+<div class="sc-hr"></div>
+{/block}
+{block name="main"}
+<input type="hidden" id="address_id" value="0">
+<!--确认地址-->
+<div class="bgcWhite">
+    <div class="order-confirmOrder w1200">
+        {if ($goods_type != '3')}
+        <!--配送方式-->
+        <div class="payMethod" {if($goods_type==0)}style="display: none;"{/if}>
+            <h2>配送方式</h2>
+            <div class="payList" id="sendList">
+                <span class="payItems {if($goods_type==1)}selected{/if}" data-select="1">快递配送<i></i></span>
+                {if $has_store}
+                <span class="payItems {if($goods_type==0)}selected{/if}" data-select="2">线下自提<i></i></span>
+                {/if}
+            </div>
+        </div>
+        <div class="order-address J-address" {if($goods_type==0)}style="display: none;"{/if}>
+            <h2>收货人地址</h2>
+            <div class="address-list clearfix J-addressList">
+                
+            </div>
+        </div>
+        {/if}
+        <!--支付方式-->
+        <div class="payMethod">
+            <h2>支付方式</h2>
+            <div class="payList" id="payList">
+                <span class="payItems selected" data-select="0">在线支付<i></i></span>
+                {if $dpay==1}
+                <span class="payItems" data-select="4">货到付款<i></i></span>
+                {/if}
+                {if $bpay==1 }
+                <span class="payItems pr" data-select="5" data-balance="{$member_info.balance}">余额支付（可用{$member_info.balance}元）<i></i><a class="recharge J-recharge" target="blank" href="{:__URL('SHOP_MAIN/member/createrechargeorder')}">余额不足，请先充值！充值成功请刷新页面</a></span>
+                {/if}
+            </div>
+        </div>
+        <!--订单信息-->
+        <div class="orderInfo">
+            <h2>订单信息</h2>
+            <div class="Con-order-main">
+                <!--表头-->
+                <div class="Con-table-th clearfix">
+                    <div class="fl th-info">
+                        <div class="Con-th-inner">商品详情</div>
+                    </div>
+                    <div class="fl th-price">
+                        <div class="Con-th-inner">单价</div>
+                    </div>
+                    <div class="fl th-num">
+                        <div class="Con-th-inner">数量</div>
+                    </div>
+                    <div class="fl th-sum">
+                        <div class="Con-th-inner">小计</div>
+                    </div>
+                </div>
+                <!--表的内容-->
+                <div class="order-contents order-content">
+                    {foreach name="list" item="shop" key="shop_id"}
+                    <div class="order-orderItem J-shop_loop" data-shop-id="{$shop_id}">
+                        <input type="hidden" name="store_id_{$shop_id}" id="store_id_{$shop_id}" class="J-store_id" data-shop-id="{$shop_id}">
+                        <input type="hidden" name="card_store_id_{$shop_id}" id="card_store_id_{$shop_id}" class="J-card_store_id" data-shop-id="{$shop_id}">
+                        <input type="hidden" name="autocomplate">
+                        <!--店铺名-->
+                        <div class="order-shopName">店铺: <span>{if $shop.shop.shop_name}{$shop.shop.shop_name}{else}官方旗舰店{/if}</span></div>
+                        <!--商品-->
+                        <div class="order-orderBody">
+                            {foreach name="shop.sku" item="cart_info" key="v"}
+                            <ul class="clearfix orderBody-ul J-goodsInfo" data-goods-id="{$cart_info.goods_id}"
+                                    data-goods-name="{$cart_info.goods_name}" 
+                                    data-sku-id="{$cart_info.sku_id}" data-price="{$cart_info.price}" data-member-price="{$cart_info.member_price}"
+                                    data-discount-price="{$cart_info.discount_price}" data-promotion-price="{$cart_info.promotion_price}"
+                                    data-discount-id="{$cart_info.discount_id}"
+                                    data-num="{$cart_info.num}"
+                                    data-promotion-shop-id="{$cart_info.promotion_shop_id}"
+                                    data-seckill-id="{$cart_info.seckill_id}"
+                                    data-cart-id="{$cart_info.cart_id}"
+                                    data-point-deduction-max="{$cart_info.goods.point_deduction_max}"
+                                    data-point-return-max="{$cart_info.goods.point_return_max}"
+                                    >
+                                <li class="td td-info">
+                                    <div class="td-inner clearfix">
+                                        <div class="item-pic">
+                                            <a href="{:__URL('SHOP_MAIN/goods/goodsinfo','goodsid='.$cart_info['goods_id'])}">
+                                                <img src="{if $cart_info['picture_info']['pic_cover_small']}{:__IMG($cart_info['picture_info']['pic_cover_small'])}{else}/template/shop/new/public/image/missing.png{/if}" alt="" width="80" height="80">
+                                            </a>
+                                        </div>
+                                        <div class="item-info">
+                                            <div class="item-basic-info">
+                                                <a href="{:__URL('SHOP_MAIN/goods/goodsinfo','goodsid='.$cart_info['goods_id'])}" target="_blank" title="{$cart_info.goods_name}" class="item-title">{$cart_info.goods_name}</a>
+                                                <div class="spec">{$cart_info.sku_name}</div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </li>
+                                <li class="td td-price">
+                                    <div class="td-inner pl46">
+                                        ￥{$cart_info.price}
+                                    </div>
+                                </li>
+                                <li class="td td-num">
+                                    <div class="td-inner pl70">
+                                        <div class="item-amount J-amount"  data-max_buy="{$cart_info.max_buy}" data-goods_id="{$cart_info.goods_id}" data-stock="{$cart_info.stock}">
+                                            <a href="javascript:void(0);" class="J_Minus minus">-</a>
+                                            <input type="text" value="{$cart_info.num}" class="text text-amount J_ItemAmount" autocomplete="off" data-default-num="{$cart_info.num}">
+                                            <a href="javascript:void(0);" class="J_Plus plus">+</a>
+                                        </div></div>
+                                </li>
+                                <li class="td td-sum">
+                                    <div class="td-inner pl50 J-sum_price" data-subtotal="{$cart_info.discount_price * $cart_info.num}" >
+                                        ￥{$cart_info.discount_price * $cart_info.num}
+                                    </div>
+                                </li>
+                            </ul>
+                            {/foreach}
+                        </div>
+                        <div class="J-fullcut_{$shop_id}">
+                        {if condition="count($full_cut_lists[$shop_id])"}
+                        <!--满减包邮-->
+                        <div class="welfare">
+                            {foreach name="full_cut_lists[$shop_id]" item="man_song" key="k"}
+                            {if condition="$k == full_cut"}
+                            {if $man_song.discount>0}
+                            <p data-full-cut-type="{$k}" data-man-song-id="{$man_song.man_song_id}"
+                                data-goods-limit="{:implode(',',$man_song.goods_limit)}"
+                                data-rule-id="{$man_song.rule_id}" data-rule-price="{$man_song.price}"
+                                data-man-song-shop-id="{$man_song.shop_id}" data-man-song-range-type="{$man_song.range_type}"
+                                data-man-song-coupon-type-id="{$man_song.coupon_type_id}" data-man-song-point="{$man_song.give_point}"
+                                data-at-discount="{$man_song.discount}"><span class="w-border">满减</span> 满{$man_song.price}减{$man_song.discount}{if $man_song.range_type == 0}(部分商品){/if}</p>
+                            {/if}
+                            {if $man_song.give_coupon}
+                            <p data-full-cut-type="{$k}" data-rule-id="{$man_song.rule_id}"
+                               data-man-song-id="{$man_song.give_coupon}"  data-man-song-shop-id="{$man_song.shop_id}" data-man-song-range-type="{$man_song.range_type}"
+                               data-goods-limit="{:implode(',',$man_song.goods_limit)}"><span class="w-border">满送</span> 满{$man_song.price}送优惠券({$man_song.coupon_type_name}){if $man_song.range_type == 0}(部分商品){/if}</p>
+                            {/if}
+                            {if $man_song.gift_card_id}
+                            <p data-full-cut-type="{$k}" data-rule-id="{$man_song.rule_id}"
+                               data-man-song-id="{$man_song.gift_card_id}"  data-man-song-shop-id="{$man_song.shop_id}" data-man-song-range-type="{$man_song.range_type}"
+                               data-goods-limit="{:implode(',',$man_song.goods_limit)}"><span class="w-border">满送</span> 满{$man_song.price}送礼品券({$man_song.gift_voucher_name}){if $man_song.range_type == 0}(部分商品){/if}</p>
+                            {/if}
+                            {if $man_song.gift_id}
+                            <p data-full-cut-type="{$k}" data-rule-id="{$man_song.rule_id}"
+                               data-man-song-id="{$man_song.gift_id}"  data-man-song-shop-id="{$man_song.shop_id}" data-man-song-range-type="{$man_song.range_type}"
+                               data-goods-limit="{:implode(',',$man_song.goods_limit)}"><span class="w-border">满送</span> 满{$man_song.price}送赠品({$man_song.gift_name}){if $man_song.range_type == 0}(部分商品){/if}</p>
+                            {/if}
+                            {foreach name="full_cut_lists[$shop_id][discount_percent]" item="percent" key="sku_id" }
+                            <div class="full-cut-data-sku-percent" data-sku-id="{$sku_id}" data-sku-percent="{$percent}"></div>
+                            {/foreach}
+                            {/if}
+                            {if condition="$k == shipping"}
+                            <p data-full-cut-type="{$k}" data-rule-id="{$man_song.rule_id}"
+                               data-man-song-id="{$man_song.man_song_id}" data-rule-price="{$man_song.price}" data-man-song-shop-id="{$man_song.shop_id}" data-man-song-range-type="{$man_song.range_type}"
+                               data-goods-limit="{:implode(',',$man_song.goods_limit)}"><span class="w-border">包邮</span> 满{$man_song.price}包邮{if $man_song.range_type == 0}(部分商品){/if}</p>
+                            {/if}
+                            {/foreach}
+                        </div>
+                        {/if}
+                        </div>
+                        <div class="order-orderExt J-orderExt">
+                            <!--配送方式-->
+                            <div class="order-deliveryMethod pb14"  id="shipping_fee_{$shop_id}" {if($goods_type==0)}style="display: none;"{/if}>
+                                <div class="delivery clearfix J-delivery" data-has_store="{$shop.shop.has_store}">
+                                    <div class="orderExt-item">配送方式：</div>
+                                    <div class="orderExt-info clearfix J-chooseDelivery">
+                                        <label for="commonDeli" class="fl"><input type="radio" id="commonDeli" checked> 普通快递</label>
+                                        <div class="delivery-price fr red hide"  id="shop_shipping_info_{$shop_id}"></div>
+                                    </div>
+                                    <span class="J-storeChooosed"></span>&nbsp;&nbsp;<a href="javascript:void(0)" class="clearfix J-chooseStore J-shop_{$shop_id} blue" data-shop="{$shop_id}" style="display: none;">请选择门店</a>
+                                </div>
+                            </div>
+                            {if($goods_type==0)}
+                            <!--配送方式-->
+                            <div class="order-deliveryMethod pb14" id="write_off_{$shop_id}">
+                                <div class="delivery clearfix">
+                                    <div class="orderExt-item">核销门店：</div>
+                                    <span class="J-wxstoreChooosed"></span>&nbsp;&nbsp;<a href="javascript:void(0)" class="clearfix J-wxchooseStore J-shop_{$shop_id} blue" data-shop="{$shop_id}">请选择门店</a>
+                                </div>
+                            </div>
+                            {/if}
+                            <!--优惠券-->
+                            <div class="J-coupon_{$shop_id}">
+                            {if condition="count($coupon_list[$shop_id]['coupon_info'])"}
+                            <div class="order-coupons pb14 clearfix">
+                                <div class="orderExt-item">优惠券：</div>
+                                <div class="orderExt-info">
+                                    <select class="ins-select J-couponSelect">
+                                        <option value="0">不使用优惠券</option>
+                                        {foreach name="coupon_list[$shop_id]['coupon_info']" item="coupon" key="coupon_key"}
+                                            {if condition="$coupon.coupon_type.coupon_genre == 2"}
+                                            <option data-money="{$coupon.coupon_type.money}"
+                                                            data-genre="{$coupon.coupon_type.coupon_genre}"
+                                                            value="{$coupon.coupon_id}"
+                                                            data-goods-limit="{:implode(',',$coupon.goods_limit)}"
+                                                            data-at-least="{$coupon.coupon_type.at_least}"
+                                                            data-coupon-shop-id="{$coupon.coupon_type.shop_id}">
+                                                    满{$coupon.coupon_type.at_least}减{$coupon.coupon_type.money}元&nbsp;-&nbsp;{$coupon.coupon_type.coupon_name}
+                                            </option>
+                                            {elseif condition="$coupon.coupon_type.coupon_genre == 1"}
+                                            <option data-money="{$coupon.coupon_type.money}"
+                                                            data-genre="{$coupon.coupon_type.coupon_genre}"
+                                                            value="{$coupon.coupon_id}"
+                                                            data-goods-limit="{:implode(',',$coupon.goods_limit)}"
+                                                            data-at-least="{$coupon.coupon_type.at_least}"
+                                                            data-coupon-shop-id="{$coupon.coupon_type.shop_id}">
+                                                    减{$coupon.coupon_type.money}元&nbsp;-&nbsp;{$coupon.coupon_type.coupon_name}
+                                            </option>
+                                            {elseif condition="$coupon.coupon_type.coupon_genre == 3"}
+                                            <option data-discount="{$coupon.coupon_type.discount}"
+                                                            data-genre="{$coupon.coupon_type.coupon_genre}"
+                                                            value="{$coupon.coupon_id}"
+                                                            data-goods-limit="{:implode(',',$coupon.goods_limit)}"
+                                                            data-at-least="{$coupon.coupon_type.at_least}"
+                                                            data-coupon-shop-id="{$coupon.coupon_type.shop_id}">
+                                                    满{$coupon.coupon_type.at_least}打{$coupon.coupon_type.discount}折&nbsp;-&nbsp;{$coupon.coupon_type.coupon_name}
+                                            </option>
+                                            {/if}
+                                        {/foreach}
+                                    </select>
+                                    {foreach name="$coupon_list[$shop_id]['sku_percent']" item="coupon_info" key="coupon_id" }
+                                    {foreach name="$coupon_info" item="sku_info" key="sku_id"}
+                                    <div class="coupon-data-sku-percent" data-coupon-id="{$coupon_id}" data-sku-id="{$sku_id}" data-shop-id="{$shop_id}" data-sku-percent="{$sku_info.coupon_percent}" data-sku-amount="{$sku_info.coupon_percent_amount}"></div>
+                                    {/foreach}
+                                    {/foreach}
+                                </div>
+                            </div>
+                            {/if}
+                            </div>
+                            <!--留言-->
+                            <div class="order-memo pb14 clearfix">
+                                <div class="orderExt-item">买家留言：</div>
+                                <div class="orderExt-info">
+                                    <input type="text" class="memo-input leave-message" data-shop-id="{$shop_id}">
+                                </div>
+                            </div>
+                            <div class="total clearfix">
+                                <div class="fr orderItempay">
+                                    <span class="total-item">共<b id="shop_total_num_{$shop_id}" class="js-goods-num">0</b>件商品总计：</span>
+                                    <span class="red num">￥<b id="shop_total_amount_{$shop_id}">0.00</b></span>
+                                </div>
+                            </div>
+                            <div class="freight clearfix">
+                                <div class="fr orderItempay">
+                                    <span class="total-item">运费：</span>
+                                    <span class="red num">￥<b id="shop_express_{$shop_id}">0</b></span>
+                                </div>
+                            </div>
+                            <div class="c-money clearfix">
+                                <div class="fr orderItempay">
+                                    <span class="total-item">会员优惠：</span>
+                                    <span class="red num">￥<b id="shop_member_reduction_amount_{$shop_id}">0.00</b></span>
+                                </div>
+                            </div>
+                            <div class="c-money clearfix">
+                                <div class="fr orderItempay">
+                                    <span class="total-item">优惠金额：</span>
+                                    <span class="red num">￥<b id="shop_reduction_amount_{$shop_id}">0.00</b></span>
+                                </div>
+                            </div>
+
+                            <div class="c-money clearfix">
+                                <div class="fr orderItempay">
+                                    <span class="total-item">店铺小计：</span>
+                                    <span class="red num">￥<b id="shop_should_paid_amount_{$shop_id}">0.00</b></span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    {/foreach}
+                </div>
+            </div>
+            <div class="c-payPwd clearfix J-payPW" style="display:none;">
+                <div id="payPassword_container" class="alieditContainer clearfix fr" data-busy="0">
+                    <div class="i-block" data-error="i_error">
+                        <!--<div class="i-block six-password">
+                            <input onpaste="return false" class="i-text sixDigitPassword" id="payPassword_rsainput" type="text" autocomplete="off" required="required" value="" name="payPassword_rsainput" data-role="sixDigitPassword" tabindex="" maxlength="6" minlength="6" aria-required="true">
+                            <div tabindex="0" class="sixDigitPassword-box" style="width: 180px;">
+                                <i style="width: 29px; border-color: transparent;" class=""><b style="visibility: hidden;"></b></i>
+                                <i style="width: 29px;"><b style="visibility: hidden;"></b></i>
+                                <i style="width: 29px;"><b style="visibility: hidden;"></b></i>
+                                <i style="width: 29px;"><b style="visibility: hidden;"></b></i>
+                                <i style="width: 29px;"><b style="visibility: hidden;"></b></i>
+                                <i style="width: 29px;"><b style="visibility: hidden;"></b></i>
+                                <span style="width: 29px; left: 0px; visibility: hidden;" id="cardwrap" data-role="cardwrap"></span>
+                            </div>
+                        </div>-->
+                        <span>请输入支付密码：</span>
+                        <input type="password" class="pay_password" maxlength="20" autocomplete="new-password">
+                        <span>没有密码？</span>
+                        <a href="{:__URL('SHOP_MAIN/member/setPayPassword')}" class="blue" target="blank">去设置&gt; </a>
+                    </div>
+                </div>
+
+            </div>
+            <div id="point_return" class="freight clearfix hide">
+                 <div class="fr orderItempay">
+                     <span class="total-item">可获积分：</span>
+                     <span class="red num"><b id="total_return_point">0</b>个</span>
+                 </div>
+            </div>
+            <div id="point_deduction" class="freight clearfix hide">
+                 <div class="fr orderItempay">
+                 	 <input type="checkbox" name="goods_labels" id="is_deduction">
+                     <span class="total-item">积分：<span style="font-size: 11px;color: #888;">共{$member_account['point']}积分,该订单可使用<span id="total_deduction_point" data-money="0" data-real-moneyp="0" data-real-money="0">0</span>个</span></span>
+                     <span class="red num">-￥<b id="total_deduction_money">0</b></span>
+                 </div>
+             </div>
+            <!--提交表单-->
+            <div class="handMenu clearfix">
+
+                <div class="fr clearfix">
+                    <div class="realPay fl">
+                        <span class="realPay-title">实付：</span>
+                        <span class="red">￥<b id="real_price">0.00</b>{if condition="$count_point_exchange "}<b>+{$count_point_exchange}积分</b>{/if}</span>
+                    </div>
+                    <div class="submit-btn fl">
+                        <a href="javascript:void(0);" class="J-settlement">
+                            结算
+                        </a>
+                        <input type="hidden" id="hidden_order_tag" value="{$order_tag}"/>
+                    </div>
+
+                </div>
+            </div>
+
+
+
+        </div>
+
+    </div>
+</div>
+<!--添加地址模态框-->
+<div class="addAddress-dialog" style="display: none">
+    <div class="pop-wrapper">
+        <div class="pop-msg" style="display: none">
+            <p class="error error_tel">账户名错误</p>
+        </div>
+        <dl class="clearfix">
+            <dt><em>*</em>收货人：</dt>
+            <dd>
+                <input id="addr_name" type="text" placeholder="姓名，如：张三、Lily" class="addr-input l input_focus" maxlength="12" style="color: rgb(51, 51, 51);">
+            </dd>
+        </dl>
+        <dl class="clearfix">
+            <dt>邮政编码：</dt>
+            <dd>
+                <input id="zip_code" class="addr-input l input_focus" type="text"  maxlength="11" style="color: rgb(51, 51, 51);">
+            </dd>
+        </dl>
+        <dl class="clearfix">
+            <dt><em>*</em>手机号码：</dt>
+            <dd>
+                <input id="addr_tel" class="addr-input l input_focus" type="text" placeholder="手机号码（重要必填）" maxlength="11" style="color: rgb(51, 51, 51);">
+            </dd>
+        </dl>
+        <dl class="clearfix">
+            <dt><em>*</em>收货地址：</dt>
+            <dd>
+                <div data-toggle="distpicker">
+                    <select  class="distpicker-sels getProvince" id="province_id">
+                        <option value="-1">请选择省</option>
+                    </select>
+                    <select  class="distpicker-sels getCity" id="city_id">
+                        <option value="-1">请选择市</option>
+                    </select>
+                    <select  class="distpicker-sels" id="district_id">
+                        <option value="-1">请选择区</option>
+                    </select>
+                </div>
+            </dd>
+        </dl>
+        <dl class="clearfix">
+            <dt><em>*</em>详细地址：</dt>
+            <dd>
+                <input id="address_info" class="addr-input l input_focus" type="text" placeholder="详细地址（重要必填）" maxlength="11" style="color: rgb(51, 51, 51);">
+            </dd>
+        </dl>
+        <dl class="clearfix">
+            <dt></dt>
+            <dd class="vm">
+                <label for="default"><input type="checkbox"  id="default"> 设为默认地址</label>
+            </dd>
+        </dl>
+    </div>
+</div>
+<!--选择门店模态框-->
+<div class="chooseStore-dialog" style="display: none">
+    <div id="J-storeList" class="fl" style="width:220px; height:500px;overflow-y: scroll">
+
+    </div>
+    <div id="allmap" class="fr" style="height:500px;width:500px;"></div>
+</div>
+<input type="hidden" value="{$getStoreListUrl}" id="storeListUrl">
+<input type="hidden" value="{$store_list}" id="store_list">
+<input type="hidden" value="{$goods_type}" id="goods_type">
+<input type="hidden" id="current_lng">
+<input type="hidden" id="current_lat">
+<input type="hidden" id="msg" value="{$msg}">
+<input type="hidden" name="member_point" value="{$member_account['point']}" id="member_point" autocomplete="off">
+<input type="hidden" name="is_point_deduction" value="{$point_deduction['is_point_deduction']}" id="is_point_deduction" autocomplete="off">
+<input type="hidden" name="is_point" value="{$point_deduction['is_point']}" id="is_point" autocomplete="off">
+{/block}
+{block name="javascript"}
+<script type="text/javascript" src="https://api.map.baidu.com/api?v=2.0&ak=t16W0CsDyfV8QjlSgS17lgsI"></script>
+<script>
+    require(['dialog','confirmOrder'], function (Dialog,confirmOrder) {
+        var msg = $('#msg').val();
+        if(msg){
+            Dialog.alert(msg);
+        }
+        var map = new BMap.Map("allmap");
+        Dialog.withAccount(".payList", ".payItems", "selected");
+        confirmOrder.opreation(map);
+        Dialog.payPwd();
+    });
+</script>
+{/block}

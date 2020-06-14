@@ -1,0 +1,153 @@
+{extend name="platform/new_base" /}
+{block name="resources"/}
+{/block}
+{block name="main"}
+<!-- page -->
+<table class="table v-table table-auto-center table-hover">
+    <thead>
+    <tr>
+        <th>文件名</th>
+        <th>任务类型</th>
+        <th>创建时间</th>
+        <th>状态</th>
+        <th>备注</th>
+        <th>操作</th>
+    </tr>
+    </thead>
+    <tbody id="list">
+    </tbody>
+</table>
+<input type="hidden" id="pageIndex">
+<nav aria-label="Page navigation" class="clearfix">
+    <ul id="page" class="pagination pull-right"></ul>
+</nav>
+<!-- page end -->
+{/block}
+{block name="script"}
+<script>
+    require(['util'],function(util){
+        util.initPage(getList);
+        function getList(pageIndex){
+            $("#pageIndex").val(pageIndex);
+            $.ajax({
+                type : "post",
+                url : "{:__URL('PLATFORM_MAIN/system/planTask')}",
+                async : true,
+                data : {
+                    "pageIndex" : pageIndex
+                },
+                success : function(data) {
+                    var html = '';
+                    if (data["data"].length > 0) {
+                        for (var i = 0; i < data["data"].length; i++) {
+                            html += '<tr>';
+                            // html += '<td class="col-md-2">' + data["data"][i]["excel_name"] + '</td>';
+                            html += '<td class="col-md-2">';
+                            html += '<p class="text-left">' + data["data"][i]["excel_name"] +'</p>';
+                            html += '<p class="text-left">' + data["data"][i]["zip_name"] +'</p>';
+                            html += '</td>';
+                            html += '<td class="col-md-2">' + data["data"][i]["task_type"] + '</td>';
+                            html += '<td class="col-md-2">' + timestampToTime(data["data"][i]["create_time"]) + '</td>';
+
+                            if (data["data"][i]["status"] == 1) {
+                                html += '<td><span class="label label-success is_show" data-is_show="0" data-id="'+data["data"][i]["status"]+'">成功</span></td>';
+                            } else if (data["data"][i]["status"] == 2) {
+                                html += '<td><span class="label label-danger is_show" data-is_show="0" data-id="'+data["data"][i]["status"]+'">失败</span></td>';
+                            } else if (data["data"][i]["status"] == 3) {
+                                html += '<td><span class="label label-orange is_show" data-is_show="0" data-id="'+data["data"][i]["status"]+'">等待中</span></td>';
+                            } else if (data["data"][i]["status"] == 4) {
+                                html += '<td><span class="label label-orange is_show" data-is_show="0" data-id="'+data["data"][i]["status"]+'">处理中</span></td>';
+                            } else if (data["data"][i]["status"] == 5) {
+                                html += '<td><span  class="label label-green is_show" data-is_show="0" data-id="'+data["data"][i]["status"]+'">部分成功</span></td>';
+                            }else {
+                                html += '<td><span class="label label-grey is_show" data-is_show="0" data-id="'+data["data"][i]["status"]+'">失败</span></td>';
+                            }
+                            html += '<td class="col-md-4">' + data["data"][i]["log"] + '</td>';
+                            if (data["data"][i]["status"] == 5) {
+                                if (data["data"][i]["type"] == 1) {<!--商品助手-->
+                                    html += '<td><a class="text-primary download" href="javascript:void(0)" data-id="'+data["data"][i]["help_id"]+'"  data-type="'+data["data"][i]["type"]+'">下载失败内容</a></td> ';
+                                } else {<!--发票助手-->
+                                    html += '<td><a class="text-primary download" href="javascript:void(0)" data-id="'+data["data"][i]["id"]+'" data-type="'+data["data"][i]["type"]+'">下载失败内容</a></td> ';
+                                }
+                            } else if (data["data"][i]["status"] == 3) {
+                                if (data["data"][i]["type"] == 1) {<!--商品助手-->
+                                    html += '<td><a class="text-primary text-danger J-del" data-id="'+data["data"][i]["help_id"]+'"  data-type="'+data["data"][i]["type"]+'" href="javascript:void(0)">删除任务</a></td> ';
+                                } else {<!--发票助手-->
+                                    html += '<td><a class="text-primary text-danger J-del" data-id="'+data["data"][i]["id"]+'" data-type="'+data["data"][i]["type"]+'" href="javascript:void(0)">删除任务</a></td> ';
+                                }
+                            } else {
+                                html += '<td> - </td>';
+                            }
+                            html += '</tr>';
+                        }
+                    }  else {
+                        html += '<tr><td colspan="6" class="h-200">暂无符合条件的数据记录</td></tr>';
+                    }
+                    $("#list").html(html);
+                    $('#page').paginator('option', {
+                        totalCounts: data['total_count']  // 动态修改总数
+                    });
+                }
+            });
+        }
+        //删除任务
+        $('#list').on('click', ".J-del", function () {
+            var id = $(this).data('id');
+            var type = $(this).data('type');//1： 商品助手任务  2：发票助手任务
+            util.alert('删除任务？', function () {
+                $.ajax({
+                    url: "{:__URL('PLATFORM_MAIN/system/delTask')}",
+                    type: 'post',
+                    data: {
+                        'type' : type,
+                        'id': id
+                    },
+                    dataType: "json",
+                    success: function (data) {
+                        if (data["code"] > 0) {
+                            util.message(data["message"], 'success', getList(1));
+                        } else {
+                            util.message(data['message']);
+                        }
+                    }
+                })
+            })
+        })
+
+        //下载失败内容
+        $("#list").on('click', '.download', function () {
+            var id = $(this).data('id');
+            var type = $(this).data('type');//1： 商品助手任务  2：发票助手任务
+
+            $.ajax({
+                url: "{:__URL('PLATFORM_MAIN/system/download')}",
+                type: 'post',
+                data: {
+                    'type' : type,
+                    'id': id
+                },
+                success: function (data) {
+                    if (data["code"] > 0) {
+                        location.href = "{:__URL(SHOP_MAIN)}/" + data.data;
+                    } else {
+                        util.message(data['message']);
+                    }
+                }
+            })
+
+        })
+
+        //时间戳转时间类型
+        function timestampToTime(timestamp) {
+            var date = new Date(timestamp * 1000);//时间戳为10位需*1000，时间戳为13位的话不需乘1000
+            Y = date.getFullYear() + '-';
+            M = (date.getMonth()+1 < 10 ? '0'+(date.getMonth()+1) : date.getMonth()+1) + '-';
+            D = date.getDate() + ' ';
+            h = date.getHours() + ':';
+            m = (date.getMinutes() < 10 ? '0'+(date.getMinutes()) : date.getMinutes()) + ':';
+            s = (date.getSeconds() < 10 ? '0'+(date.getSeconds()) : date.getSeconds());
+            return Y+M+D+h+m+s;
+        }
+    })
+</script>
+{/block}

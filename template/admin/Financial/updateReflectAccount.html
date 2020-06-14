@@ -1,0 +1,200 @@
+{extend name="admin/base" /}
+{block name="main"}
+<!-- page -->
+<form class="form-horizontal widthFixedForm" role="form">
+    <!--账号名称-->
+    <input type="hidden" id="id" value="{$info.id}" /> 
+    <div class="form-group">
+        <label for="accounts" class="col-sm-2 control-label">账号类型</label>
+<!--        <div class="col-sm-5 radio" id="type">-->
+<!--            {if $info.type==1} <label ><input class='bank' type='radio' name='account_type' {if $info.type==1}checked {/if}  value=1>银行卡</input></label>{/if}-->
+<!--            <label ><input class='wx' type='radio' name='account_type'  {if $info.type==2}checked {/if} value=2>微信</input></label>-->
+<!--            <label ><input class='ali' type='radio' name='account_type' {if $info.type==3}checked {/if} value=3>支付宝</input></label>-->
+<!--            {if $info.type==4}<label ><input class='bank' type='radio' name='account_type' {if $info.type==4}checked {/if}  value=4>银行卡</input></label>{/if}-->
+<!--        </div>-->
+        <div class="col-sm-5 radio" id="type">
+            {if $bank_type==1 AND $info.type==1}
+            <label ><input class='bank' type='radio' name='account_type'  value=1 {if $info.type==1}checked {/if}>银行卡 </input></label>
+            {/if}
+            {if $bank_type==4 AND $info.type==4}
+            <label ><input class='bank' type='radio' name='account_type'  value=4 {if $info.type==4}checked {/if}>银行卡 </input></label>
+            {/if}
+            {if $wx_type==2 AND $info.type==2}
+            <label ><input class='wx' type='radio' name='account_type'  value=2 {if $info.type==2}checked {/if}>微信 </input></label>
+            {/if}
+            {if $ali_type==3 AND $info.type==3}
+            <label ><input class='ali' type='radio' name='account_type'  value=3 {if $info.type==3}checked {/if}>支付宝 </input></label>
+            {/if}
+        </div>
+    </div>
+    <!--收款账号-->
+    <div class="form-group">
+        <label for="account_number" class="col-sm-2 control-label">收款账号</label>
+        <div class="col-sm-8" >
+            <div class="add_account">
+                <input type="text" class="form-control" id="account_number" name="account_number" value="{$info.account_number}" placeholder="如：支付宝帐号,微信号,银行卡号" autocomplete="off">
+            </div>
+        </div>
+    </div>
+    <!--开户人-->
+    <div class="form-group">
+        <label for="realname" class="col-sm-2 control-label">真实姓名</label>
+        <div class="col-sm-5">
+            <input type="text" class="form-control" id="realname" value="{$info.realname}" name="realname" placeholder="真实姓名,持卡人姓名" autocomplete="off">
+        </div>
+    </div>
+    <div class="bank_with {if ($info.type neq 4 AND $info.type neq 1) }hide{/if}" id="banks-div">
+        <div class="form-group">
+            <label for="account_number" class="col-sm-2 control-label">银行列表</label>
+            <div class="col-sm-5" >
+                <select name="bank_name" id="bank_name"  class="form-control">
+                    {foreach $bank_list as $v}
+                    <option value="{$v['bank_code']}" {if $info.bank_code==$v['bank_code']}selected{/if}>{$v['bank_short_name']}</option>
+                    {/foreach}
+                </select>
+            </div>
+        </div>
+        <div class="form-group">
+            <label for="account_number" class="col-sm-2 control-label">银行卡类型</label>
+            <div class="col-sm-5 radio" >
+                <label ><input class="" type='radio' name='bank_type'  value=00 {if $info.bank_type==00}checked {/if}>储蓄卡</input></label>
+                <label ><input  class="" type='radio' name='bank_type'  value=02 {if $info.bank_type==02}checked {/if}>信用卡</input></label>
+            </div>
+        </div>
+        <div class="form-group">
+            <label for="account_number" class="col-sm-2 control-label">持卡人身份证号</label>
+            <div class="col-sm-8 " >
+                <div class="">
+                    <input type="text" class="form-control" id="bank_card" name="bank_card" value="{$info.bank_card}" autocomplete="off">
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="form-group">
+        <label for="remark" class="col-sm-2 control-label">备注</label>
+        <div class="col-sm-5">
+            <input type="text" class="form-control"  id="remark" value="{$info.remark}" name="remark" placeholder="请填写备注" autocomplete="off">
+        </div>
+    </div>
+    <!--添加返回-->
+    <div class="form-group add_back">
+        <div class="col-sm-2"></div>
+        <div class="col-sm-5">
+            <button type="button" class="btn add">确定</button>
+            <a href="{:__URL('ADMIN_MAIN/Financial/shopAccountList')}" class="btn back">返回</a>
+        </div>
+    </div>
+</form>
+<!-- page end -->
+{/block}
+{block name="script"}
+<script>
+require(['util','utilAdmin'], function (util,utilAdmin) {
+    $('.wx').on('change',function(){
+        $('#banks-div').addClass('hide');
+        $('.bank_with').addClass('hide');
+        $(".add_account").html('');
+        $(".add_account").addClass('input-group');
+        $(".add_account").append('<input type="text" class="form-control" id="account_number" name="account_number" disabled placeholder="微信账号"><span class="input-group-btn"><a href="javascript:void(0);" class="btn btn-default select_wx">选择微信账户</a></span>');
+    })
+    $('.bank').on('change',function(){
+        $('#banks-div').removeClass('hide');
+        $('.bank_with').removeClass('hide');
+        $(".add_account").html('');
+        $(".add_account").removeClass('input-group');
+        $(".add_account").append('<input type="text" class="form-control" id="account_number" name="account_number"  placeholder="银行卡号">');
+    })
+    $('.ali').on('change',function(){
+        $('#banks-div').addClass('hide');
+        $('.bank_with').addClass('hide');
+        $(".add_account").html('');
+        $(".add_account").removeClass('input-group');
+        $(".add_account").append('<input type="text" class="form-control" id="account_number" name="account_number" placeholder="支付宝账号">');
+    })
+    $('body').on('click','.select_wx', function () {
+        var url = "{:__URL('ADMIN_MAIN/financial/selectMemberList')}";
+        util.confirm('选择账户(必须是关注商城公众号的会员)','url:'+url, function () {
+            var data = this.$content.find('.cms_val').val();
+            $("#account_number").val(data);
+        },'large');
+    });
+    function editUserAjax() {
+        var type = $("input[name='account_type']:checked").val();
+        var realname = $("#realname").val();
+        var account_number = $("#account_number").val();
+        var bank_name = $("#bank_name").val();
+        var remark = $("#remark").val();
+        var id = $("#id").val();
+        var bank_type = $("input[name='bank_type']:checked").val();
+        var bank_card = $("#bank_card").val();
+        var bank_username = $("#bank_username").val();
+        if (type===undefined) {
+            utilAdmin.message('请选择账号类型','info', function () {
+                $("input[name='account_type']").focus();
+            });
+            return false;
+        };
+        if(type==1){
+            if(bank_name === ''){
+                utilAdmin.message('请选择银行','info', function () {
+                    $('#bank_name').focus();
+                });
+                return false;
+            }
+            if(bank_type === ''){
+                utilAdmin.message('请选择银行卡类型','info', function () {
+                });
+                return false;
+            }
+            if(bank_card === ''){
+                utilAdmin.message('请输入持卡人身份证号','info', function () {
+                });
+                return false;
+            }
+        }
+        if (account_number === '') {
+            utilAdmin.message('请输入收款账号','info', function () {
+                $('#account_number').focus();
+            });
+            return false;
+        };
+        if (realname === '') {
+            utilAdmin.message('请输入真实姓名！','info', function () {
+                $('#realname').focus();
+            });
+            return false;
+        };
+        $.ajax({
+            type: "post",
+            url: "{:__URL('ADMIN_MAIN/financial/updateshopaccount')}",
+            data: {
+                'id': id,
+                'type': type,
+                'realname': realname,
+                'bank_name': bank_name,
+                'bank_type': bank_type,
+                'bank_card': bank_card,
+                'account_number': account_number,
+                'remark': remark
+            },
+            async: true,
+            dataType: "json",
+            success: function (data) {
+                if (data['code'] > 0) {
+                    utilAdmin.message(data["message"],'success',function(){
+                        location.href = "{:__URL('ADMIN_MAIN/financial/shopaccountlist')}";
+                    });
+                } else {
+                    utilAdmin.message(data["message"],'danger');
+                    return false;
+                }
+            }
+        });
+    }
+
+    $('.add').on('click',function(){
+        editUserAjax()
+    })
+})    
+</script>
+{/block}

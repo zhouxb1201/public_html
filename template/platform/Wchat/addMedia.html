@@ -1,0 +1,577 @@
+{extend name="platform/new_base" /}
+{block name="resources"/}
+<style>
+	.media {
+		max-width: 800px;
+		margin: 0 auto;
+	}
+
+	.media:after {
+		content: "";
+		display: table;
+		clear: both;
+	}
+
+	.img-text {
+		display: block;
+		width: 100%;
+		line-height: 120px;
+		background: #ececec;
+		text-align: center;
+		font-size: 22px;
+		color: #c0c0c0;
+		font-weight: 400;
+	}
+
+	.media-left {
+		width: 30%;
+		margin-right: 2%;
+	}
+
+	.media-right {
+		width: 60%;
+		background: #f8f8f8;
+		border: 1px solid #d3d3d3;
+		border-radius: 5px;
+		padding: 15px;
+	}
+
+	.media-left, .media-right {
+		float: left;
+	}
+
+	.media-border {
+		padding: 10px;
+		border: 1px solid #d3d3d3;
+		border-radius: 5px;
+	}
+
+	.media-border-title {
+		padding: 10px;
+		border: 1px solid #d3d3d3;
+		border-top-left-radius: 5px;
+		border-top-right-radius: 5px;
+		position: relative;
+	}
+
+	.media-bodys {
+		padding: 10px;
+		border-bottom: 1px solid #d3d3d3;
+		border-left: 1px solid #d3d3d3;
+		border-right: 1px solid #d3d3d3;
+		position: relative;
+	}
+
+	.media-bodys:after {
+		content: "";
+		display: table;
+		clear: both;
+	}
+
+	.media-bodys p {
+		width: 65%;
+		float: left;
+	}
+
+	.media-bodys .media-body-div {
+		width: 30%;
+		float: right;
+	}
+
+	.media-bodys .media-body-div span {
+		font-size: 16px;
+		line-height: 62px;
+	}
+
+	.media-bodys .media-plus {
+		font-size: 22px;
+		line-height: 62px;
+		text-align: center;
+		display: block;
+	}
+
+	.actions{
+		position: absolute;
+		bottom: 0;
+		right: 0;
+		width: 100%;
+		height: 100%;
+		background-color: #e5e5e5;
+		opacity: 0.4;
+		color: #fff;
+		text-align: right;
+		z-index: 49;
+		display: none;
+	}
+
+	.actions span{
+		display: inline-block;
+		background-color: rgba(0, 0, 0, 0.8);
+		padding: 0 5px;
+		color: #fff;
+		z-index: 50;
+		margin-left: 5px;
+	}
+
+	.edit, .del {
+		cursor: pointer;
+	}
+	.editting{display:none;}
+	.action .editting{display:block;color:red;text-align:right;}
+    /*9.29*/
+    a:hover,a:focus{
+		text-decoration: none;
+	}
+    p {
+        margin: 0 0 10px;
+    }
+    .m-b-sm {
+        margin: 60px 0 20px 0;
+        text-align: center;
+    }
+    .img-box {
+        width: 270px;
+        height: 150px;
+        line-height: 150px;
+        text-align: center;
+        border: 1px dashed #999;
+        position: relative;
+    }
+    .img-box img {
+        max-width: 100%;
+        max-height: 100%;
+        vertical-align: middle;
+        width: auto;
+        height: auto;
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translateX(-50%) translateY(-50%);
+    }
+    .media, .media-bodys{
+        overflow: hidden;
+        zoom: 1;
+    }
+    .panel .panel_layout{
+        padding-left: 250px;
+    }
+    .img_upload{
+        display: inline-block;
+        padding: 4px 8px;
+        border-radius: 4px;
+        border: 1px solid #2c9cf0;
+        color: #fff;
+        background-color: #2c9cf0;
+        cursor: pointer;
+    }
+    .js-action.action{
+       border: 2px solid #ffa500;
+    }
+    /*9.29*/
+</style>
+{/block} 
+{block name="main"}
+<section class="panel panel-default">
+	<div class="col-lg-12 panel_layout">
+		<div class="m-b-sm">
+			<div class="btn-group">
+				<label class="btn btn-sm btn-info"> <input type="radio"
+														   name="type" id="type1" value="1"> <i
+						class="fa fa-check text-active"></i> 文本
+				</label> <label class="btn btn-sm btn-success"> <input type="radio"
+																	   name="type" id="type2" value="2"> <i
+					class="fa fa-check text-active"></i> 单图文
+			</label> <label class="btn btn-sm btn-primary"> <input type="radio"
+																   name="type" id="type3" value="3" checked> <i
+					class="fa fa-check text-active"></i> 多图文
+			</label>
+			</div>
+		</div>
+		<div class="row type1" style="display:none;">
+			<form class="form-horizontal" method="get">
+				<div class="form-group">
+					<label class="col-sm-4 control-label">描述</label>
+					<div class="col-sm-4">
+						<textarea id="type1_desc" class="form-control"
+								  style="overflow: scroll; height: 150px; max-height: 150px"></textarea>
+					</div>
+				</div>
+			</form>
+		</div>
+		<div class="type2 media"  style="display: none;">
+			<div class="media-left">
+				<div class="media-border">
+					<h5 class="type-title">标题</h5>
+					<div style="text-align:center;">
+						<img class="type2-img" src="" style="max-width:218px;max-height:120px;display:none;">
+						<span class="img-text">封面图片</span>
+					</div>
+				</div>
+			</div>
+			<div class="media-right">
+				<p> <span style="color:red;"> * </span> 标题 </p>
+				<input style="width: 98%;" type="text" id="title" value="">
+				<p>作者（选填）</p>
+				<input style="width: 98%;" type="text" id="author" value="">
+				<p>
+					<span style="color:red;"> *</span> 封面
+				</p>
+				<div>
+					<div class="class-logo" style="background: #f8f8f8;">
+						<p class="img-box">
+							<img id="imgLogo" src="" class="imgLogo">
+						</p>
+					</div>
+					<p class="hint">
+						<span style="color: orange;">建议使用宽900像素-高500像素的图片。</span>
+					</p>
+					<input type="hidden" id="type2-img-hidden" value=""/>
+                    <span class="img_upload">图片上传</span>
+				</div>
+				<p></p>
+				<p>
+					<input type="checkbox" id="show_cover_pic"
+						   style="margin-top: -2px; margin-right: 5px;"><label
+						for="show_cover_pic"
+						style="font-weight: normal; display: inline-block;">封面图片显示在正文中</label>
+				</p>
+				<p><span style="color:red;"> *</span> 摘要</p>
+				<p>
+					<textarea id="desc" style="width: 98%;"></textarea>
+				</p>
+				<p class="error">请输入模块描述</p>
+				<p><span style="color:red;"> *</span> 正文</p>
+				<div class="controls" >
+                    <div class="UE-box">
+                        <div id="UE-detail2" data-content=""></div>
+                    </div>
+                        </div>
+                        <p></p>
+                        <p>原文链接</p>
+                        <input style="width: 98%;" type="text" id="content_source_url"
+                    value="">
+                        </div>
+                        </div>
+		<div class="type3 media">
+                        <div class="media-left">
+                        <div class="media-border-title js-action action"
+                      data-num="0">
+                        <div style="position: relative;text-align:center;">
+                        <img class="type3-img-0" src="" style="max-width:218px;max-height:120px;display:none;">
+                        <span class="img-text">封面图片</span>
+                        <h5 class="type3-title-0"
+                    style="position: absolute; bottom: 0; width: 100%; background: #bbb; color: #fff; margin: 0; padding: 5px 0;text-align:left;">标题</h5>
+                        </div>
+                        <div class="actions"><span class="edit">编辑</span></div>
+                        <input type="hidden" name="hidden0" id="title0" value="">
+                        <input type="hidden" name="hidden0" id="author0" value="">
+                        <input type="hidden" name="hidden0" id="cover0" value="">
+                        <input type="hidden" name="hidden0" id="show_cover_pic0" value="">
+                        <input type="hidden" name="hidden0" id="summary0" value="">
+                        <input type="hidden" name="hidden0" id="content0" value="">
+                        <input type="hidden" name="hidden0" id="content_source_url0" value="">
+                        </div>
+                        <div class="media-bodys js-action"
+                      data-num="1">
+                        <p class="type3-title-1">标题</p>
+                        <div class="media-body-div">
+                        <img class="type3-img-1" src="" style="max-width:62px;max-height:62px;display:none;">
+                        <span class="img-text">缩略图</span>
+                        </div>
+                        <div class="actions"><span class="edit">编辑</span></div>
+                        <input type="hidden" name="hidden1" id="title1" value="">
+                        <input type="hidden" name="hidden1" id="author1" value="">
+                        <input type="hidden" name="hidden1" id="cover1" value="">
+                        <input type="hidden" name="hidden1" id="show_cover_pic1" value="">
+                        <input type="hidden" name="hidden1" id="summary1" value="">
+                        <input type="hidden" name="hidden1" id="content1" value="">
+                        <input type="hidden" name="hidden1" id="content_source_url1" value="">
+                        </div>
+                        <div class="media-bodys">
+                        <span class="media-plus"><a href="javascript:void(0);"><i
+                    class="icon-add icon"></i></a></span>
+                    </div>
+                    </div>
+                    <div class="media-right" id="dir" dir="0">
+                        <p><span style="color:red;"> *</span> 标题</p>
+                        <input style="width: 98%;" type="text" id="form_title" value=""
+                     class="changeElement" data-name="title">
+                        <p>
+                        <p>作者</p>
+                        <input style="width: 98%;" type="text" id="form_author" value=""
+                     class="changeElement" data-name="author">
+                        </p>
+                        <p>
+							<span style="color:red;"> *</span> 封面<span></span>
+                        </p>
+                        <div>
+                        <div class="class-logo" style="background: #f8f8f8;">
+                        <p class="img-box">
+                        <img id="imgLogo1" src="" class="imgLogo">
+                        </p>
+                        </div>
+                        <p class="hint">
+                        <span style="color: orange;">建议使用宽900像素-高500像素的图片。</span>
+                    </p>
+                    <span class="img_upload">图片上传</span>
+                    </div>
+                    <p></p>
+                    <p>
+                    <input type="checkbox" id="form_show_cover_pic" data-name="show_cover_pic"
+                    style="margin-top: -2px; margin-right: 5px;" class="changeElement"><label
+                    for="show_cover_pic"
+                        style="font-weight: normal; display: inline-block;">封面图片显示在正文中</label>
+                            </p>
+                            <p><span style="color:red;"> *</span> 摘要</p>
+                            <p>
+                            <textarea id="form_summary" style="width: 98%;" class="changeElement" data-name="summary"></textarea>
+                        </p>
+                        <p class="error">请输入模块描述</p>
+                        <p><span style="color:red;"> *</span> 正文</p>
+                        <div class="controls" >
+                            <div class="UE-box" >
+                                <div id="UE-detail1"  data-content=""></div>
+                            </div>
+				        </div>
+				<p></p>
+				<p>原文链接</p>
+				<input style="width: 98%;" type="text" id="form_content_source_url"
+					   value="" class="changeElement" data-name="content_source_url">
+			</div>
+		</div>
+		<div class="row">
+			<div class="panel-body">
+				<div class="form-group">
+					<div class="col-sm-4 col-sm-offset-4">
+						<a href="javascript:void(0);" 
+						   class="btn btn-primary save">保存</a>
+					</div>
+				</div>	</div></div>
+	</div>
+</section>
+{/block}
+{block name="script"}
+<script>
+
+  require(['util'],function(util){
+    // 富文本变动保存
+    util.ueditorChange("UE-detail1");
+    // 点击右侧栏保存数据
+    $(".media-right").on("change",".changeElement",function(){
+        var name=$(this).data("name");
+        var dir = $("#dir").attr('dir');
+        if(name == 'show_cover_pic'){
+            if($("#form_"+name).prop("checked")){
+                var form_show_cover_pic = 1;
+            }else{
+                var form_show_cover_pic = 0;
+            }
+            $("#"+name+dir).val(form_show_cover_pic);
+        }else{
+            $("#"+name+dir).val($("#form_"+name).val());
+        }
+        if(name == 'title'){
+            if($("#form_"+name).val() == ''){
+                $(".type3-title-"+dir).html('标题');
+            }else{
+                $(".type3-title-"+dir).html($("#form_"+name).val());
+            }
+        }
+    })
+
+    // 左侧变动改变右侧数据渲染
+    $(".media-left").on("click",".js-action",function(){
+        var num=$(this).data("num");
+        $(".js-action").removeClass('action');
+        $(this).addClass('action');
+        $("#dir").attr('dir',num);
+        //获取 隐藏域中的值
+        var title = $("#title"+num).val();
+        var author = $("#author"+num).val();
+        var cover = $("#cover"+num).val();
+        var show_cover_pic = $("#show_cover_pic"+num).val();
+        var summary = $("#summary"+num).val();
+        var content = $("#content"+num).val();
+        var content_source_url = $("#content_source_url"+num).val();
+        //把 form 的值填进去
+        $("#form_title").val(title);
+        $("#form_author").val(author);
+        $(".imgLogo").attr('src',cover);
+        if(show_cover_pic == 1){
+            $("#form_show_cover_pic").prop("checked","checked");
+        }else{
+            $("#form_show_cover_pic").prop("checked","");
+        }
+
+        $("#form_summary").val(summary);
+        UE.getEditor('UE-detail1').setContent(content);
+        $("#form_content_source_url").val(content_source_url);
+    })
+    //   图片上传
+        $('.img_upload').on('click',function(){
+            var _this=$(this);
+            util.confirm('图片空间', 'url:{:__URL(\'PLATFORM_MAIN/goods/pic_space\')}', function () {
+                var content = this.$content.find('#selectedData').data();
+                if(content.id){
+                    var  src= content.path[0];
+                    var dataNum=_this.parents(".media").find(".action").data("num");
+                    _this.siblings(".class-logo").find(".imgLogo").attr('src',src);
+                    _this.parents(".media").find(".action").find("img").attr('src',src).css("display","block").siblings(".img-text").remove();
+                    _this.parents(".media").find("#cover"+dataNum).val(src);
+                    if(_this.parents(".media").hasClass("type2")){
+                        $("#type2-img-hidden").val(src);
+                        _this.parents(".media").find("img").attr('src',src).css("display","block").siblings(".img-text").remove();
+                    }
+                }
+
+            },'xlarge')
+
+        })
+
+    $(".save").on("click",function(){
+        var type = $("input[type='radio'][name='type']:checked").val();
+        if(type == 1){
+            //文本提交
+            var title = $("#type1_desc").val();
+            var content = '';
+        }else if(type == 2){
+            // 单图文 提交
+            var title = $("#title").val();
+            var author = $("#author").val();
+            var cover = $("#type2-img-hidden").val();
+            if($("#show_cover_pic").prop("checked")){
+                var show_cover_pic = 1;
+            }else{
+                var show_cover_pic = 0;
+            }
+            var summary = $("#desc").val();
+            var content = UE.getEditor('UE-detail2').getContent();
+            var content_source_url = $("#content_source_url").val();
+            var contents = title+'`|`'+author+'`|`'+cover+'`|`'+show_cover_pic+'`|`'+summary+'`|`'+content+'`|`'+content_source_url;
+            if(title == ''){
+                util.message('标题不能为空','danger');
+                return false;
+            }else if(cover == ''){
+                util.message('请上传封面图片','danger');
+                return false;
+            }else if(summary == ''){
+                util.message('摘要不能为空','danger');
+                return false;
+            }else if(content == ''){
+                util.message( '正文不能为空','danger');
+                return false;
+            }
+// 		return false;
+        }else if(type == 3){
+            // 多图文提交
+            var title = $("#title0").val();
+            var contents = '';
+            var num = $(".js-action").length;
+            for(var i=0; i<num; i++){
+                var content_new = '';
+                $("input[name='hidden"+i+"']").each(function(){
+                    if($("input[name='hidden"+i+"']").eq(0).val() == ""){
+                        util.message('第'+(i+1)+'篇文章的标题不能为空','danger');
+                        return false;
+                    }else if($("input[name='hidden"+i+"']").eq(2).val() == ""){
+                        util.message('第'+(i+1)+'篇文章的封面图片不能为空','danger');
+                        return false;
+                    }else if($("input[name='hidden"+i+"']").eq(4).val() == ""){
+                        util.message('第'+(i+1)+'篇文章的封面图片不能为空','danger');
+                        return false;
+                    }else if($("input[name='hidden"+i+"']").eq(5).val() == ""){
+                        util.message('第'+(i+1)+'篇文章的正文不能为空','danger');
+                        return false;
+                    }else{
+                        content_new = content_new +'`|`'+ $(this).val();
+                    }
+                });
+                content_new = content_new.substring(3);
+                contents = contents +'`$`'+ content_new;
+            }
+            contents = contents.substring(3);
+        }else{
+            util.message( '请选择消息类型','danger');
+            return false;
+        }
+        //类型,标题,content
+        //content = 标题,作者,封面图片,显示在正文,摘要,正文,链接地址;标题,作者,封面图片,显示在正文,摘要,正文,链接地址
+        $.ajax({
+            type : "post",
+            url : "{:__URL('PLATFORM_MAIN/wchat/addmedia')}",
+            async : true,
+            data : {
+                "type" : type, "title" : title, "content" : contents
+            },
+            success : function(data) {
+                if(data['code'] > 0){
+                    util.message('添加成功', 'success');
+                    location.href="{:__URL('PLATFORM_MAIN/Wchat/materialMessage')}";
+                }else{
+                    // util.message('添加失败','danger');
+                }
+            }
+        });
+    })
+
+
+    $(".media-plus").click(
+        function() {
+            var num = $(this).parents(".media-left").find(
+                ".media-bodys").length;
+            if (num > 7) {
+                util.message('最多只可以加入8条图文消息。','danger');
+                return false;
+            }
+            var html = '';
+            html += '<div class="media-bodys js-action" data-num='+num+'>';
+            html += '<p class="type3-title-'+num+'">标题</p><div class="media-body-div"><img class="type3-img-'+num+'" src="" style="max-width:62px;max-height:62px;display:none;"><span class="img-text">缩略图</span></div>';
+            html += '<div class="actions"><span class="edit">编辑</span><span class="del">删除</span></div>';
+            html += '<input type="hidden" name="hidden'+num+'" id="title'+num+'" value="">';
+            html += '<input type="hidden" name="hidden'+num+'" id="author'+num+'" value="">';
+            html += '<input type="hidden" name="hidden'+num+'" id="cover'+num+'" value="">';
+            html += '<input type="hidden" name="hidden'+num+'" id="show_cover_pic'+num+'" value="">';
+            html += '<input type="hidden" name="hidden'+num+'" id="summary'+num+'" value="">';
+            html += '<input type="hidden" name="hidden'+num+'" id="content'+num+'" value="">';
+            html += '<input type="hidden" name="hidden'+num+'" id="content_source_url'+num+'" value="">';
+            html += '</div>';
+            $(this).parents(".media-left").find(".media-bodys").eq(
+                num - 2).after(html);
+        });
+
+    $("#title").on("change",function(){
+        if($(this).val() == ''){
+            $(this).parents(".media").find("h5.type-title").html('标题');
+        }else{
+            $(this).parents(".media").find("h5.type-title").html($(this).val());
+        }
+    });
+
+    /**
+     * 点击消息类型  切换表单
+     */
+    $("input[type=radio][name='type']").click(function(){
+        var type = $(this).val();
+        $(".type1").hide();
+        $(".type2").hide();
+        $(".type3").hide();
+        $(".type"+type).show();
+    });
+    // media-body标题栏移入
+    $(".media-left").on("mouseover",".js-action",function(){
+        $(this).children('.actions').show();
+    })
+    // media-body标题栏移出
+    $(".media-left").on("mouseout",".js-action",function(){
+        $(this).children('.actions').hide();
+    })
+    // media-body标题栏删除
+    $(".media-left").on("click",".del",function(){
+        $(this).parents(".media-bodys").remove();
+    })
+
+    
+
+  })
+  </script>
+{/block}

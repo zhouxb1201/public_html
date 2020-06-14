@@ -1,0 +1,250 @@
+@import "/css/iconfont.wxss";
+page {
+  background-color: #f8f8f8;
+  font-size: 28rpx;
+}
+
+.van-hairline--top-bottom::after {
+  border-width: 0 !important;
+}
+.head {
+  background-color: #ffffff;
+  position: relative;
+}
+
+.head .info {
+  display: flex;
+  padding: 20rpx 30rpx;
+  align-items: center;
+}
+
+.head .info .avator {
+  border-radius: 50%;
+  position: relative;
+  width: 100rpx;
+  height: 100rpx;
+  overflow: hidden;
+  background: #fff;
+}
+
+.head .info .content {
+  flex: 1;
+  padding-left: 20rpx;
+  line-height: 40rpx;
+}
+
+.head .info .content .number {
+  font-size: 24rpx;
+  color: #999;
+}
+
+.head .info .icon_msg {
+  position: absolute;
+  right: 30rpx;
+  top: 28rpx;
+  font-size: 36rpx;
+}
+
+.head .box {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  font-size: 24rpx;
+  padding: 20rpx 0px;
+}
+
+.head .box view {
+  flex: 1;
+  width: 33.333%;
+}
+
+.no_open {
+  background-color: #fff;
+  position: fixed;
+  top: 0;
+  bottom: 0;
+  right: 0;
+  left: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.no_open .box {
+  text-align: center;
+}
+
+.no_open .box .img {
+  width: 400rpx;
+  height: 200rpx;
+  margin: 30rpx 0;
+}
+
+.no_open .img image {
+  width: 100%;
+  height: 100%;
+}
+.tab {
+  margin-top: 20rpx;
+  position: relative;
+}
+
+.tab:after {
+  content: ' ';
+  position: absolute;
+  pointer-events: none;
+  box-sizing: border-box;
+  left: 0;
+  bottom: -1px;
+  transform: scaleY(0.5);
+  height: 1px;
+  background-color:#ebedf0 ;
+  width: 100%;
+  z-index: 10;
+
+}
+
+.van-list {
+  position: relative;
+  margin-bottom: 100rpx;
+  overflow: hidden;
+  
+}
+
+.van-list .wrap {
+  background-color: #fff;
+}
+
+.van-list .wrap .item {
+  display: flex;
+  padding: 20rpx 0rpx;
+}
+
+.van-list .wrap .item .date {
+  font-size: 36rpx;
+  width: 140rpx;
+  text-align: center;
+  font-weight: 700;
+}
+
+.van-list .wrap .item .date .month {
+  font-size: 24rpx;
+  font-weight: normal;
+  margin-left: 10rpx;
+}
+
+.van-list .wrap .item .boxes {
+  flex: 1;
+}
+
+.van-list .wrap .item .boxes .content {
+  display: flex;
+  margin-top: 20rpx;
+}
+
+.van-list .wrap .item .boxes .content:first-child {
+  margin-top: 0px;
+}
+
+.van-list .wrap .item .boxes .content image {
+  width: 100rpx;
+  height: 100rpx;
+  display: inline-block;
+}
+
+.van-list .wrap .item .boxes .content text {
+  display: inline-block;
+  flex: 1;
+  padding: 0rpx 40rpx 0rpx 20rpx;
+  max-height: 80rpx;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+  line-height: 40rpx;
+}
+
+.waterfall .item {
+  width: calc(50% - 2rpx);
+  float: left;
+  display: block;
+}
+
+.waterfall .item .item_box {
+  box-sizing: border-box;
+  background-color: #fff;
+  border-radius: 20rpx;
+  overflow: hidden;
+  margin: 10rpx;
+  width: auto;
+  height: auto;
+  box-shadow: 0 0 10px 0 rgba(0, 0, 0, .05);
+}
+
+.waterfall .item .thing_img {
+  height: 351rpx;
+  overflow: hidden;
+}
+
+
+.waterfall .item .thing_img image {
+  width: 100%;
+  height: 100%;
+}
+
+.waterfall .item .thing_name {
+  text-overflow: ellipsis;
+  overflow: hidden;
+  white-space: nowrap;
+  width: 100%;
+  margin: 12rpx 0;
+  padding: 0 10rpx;
+}
+
+.waterfall .item .userinfo {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10rpx;
+}
+
+.waterfall .item .userinfo .user_name {
+  display: flex;
+  align-items: center;
+}
+
+.waterfall .item .userinfo .user_name .user_img {
+  width: 36rpx;
+  height: 36rpx;
+  border-radius: 50%;
+  overflow: hidden;
+}
+
+.waterfall .item .userinfo .user_name .user_img image {
+  width: 100%;
+  height: 100%;
+}
+
+.waterfall .item .userinfo .user_name .name {
+  text-overflow: ellipsis;
+  overflow: hidden;
+  white-space: nowrap;
+  width: 160rpx;
+  padding-left: 10rpx;
+  font-size: 24rpx;
+}
+
+.waterfall .item .userinfo .collect_box {
+  margin-right: 10rpx;
+  display: flex;
+  align-items: center;
+  font-size: 24rpx;
+  justify-content: center;
+}
+
+.waterfall .item .userinfo .collect_box .icon_like {
+  margin-right: 5rpx;
+  padding-top: 5rpx;
+}

@@ -1,0 +1,188 @@
+<swiper class="swiper-wrap" circular="{{true}}" vertical="{{true}}" bindchange="onChange">
+	<swiper-item wx:for="{{list}}" wx:for-index="index" wx:for-item="item" wx:key="index">
+		<view class="swiper-item">
+			<view class="head-nav">
+				<view class="head-nav-fixed">
+					<view class="head-info">
+						<image src="{{item.user_headimg ? item.user_headimg :  '/images/no-avatar.png'}}" class="img" />
+						<text class="name">{{item.thing_user_name ? item.thing_user_name : "匿名"}}</text>
+					</view>
+					<view class="head-nav__right">
+						<van-button plain round size="small" type="danger" wx-if="{{uid != item.user_id}}" bind:click="sensitiveOthers">{{listOption[index].is_attention ? '已关注' : '关注'}}</van-button>
+						<button class="btn" open-type="share">
+							<van-icon name="share" />
+						</button>
+					</view>
+				</view>
+			</view>
+
+			<view class="video-box">
+				<view class="control" catchtap="onVideoAction" data-index="{{index}}">
+					<view class="{{listOption[index].play?'hide':''}}">
+						<van-icon name="{{listOption[index].play?'pause':'play'}}" size="160rpx" color="#fff" />
+					</view>
+				</view>
+				<video id="video_{{index}}" autoplay="{{active===index}}" show-mute-btn="{{true}}" enable-play-gesture="{{true}}" show-fullscreen-btn="{{false}}" show-play-btn="{{false}}" loop="{{true}}" show-center-play-btn="{{false}}" controls="{{false}}" class="video" poster="{{item.video_img?item.video_img.pic_cover:''}}" src="{{item.img_temp_array?item.img_temp_array[0].pic_cover:''}}"></video>
+			</view>
+
+			<view class="foot">
+				<view class="goods-icon" wx:if="{{listOption[index].goods_list.length}}" bindtap="onBottomGoods">
+					<view class="icon">
+						<van-icon name="cart" color="#fff" size="10px" />
+					</view>
+					<text class="text">推荐商品</text>
+				</view>
+				<view class="theme-wrap" wx:if="{{item.id}}">
+					<view class="title" wx:if="item.title">{{item.title}}</view>
+					<view class="content {{listOption[index].contentShow?'flex-column':''}}">
+						<view class="{{!listOption[index].contentShow?'text':''}}">{{item.content}}</view>
+						<view class="s" catchtap="bindContentShow">{{listOption[index].contentShow?'收起':'展开'}}</view>
+					</view>
+					<view class="tag">
+						<view wx:if="{{item.topic_title}}">
+							<text class="bol">#</text>
+							<text class="text">{{item.topic_title}}</text>
+						</view>
+						<view class="sec" wx:if="{{item.location}}">
+							<view class="icon">
+								<van-icon name="location" color="#fff" size="12px" />
+							</view>
+							<text class="text">{{item.location}}</text>
+						</view>
+					</view>
+					<view class="bottom">
+						<view>{{time.formatDate(item.create_time)}}</view>
+						<view>阅读 {{item.reading_volumes ? item.reading_volumes : 0}}</view>
+					</view>
+				</view>
+
+				<view class="bottom-wrap">
+					<view class="bom-fixed">
+						<view class="prt">
+							<view class="text-input" bindtap="onPopMessage">
+								<view class="icon">
+									<van-icon name="edit" size="14px" />
+								</view>
+								<text>说点什么...</text>
+							</view>
+							<view class="icon-w">
+								<van-icon name="{{item.is_like ? 'like' : 'like-o'}}" color="{{item.is_like ? 'red' : ''}}" size="20px" bindtap="onBottomFabulous" data-index="{{index}}" />
+								<text>{{time.praise(item.likes)}}</text>
+							</view>
+							<view class="icon-w">
+								<van-icon name="{{item.is_collect ? 'star' : 'star-o'}}" color="{{item.is_collect ? 'red' : ''}}" size="20px" bindtap="onBottomCollection" data-index="{{index}}" />
+								<text>{{time.praise(item.collects)}}</text>
+							</view>
+							<view class="icon-w">
+								<van-icon name="chat" size="20px" bindtap="onBottomComment" data-index="{{index}}" />
+								<text></text>
+							</view>
+						</view>
+					</view>
+				</view>
+			</view>
+
+			<van-popup show="{{listOption[index].commentPopupShow}}" position="bottom" data-index="{{index}}" bind:click-overlay="commentPopupClose">
+				<scroll-view class="comment" scroll-y="{{true}}" bindscrolltolower="onCommentBottom">
+					<view class="item" wx:for="{{listOption[index].commentList}}" wx:for-index="commentIndex" wx:for-item="commentItem" wx:key="commentIndex">
+						<view class="comment-info">
+							<view class="user">
+								<view class="avatar avatar-M type-outline">
+									<view class="avatar-img">
+										<image src="{{commentItem.user_headimg ? commentItem.user_headimg : '/images/no-avatar.png'}}" />
+									</view>
+								</view>
+								<view class="user-info">
+									<view class="user-nickname">
+										<label>{{commentItem.thing_user_name ? commentItem.thing_user_name : '匿名'}}</label>
+										<van-tag type="danger" wx:if="{{commentItem.is_author}}">作者</van-tag>
+									</view>
+									<text class="publish-time">{{time.getTimer(commentItem.create_time)}}</text>
+								</view>
+							</view>
+
+							<view class="comment-stats" bindtap="onFabulous" data-item="{{commentItem}}" data-index="{{commentIndex}}">
+								<view class="likes">
+									<van-icon name="{{commentItem.is_like ? 'like' : 'like-o'}}" color="{{commentItem.is_like ? 'red' : ''}}" size="14px" />
+									<label>{{time.praise(commentItem.like_count)}}</label>
+								</view>
+							</view>
+						</view>
+
+						<view class="content-text" bindtap="onReflex" data-item="{{commentItem}}" data-commentpid="{{commentItem.id}}" data-index="{{commentIndex}}" data-hash="#parentComment">{{commentItem.content}}</view>
+
+						<view class="replies" wx:if="{{commentItem.reply_list.total_count > 0}}">
+							<view class="reply" wx:for="{{commentItem.reply_list.data}}" wx:for-index="cindex" wx:for-item="child" wx:key="cindex">
+								<view class="replier">
+									<view class="cube-image">
+										<image src="{{child.user_headimg || '/images/no-avatar.png'}}" />
+									</view>
+									<view class="rep-name">
+										<label>{{child.thing_user_name ? child.thing_user_name : "匿名"}}</label>
+										<van-tag type="danger" wx:if="{{child.is_author}}">作者</van-tag>
+									</view>
+								</view>
+								<view class="rep-content" bindtap="onReflex" data-item="{{child}}" data-commentpid="{{commentItem.id}}" data-index="{{commentIndex}}" data-cindex="{{cindex}}" data-hash="#childComment">
+									<text>回复</text>
+									<text class="to">{{child.to_thing_user_name ? child.to_thing_user_name : "匿名"}}</text>
+									：{{child.content}}
+								</view>
+								<view class="rep-stats" bindtap="onFabulous" data-item="{{child}}" data-index="{{commentIndex}}" data-cindex="{{cindex}}">
+									<van-icon name="{{child.is_like ? 'like' : 'like-o'}}" color="{{child.is_like ? 'red' : ''}}" size="14px" />
+									<text class="num">{{time.praise(child.comment_likes)}}</text>
+								</view>
+							</view>
+							<view class="sub-total" wx:if="{{commentItem.reply_list.total_count > 1}}">
+								<text wx:if="{{listOption[index].is_more[commentIndex]}}" class="text" bindtap="onMoreReply" data-item="{{commentItem}}" data-index="{{commentIndex}}" data-cindex="{{cindex}}" >展开更多回复</text>
+							</view>
+						</view>
+					</view>
+					<view class="bottom-wrap">
+						<view class="bom-fixed">
+							<view class="prt">
+								<view class="text-input" bindtap="onPopMessage">
+									<view class="icon">
+										<van-icon name="edit" size="14px" />
+									</view>
+									<text>说点什么...</text>
+								</view>
+								<view class="icon-w">
+									<van-icon name="{{item.is_like ? 'like' : 'like-o'}}" color="{{item.is_like ? 'red' : ''}}" size="20px" bindtap="onBottomFabulous" data-index="{{index}}" />
+									<text>{{time.praise(item.likes)}}</text>
+								</view>
+								<view class="icon-w">
+									<van-icon name="{{item.is_collect ? 'star' : 'star-o'}}" color="{{item.is_collect ? 'red' : ''}}" size="20px" bindtap="onBottomCollection" data-index="{{index}}" />
+									<text>{{time.praise(item.collects)}}</text>
+								</view>
+							</view>
+						</view>
+					</view>
+				</scroll-view>
+			</van-popup>
+			<van-popup show="{{listOption[index].goodsPopupShow}}" position="bottom" data-index="{{index}}" bind:click-overlay="goodsPopupClose">
+				<view class="goods-box">
+					<view class="item" wx:for="{{listOption[index].goods_list}}" wx:for-item="g" wx:key="{{gindex}}" bindtap="toGoodsDetail" data-goodsid="{{g.goods_id}}">
+						<image src="{{g.goods_img ? g.goods_img : '/images/no-goods.png'}}" class="img" />
+						<view class="content">
+							<view class="title">{{g.goods_name}}</view>
+							<view class="bottom">
+								<text>￥{{g.price}}</text>
+								<text>￥{{g.market_price}}</text>
+							</view>
+						</view>
+					</view>
+				</view>
+			</van-popup>
+			<van-popup show="{{ listOption[index].sendPopupShow }}" position="bottom" bind:click-overlay="popupClose">
+				<view class="popup-warp">
+					<input class="popup-input" auto-focus bindinput="onPopupInput" value="{{listOption[index].sendOptions.content}}" placeholder="{{listOption[index].sendPopupPlaceholder}}"></input>
+					<text bindtap="onSend"  class="popup-text">发送</text>
+				</view>
+			</van-popup>
+		</view>
+	</swiper-item>
+</swiper>
+
+
+<wxs src="../grapDetail/time.wxs" module="time" />
+

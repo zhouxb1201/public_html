@@ -1,0 +1,37 @@
+<view wx:if="{{!isSuccess}}">
+	<view class="cell-wrap">
+		<van-cell title="违规类型" />
+		<van-radio-group value="{{ type }}">
+			<van-cell-group wx:for="{{reportAction}}" wx:for-item="item" wx:key="index">
+				<van-cell title="{{item.name}}" clickable="{{true}}" data-item="{{item}}" bind:click="onSelect">
+					<van-radio checked-color="#f44" name="{{item.violation_id}}" />
+				</van-cell>
+			</van-cell-group>
+		</van-radio-group>
+		<van-field value="{{message}}" bind:input="onMessage" type="textarea" placeholder="请描述你的举报内容" rows="1" autosize="{{autosize}}" />
+	</view>
+	<view class="upload-wrap">
+		<view class="img-group">
+			<view class="item" wx:for="{{arrImg}}" wx:key='index' wx:for-item='imgItem'>
+				<view class='btn-delete iconfont v-icon-close' data-index="{{index}}" bindtap='deleteImg'></view>
+				<view class="img">
+					<image mode="widthFix" src="{{imgItem}}"></image>
+				</view>
+			</view>
+			<view class="upload-img van-uploader" bindtap="onUploadImages" wx:if="{{arrImg.length < 3}}">
+				<view class="uploader">
+					<van-icon name="photograph" size='38px' class="upload-icon" />
+					<view class='img_num'>{{arrImg.length}}/3</view>
+				</view>
+			</view>
+		</view>
+	</view>
+	<view class="btn">
+		<van-button type="danger" loading="{{isLoading}}" round="{{true}}" block="{{true}}" size="normal" bind:click="onSubmit">举报</van-button>
+	</view>
+</view>
+<view class="success" wx:else>
+	<van-icon name="checked" color="#07c160" size="100px" />
+	<view class="h3">举报成功</view>
+	<view class="9">受理结果将会在消息通知中告知</view>
+</view>

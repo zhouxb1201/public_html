@@ -1,0 +1,15 @@
+<view class='logon'>
+  <view class='logon_btn'>
+    <view class='mini_img'>
+      <image src='{{head_img}}'></image>
+    </view>
+    <view class='content'>
+      <view class='title'>欢迎来到{{mall_name}}</view>
+      <view class='text'>为提供优质的服务，{{mall_name}}需要获取以下信息</view>
+      <view class='message'>· 你的公开信息(昵称、头像等）</view>
+    </view>
+    <button class='btn_sure' open-type='getUserInfo' bindgetuserinfo="bindGetUserInfo">微信授权登录</button>
+    <view class='phone_logon' bindtap='onIndexPage'>返回首页</view>
+  </view>
+  
+</view>

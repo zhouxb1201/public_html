@@ -1,0 +1,44 @@
+<view class='result_box'>
+  <view class="group">
+    <view class="van_cell">
+      <view class="good_card">
+        <view class="good_img">
+          <image mode="widthFix" src="{{resultData.goods_img?resultData.goods_img:'/images/no-goods.png'}}"></image>
+        </view>
+        <view class="content">
+          <view class="good_name">{{resultData.goods_name}}</view>
+          <view class="good_foot">
+            <view class="price">¥{{resultData.price}}</view>
+            <view class="buy_btn" wx:if='{{resultData.state == 1}}' bindtap="onGoodPage">点击购买</view>
+          </view>
+        </view>
+      </view>
+    </view>
+  </view>
+
+  <view class="group">
+    <view class="van_cell">
+      <view class="title">防伪信息</view>
+    </view>
+    <view class="van_cell">
+      <view class="tips">
+        <view class="tips_text">{{resultData.search_tips}}</view>
+        <view class="code">唯一防伪编码：{{resultData.anti_code}}</view>
+        <view class="code" wx:if='{{resultData.box_code}}'>箱码：{{resultData.box_code}}</view>
+      </view>
+    </view>
+  </view>
+
+  <view class="group">
+    <view class="van_cell">
+      <view class="title">商品溯源信息</view>
+    </view>
+    <steps steps='{{steps}}'></steps>
+  </view>
+
+  <view class="bottom_box" wx:if="{{upSrc != ''}}">
+    <view class="btn" bindtap="onOtherPage">查看上链信息</view>
+  </view> 
+
+
+</view>

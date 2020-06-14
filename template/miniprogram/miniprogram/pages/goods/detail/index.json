@@ -1,0 +1,11 @@
+{
+  "navigationBarTitleText": "商品明细",
+  "usingComponents":{
+    "phone-compoent":"/pages/component/phone/phonecom",
+    "login-component": "/pages/component/login/login",
+    "tem-component": "/pages/component/tem/index",
+    "my-poster": "/pages/component/poster/index",
+    "backtop-component": "/pages/component/backtop/backtop",
+    "topnav-component": "/pages/component/topnav/topnav"   
+  }  
+}

@@ -1,0 +1,303 @@
+{extend name="shop/new/Member/base" /}
+
+{block name="main"}
+<div class="v-main-right fl" style="background-color:#f5f5f5">
+    <div class="v-container" style="padding: 0">
+        <!--page-->
+        <div class="trade-box">
+            <div class="trade-item">
+                <div class="trade-item-title"><span class="text">交易进行</span></div>
+                <div class="trade-state">
+                    <a href="{:__URL('SHOP_MAIN/member/orderlist','status=0')}">
+                        <i class="icon-purse"></i>
+                        <p>待付款</p>
+                        <div class="border">{$order_status_num['wait_pay']}</div>
+                    </a>
+                    <a href="{:__URL('SHOP_MAIN/member/orderlist','status=1')}">
+                        <i class="icon-deliver"></i>
+                        <p>待发货</p>
+                        <div class="border">{$order_status_num['wait_delivery']}</div>
+                    </a>
+                    <a href="{:__URL('SHOP_MAIN/member/orderlist','status=2')}">
+                        <i class="icon-take"></i>
+                        <p>待收货</p>
+                        <div class="border">{$order_status_num['wait_recieved']}</div>
+                    </a>
+                    <a href="{:__URL('SHOP_MAIN/member/orderlist','status=5')}">
+                        <i class="icon-purse"></i>
+                        <p>待评价</p>
+                        <div class="border">{$order_status_num['wait_evaluate']}</div>
+                    </a>
+
+                </div>
+            </div>
+            <div class="trade-item">
+                <div class="trade-item-title"><span class="text">售后服务</span></div>
+                <div class="trade-state">
+                    <a href="{:__URL('SHOP_MAIN/member/orderlist','status=5')}">
+                        <i class="icon-paying"></i>
+                        <p>退款中</p>
+                        <div class="border">{$order_status_num['refunding']}</div>
+                    </a>
+                    <a href="{:__URL('SHOP_MAIN/member/orderlist','status=5')}">
+                        <i class="icon-tuihuo"></i>
+                        <p>退货</p>
+                        <div class="border">{$order_status_num['refunded_goods']}</div>
+                    </a>
+
+                </div>
+            </div>
+        </div>
+        <div class="cost-box">
+            <div  {if $isCoupon==1 && $isPoint==1} class="cost-item cost-item-three"{elseif $isPoint==1}class="cost-item" {elseif $isCoupon==1}class="cost-item"{else}class="cost-item cost-item-one"{/if}>
+                <a href="{:__URL('SHOP_MAIN/member/balancelist')}"  class="item-three">
+                    <div class="title"><i class="icon-financial"></i>余额</div>
+                    <div class="num">{$member_info['balance']}元</div>
+                </a>
+            </div>
+            <!-- <div  {if $isCoupon==1 && $isPoint==1} class="cost-item cost-item-three"{elseif $isPoint==1}class="cost-item" {elseif $isCoupon==1}class="cost-item"{else}class="cost-item cost-item-one"{/if}>
+                <a href="{:__URL('SHOP_MAIN/member/balancelist')}"  class="item-three">
+                    <div class="title"><i class="icon-financial"></i>成长值</div>
+                    <div class="num">{$member_info['growth_num']}</div>
+                </a>
+            </div> -->
+            {if $isPoint==1}
+            <div {if $isCoupon==1 && $isPoint==1} class="cost-item cost-item-three"{elseif $isPoint==1}class="cost-item"{/if}>
+                <a href="{:__URL('SHOP_MAIN/member/integrallist')}"  class="item-three">
+                    <div class="title"><i class="icon-money"></i>积分</div>
+                    <div class="num">{$member_info['point']}积分</div>
+                </a>
+            </div>
+            {/if}
+            {if $isCoupon==1}
+            <div {if $isCoupon==1 && $isPoint==1} class="cost-item cost-item-three"{elseif $isCoupon==1}class="cost-item"{/if} >
+                <a href="{:__URL('ADDONS_SHOP_MAIN','addons=couponList')}" class="item-three">
+                    <div class="title"><i class="icon-Coupon2"></i>优惠券</div>
+                    <div class="num">{if $vouchersCount}{$vouchersCount}{else}0{/if}张</div>
+                </a>
+            </div>
+            {/if}
+            <div {if $isCoupon==1 && $isPoint==1} class="cost-item"{elseif $isPoint==1}class="cost-item" {elseif $isCoupon==1}class="cost-item cost-item-three"{else}class="cost-item"{/if}>
+                <div class="safe">安全等级</div>
+                {if condition="$member_info['user_info']['user_tel'] neq '' and $member_info['user_info']['user_email'] neq ''"}
+                <div class="safe-level clearfix">
+                    <span class="state red fl">很高</span>
+                    <div class="level-pro fl">
+                        <div class="user-pro pro-low" style="width:80%;"></div>
+                    </div>
+                    <a class="fl promote-txt" href="{:__URL('SHOP_MAIN/member/usersecurity')}">提升></a>
+                </div>
+                {elseif condition="$member_info['user_info']['user_tel'] neq '' OR $member_info['user_info']['user_email'] neq ''"/}
+                <div class="safe-level clearfix">
+                    <span class="state red fl">良好</span>
+                    <div class="level-pro fl">
+                        <div class="user-pro pro-low" style="width:50%;"></div>
+                    </div>
+                    <a class="fl promote-txt" href="{:__URL('SHOP_MAIN/member/usersecurity')}">提升></a>
+                </div>
+                {else}
+                <div class="safe-level clearfix">
+                    <span class="state red fl">较低</span>
+                    <div class="level-pro fl">
+                        <div class="user-pro pro-low" style="width:30%;"></div>
+                    </div>
+                    <a class="fl promote-txt" href="{:__URL('SHOP_MAIN/member/usersecurity')}">提升></a>
+                </div>
+                {/if}
+                <div class="phone-txt">
+                    <span class="phone"><i class="icon-phone"></i>手机：{$member_info['user_info']['user_tel']}</span>
+                    <a href="{:__URL('SHOP_MAIN/member/usersecurity','atc=user_mobile')}" class="fr remove">更改手机</a>
+                </div>
+                {if $notice['noticeEmail']==1}
+                {if condition="$member_info['user_info']['user_email'] neq ''"}
+                <div class="email-txt">
+                    <span class="phone"><i class="icon-phone"></i>邮箱：{$member_info['user_info']['user_email']}<a href="{:__URL('SHOP_MAIN/member/usersecurity','atc=user_email')}" class="fr">更改邮箱</a></span>
+                </div>
+                {else}
+                <div class="email-txt">
+                    <span class="phone"><i class="icon-phone"></i>邮箱：<a href="{:__URL('SHOP_MAIN/member/usersecurity','atc=user_email')}">未绑定</a></span>
+                </div>
+                {/if}
+                {/if}
+            </div>
+        </div>
+
+        <div class="orderNews">
+            <div class="orderNews-item clearfix">
+                <div class="trade-item-title"><span class="text">订单消息</span><a href="{:__URL('SHOP_MAIN/member/orderlist')}" class="fr allOrder">查看所有订单></a></div>
+                {if $orderList['data']}
+                <div class="news-box">
+                    {foreach name="orderList['data']" item = "order"}
+                    <div class="news-box-item clearfix">
+                        <div class="td-goods fl td">
+                            <div class="item-pic">
+                                <a href="javascript:void(0);" class="item-img-box">
+                                    <img src="{$order['order_item_list'][0]['picture']['pic_cover_small']}" width="60px" height="60px" alt="">
+                                </a>
+                            </div>
+                            <div class="item-desc">
+                                <a href="{:__URL('SHOP_MAIN/goods/goodsinfo','goodsid='.$order['order_item_list'][0]['goods_id'])}" class="item-title">{$order.order_item_list.0.goods_name}</a>
+                                <p class="colors">
+                                    {foreach name="$order['order_item_list'][0]['spec']" id="vo1"}
+                                    {$vo1['spec_name']}{$vo1['spec_value_name']}
+                                    {/foreach}
+                                </p>
+                            </div>
+                        </div>
+                        <div class="td-name fl td"><span class="pa">{$order['user_name']}</span></div>
+                        <div class="td-apply fl td">
+                            <div class="pa">
+                                <p class="money">￥{$order['order_money']}</p>
+                                <p class="way">{$order['pay_type_name']}</p>
+                            </div>
+                        </div>
+                        <div class="td-state fl td" style="overflow: visible">
+                            <div class="pa">
+                                <p>{$order['status_name']}</p>
+                                {if $order['order_item_list'][0]['express_no']}
+                                <div>
+                                    <a href="javascript:void(0);" class="blue express_info logistics-a" data-name="{$order['order_item_list'][0]['express_name']}" data-id="{$order['order_item_list'][0]['express_no']}">
+                                      <i class="icon-logistics "></i>
+                                        <span>物流</span>
+                                        <div class="logistics-box" style="display: none">
+                                            <span class="logistics-span"></span>
+                                            <div class="logistics-img">
+                                                <ul class="express_list">
+
+                                                </ul>
+                                            </div>
+                                        </div>              
+                                    </a>
+                                </div>
+                                <!--<div class="logistics-box" style="display: none">
+                                    <span class="logistics-span"></span>
+                                    <div class="logistics-img">
+                                        <ul class="express_list">
+
+                                        </ul>
+                                    </div>
+                                </div>-->
+                                {/if}
+                            </div>
+                        </div>
+                        <div class="td-ol fl td">
+                            <div class="pa">
+                                {if $order['order_status']=0}
+                                <a href="javascript:void(0);" class="ol_a blue">立即付款</a>
+                                {/if}
+                                <a href="{:__URL('SHOP_MAIN/member/orderdetail','order_id='.$order['order_id'])}" class="ol_a">订单详情</a>
+                            </div>
+                        </div>
+                    </div>
+                    {/foreach}
+                </div>
+                {else}
+                <div class="news-box" style="text-align:center">暂无订单消息!</div>
+                {/if}
+            </div>
+            <div class="orderNews-item car">
+                <div class="trade-item-title"><span class="text">购物车</span></div>
+                {if $cart_list}
+                <div class="car-list">
+                    <ul>
+                        {foreach name="cart_list" item = "cart"}
+                        <li>
+                            <div class="cartbox clearfix">
+                                <div class="cartbox-pic">
+                                    <a href="{:__URL('SHOP_MAIN/goods/goodsinfo','goodsid='.$cart['goods_id'])}">
+                                        <img src="{$cart['picture_info']['pic_cover_small']}" width="50px" height="50px" alt="">
+                                    </a>
+                                </div>
+                                <div class="cartbox-desc">
+                                    <a href="{:__URL('SHOP_MAIN/goods/goodsinfo','goodsid='.$cart['goods_id'])}">
+                                        <div class="goodsTtlte">{$cart.goods_name}</div>
+                                        <div class="sizeColor">
+                                            {if $cart_info.sku_name_arr}
+                                            {foreach $cart_info.sku_name_arr as $vs}
+                                            <span>{$vs}</span>
+                                            {/foreach}
+                                            {/if}
+                                        </div>
+                                        <div class="price red">￥{$cart.price}元</div>
+                                    </a>
+                                </div>
+                            </div>
+                        </li>
+                        {/foreach}
+                    </ul>
+                </div>
+                <div class="car-view"><a href="{:__URL('SHOP_MAIN/goods/cart')}" class="blue">查看购物车></a></div>
+                {else}
+                    <div class="car-view"><a href="{:__URL('SHOP_MAIN/index/index')}">
+                        购物车还是空空的呢，去逛逛~
+                    </a></div>
+                {/if}
+            </div>
+        </div>
+
+        <div class="goodsCollection">
+            <div class="goodsCollection-title"><span class="text">商品收藏</span><a href="javascript:void(0);" class="fr allOrder">查看所有></a></div>
+            {if $goods_collection_list_count}
+            <div class="collection-main">
+                <ul class="clearfix">
+                    {foreach name="goods_collection_list" item="goods" key="k"}
+                    {notempty name="$goods['goods_id']"}
+                    <li>
+                        <a href="{:__URL('SHOP_MAIN/goods/goodsinfo','goodsid='.$goods['goods_id'])}" class="collection-href">
+                            <div class="collection-pic">
+                                <img src="{$goods['pic_cover']}" width="110px" height="110px" alt="">
+                                <div class="price">￥{$goods.price}</div>
+                            </div>
+                            <div class="collection-title">
+                                {$goods.goods_name}
+                            </div>
+                        </a>
+                    </li>
+                    {/notempty}
+                    {/foreach}
+                </ul>
+            </div>
+            {else/}
+            <div class="collection-main" style="text-align:center"> 暂无收藏！</div>
+            {/if}
+        </div>
+        <!--page-->
+    </div>
+</div>
+{/block}
+{block name="javascript"}
+<script>
+    require(['dialog'], function (Dialog) {
+        $('.logistics-a').hover(function () {
+           var _this=$(this);
+           var express_id = $(this).data('id');
+            var express_name = $(this).data('name');
+            $.ajax({
+                type: "post",
+                url: __URL(SHOPMAIN + "/member/getordergoodsexpressmessage"),
+                data : {"express_no":express_id},
+                success: function (data) {
+                    var html = '';
+                    if (data["code"] > 0) {
+                        html +='<li>'+express_name+':'+express_id+'</li>';
+                        $.each(data.data.data, function (k_ex, v_ex) {
+                            if(k_ex<2){
+                                html +='<li><p>'+v_ex.context+'</p><p class="time">'+v_ex.time+'</p></li>';
+                            }
+                          
+                        });
+                    } else {
+                        html +=  '<li>'+express_name+':'+express_id+'</li><li style="text-align:center">暂无物流信息</li>';
+                    }
+                    // _this.parent('p').siblings('.logistics-box').find('.express_list').html(html);
+                    // _this.parent('p').siblings('.logistics-box').show();
+                    _this.find('.express_list').html(html);
+                    _this.find('.logistics-box').show();
+                }
+            })
+        },function () {
+            $('.logistics-box').hide();
+        })
+    });
+</script>
+{/block}

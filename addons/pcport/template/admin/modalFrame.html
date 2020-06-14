@@ -1,0 +1,2872 @@
+
+{if $temp == 'header_mode'}
+<!--店铺头部-->
+<div id="header_dialog">
+	<div class="header-mode-json" style="display: none">{$result_json}</div>
+	<div class="modal-body">
+		<div class="moduleTips">模块小贴士：店招是商城必不可少的一部分，根据商城需求设置店招风格。</div>
+		<form class="form-horizontal" role="form">
+			<div class="form-group">
+				<label class="col-sm-2 control-label">店招信息</label>
+				<div class="col-sm-5">
+					<label class="radio-inline">
+						<input type="radio" name="header_type" id="defalt_type" value="defalt_type" {if $spec_attr.header_type=='defalt_type' || !$spec_attr.header_type} checked {/if}> 默认店招
+					</label>
+				</div>
+			</div>
+			<div class="form-group">
+				<label class="col-sm-2 control-label">店铺名称</label>
+				<div class="col-sm-5">
+					<input type="text" class="form-control" id="shopname" name="shopname" value="{$spec_attr.shopname}">
+				</div>
+				<div class="col-sm-4">
+					<label for="noshowname" class="checkbox-inline"><input type="checkbox" id="noshowname" name="noshowname" value="1" {if $spec_attr.noshow=='1'} checked {/if}> 不显示店铺名称</label>
+				</div>
+			</div>
+			<div class="form-group">
+				<label class="col-sm-2 control-label">背景图</label>
+				<div class="col-sm-3 infoTab">
+					<div class="picture-list" id="picture-list1">
+						{if $spec_attr['headerbg_img']}
+                              <a id="goods_pic_list" href="javascript:void(0);" class="close-box5">
+								  <i class="icon icon-danger" style="margin-right:10px;" title="删除"></i>
+								  <img src="{$spec_attr['headerbg_img']}">
+								  <input type="hidden" id="bgimg" name="bgimg" class="J-pic" value="{$spec_attr['headerbg_img']}">
+							  </a>
+						{else}
+								<a href="javascript:void(0);" class="plus-box" data-toggle="decoPicture5">
+									<i class="icon icon-plus"></i>
+									<!--<img src="{if $spec_attr['headerbg_img']}{$spec_attr['headerbg_img']}{else}http://iph.href.lu/200x50?text=1920x120{/if}" alt="">-->
+									<input type="hidden" id="bgimg" name="bgimg" class="J-pic" value="{$spec_attr['headerbg_img']}">
+								</a>
+						{/if}
+
+					</div>
+
+				</div>
+				<div class="col-sm-4">
+					<p class="form-control-static">宽1920px以内，高120px</p>
+				</div>
+			</div>
+			<input type="hidden" name="mode" value="{$temp}" />
+		</form>
+	</div>
+</div>
+
+{/if}
+
+
+{if $temp == 'home_nav_mode'}
+<!-- 首页菜单导航模态框 -->
+<div class="nav-mode-json" style="display: none">{$result_json}</div>
+<div id="homemenuNavs" class="menuNavs-dia">
+	<div class="modal-body">
+		<div class="moduleTips">模块小贴士：合理设置导航跳转，提高转化</div>
+		<form class="form-horizontal" role="form">
+			<div class="form-group">
+				<label class="col-sm-2 control-label">导航类型</label>
+				<div class="col-sm-5">
+					<label class="radio-inline">
+						<input type="radio" name="shopfor" id="shopDefa" checked> 默认导航
+					</label>
+				</div>
+			</div>
+			<div class="form-group">
+				<label class="col-sm-2 control-label">显示全部分类</label>
+				<div class="col-sm-5">
+					<label class="radio-inline">
+						<input type="radio" name="showcat" id="isSortYes" value="1" {if $spec_attr['showcat']==1} checked {/if}> 是
+					</label>
+					<label class="radio-inline">
+						<input type="radio" name="showcat" id="isSortNo" value="0" {if $spec_attr['showcat']!=1} checked {/if} > 否
+					</label>
+				</div>
+			</div>
+			<div class="form-group">
+				<label class="col-sm-2 control-label">首页分类展开</label>
+				<div class="col-sm-5">
+					<label class="radio-inline">
+						<input type="radio" name="slide" id="indexSortYes" value="1" {if $spec_attr['slide']==1} checked {/if}> 是
+					</label>
+					<label class="radio-inline">
+						<input type="radio" name="slide" id="indexSortNo" value="0" {if $spec_attr['slide']!=1} checked {/if}> 否
+					</label>
+				</div>
+			</div>
+			<div class="form-group">
+				<label class="col-sm-2 control-label">导航链接</label>
+				<div class="col-sm-9">
+					<!--表格-->
+					<table class="table table-hover v-table" border="1" style="margin-bottom: 0px">
+						<thead>
+						<tr>
+							<th>菜单名字</th>
+							<th>跳转链接</th>
+							<th>新窗口打开</th>
+							<th>排序</th>
+							<th>操作</th>
+						</tr>
+						</thead>
+						<tbody class="J-tbody">
+						{if !empty($navigator)}
+						{foreach $navigator  as $k => $nav}
+						<tr data-key="{$k}">
+							<td><input type="text" class="ipt80" name="navname[]" value="{$nav['name']}"></td>
+							<td><input type="text" name='navurl[]' value="{$nav['url']}" class="ipt80 J-navlink{$k}"><a href="javascript:void(0);" data-toggle="selectUrlPc"><i class="icon icon-link"></i></a></td>
+							<td>
+								<label for="opennew_{$k}" class="checkbox-inline"><input type="checkbox" id="opennew_{$k}"  name="opennew[]" {if $nav['opennew']==1} checked {/if}><span>是</span></label>
+							</td>
+							<td>
+								<a href="javascript:void(0);" onclick='moveUp(this)'><i class="icon icon-up-arrow"></i></a>
+								<a href="javascript:void(0);" onclick='moveDown(this)'><i class="icon icon-down-arrow"></i></a>
+							</td>
+							<td><a href="javascript:void(0);" class="del1" data-id="{$nav['id']}">删除</a></td>
+							<input type="hidden" name="navid[]" value="{$nav['id']}">
+						</tr>
+						{/foreach}
+						{/if}
+						</tbody>
+						<input type="hidden" name="mode" value="{$temp}" />
+					</table>
+					<div class="addOneBorder"><a href="javascript:void(0);" class="addOne">+增加一个</a></div>
+				</div>
+			</div>
+		</form>
+	</div>
+</div>
+<script type="text/javascript">
+require(['utilAdmin'],function(utilAdmin){
+	$('.addOneBorder').on('click','a',function(){
+		addcopy();
+	})
+	$('body').on('click','.del1',function(){
+		var id=$(this).attr('data-id');
+		remove_nav($(this),id);
+	})
+    function addcopy(){
+        var selected_count = $('.J-tbody').find('tr').length;
+        var alltr = $('.J-tbody').find('tr');
+        var arrkey = [];
+        alltr.each(function(){
+            arrkey.push($(this).data('key'));
+        })
+        var max = 0;
+        if(arrkey.length>0){
+            max = utilAdmin.arrayMax(arrkey);//取最大值
+        }
+        var html='';
+        html +='<tr>';
+        html +='<td><input type="text" name="navname[]" class="ipt80" ></td>';
+        html +='<td><input type="text" name="navurl[]" class="ipt80 J-navlink'+(max+1)+'"><a href="javascript:void(0);" data-toggle="selectUrlPc"><i class="icon icon-link"></i></a></td>';
+        html +='<td>';
+        html +='<label for="opennew_'+(max+1)+'" class="checkbox-inline"><input type="checkbox" id="opennew_'+(max+1)+'"  name="opennew[]"><span>是</span></label>';
+        html +='</td>';
+        html +='<td>';
+        html +='<a href="javascript:void(0);" onclick="moveUp(this)"><i class="icon icon-up-arrow"></i></a>';
+        html +='<a href="javascript:void(0);" onclick="moveDown(this)"><i class="icon icon-down-arrow"></i></a>';
+        html +='</td>';
+        html +='<td><a href="javascript:void(0);" class="del1" data-id="0">删除</a></td>';
+        html +='<input type="hidden" name="navid[]">';
+        html +='</tr>';
+        $('.J-tbody').append(html);
+    }
+    function remove_nav(obj,id){
+        //获取当前<tr>
+        var current = obj.parent().parent();
+        if(id > 0){
+            Ajax.call("{$navremoveUrl}", "id=" + id , function(data){
+                if(data.code==1){
+                    current.remove();
+                }else{
+                    layer.msg(data.message,{icon:2,time:1000});
+                }
+            }, 'POST', 'JSON');
+        }else{
+            current.remove();
+        }
+    }
+
+})
+</script>
+{/if}
+
+{if $temp == 'home_nav_mode_response'}
+<!--首页菜单回调-->
+<div class="navigator-home-json" style="display: none">{$result_json}</div>
+<div class="nav_main" >
+	<ul class="clearfix navitems" >
+		{if $attr['showcat']==1}
+		<li class="navitems-group"><a class="fore active" href="{:__URLS('SHOP_MAIN/goods/category')}" target="_blank">全部分类</a></li>
+		{if $attr['slide']==1}
+		<div class="nav-con">
+			<ul class="normal-nav">
+                <li class="pr"><a href="javascript:void(0);">女装 / 男装 / 内衣<span class="pa0"><b class="icon-right-arrow icon-dir-right3"></b></span></a> </li>
+                <li class="pr"><a href="javascript:void(0);">女装 / 男装 / 内衣<span class="pa0"><b class="icon-right-arrow icon-dir-right3"></b></span></a> </li>
+                <li class="pr"><a href="javascript:void(0);">女装 / 男装 / 内衣<span class="pa0"><b class="icon-right-arrow icon-dir-right3"></b></span></a> </li>
+                <li class="pr"><a href="javascript:void(0);">女装 / 男装 / 内衣<span class="pa0"><b class="icon-right-arrow icon-dir-right3"></b></span></a> </li>
+                <li class="pr"><a href="javascript:void(0);">女装 / 男装 / 内衣<span class="pa0"><b class="icon-right-arrow icon-dir-right3"></b></span></a> </li>
+                <li class="pr"><a href="javascript:void(0);">女装 / 男装 / 内衣<span class="pa0"><b class="icon-right-arrow icon-dir-right3"></b></span></a> </li>
+                <li class="pr"><a href="javascript:void(0);">女装 / 男装 / 内衣<span class="pa0"><b class="icon-right-arrow icon-dir-right3"></b></span></a> </li>
+                <li class="pr"><a href="javascript:void(0);">女装 / 男装 / 内衣<span class="pa0"><b class="icon-right-arrow icon-dir-right3"></b></span></a> </li>
+                <li class="pr"><a href="javascript:void(0);">女装 / 男装 / 内衣<span class="pa0"><b class="icon-right-arrow icon-dir-right3"></b></span></a> </li>
+                <li class="pr"><a href="javascript:void(0);">女装 / 男装 / 内衣<span class="pa0"><b class="icon-right-arrow icon-dir-right3"></b></span></a> </li>
+                <li class="pr"><a href="javascript:void(0);">女装 / 男装 / 内衣<span class="pa0"><b class="icon-right-arrow icon-dir-right3"></b></span></a> </li>
+			</ul>
+			<div class="index-sort-detail">
+				<div class="cate-list">
+					<div class="sort-two-item">
+						<!--标题-->
+						<div class="sort-two-item-title">
+							<h4>女装</h4>
+							<a class="more" href="javascript:void(0);">更多></a>
+						</div>
+						<!--三级分类-->
+						<div class="sort-three-item">
+							<a href="javascript:void(0);">羽绒服</a>
+							<a href="javascript:void(0);">连衣裙</a>
+							<a href="javascript:void(0);">羽绒服</a>
+							<a href="javascript:void(0);">连衣裙</a>
+							<a href="javascript:void(0);">羽绒服</a>
+							<a href="javascript:void(0);">连衣裙</a>
+							<a href="javascript:void(0);">羽绒服</a>
+							<a href="javascript:void(0);">连衣裙</a>
+							<a href="javascript:void(0);">羽绒服</a>
+							<a href="javascript:void(0);">连衣裙</a>
+							<a href="javascript:void(0);">羽绒服</a>
+							<a href="javascript:void(0);">连衣裙</a>
+							<a href="javascript:void(0);">羽绒服</a>
+							<a href="javascript:void(0);">连衣裙</a>
+							<a href="javascript:void(0);">羽绒服</a>
+							<a href="javascript:void(0);">连衣裙</a>
+							<a href="javascript:void(0);">羽绒服</a>
+							<a href="javascript:void(0);">连衣裙</a>
+							<a href="javascript:void(0);">羽绒服</a>
+							<a href="javascript:void(0);">连衣裙</a>
+							<a href="javascript:void(0);">羽绒服</a>
+							<a href="javascript:void(0);">连衣裙</a>
+							<a href="javascript:void(0);">羽绒服</a>
+							<a href="javascript:void(0);">连衣裙</a>
+							<a href="javascript:void(0);">羽绒服</a>
+							<a href="javascript:void(0);">连衣裙</a>
+							<a href="javascript:void(0);">羽绒服</a>
+							<a href="javascript:void(0);">连衣裙</a>
+							<a href="javascript:void(0);">羽绒服</a>
+							<a href="javascript:void(0);">连衣裙</a>
+							<a href="javascript:void(0);">羽绒服</a>
+							<a href="javascript:void(0);">连衣裙</a>
+						</div>
+					</div>
+					<div class="sort-two-item">
+						<!--标题-->
+						<div class="sort-two-item-title">
+							<h4>女装</h4>
+							<a class="more" href="javascript:void(0);">更多></a>
+						</div>
+						<!--三级分类-->
+						<div class="sort-three-item">
+							<a href="javascript:void(0);">羽绒服</a>
+							<a href="javascript:void(0);">连衣裙</a>
+							<a href="javascript:void(0);">羽绒服</a>
+							<a href="javascript:void(0);">连衣裙</a>
+							<a href="javascript:void(0);">羽绒服</a>
+							<a href="javascript:void(0);">连衣裙</a>
+							<a href="javascript:void(0);">羽绒服</a>
+							<a href="javascript:void(0);">连衣裙</a>
+							<a href="javascript:void(0);">羽绒服</a>
+							<a href="javascript:void(0);">连衣裙</a>
+							<a href="javascript:void(0);">羽绒服</a>
+							<a href="javascript:void(0);">连衣裙</a>
+							<a href="javascript:void(0);">羽绒服</a>
+							<a href="javascript:void(0);">连衣裙</a>
+							<a href="javascript:void(0);">羽绒服</a>
+							<a href="javascript:void(0);">连衣裙</a>
+							<a href="javascript:void(0);">羽绒服</a>
+							<a href="javascript:void(0);">连衣裙</a>
+							<a href="javascript:void(0);">羽绒服</a>
+							<a href="javascript:void(0);">连衣裙</a>
+							<a href="javascript:void(0);">羽绒服</a>
+							<a href="javascript:void(0);">连衣裙</a>
+							<a href="javascript:void(0);">羽绒服</a>
+							<a href="javascript:void(0);">连衣裙</a>
+							<a href="javascript:void(0);">羽绒服</a>
+							<a href="javascript:void(0);">连衣裙</a>
+							<a href="javascript:void(0);">羽绒服</a>
+							<a href="javascript:void(0);">连衣裙</a>
+							<a href="javascript:void(0);">羽绒服</a>
+							<a href="javascript:void(0);">连衣裙</a>
+							<a href="javascript:void(0);">羽绒服</a>
+							<a href="javascript:void(0);">连衣裙</a>
+						</div>
+					</div>
+					<div class="sort-two-item">
+						<!--标题-->
+						<div class="sort-two-item-title">
+							<h4>女装</h4>
+							<a class="more" href="javascript:void(0);">更多></a>
+						</div>
+						<!--三级分类-->
+						<div class="sort-three-item">
+							<a href="javascript:void(0);">羽绒服</a>
+							<a href="javascript:void(0);">连衣裙</a>
+							<a href="javascript:void(0);">羽绒服</a>
+							<a href="javascript:void(0);">连衣裙</a>
+							<a href="javascript:void(0);">羽绒服</a>
+							<a href="javascript:void(0);">连衣裙</a>
+							<a href="javascript:void(0);">羽绒服</a>
+							<a href="javascript:void(0);">连衣裙</a>
+							<a href="javascript:void(0);">羽绒服</a>
+							<a href="javascript:void(0);">连衣裙</a>
+							<a href="javascript:void(0);">羽绒服</a>
+							<a href="javascript:void(0);">连衣裙</a>
+							<a href="javascript:void(0);">羽绒服</a>
+							<a href="javascript:void(0);">连衣裙</a>
+							<a href="javascript:void(0);">羽绒服</a>
+							<a href="javascript:void(0);">连衣裙</a>
+							<a href="javascript:void(0);">羽绒服</a>
+							<a href="javascript:void(0);">连衣裙</a>
+							<a href="javascript:void(0);">羽绒服</a>
+							<a href="javascript:void(0);">连衣裙</a>
+							<a href="javascript:void(0);">羽绒服</a>
+							<a href="javascript:void(0);">连衣裙</a>
+							<a href="javascript:void(0);">羽绒服</a>
+							<a href="javascript:void(0);">连衣裙</a>
+							<a href="javascript:void(0);">羽绒服</a>
+							<a href="javascript:void(0);">连衣裙</a>
+							<a href="javascript:void(0);">羽绒服</a>
+							<a href="javascript:void(0);">连衣裙</a>
+							<a href="javascript:void(0);">羽绒服</a>
+							<a href="javascript:void(0);">连衣裙</a>
+							<a href="javascript:void(0);">羽绒服</a>
+							<a href="javascript:void(0);">连衣裙</a>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		{/if}
+		{/if}
+		{foreach $navigator as $nav}
+		<li class="navitems-group"><a class="fore" href="{if $nav['url']}{$nav['url']}{else}javascript:void(0){/if}" {if $nav['opennew'] == 1} target="_blank"{/if}>{$nav['name']}</a></li>
+		{/foreach}
+	</ul>
+</div>
+
+{/if}
+
+
+{if $temp == 'nav_mode'}
+<!-- 店铺导航模态框 -->
+<div class="nav-mode-json" style="display: none">{$result_json}</div>
+<div id="menuNavs" class="menuNavs-dia">
+	<div class="modal-body body_info">
+		<div class="moduleTips">模块小贴士：合理设置导航跳转，提高转化</div>
+		<form class="form-horizontal" role="form">
+			<div class="form-group">
+				<label class="col-sm-2 control-label">导航类型</label>
+				<div class="col-sm-5">
+					<label class="radio-inline">
+						<input type="radio" name="shopfor" id="shopDefa" checked> 默认导航
+					</label>
+				</div>
+			</div>
+			<div class="form-group">
+				<label class="col-sm-2 control-label">导航链接</label>
+				<div class="col-sm-9">
+					<!--表格-->
+					<table class="table table-hover v-table" border="1" style="margin-bottom: 0px">
+						<thead>
+						<tr>
+							<th>菜单名字</th>
+							<th>跳转链接</th>
+							<th>新窗口打开</th>
+							<th>排序</th>
+							<th>操作</th>
+						</tr>
+						</thead>
+						<tbody class="J-tbody">
+						{if !empty($navigator)}
+						{foreach $navigator  as $k => $nav}
+						<tr data-key="{$k}">
+							<td><input type="text" name="navname[]" value="{$nav['name']}" class="ipt80"></td>
+							<td><input type="text" name='navurl[]' value="{$nav['url']}" class="ipt80 J-navlink{$k}"><a href="javascript:void(0);" data-toggle="selectUrlPc"><i class="icon icon-link"></i></a></td>
+							<td>
+								<label for="opennew_{$k}" class="checkbox-inline"><input type="checkbox" id="opennew_{$k}"  name="opennew[]" {if $nav['opennew']==1} checked {/if}><span>是</span></label>
+							</td>
+							<td>
+								<a href="javascript:void(0);" onclick='moveUp(this)'><i class="icon icon-up-arrow"></i></a>
+								<a href="javascript:void(0);" onclick='moveDown(this)'><i class="icon icon-down-arrow"></i></a>
+							</td>
+							<td><a href="javascript:void(0);" onclick="remove_nav(this,{$nav['id']})">删除</a></td>
+							<input type="hidden" name="navid[]" value="{$nav['id']}">
+						</tr>
+						{/foreach}
+						{/if}
+						</tbody>
+						<input type="hidden" name="mode" value="{$temp}" />
+					</table>
+					<div class="addOneBorder"><a href="javascript:void(0);" class="addOne">+增加一个</a></div>
+				</div>
+			</div>
+		</form>
+	</div>
+</div>
+<script type="text/javascript">
+    function remove_nav(obj,id){
+        //获取当前<tr>
+        var current = $(obj).parent().parent();
+        if(id > 0){
+            Ajax.call("{$navremoveUrl}", "id=" + id , function(data){
+                if(data.code==1){
+                    current.remove();
+                }else{
+                    layer.msg(data.message,{icon:2,time:1000});
+                }
+            }, 'POST', 'JSON');
+        }else{
+            current.remove();
+        }
+    }
+  require(['utilAdmin'],function(utilAdmin){
+	  $('.addOneBorder').on('click','.addOne',function(){
+		  addcopy();
+	  })
+    function addcopy(){
+        var selected_count = $('.J-tbody').find('tr').length;
+        var alltr = $('.J-tbody').find('tr');
+        var arrkey = [];
+        alltr.each(function(){
+            arrkey.push($(this).data('key'));
+        })
+        var max = 0;
+        if(arrkey.length>0){
+            max = utilAdmin.arrayMax(arrkey);//取最大值
+        }
+        // var onclick = "addSelecturl(this, '','"+(max+1)+"')";
+        var html='';
+        html +='<tr>';
+        html +='<td><input type="text" name="navname[]" class="ipt80" ></td>';
+        html +='<td><input type="text" name="navurl[]" class="ipt80 J-navlink'+(max+1)+'"><a href="javascript:void(0);" data-toggle="selectUrlPc"><i class="icon icon-link"></i></a></td>';
+        html +='<td>';
+        html +='<label for="opennew_'+(max+1)+'" class="checkbox-inline"><input type="checkbox" id="opennew_'+(max+1)+'"  name="opennew[]"><span>是</span></label>';
+        html +='</td>';
+        html +='<td>';
+        html +='<a href="javascript:void(0);" onclick="moveUp(this)"><i class="icon icon-up-arrow"></i></a>';
+        html +='<a href="javascript:void(0);" onclick="moveDown(this)"><i class="icon icon-down-arrow"></i></a>';
+        html +='</td>';
+        html +='<td><a href="javascript:void(0);" onclick="remove_nav(this,0)">删除</a></td>';
+        html +='<input type="hidden" name="navid[]">';
+        html +='</tr>';
+        $('.J-tbody').append(html);
+    }
+    
+  })  
+
+</script>
+{/if}
+
+{if $temp == 'navigator_home'}
+<!--店铺导航回调-->
+<div class="navigator-home-json" style="display: none">{$result_json}</div>
+{foreach $navigator as $nav}
+<li class="navitems-group"><a class="fore" href="{if $nav['url']}{$nav['url']}{else}javascript:void(0){/if}" {if $nav['opennew'] == 1} target="_blank"{/if}>{$nav['name']}</a></li>
+{/foreach}
+{/if}
+
+{if $temp == 'shop_banner'}
+<!--轮播图、底部广告、顶部广告图回调-->
+{if $mode == 'lunbo'}
+<div id="bannerEdit" class='bannerEdit-dia'>
+	<div class="shop_banner_json" style="display: none">{$result_json}</div>
+	<div class="modal-body">
+		<div class="moduleTips">模块小贴士：可以最多展示8张图片，通常用于精彩活动、主打商品等。尺寸1920px*520px，最少上传2张图片最多8张。</div>
+		<form class="form-horizontal" role="form">
+
+			<div class="form-group">
+				<label class="col-sm-2 control-label">轮播图片</label>
+				<div class="col-sm-10">
+					<!--表格-->
+					<table class="table table-hover v-table table-bordered">
+						<thead>
+						<tr>
+							<th>缩略图</th>
+							<th>图片链接</th>
+							<th>跳转链接</th>
+							<th>新窗口打开</th>
+							<th>排序</th>
+							<th>操作</th>
+						</tr>
+						</thead>
+						<tbody class="J-tbody">
+						{if isset($banner_list) && !empty($banner_list)}
+						{foreach $banner_list as $ki => $item}
+						<tr data-key="{$ki}"><td><div class="add-lbt"><img src="{$item['pic_src']}" class="pic_src{$ki}" alt=""></div></td>
+							<td class="td20"><input type="text" name="pic_link[]" class="ipt80 pic_link" value="{$item['pic_src']}"><a href="javascript:void(0);" data-toggle="decoPicture2"><input type="hidden" id="pic_src{$ki}" name="pic_src[]" class="J-pic" value="{$item['pic_src']}"><i class="icon icon-pic"></i></a></td>
+							<td class="td20"><input type="text" name="link[]" class="ipt80 floorpic{$ki}" {if isset($item['link'])} value="{$item['link']}" {/if}><a href="javascript:void(0);" data-toggle="selectUrlPc" ><i class="icon icon-link"></i></a></td>
+							<td><label for="opennew_{$ki}" class="checkbox-inline"><input type="checkbox" id="opennew_{$ki}"  name="opennew[]" {if $item['opennew']==1} checked {/if}><span>是</span></label></td>
+							<td>
+								<a href="javascript:void(0);" onclick="moveUp(this)"><i class="icon icon-up-arrow"></i></a>
+								<a href="javascript:void(0);" onclick="moveDown(this)"><i class="icon icon-down-arrow"></i></a>
+							</td>
+							<td><a href="javascript:void(0);" onclick="delcopy(this)">删除</a></td></tr>
+						{/foreach}
+						{/if}
+						</tbody>
+
+					</table>
+					<div class="addOneBorder"><a href="javascript:void(0);" class="addOne">+增加一个</a></div>
+				</div>
+
+			</div>
+			<input type="hidden" name="mode" value="{$temp}" />
+			<input type="hidden" name="service_count" value="{$pic_number}">
+		</form>
+	</div>
+</div>
+<script type="text/javascript">
+  require(['utilAdmin'],function(utilAdmin){
+    function addcopy() {
+        var can_select_num = Number($("input[name='service_count']").val());
+        var selected_count = $('.J-tbody').find('tr').length;
+        var alltr = $('.J-tbody').find('tr');
+        var arrkey = [];
+        alltr.each(function(){
+            arrkey.push($(this).data('key'));
+        })
+        var max = 0;
+        if(arrkey.length>0){
+            max = utilAdmin.arrayMax(arrkey);//取最大值
+        }
+        if (selected_count >= can_select_num) {
+            layer.msg('最多只能添加' + can_select_num + '个');
+            return false;
+        }
+        var html = "";
+        // var onclick = "addSelecturl(this, '', '"+(max+1)+"', 'floorpic')";
+        // var onclickpic = "showAlbum(this, 1, 'selectpic(this)');";
+
+        html += '<tr data-key="'+(max+1)+'"><td><div class="add-lbt"><img src="http://iph.href.lu/1920x520" class="pic_src'+(max+1)+'" alt=""></div></td>';
+        html += '<td class="td20"><input type="text" name="pic_link[]" class="ipt80 pic_link"><a href="javascript:void(0);" data-toggle="decoPicture2"><input type="hidden" id="pic_src'+(max+1)+'" name="pic_src[]" class="J-pic" value=""><i class="icon icon-pic"></i></a></td>';
+        html += '<td class="td20"><input type="text" name="link[]" class="ipt80 floorpic'+(max+1)+'"><a href="javascript:void(0);" data-toggle="selectUrlPc" ><i class="icon icon-link"></i></a></td>';
+        html += '<td><label for="opennew_'+(max+1)+'" class="checkbox-inline"><input type="checkbox" id="opennew_'+(max+1)+'"  name="opennew[]"><span>是</span></label></td>';
+        html += '<td>';
+        html += '<a href="javascript:void(0);" onclick="moveUp(this)"><i class="icon icon-up-arrow"></i></a>';
+        html += '<a href="javascript:void(0);" onclick="moveDown(this)"><i class="icon icon-down-arrow"></i></a>';
+        html += '</td>';
+        html += '<td><a href="javascript:void(0);" onclick="delcopy(this)">删除</a></td></tr>';
+        $('.J-tbody').append(html);
+    }
+	$('.addOneBorder').on('click','.addOne',function(){
+		addcopy();
+	})
+        $('.J-tbody').on('change','.pic_link',function(){
+            var key = $(this).parents('tr').data('key');
+            console.log(key);
+            console.log($(this).val());
+            $('.pic_src'+key).attr('src',$(this).val());
+            $('#pic_src'+key).val($(this).val());
+        });
+  })  
+
+
+
+</script>
+{/if}
+{if $mode == 'bottomBanner'}
+<div id="bannerEdit" class='bannerEdit-dia'>
+	<div class="shop_banner_json" style="display: none">{$result_json}</div>
+	<div class="modal-body">
+		<div class="moduleTips">模块小贴士：可以展示一张图片，通常用于产品、质量、认证商标等。尺寸1200px。</div>
+        <form class="form-horizontal" role="form">
+            <div class="form-group">
+                <label class="col-sm-2 control-label">显示隐藏</label>
+                <div class="col-sm-6">
+                    <label class="radio-inline">
+                        <input type="radio" name="is_show" id="isshow1" value="1" {if $spec_attr['is_show']==1} checked {/if}>是
+                    </label>
+                    <label class="radio-inline">
+                        <input type="radio" name="is_show" id="isshow2"  value="0" {if $spec_attr['is_show']!=1} checked {/if}>否
+                    </label>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-sm-2 control-label">缩略图</label>
+                <div class="col-sm-6">
+                    <img src="{if $spec_attr['pic_src'][0]}{$spec_attr['pic_src'][0]}{else}http://iph.href.lu/147x45{/if}" class="pic_src" alt="" width="147" height="45">
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-sm-2 control-label">图片地址</label>
+                <div class="col-sm-6">
+                    <input type="text" name="pic_link[]" class="ipt80 pic_link" value="{$spec_attr['pic_src'][0]}"><a href="javascript:void(0);" data-toggle="decoPicture1"><input type="hidden" id="pic_src" name="pic_src[]" class="J-pic" value="{$spec_attr['pic_src'][0]}"><i class="icon icon-pic"></i></a>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="col-sm-2 control-label">跳转链接</label>
+                <div class="col-sm-6">
+                    <input type="text" name="link[]" class="ipt80 floorpic0" {if isset($spec_attr['link'])} value="{$spec_attr['link']}" {/if}><a href="javascript:void(0);" data-toggle="selectUrlPc" ><i class="icon icon-link"></i></a>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="col-sm-2 control-label">新窗口打开</label>
+                <div class="col-sm-6">
+                    <label class="radio-inline">
+                        <input type="radio" name="opennew[]" id="opennew1" value="1" {if $spec_attr['opennew'][0]==1} checked {/if}>是
+                    </label>
+                    <label class="radio-inline">
+                        <input type="radio" name="opennew[]" id="opennew2"  value="0" {if $spec_attr['opennew'][0]!=1} checked {/if}>否
+                    </label>
+                </div>
+            </div>
+            
+        </form>
+	</div>
+</div>
+<script type="text/javascript">
+  require(['utilAdmin'],function(utilAdmin){  
+    $('.pic_link').change(function(){
+
+            $('.pic_src').attr('src',$(this).val());
+            $('#pic_src').val($(this).val());
+        });
+  })
+</script>
+{/if}
+{if $mode == 'topBanner'}
+<div id="bannerEdit" class='bannerEdit-dia'>
+	<div class="shop_banner_json" style="display: none">{$result_json}</div>
+	<div class="modal-body">
+		<div class="moduleTips">模块小贴士：可以展示一张图片，通常用于产品、质量、认证商标等。尺寸1920px*80px。</div>
+		<form class="form-horizontal" role="form">
+
+			<div class="form-group">
+				<label class="col-sm-2 control-label">缩略图</label>
+				<div class="col-sm-6">
+					<img src="{if $spec_attr['pic_src'][0]}{$spec_attr['pic_src'][0]}{else}http://iph.href.lu/147x45{/if}" class="pic_src" alt="" width="147" height="45">
+				</div>
+			</div>
+			<div class="form-group">
+				<label class="col-sm-2 control-label">图片地址</label>
+				<div class="col-sm-6">
+					<input type="text" name="pic_link[]" class="ipt80 pic_link" value="{$spec_attr['pic_src'][0]}"><a href="javascript:void(0);" data-toggle="decoPicture1"><input type="hidden" id="pic_src" name="pic_src[]" class="J-pic" value="{$spec_attr['pic_src'][0]}"><i class="icon icon-pic"></i></a>
+				</div>
+			</div>
+
+			<div class="form-group">
+				<label class="col-sm-2 control-label">跳转链接</label>
+				<div class="col-sm-6">
+					<input type="text" name="link[]" class="ipt80 floorpic0" {if isset($spec_attr['link'])} value="{$spec_attr['link']}" {/if}><a href="javascript:void(0);" data-toggle="selectUrlPc"><i class="icon icon-link"></i></a>
+				</div>
+			</div>
+
+			<div class="form-group">
+				<label class="col-sm-2 control-label">新窗口打开</label>
+				<div class="col-sm-6">
+					<label class="radio-inline">
+						<input type="radio" name="opennew[]" id="opennew1" value="1" {if $spec_attr['opennew'][0]==1} checked {/if}>是
+					</label>
+					<label class="radio-inline">
+						<input type="radio" name="opennew[]" id="opennew2"  value="0" {if $spec_attr['opennew'][0]!=1} checked {/if}>否
+					</label>
+				</div>
+			</div>
+		</form>
+	</div>
+</div>
+<script type="text/javascript">
+	require(['utilAdmin'],function(utilAdmin){
+$('.pic_link').change(function(){
+            $('.pic_src').attr('src',$(this).val());
+            $('#pic_src').val($(this).val());
+        });
+	})
+    // function selectpic(event) {
+    //     $('#licenseImg').modal('hide');
+    //     var chooseId = $('#J-choose').val();
+    //     var chooseImg = $('#J-choose_img').val();
+    //     if (chooseId === '') {
+    //         return;
+    //     }
+    //     var dom = $(event).attr('dom');
+    //     $('#' + dom).val(chooseImg);
+    //     $('.' + dom).attr('src', chooseImg);
+    //     $('#' + dom).parent().siblings('input').val(chooseImg);
+    // }
+</script>
+{/if}
+{/if}
+<!--轮播图编辑模态框-->
+
+{if $temp == 'img_list'}
+<!--轮播图、底部广告、顶部广告图回调-->
+<div class="img_list_json" style="display: none">{$result_json}</div>
+{if !empty($img_list)}
+{if $mode == 'lunbo'}
+{foreach $img_list as $img}
+<div class="swiper-slide" style="height: 540px"><a href="{$img['link']}"  target="{if $img['opennew']==1}_blank{/if}"  class="lbtTwo bg-full" style="background-image:url('{$img['pic_src']}');width: 100%;height: 100%"></a></div>
+{/foreach}
+{/if}
+{if $mode == 'bottomBanner'}
+<a href="{$img_list[0]['link']}" {if $img_list[0]['opennew']} target="_blank" {/if} data-is_show="{$attr['is_show']}" ><img width="1200"  src="{$img_list[0]['pic_src']} "></a>
+{/if}
+{if $mode == 'topBanner'}
+<a href="{$img_list[0]['link']}" {if $img_list[0]['opennew']} target="_blank" {/if} ><img width="1920" height="80" src="{$img_list[0]['pic_src']} "></a>
+{/if}
+{/if}
+{/if}
+
+{if $temp == 'home_nav_mode' || $temp == 'help_mode' || $temp == 'link_mode' || $temp == 'copy_mode'|| $temp == 'home_banner' || $temp == 'service_mode' || $temp == 'shop_banner'|| $temp == 'homeFloor' || $temp == 'homeBanner' || $temp == 'home_header_mode'}
+<script type="text/javascript">
+    function moveUp(obj){
+        var current = $(obj).parent().parent();//获取当前<tr>
+        var prev = current.prev();  //获取当前<tr>前一个元素
+        if (current.index() > 0) {
+            current.insertBefore(prev);
+        } //插入到当前<tr>前一个元素前
+    }
+    function delcopy(obj){
+        var current = $(obj).parent().parent();//获取当前<tr>
+        current.remove();
+    }
+    // 下移
+    function moveDown(obj){
+        var current = $(obj).parent().parent();//获取当前<tr>
+        var next = current.next(); //获取当前<tr>后面一个元素
+        if (next) {
+            current.insertAfter(next);
+        }  //插入到当前<tr>后面一个元素后面
+    }
+</script>
+{/if}
+
+{if $temp == 'hot'}
+<!--热门活动编辑模态框-->
+<div id="{$temp}" class='hotEdit-dia'>
+
+    <div class="h-result-json" style="display: none">{$result_json}</div>
+    <div class="modal-body">
+        <div class="moduleTips">模块小贴士：一般可用于活动入口展示。</div>
+        <form class="form-horizontal" role="form"  id="{$temp}Insert" method="post"  enctype="multipart/form-data"  runat="server">
+
+            <div class="form-group">
+                <label class="col-sm-2 control-label">模块标题</label>
+                <div class="col-sm-5">
+                    <input type="text" class="form-control" placeholder="文本输入" value="{$masterTitle}" name="masterTitle">
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="col-sm-2 control-label">展位内容</label>
+                <div class="col-sm-10 boothContent">
+                    <ul>
+                        {if $spec_attr}
+                        {foreach $spec_attr as $key => $arr}
+                        <li data-key='{$key}'>
+                            <div class="ha-img"><img class='picsrc{$key}' src="{$arr['original_img']}" alt=""></div>
+                            <div class="imgAddress"><input type="text" name="original_img[]" value="{$arr['original_img']}" placeholder="图片地址" class="ipt80 pic_link"><a href="javascript:void(0);" data-toggle="decoPicture4"><input type="hidden" id='pic_id{$key}'  name="pic_id[]" class="J-pic" value="{$arr['pic_id']}"><i class="icon icon-pic"></i></a></div>
+                            <div class="imgAddress"><input type="text" value="{$arr['url']}" name="url[]" placeholder="跳转链接" class="ipt80 J-recLink{$key}"><a href="javascript:void(0);" data-toggle="selectUrlPc"><i class="icon icon-link"></i></a></div>
+                            <div><label for="newOpen{$key}" class="checkbox-inline"><input type="checkbox" name="opennew[]" id="newOpen{$key}" {if $arr['opennew']} checked {/if}>新窗口打开</label></div>
+                        </li>
+                        {/foreach}
+                        {else}
+                        <li data-key='1'>
+                            <div class="ha-img"><img class='picsrc1' src="http://iph.href.lu/108x100?text=290x290" alt=""></div>
+                            <div class="imgAddress"><input type="text" name="original_img[]" placeholder="图片地址" class="ipt80 pic_link"><a href="javascript:void(0);" data-toggle="decoPicture4"><input type="hidden" id='pic_id1'  name="pic_id[]" class="J-pic" value=""><i class="icon icon-pic"></i></a></div>
+                            <div class="imgAddress"><input type="text" name="url[]" placeholder="跳转链接" class="J-recLink1 ipt80"><a href="javascript:void(0);" data-toggle="selectUrlPc"><i class="icon icon-link"></i></a></div>
+                            <div><label for="newOpen1" class="checkbox-inline"><input type="checkbox" name="opennew[]" id="newOpen1">新窗口打开</label></div>
+                        </li>
+                        <li data-key='2'>
+                            <div class="ha-img"><img class='picsrc2' src="http://iph.href.lu/108x100?text=290x290" alt=""></div>
+                            <div class="imgAddress"><input type="text" name="original_img[]" placeholder="图片地址" class="ipt80 pic_link"><a href="javascript:void(0);" data-toggle="decoPicture4"><input type="hidden" id='pic_id2'  name="pic_id[]" class="J-pic" value=""><i class="icon icon-pic"></i></a></div>
+                            <div class="imgAddress"><input type="text" name="url[]" placeholder="跳转链接" class="J-recLink2 ipt80"><a href="javascript:void(0);" data-toggle="selectUrlPc"><i class="icon icon-link"></i></a></div>
+                            <div><label for="newOpen2" class="checkbox-inline"><input type="checkbox" name="opennew[]" id="newOpen2">新窗口打开</label></div>
+                        </li>
+                        <li data-key='3'>
+                            <div class="ha-img"><img class='picsrc3' src="http://iph.href.lu/108x100?text=290x290" alt=""></div>
+                            <div class="imgAddress"><input type="text" name="original_img[]" placeholder="图片地址" class="ipt80 pic_link"><a href="javascript:void(0);" data-toggle="decoPicture4"><input type="hidden" id='pic_id3'  name="pic_id[]" class="J-pic" value=""><i class="icon icon-pic"></i></a></div>
+                            <div class="imgAddress"><input type="text" name="url[]" placeholder="跳转链接" class="J-recLink3 ipt80"><a href="javascript:void(0);" data-toggle="selectUrlPc"><i class="icon icon-link"></i></a></div>
+                            <div><label for="newOpen3" class="checkbox-inline"><input type="checkbox" name="opennew[]" id="newOpen3">新窗口打开</label></div>
+                        </li>
+                        <li data-key='4'>
+                            <div class="ha-img"><img class='picsrc4' src="http://iph.href.lu/108x100?text=290x290" alt=""></div>
+                            <div class="imgAddress"><input type="text" name="original_img[]" placeholder="图片地址" class="ipt80 pic_link"><a href="javascript:void(0);" data-toggle="decoPicture4"><input type="hidden" id='pic_id4'  name="pic_id[]" class="J-pic" value=""><i class="icon icon-pic"></i></a></div>
+                            <div class="imgAddress"><input type="text" name="url[]" placeholder="跳转链接" class="J-recLink4 ipt80"><a href="javascript:void(0);" data-toggle="selectUrlPc"><i class="icon icon-link"></i></a></div>
+                            <div><label for="newOpen4" class="checkbox-inline"><input type="checkbox" name="opennew[]" id="newOpen4">新窗口打开</label></div>
+                        </li>
+                        {/if}
+                    </ul>
+                </div>
+            </div>
+            <input type="hidden" name="mode" value="{$temp}">
+        </form>
+    </div>
+
+
+</div>
+<script>
+require(['utilAdmin'],function(utilAdmin){ 
+    $('.boothContent').on('change','.pic_link',function(){
+            var key = $(this).parents('li').data('key');
+            console.log(key);
+            console.log($(this).val());
+            $('.picsrc'+key).attr('src',$(this).val());
+            $('#pic_id'+key).val($(this).val());
+        });
+ })
+</script>
+<!--热门活动编辑模态框-->
+{/if}
+
+
+{if $temp == 'hot1'}
+<!--热门活动回调-->
+<div style="display: none;" class="h-hot-json">{$result_json}</div>
+<div class="w1200 titles">
+    {if $masterTitle}
+    <h3>{$masterTitle}</h3>
+    {/if}
+</div>
+<div class="h-list w1200 clearfix">
+    {if !empty($spec_attr)}
+    {foreach $spec_attr as $attr}
+    <div class="h-list-item">
+        <a href="{if $attr['url']}{$attr['url']}{else}javascript:void(0);{/if}" {if $attr['opennew']} target="_blank" {/if}>
+        <div class="h-img">
+            <img src="{if $attr['original_img']}{$attr['original_img']} {else}http://iph.href.lu/290x290{/if}" alt="">
+        </div>
+        </a>
+    </div>
+    {/foreach}
+    {else}
+    <div class="h-list-item">
+        <a href="javascript:void(0);">
+            <div class="h-img">
+                <img src="http://iph.href.lu/290x290" alt="">
+            </div>
+        </a>
+    </div>
+    <div class="h-list-item">
+        <a href="javascript:void(0);">
+            <div class="h-img">
+                <img src="http://iph.href.lu/108x100" alt="">
+            </div>
+        </a>
+    </div>
+    <div class="h-list-item">
+        <a href="javascript:void(0);">
+            <div class="h-img">
+                <img src="http://iph.href.lu/290x290" alt="">
+            </div>
+        </a>
+    </div>
+    <div class="h-list-item">
+        <a href="javascript:void(0);">
+            <div class="h-img">
+                <img src="http://iph.href.lu/290x290" alt="">
+            </div>
+        </a>
+    </div>
+    {/if}
+
+</div>
+<!--热门活动回调-->
+{/if}
+
+
+{if $temp == 'homeFloor'}
+<!--楼层-->
+<div id="mainFloor" class="mainFloor-dia">
+    <div style="display: none;" class="h-result-json">{$result_json}</div>
+    <div class="modal-body" style="height: 500px;overflow-y:scroll">
+        <div class="moduleTips">模块小贴士：一般挑选商城主推或主打商品及活动展示入口。</div>
+        <!--tab栏切换-->
+        <div class="infoTab">
+            <ul id="myTab" class="nav nav-tabs">
+                <li class="active"><a href="#basicSet" data-toggle="tab">基础设置</a></li>
+            </ul>
+            <div id="myTabContent" class="tab-content">
+                <div class="tab-pane fade in active" id="basicSet">
+                    <form class="form-horizontal" role="form">
+
+                        <div class="form-group">
+                            <label class="col-sm-2 control-label">模块标题</label>
+                            <div class="col-sm-5">
+                                <input type="text" class="form-control" name="floor_title" autocomplete="off" placeholder="模块标题" value="{$spec_attr['floor_title']}">
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-sm-2 moduleColor">模块颜色</div>
+                            <div class="col-sm-10 colorItems">
+                                <div class="color-item color-item1 {if $spec_attr['typeColor'] == 'floor-color-type-1' || !$spec_attr['typeColor']} selected{/if}" ectype="colorItem">
+                                    <input type="hidden" value="floor-color-type-1">
+                                    <i></i>
+                                </div>
+                                <div class="color-item color-item2{if $spec_attr['typeColor'] == 'floor-color-type-2'} selected{/if}" ectype="colorItem">
+                                    <input type="hidden" name="" value="floor-color-type-2">
+                                    <i></i>
+                                </div>
+                                <div class="color-item color-item3{if $spec_attr['typeColor'] == 'floor-color-type-3'} selected{/if}" ectype="colorItem">
+                                <input type="hidden" name="" value="floor-color-type-3">
+                                <i></i>
+                            </div>
+                            <div class="color-item color-item4{if $spec_attr['typeColor'] == 'floor-color-type-4'} selected{/if}" ectype="colorItem">
+                                <input type="hidden" name="" value="floor-color-type-4">
+                                <i></i>
+                            </div>
+                            <div class="color-item color-item5{if $spec_attr['typeColor'] == 'floor-color-type-5'} selected{/if}" ectype="colorItem">
+                                <input type="hidden" name="" value="floor-color-type-5">
+                                <i></i>
+                            </div>
+                            <div class="color-item color-item6{if $spec_attr['typeColor'] == 'floor-color-type-6'} selected{/if}" ectype="colorItem">
+                                <input type="hidden" name="" value="floor-color-type-6">
+                                <i></i>
+                            </div>
+                            <div class="color-item color-item7{if $spec_attr['typeColor'] == 'floor-color-type-7'} selected{/if}" ectype="colorItem">
+                                <input type="hidden" name="" value="floor-color-type-7">
+                                <i></i>
+                            </div>
+                            <div class="color-item color-item8{if $spec_attr['typeColor'] == 'floor-color-type-8'} selected{/if}" ectype="colorItem">
+                                <input type="hidden" name="" value="floor-color-type-8">
+                                <i></i>
+                            </div>
+                            <div class="color-item color-item9{if $spec_attr['typeColor'] == 'floor-color-type-9'} selected{/if}" ectype="colorItem">
+                                <input type="hidden" name="" value="floor-color-type-9">
+                                <i></i>
+                            </div>
+                            <div class="color-item color-item10{if $spec_attr['typeColor'] == 'floor-color-type-10'} selected{/if}" ectype="colorItem">
+                                <input type="hidden" name="" value="floor-color-type-10">
+                                <i></i>
+                            </div>
+                            <div class="color-item color-item11{if $spec_attr['typeColor'] == 'floor-color-type-11'} selected{/if}" ectype="colorItem">
+                                <input type="hidden" name="" value="floor-color-type-11">
+                                <i></i>
+                            </div>
+                            <div class="color-item color-item12{if $spec_attr['typeColor'] == 'floor-color-type-12'} selected{/if}" ectype="colorItem">
+                                <input type="hidden" name="" value="floor-color-type-12">
+                                <i></i>
+                            </div>
+                            <div class="color-item color-item13{if $spec_attr['typeColor'] == 'floor-color-type-13'} selected{/if}" ectype="colorItem">
+                                <input type="hidden" name="" value="floor-color-type-13">
+                                <i></i>
+                            </div>
+                            <div class="color-item color-item14{if $spec_attr['typeColor'] == 'floor-color-type-14'} selected{/if}" ectype="colorItem">
+                                <input type="hidden" name="" value="floor-color-type-14">
+                                <i></i>
+                            </div>
+                            <div class="color-item color-item15{if $spec_attr['typeColor'] == 'floor-color-type-15'} selected{/if}" ectype="colorItem">
+                                <input type="hidden" name="" value="floor-color-type-15">
+                                <i></i>
+                            </div>
+                                <input type="hidden" name="typeColor" value="{if $spec_attr['typeColor']}{$spec_attr['typeColor']}{else}floor-color-type-1{/if}">
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="col-sm-2 control-label">模板布局</label>
+                            <div class="col-sm-6">
+                                <label class="radio-inline l-radio-img" for="floorMode_1">
+                                    <input type="radio" name="floorMode" value="1" id="floorMode_1" {if $spec_attr['floorMode'] < 2} checked {/if}>样式1
+                                    <div class="l-radio-box">
+                                            <span class="l-arrows"></span>
+                                            <div class="l-img"><img src="ADMIN_IMG/decorate/Tlayout1.png" alt=""></div>
+                                     </div>
+                                </label>
+                                <label class="radio-inline l-radio-img" for="floorMode_2">
+                                    <input type="radio" name="floorMode" value="2" id="floorMode_2" {if $spec_attr['floorMode'] == 2} checked {/if}>样式2
+                                    <div class="l-radio-box">
+                                            <span class="l-arrows"></span>
+                                            <div class="l-img"><img src="ADMIN_IMG/decorate/Tlayout2.png" alt=""></div>
+                                     </div>
+                                </label>
+                            </div>
+                        </div>
+						<div class="form-group">
+							<label class="col-sm-2 control-label">关联分类</label>
+							<div class="col-sm-10">
+								<!--表格-->
+								<table class="table table-hover v-table table-bordered">
+									<thead>
+									<tr>
+										<th>分类名称</th>
+										<th>跳转链接</th>
+										<th>新窗口打开</th>
+										<th>排序</th>
+										<th>操作</th>
+									</tr>
+									</thead>
+									<tbody id="j-cat">
+									{if isset($spec_attr['lcList']) && !empty($spec_attr['lcList'])}
+									{foreach $spec_attr['lcList'] as $ki => $item}
+									<tr>
+										<td><input class="ipt80" type="text" name="lcName[]" value="{$item.name}"></td>
+										<td class="td38"><input type="text" name="lcLink[]"  class="ipt80 floorpic{$ki}" value="{$item.link}"><a href="javascript:void(0);" class="pl5" data-toggle="selectUrlPc"><i class="icon icon-link"></i></a></td>
+										<td><label for="newOpen" class="checkbox-inline"><input type="checkbox" id="newOpen" name="lcOpennew[]" {if $item.opennew==1}checked{/if}><span>是</span></label></td>
+										<td>
+											<a href="javascript:void(0);" onclick="moveUp(this)"><i class="icon icon-up-arrow"></i></a>
+											<a href="javascript:void(0);" onclick="moveDown(this)"><i class="icon icon-down-arrow"></i></a>
+										</td>
+										<td><a href="javascript:void(0);" onclick="delcopy(this)">删除</a></td>
+									</tr>
+									{/foreach}
+									{/if}
+									</tbody>
+								</table>
+								<div class="addOneBorder"><a href="javascript:void(0);" class="addOneSort">+增加一个</a></div>
+							</div>
+						</div>
+                        <div class="form-group">
+                            <label class="col-sm-2 control-label">主推轮播图</label>
+                            <div class="col-sm-10">
+                                <!--表格-->
+                                <table class="table table-hover v-table table-bordered">
+                                    <thead>
+                                    <tr>
+                                        <th>缩略图</th>
+                                        <th>图片链接</th>
+                                        <th>跳转链接</th>
+                                        <th>新窗口打开</th>
+                                        <th>排序</th>
+                                        <th>操作</th>
+                                    </tr>
+                                    </thead>
+                                    <tbody class='J-tbody'>
+                                    {if isset($spec_attr['leftBannerList']) && !empty($spec_attr['leftBannerList'])}
+                                    {foreach $spec_attr['leftBannerList'] as $ki => $item}
+                                    <tr data-key="{$ki}"><td><div class="add-lbt"><img src="{$item['pic_src']}" class="pic_src{$ki}" alt=""></div></td>
+                                        <td class="td20"><input type="text" name="leftBannerLink[]" class="ipt80 pic_link" value="{$item['pic_link']}"><a href="javascript:void(0);" data-toggle="decoPicture2"><input type="hidden" id="pic_src{$ki}" name="leftBanner[]" class="J-pic" value="{$item['pic_src']}"><i class="icon icon-pic"></i></a></td>
+                                        <td class="td20"><input type="text" name="leftBannerUrlLink[]" class="ipt80 floorpic{$ki}" {if isset($item['link'])} value="{$item['link']}" {/if}><a href="javascript:void(0);" data-toggle="selectUrlPc"><i class="icon icon-link"></i></a></td>
+                                        <td><label for="opennew_{$ki}" class="checkbox-inline"><input type="checkbox" id="opennew_{$ki}"  name="leftBannerOpennew[]" {if $item['opennew']==1} checked {/if}><span>是</span></label></td>
+                                        <td>
+                                            <a href="javascript:void(0);" onclick="moveUp(this)"><i class="icon icon-up-arrow"></i></a>
+                                            <a href="javascript:void(0);" onclick="moveDown(this)"><i class="icon icon-down-arrow"></i></a>
+                                        </td>
+                                        <td><a href="javascript:void(0);" onclick="delcopy(this)">删除</a></td></tr>
+                                    {/foreach}
+                                    {/if}
+                                    </tbody>
+                                </table>
+                                <div class="addOneBorder"><a href="javascript:void(0);" class="addOneLbt">+增加一个</a></div>
+                                <p style="padding:4px;"><span>请至少添加一张轮播图片，</span><span class="J-size">尺寸{if $spec_attr['floorMode'] < 2}472x280{else}230x570{/if}</span></p>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="col-sm-2 control-label">展位内容</label>
+                            <div class="col-sm-10 boothContent">
+                                <ul>
+                                    {if isset($spec_attr['leftAdvList']) && !empty($spec_attr['leftAdvList'])}
+                                    {foreach $spec_attr['leftAdvList'] as $ka => $itema}
+                                    <li data-key='{$ka}'>
+                                        <div class="ha-img"><img src="{if $itema['pic_src']}{$itema['pic_src']}{else}http://iph.href.lu/230x280{/if}" alt="" class="adv_src{$ka}"></div>
+                                        <div class="imgAddress"><input type="text" class="ipt80 pic_link" name="leftAdvLink[]" placeholder="图片地址" value="{$itema['pic_link']}"><a href="javascript:void(0);" data-toggle="decoPicture4"><input type="hidden" id="adv_src{$ka}" name="leftAdv[]" class="J-pic" value="{$itema['pic_src']}"><i class="icon icon-pic"></i></a></div>
+                                        <div class="imgAddress"><input type="text" name="leftAdvUrlLink[]" placeholder="跳转链接" class="ipt80 advpic{$ka}" {if isset($itema['link'])} value="{$itema['link']}" {/if}><a href="javascript:void(0);" data-toggle="selectUrlPc"><i class="icon icon-link"></i></a></div>
+                                        <div><label for="advopennew_{$ka}" class="checkbox-inline"><input type="checkbox" name="leftAdvOpennew[]" id="advopennew_{$ka}"{if $itema['opennew']==1} checked {/if}>新窗口打开</label></div>
+                                    </li>
+                                    {/foreach}
+                                    {/if}
+                                </ul>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script type="text/javascript">
+require(['utilAdmin'],function(utilAdmin){  
+    function addcopy() {
+        var can_select_num = 3;
+        var selected_count = $('.J-tbody').find('tr').length;
+        var alltr = $('.J-tbody').find('tr');
+        var arrkey = [];
+        alltr.each(function(){
+            arrkey.push($(this).data('key'));
+        })
+        var max = 0;
+        if(arrkey.length>0){
+            max = utilAdmin.arrayMax(arrkey);//取最大值
+        }
+        if (selected_count >= can_select_num) {
+            layer.msg('最多只能添加' + can_select_num + '个');
+            return false;
+        }
+        var html = "";
+        // var onclick = "addSelecturl(this, '', '"+(max+1)+"', 'floorpic')";
+        // var onclickpic = "showAlbum(this, 1, 'selectpic(this)');";
+
+        html += '<tr data-key="'+(max+1)+'"><td><div class="add-lbt"><img src="http://iph.href.lu/147x45" class="pic_src'+(max+1)+'" alt=""></div></td>';
+        html += '<td class="td20"><input type="text" name="leftBannerLink[]" class="ipt80 pic_link"><a href="javascript:void(0);" data-toggle="decoPicture2"><input type="hidden" id="pic_src'+(max+1)+'" name="leftBanner[]" class="J-pic" value=""><i class="icon icon-pic"></i></a></td>';
+        html += '<td class="td20"><input type="text" name="leftBannerUrlLink[]" class="ipt80 floorpic'+(max+1)+'"><a href="javascript:void(0);" data-toggle="selectUrlPc"><i class="icon icon-link"></i></a></td>';
+        html += '<td><label for="opennew_'+(max+1)+'" class="checkbox-inline"><input type="checkbox" id="opennew_'+(max+1)+'"  name="leftBannerOpennew[]"><span>是</span></label></td>';
+        html += '<td>';
+        html += '<a href="javascript:void(0);" onclick="moveUp(this)"><i class="icon icon-up-arrow"></i></a>';
+        html += '<a href="javascript:void(0);" onclick="moveDown(this)"><i class="icon icon-down-arrow"></i></a>';
+        html += '</td>';
+        html += '<td><a href="javascript:void(0);" onclick="delcopy(this)">删除</a></td></tr>';
+        $('.J-tbody').append(html);
+    }
+    function addcopy1() {
+        var can_select_num = 5;
+        var selected_count = $('#j-cat').find('tr').length;
+        var alltr = $('#j-cat').find('tr');
+        var arrkey = [];
+        alltr.each(function(){
+            arrkey.push($(this).data('key'));
+        })
+        var max = 0;
+        if(arrkey.length>0){
+            max = utilAdmin.arrayMax(arrkey);//取最大值
+        }
+        if (selected_count >= can_select_num) {
+            layer.msg('最多只能添加' + can_select_num + '个');
+            return false;
+        }
+        var html = "";
+        html += '<tr data-key="'+(max+1)+'">';
+        html += '<td><input type="text" name="lcName[]" class="ipt80"></td>';
+        html += '<td class="td38"><input type="text" name="lcLink[]" class="ipt80 pic_link floorpic'+(max+1)+'"><a href="javascript:void(0);" data-toggle="selectUrlPc"><i class="icon icon-link"></i></a></td>';
+        html += '<td><label for="opennew_'+(max+1)+'" class="checkbox-inline"><input type="checkbox" id="opennew_'+(max+1)+'"  name="lcOpennew[]"><span>是</span></label></td>';
+        html += '<td>';
+        html += '<a href="javascript:void(0);" onclick="moveUp(this)"><i class="icon icon-up-arrow"></i></a>';
+        html += '<a href="javascript:void(0);" onclick="moveDown(this)"><i class="icon icon-down-arrow"></i></a>';
+        html += '</td>';
+        html += '<td><a href="javascript:void(0);" onclick="delcopy(this)">删除</a></td></tr>';
+        $('#j-cat').append(html);
+    }
+	$('.addOneBorder').on('click','.addOneSort',function(){
+		addcopy1();
+	})
+	$('.addOneBorder').on('click','.addOneLbt',function(){
+		addcopy();
+	})
+    /* 弹窗内 楼层分类设置 颜色选择 */
+    $(document).on("click", "*[ectype='colorItem']", function () {
+        var t = $(this),
+            val = t.find("input[type='hidden']").val();
+        $("input[name='typeColor']").val(val);
+        t.addClass("selected").siblings().removeClass("selected");
+    });
+    $(document).on("change", "input[name='floorMode']", function () {
+        var t = $(this),
+        val = t.val();
+        var size = '472x280';
+        if(val == '2'){
+            size = '230x570';
+        }
+        $('.J-size').html('尺寸'+size);
+    });
+    $('.J-tbody').on('change','.pic_link',function(){
+            var key = $(this).parents('tr').data('key');
+            console.log(key);
+            console.log($(this).val());
+            $('.pic_src'+key).attr('src',$(this).val());
+            $('#pic_src'+key).val($(this).val());
+        })
+    $('.boothContent').on('change','.pic_link',function(){
+            var key = $(this).parents('li').data('key');
+            console.log(key);
+            console.log($(this).val());
+            $('.adv_src'+key).attr('src',$(this).val());
+            $('#adv_src'+key).val($(this).val());
+        })
+})
+
+
+</script>
+{/if}
+{if $temp == 'homeFloorResponse'}
+<div style="display: none" class="h-promp-json">{$result_json}</div>
+{if $spec_attr['floorMode']==1}
+<div class="floor-content1">
+    <div class="floor-hd w1200 clearfix {$spec_attr['typeColor']}">
+        <div class="hd-tit">{$spec_attr['floor_title']}</div>
+		{if isset($spec_attr['lcList']) && !empty($spec_attr['lcList'])}
+        <div class="hd-tags pull-right">
+            <ul>
+				{foreach $spec_attr['lcList'] as $ki => $item}
+				<li class="first"><a href="{if $item['link']}{$item['link']}{else}javascript:void(0);{/if}"  target="{if $item['opennew']==1}_blank{/if}"  class="lbtTwo bg-full" style="background-image:url('{$item['pic_link']}');width: 100%;height: 100%">{$item['name']}</a></li>
+				{/foreach}
+            </ul>
+        </div>
+		{/if}
+    </div>
+    <!--内容栏-->
+    <div class="f1-list w1200 clearfix">
+        <div class="f-list-item">
+            <div class="f-img">
+                <div class="swiper-container swiper-container2 swiper-no-swiping">
+                    <div class="swiper-wrapper">
+                        {if isset($spec_attr['leftBannerList']) && !empty($spec_attr['leftBannerList'])}
+                        {foreach $spec_attr['leftBannerList'] as $ki => $item}
+                        <div class="swiper-slide"><a href="{if $item['link']}{$item['link']}{else}javascript:void(0);{/if}"  target="{if $item['opennew']}_blank{/if}"  class="lbtTwo bg-full" style="background-image:url('{$item['pic_link']}');width: 100%;height: 100%"></a></div>
+                        {/foreach}
+                        {/if}
+                    </div>
+                    <!-- 如果需要分页器 -->
+                    <div class="swiper-pagination"></div>
+                </div>
+            </div>
+        </div>
+        {if isset($spec_attr['leftAdvList']) && !empty($spec_attr['leftAdvList'])}
+        {foreach $spec_attr['leftAdvList'] as $ka => $itemka}
+        <div class="f-list-item">
+            <a href="{if $itemka['link']}{$itemka['link']}{else}javascript:void(0);{/if}" {if $itemka['opennew']} target='_blank' {/if}>
+            <div class="f-img">
+                <img src="{if $itemka['pic_link']}{$itemka['pic_link']}{else}http://iph.href.lu/230x280{/if}" alt="">
+            </div>
+            </a>
+        </div>
+        {/foreach}
+        {/if}
+    </div>
+</div>
+{elseif $spec_attr['floorMode']==2}
+<div class="floor-content2">
+    <!--标题栏-->
+    <div class="floor-hd w1200 clearfix {$spec_attr['typeColor']}">
+        <div class="hd-tit">{$spec_attr['floor_title']}</div>
+		{if isset($spec_attr['lcList']) && !empty($spec_attr['lcList'])}
+		<div class="hd-tags pull-right">
+			<ul>
+				{foreach $spec_attr['lcList'] as $ki => $item}
+				<li class="first"><a href="{if $item['link']}{$item['link']}{else}javascript:void(0);{/if}"  target="{if $item['opennew']==1}_blank{/if}"  class="lbtTwo bg-full" style="background-image:url('{$item['pic_link']}');width: 100%;height: 100%">{$item['name']}</a></li>
+				{/foreach}
+			</ul>
+		</div>
+		{/if}
+    </div>
+    <!--内容栏-->
+    <div class="f1-list w1200 clearfix">
+
+        <div class="f-list-item">
+            <a href="javascript:void(0);">
+
+                <div class="f-img">
+                    <div class="swiper-container swiper-container3 swiper-no-swiping">
+                        <div class="swiper-wrapper">
+                            {if isset($spec_attr['leftBannerList']) && !empty($spec_attr['leftBannerList'])}
+                            {foreach $spec_attr['leftBannerList'] as $ki => $item}
+                            <div class="swiper-slide"><a href="{if $item['link']}{$item['link']}{else}javascript:void(0);{/if}"  target="{if $item['opennew']}_blank{/if}"  class="lbtTwo bg-full" style="background-image:url('{$item['pic_link']}');width: 100%;height: 100%"></a></div>
+        {/foreach}
+        {/if}
+    </div>
+    <!-- 如果需要分页器 -->
+    <div class="swiper-pagination"></div>
+</div>
+</div>
+
+</a>
+</div>
+{if isset($spec_attr['leftAdvList']) && !empty($spec_attr['leftAdvList'])}
+{foreach $spec_attr['leftAdvList'] as $ka => $itemka}
+<div class="f-list-item">
+    <a href="{if $itemka['link']}{$itemka['link']}{else}javascript:void(0);{/if}" {if $itemka['opennew']} target='_blank' {/if}>
+    <div class="f-img">
+        <img src="{if $itemka['pic_link']}{$itemka['pic_link']}{else}http://iph.href.lu/230x280{/if}" alt="">
+    </div>
+    </a>
+</div>
+{/foreach}
+{/if}
+</div>
+</div>
+{/if}
+<!--楼层-->
+{/if}
+
+{if $temp == 'goods_info'}
+<!--商品推荐编辑模态框-->
+<div id='goodsRecom' class='goodsRecom-dia'>
+	<div style="display: none;" class="h-result-json">{$result_json}</div>
+	<div class="modal-body">
+		<div class="moduleTips">模块小贴士：推荐精选爆品。</div>
+		<form class="form-horizontal" role="form">
+			<div class="form-group">
+				<label class="col-sm-2 control-label">模块名称</label>
+				<div class="col-sm-6">
+					<input type="text" placeholder="模块名称" value="{$arr['cat_name']}" name="cat_name" class="form-control">
+				</div>
+			</div>
+
+			<div class="form-group">
+				<label class="col-sm-2 control-label">推荐方式</label>
+				<div class="col-sm-6">
+					<label class="radio-inline" for="type_1">
+						<input type="radio" name="rec_type" value="1" id="type_1" {if $arr['rec_type']} checked {/if}> 自动推荐
+					</label>
+					<label class="radio-inline" for="type_0">
+						<input type="radio" name="rec_type" value="0" id="type_0" {if !$arr['rec_type']} checked {/if}> 手动推荐
+					</label>
+				</div>
+			</div>
+
+			<div class="form-group auto"{if !$arr['rec_type']} style='display:none;'{/if}>
+				<label class="col-sm-2 control-label">排序规则</label>
+				<div class="col-sm-4">
+					<select class="form-control" name="sort">
+						<option value="0" {if !$arr['sort']} selected="selected" {/if}>请选择</option>
+						<option value="1" {if $arr['sort'] == 1} selected="selected" {/if}>按上架时间升序</option>
+						<option value="2" {if $arr['sort'] == 2} selected="selected" {/if}>按上架时间降序</option>
+						<option value="3" {if $arr['sort'] == 3} selected="selected" {/if}>按销量升序</option>
+						<option value="4" {if $arr['sort'] == 4} selected="selected" {/if}>按销量降序</option>
+						<option value="5" {if $arr['sort'] == 5} selected="selected" {/if}>按收藏数升序</option>
+						<option value="6" {if $arr['sort'] == 6} selected="selected" {/if}>按收藏数降序</option>
+					</select>
+				</div>
+	       </div>
+
+	<div class="form-group auto"{if !$arr['rec_type']} style='display:none;'{/if}>
+		<label class="col-sm-2 control-label">推荐数量</label>
+		<div class="col-sm-4">
+			<select class="form-control" name="count">
+				<option value="20" {if $arr['count']==20} selected="selected" {/if}>20</option>
+				<option value="40" {if $arr['count'] == 40} selected="selected" {/if}>40</option>
+				<option value="60" {if $arr['count'] == 60} selected="selected" {/if}>60</option>
+				<option value="80" {if $arr['count'] == 80} selected="selected" {/if}>80</option>
+				<option value="100" {if $arr['count'] == 100} selected="selected" {/if}>100</option>
+			</select>
+		</div>
+    </div>
+	<div class="infoTab recomTab"{if !$arr['rec_type']} style='display:block;'{/if}>
+		<ul id="myTab" class="nav nav-tabs J-goodstab">
+			<li class="active" data-type="1"><a href="#goodsList" data-toggle="tab" onclick='ajaxchangedgoods(1);'>商品列表</a></li>
+			<li data-type="0"><a href="#goodsChosed" data-toggle="tab" onclick='ajaxchangedgoods(0);'>已选商品</a></li>
+			<li class="fr">
+				<div class="search">
+					<input type="text" class="searchs" placeholder="商品名称" name="keyword_brand">
+					<button class="search_to" type="button" onclick="searchgoods()">搜索</button>
+				</div>
+			</li>
+		</ul>
+		<div id="myTabContent" class="tab-content">
+			<div class="tab-pane fade in active" id="goodsList" style="height: 450px;overflow-y: auto">
+				<!--表格-->
+				<table class="table table-hover v-table">
+					<thead>
+					<tr>
+						<th class="col-md-6">商品信息</th>
+						<th>店铺</th>
+						<th>操作</th>
+					</tr>
+					</thead>
+					<tbody class="J-goodslist"></tbody>
+				</table>
+			</div>
+			<div class="tab-pane fade" id="goodsChosed" style="height: 450px;overflow-y: auto">
+				<!--表格-->
+				<table class="table table-hover v-table">
+					<thead>
+					<tr>
+						<th class="col-md-6">商品信息</th>
+						<th>店铺</th>
+						<th>操作</th>
+					</tr>
+					</thead>
+					<tbody class="J-selected">
+					</tbody>
+				</table>
+			</div>
+		</div>
+	</div>
+                    <input type="hidden" name="search_type" value="{$search_type}"/>
+<input type="hidden" name="goods_id" value="{$goods_id}"/>
+<input type="hidden" name="goods_ids" value='{$arr["goods_ids"]}'/>
+		</form>
+	</div>
+</div>
+
+<script language="JavaScript">
+    //  商品推荐单选框Tab栏
+    function operation(){
+        $("input[name=rec_type]").click(function () {
+            var index = $("input[name=rec_type]").index($(this));
+            if (index == 1) {
+                $(".recomTab").show();
+                $(".auto").hide();
+                ajaxchangedgoods(1);
+            } else {
+                $(".recomTab").hide();
+                $(".auto").show();
+            }
+        });
+        if($("input[name='rec_type']:checked").val()==0 && $('.J-goodslist').html()==''){
+            ajaxchangedgoods(1);
+        }
+    };
+    operation();
+    function searchgoods(){
+        var type = $('.J-goodstab').find('.active').data('type');
+        ajaxchangedgoods(type);
+    }
+
+    function ajaxchangedgoods(type){
+        var keyword = $("input[name='keyword_brand']").val();
+        var rec_type = $("input[name='rec_type']:checked").val();
+        var goods_ids = $("input[name='goods_ids']").val();
+        var search_type = $("input[name='search_type']").val();
+        var goods_id = $("input[name='goods_id']").val();
+        $("[ectype='goods_list']").html("<i class='icon-spin'><img src='http://iph.href.lu/30x30' width='30' height='30'></i>");
+
+        Ajax.call("{$changedgoodsUrl}", "keyword="+keyword+"&goods_ids="+goods_ids+"&rec_type="+rec_type+"&type="+type + "&search_type=" + search_type + "&goods_id=" + goods_id, function(data){
+            if(type==1){
+                $(".J-goodslist").html(data);
+            }else{
+                $(".J-selected").html(data);
+            }
+
+        } , 'POST', 'text');
+
+    }
+
+    //选中商品
+    function selected_goods(obj,goods_id){
+        var obj = $(obj);
+        var arr = '';
+        var goods_ids = $("input[name='goods_ids']").val();
+        var good_number = "{$good_number}";
+        var verinumber = true;
+        if(obj.hasClass("on")){
+            obj.removeClass("on");
+            obj.html('推荐');
+            arr = goods_ids.split(',');
+            for(var i =0;i<arr.length;i++){
+                if(arr[i] == goods_id){
+                    arr.splice(i,1);
+                }
+            }
+        }else{
+            if(good_number > 0){
+                arr = goods_ids.split(',');
+                if(arr.length >= good_number){
+                    layer.msg("此模块只能添加" + good_number + "个商品");
+                    verinumber = false;
+                }
+            }
+            if(verinumber){
+                $(obj).addClass('on');
+                $(obj).html('取消推荐');
+                if(goods_ids){
+                    arr = goods_ids + ','+goods_id;
+                }else{
+                    arr = goods_id;
+                }
+            }
+        }
+        if(verinumber){
+            $("input[name='goods_ids']").val(arr);
+        }
+        ajaxchangedgoods(0);
+        ajaxchangedgoods(1);
+    }
+    function moveUpGoods(obj){
+        var current = $(obj).parent().parent();//获取当前<tr>
+        var prev = current.prev();  //获取当前<tr>前一个元素
+        if (current.index() > 0) {
+            current.insertBefore(prev);
+            reSortGoods();
+        } //插入到当前<tr>前一个元素前
+    }
+    // 下移
+    function moveDownGoods(obj){
+        var current = $(obj).parent().parent();//获取当前<tr>
+        var next = current.next(); //获取当前<tr>后面一个元素
+        if (next){
+            current.insertAfter(next);
+            reSortGoods();
+        }  //插入到当前<tr>后面一个元素后面
+    }
+    function reSortGoods(){
+        var strGoods = '';
+        $('.J-selected').find('tr').each(function(){
+            if(strGoods){
+                strGoods = strGoods + ',' + $(this).data('id');
+            }else{
+                strGoods = $(this).data('id');
+            }
+        })
+        $("input[name='goods_ids']").val(strGoods);
+    }
+</script>
+{/if}
+
+
+{if $temp == 'goods_list'}
+<!--商品推荐-->
+{if !empty($goods_list)}
+{foreach $goods_list as $goods}
+<tr class="{if $goods['is_selected'] == 1}on{/if}" data-id="{$goods['goods_id']}">
+	<!--<td class="picword_td">
+		<div class="col-sm-2 pic_td"><img src="{:__IMG($goods['pic_cover_mid'])}" alt=""></div>
+		<div class="col-sm-9 word_td">
+			<p class="tdTitles">{$goods['goods_name']}</p>
+			<p><strong>{$goods['price']}</strong></p>
+		</div>
+	</td>-->
+    <td>
+		<div class="media text-left">
+				<div class="media-left"><img src="{:__IMG($goods['pic_cover_mid'])}" width="60" height="60"></div>
+				<div class="media-body break-word">
+					<div class="line-2-ellipsis"><a href="javascript:void(0);">{$goods['goods_name']}</a></div>
+					<div class="small-muted line-2-ellipsis">{$goods['price']}</div>
+				<div>
+		</div>
+    </td>
+	<td>{if $goods['shop_name']}{$goods['shop_name']}{else}自营店{/if}</td>
+	<td>
+		<a href="javascript:void(0);" class="{if $goods['is_selected'] == 1} on{/if}" onclick="selected_goods(this,'{$goods['goods_id']}')">{if $goods['is_selected'] == 1}取消推荐{else}推荐{/if}</a>
+		{if $type == 0}
+		<a href="javascript:void(0);" onclick="moveUpGoods(this)">上移</a>
+		<a href="javascript:void(0);" onclick="moveDownGoods(this)">下移</a>
+		{/if}
+	</td>
+</tr>
+{/foreach}
+{else}
+<tr><td colspan="3">暂无相应的商品</td></tr>
+{/if}
+{/if}
+{if $temp == 'goodsRecom'}
+<div style="display: none" class="h-guess-json">{$result_json}</div>
+{foreach $goods_list as $goods}
+<li>
+	<div class="product_box">
+		<div class="product_img"><a href="{:__URLS('SHOP_MAIN/goods/goodsinfo','goodsid='.$goods['goods_id'])}" target="_blank"><img src="{:__IMG($goods['pic_cover_mid'])}" alt=""></a></div>
+		<div class="product_info">
+			<div class="product_name" title="{$goods['goods_name']}"><a class="pName" target="_blank" href="{:__URLS('SHOP_MAIN/goods/goodsinfo','goodsid='.$goods['goods_id'])}">{$goods['goods_name']}</a></div>
+			<div class="product_store"><a class="sName" href="javascript:void(0);">{if $goods['shop_name']}{$goods['shop_name']}{else}自营店{/if}</a> {if $goods['shop_id']==0}<a class="proprietary notproprietary" href="javascript:void(0);">自营</a>{/if}</div>
+			<div class="product_sell clearfix">
+                <span class="price pull-left">￥{$goods['price']}</span>
+                <span class="sellsNum pull-right">销量：<b>{$goods['sales']}</b></span>
+			</div>
+		</div>
+	</div>
+</li>
+{/foreach}
+{/if}
+
+
+{if $temp == 'single_banner'}
+<!--单图广告-->
+<div id="singleBanner">
+	<div class="single_banner_json" style="display: none">{$result_json}</div>
+	<div class="modal-body">
+		<div class="moduleTips">模块小贴士：单图广告常用于广告，也可以用于图片展示。尺寸宽1200px高自适应。</div>
+		<form class="form-horizontal" role="form">
+
+			<div class="form-group">
+				<label class="col-sm-2 control-label">缩略图</label>
+				<div class="col-sm-6">
+					<img src="{if $spec_attr['pic_src']}{$spec_attr['pic_src']}{else}http://iph.href.lu/147x45?text=1200x100{/if}" class="pic_src" alt="" width="147" height="45">
+				</div>
+			</div>
+			<div class="form-group">
+				<label class="col-sm-2 control-label">图片地址</label>
+				<div class="col-sm-6">
+					<input type="text" placeholder="图片地址" class="ipt80" name="pic_link" value="{$spec_attr['pic_link']}">
+					<a href="javascript:void(0);" data-toggle="decoPicture1"><input type="hidden" id="pic_src" name="pic_src" class="J-pic" value="{$spec_attr['pic_src']}"><i class="icon icon-pic"></i></a>
+				</div>
+			</div>
+
+			<div class="form-group">
+				<label class="col-sm-2 control-label">跳转链接</label>
+				<div class="col-sm-6">
+					<input type="text" placeholder="跳转链接" class="ipt80 floorpic1" name="link" value="{$spec_attr['link']}">
+					<a href="javascript:void(0);" data-toggle="selectUrlPc"><i class="icon icon-link"></i></a>
+				</div>
+			</div>
+
+			<div class="form-group">
+				<label class="col-sm-2 control-label">新窗口打开</label>
+				<div class="col-sm-6">
+					<label class="radio-inline">
+						<input type="radio" name="opennew" id="opennew1" value="1" {if $spec_attr['opennew']==1} checked {/if}>是
+					</label>
+					<label class="radio-inline">
+						<input type="radio" name="opennew" id="opennew2"  value="2" {if $spec_attr['opennew']!=1} checked {/if}>否
+					</label>
+				</div>
+			</div>
+		</form>
+	</div>
+</div>
+<script type="text/javascript">
+require(['utilAdmin','visualizationB'],function(utilAdmin,modal){
+    $('input[name=pic_link]').change(function(){
+        console.log($(this).val());
+        $('.pic_src').attr('src',$(this).val());
+        $('#pic_src').val($(this).val());
+    })
+})
+</script>
+{/if}
+
+{if $temp == 'add_single_banner'}
+<!--单图广告回调-->
+<div class="img_list_json" style="display: none">{$result_json}</div>
+<a href="{if $spec_attr['link']}{$spec_attr['link']}{else}javascript:void(0){/if}" {if $spec_attr['opennew']==1} target='_blank' {/if}><img src="{if $spec_attr['pic_src']}{$spec_attr['pic_src']}{else}http://iph.href.lu/1200x100{/if}" alt=""></a>
+<!--单图广告回调-->
+{/if}
+
+
+{if $temp == 'service_mode'}
+<!--客服中心-->
+<div class="service-mode-json" style="display: none">{$result_json}</div>
+<div class="modal-body">
+	<div class="moduleTips">模块小贴士：客服中心为QQ客服，最多能添加{$count}个。</div>
+	<form class="form-horizontal" role="form" id='service'>
+
+		<div class="form-group">
+                    <label class="col-sm-2 control-label"><span class="red">*</span>模块标题</label>
+			<div class="col-sm-5">
+				<input type="text" class="form-control m_title1" placeholder="标题输入" value="{$spec_attr['title']}" name="title" required title="请输入模块标题">
+			</div>
+		</div>
+
+		<div class="form-group">
+			<label class="col-sm-2 control-label"><span class="red">*</span>模块副标题</label>
+			<div class="col-sm-5">
+				<input type="text" class="form-control m_title2" placeholder="副标题输入" value="{$spec_attr['subtitle']}" name="subtitle" required title="请输入模块副标题">
+			</div>
+		</div>
+
+		<div class="form-group">
+			<label class="col-sm-2 control-label"><span class="red">*</span>工作时间</label>
+			<div class="col-sm-5">
+                            <input type="text" class="form-control m_time" placeholder="工作时间输入" value="{$spec_attr['time']}" name="time" required title="请输入工作时间">
+			</div>
+		</div>
+
+		<div class="form-group">
+			<label class="col-sm-2 control-label"><span class="red">*</span>客服</label>
+			<div class="col-sm-10">
+                            <label id="subtitle-error" class="red" style="display:none;">请添加客服</label>
+				<!--表格-->
+				<table class="table v-table table-bordered">
+					<thead>
+					<tr>
+						<th>图片</th>
+						<th>昵称</th>
+						<th>QQ号</th>
+						<th>排序</th>
+						<th>操作</th>
+					</tr>
+					</thead>
+					<tbody class='J-tbody'>
+					{if $spec_attr['servicelist']}
+					{foreach $spec_attr['servicelist'] as $key => $service}
+					<tr data-key="{$key}">
+						<td class="td25">
+							<input type="text" name="servicepic[]" value="{$service['servicepic']}" class="ipt80 pic_link"><a href="javascript:void(0);" data-toggle='decoPicture1' class="pl5"><input type="hidden" id='pic_id{$key}'  name="pic_id[]" class="J-pic" value=""><i class="icon icon-pic"></i></a></td>
+						<td class="td25"><input type="text" name='name[]' value="{$service['name']}" class="ipt80"></td>
+                                                <td class="td25"><input type="text" name='qq[{$key}]' value="{$service['qq']}" class="ipt80 J-qq" required title="请填写qq"></td>
+						<td>
+							<a href="javascript:void(0);" onclick="moveUp(this)"><i class="icon icon-up-arrow"></i></a>
+							<a href="javascript:void(0);" onclick="moveDown(this)"><i class="icon icon-down-arrow"></i></a>
+						</td>
+						<td><a href="javascript:void(0);" onclick='delcopy(this)'>删除</a></td>
+					</tr>
+					{/foreach}
+					{/if}
+					</tbody>
+				</table>
+				<div class="addOneBorder"><a href="javascript:void(0);" class="addOne">+增加一个</a></div>
+			</div>
+		</div>
+		<input type="hidden" name="mode" value="{$temp}" />
+		<input type="hidden" name="service_count" value="{$count}">
+	</form>
+</div>
+<script type="text/javascript">
+    // $('#service').validate();
+	  require(['utilAdmin','visualizationB'],function(utilAdmin,modal){  
+		function addcopy(){
+			var can_select_num = Number($("input[name='service_count']").val());
+			var selected_count = $('.J-tbody').find('tr').length;
+			var alltr = $('.J-tbody').find('tr');
+			var arrkey = [];
+			alltr.each(function(){
+				arrkey.push($(this).data('key'));
+			})
+			var max = 0;
+			if(arrkey.length>0){
+				max = utilAdmin.arrayMax(arrkey);//取最大值
+			}
+			if(selected_count >= can_select_num){
+				layer.msg('最多只能添加'+can_select_num+'个');
+				return false;
+			}
+			var html="";
+			html +="<tr data-key='"+(max+1)+"'>";
+			html +="<td class='td25'>";
+			html +="<input type='text' name='servicepic[]' class='ipt80 pic_link'><a href='javascript:void(0);' data-toggle='decoPicture1' class='pl5'><input type='hidden' id='pic_id"+(max+1)+"'  name='pic_id[]' class='J-pic'><i class='icon icon-pic'></i></a></td>";
+			html +="<td class='td25'><input type='text' name='name[]'class='ipt80'></td>";
+			html +="<td class='td25'><input type='text' name='qq["+(max+1)+"]' class='ipt80 J-qq' required title='请填写qq'></td>";
+			html +="<td>";
+			html +="<a href='javascript:void(0);' onclick='moveUp(this)'><i class='icon icon-up-arrow'></i></a>";
+			html +="<a href='javascript:void(0);' onclick='moveDown(this)'><i class='icon icon-down-arrow'></i></a>";
+			html +="</td>";
+			html +="<td><a href='javascript:void(0);' onclick='delcopy(this)'>删除</a></td>";
+			html +="</tr>";
+			$('.J-tbody').append(html);
+			// $('#service').validate();
+			// $('#subtitle-error').hide();
+		}
+		$('.addOneBorder').on('click','.addOne',function(){
+			addcopy();
+		});
+                $('.J-tbody').on('change','.pic_link',function(){
+                    var key = $(this).parents('tr').data('key');
+                    $('#pic_id'+key).val($(this).val());
+                });
+	  })
+
+</script>
+{/if}
+{if $temp == 'service_home'}
+<!--客服中心回调-->
+<div class="service-home-json" style="display: none">{$result_json}</div>
+<div class="w w1200 clearfix">
+	<div class="left pull-left">{$spec_attr['title']}
+		<span class="desc">{$spec_attr['subtitle']}</span>
+	</div>
+	<div class="center pull-left clearfix">
+		<div class="pull-left beforeSell">售前客服</div>
+		<ul class="clearfix pull-left serviceList">
+			{if $spec_attr['servicelist']}
+			{foreach $spec_attr['servicelist'] as $service}
+			<li>
+				<a href="tencent://message/?uin={$service['qq']}&Site={$service['qq']}&Menu=yes"><div class="sells"><img  src="{if $service['servicepic']}{$service['servicepic']}{else}http://iph.href.lu/62x62{/if}" alt=""></div>
+					<div class="sells-name">{$service['name']}</div>
+				</a>
+			</li>
+			{/foreach}
+			{/if}
+		</ul>
+	</div>
+	<div class="right pull-left">{$spec_attr['time']}</div>
+</div>
+<!--客服中心回调-->
+{/if}
+
+
+{if $temp == 'custom'}
+<!--自定义-->
+<div id='custom'>
+	<div class="custom-json" style="display: none;">{$result_json}</div>
+	<div class="modal-body">
+		<div class="moduleTips">注意：1、弹出框鼠标移到头部可以拖动，以防笔记本小屏幕内容展示不全；</div>
+		<form class="form-horizontal" role="form">
+
+			<div class="form-group">
+				<label class="col-sm-2 control-label">模块名称</label>
+				<div class="col-sm-5">
+					<input type="text" class="form-control" value="{$lift}" placeholder="名称输入" name="lift" >
+				</div>
+			</div>
+			<div class="form-group">
+				<label class="col-sm-2 control-label"></label>
+				<div class="col-sm-10">
+					<!--{$FCKeditor}-->
+						<div class="UE-box">
+							<div id="UE-detail" data-content='{$custom_content}'></div>
+						</div>
+				</div>
+			</div>
+
+		</form>
+	</div>
+</div>
+<script>
+require(['utilAdmin'],function(utilAdmin){
+	utilAdmin.ueditor('UE-detail');
+})
+</script>
+{/if}
+{if $temp == 'help_mode'}
+<!--帮助中心-->
+<div class="help-mode-json" style="display: none">{$result_json}</div>
+<div  class="helpCenter-dia" id="helpInsert">
+	<div class="modal-body">
+		<div class="moduleTips">模块小贴士：友好的设置购物帮助说明文档，更快的让顾客了解商城的购物体系。</div>
+		<form class="form-horizontal" role="form">
+                    <div class="form-group">
+                        <label class="col-sm-2 control-label">显示隐藏</label>
+                        <div class="col-sm-6">
+                            <label class="radio-inline">
+                                <input type="radio" name="is_show" value="1" {if $spec_attr['is_show']==1} checked {/if}>是
+                            </label>
+                            <label class="radio-inline">
+                                <input type="radio" name="is_show" value="0" {if $spec_attr['is_show']!=1} checked {/if}>否
+                            </label>
+                        </div>
+                    </div>
+			<div class="form-group">
+				<label class="col-sm-2 control-label">客服电话</label>
+				<div class="col-sm-6 pr0">
+					<input type="text" class="ipt80" value="{$spec_attr['phone']}"  name="phone">
+				</div>
+			</div>
+
+			<div class="form-group">
+				<label class="col-sm-2 control-label">客服邮箱</label>
+				<div class="col-sm-6 pr0">
+					<input type="text" class="ipt80" value="{$spec_attr['email']}" name="email">
+				</div>
+			</div>
+
+			<div class="form-group">
+				<label class="col-sm-2 control-label">二维码</label>
+				<div class="col-sm-6 pr0" ectype="imgControl">
+					<input type="text" placeholder="图片地址" class="ipt80 pic_link" name="qrcode[]" value="{$spec_attr['pic_src'][0]}">
+					<a href="javascript:void(0);" data-toggle="decoPicture1"><input type="hidden" id="pic_src" name="pic_src" class="J-pic" value="{$spec_attr['pic_src']}"><i class="icon icon-pic"></i></a>
+				</div>
+			</div>
+                        {if $hasHelpcenter}
+			<div class="form-group">
+				<label class="col-sm-2 control-label">文章栏目</label>
+				<div class="col-sm-10">
+					<!--表格-->
+					<table class="table v-table table-bordered" style="margin-bottom: 0px">
+						<thead>
+						<tr>
+							<th>栏目</th>
+							<th>子文章数</th>
+							<th>文章展示排序</th>
+							<th>排序</th>
+							<th>操作</th>
+						</tr>
+						</thead>
+						<tbody class='J-tbody'>
+						{if $spec_attr['copylist']}
+						{foreach $spec_attr['copylist'] as $key => $copy}
+						<tr>
+							<td>
+								<select name='articleclass[]'>
+									<option value='0'>请选择文章栏目</option>
+									{if $articleClassList}
+									{foreach $articleClassList as $articleClass}
+									<option {if $articleClass['cate_id'] == $copy['cate_id']} selected="selected" {/if} value="{$articleClass['cate_id']}">{$articleClass['name']}</option>
+									{/foreach}
+									{/if}
+								</select>
+							</td>
+							<td><input type='text' name='childcount[]' value="{$copy['childcount']}"/></td>
+							<td>
+								<select name='articlesort[]'>
+									<option {if $copy['articlesort'] == 1} selected="selected" {/if} value='1'>按发布时间升序</option>
+									<option {if $copy['articlesort'] == 2} selected="selected" {/if} value='2'>按发布时间降序</option>
+								</select>
+							</td>
+							<td><a href='javascript:void(0);' onclick='moveUp(this)'><i class='icon icon-up-arrow'></i></a><a href='javascript:void(0);' onclick='moveDown(this)'><i class='icon icon-down-arrow'></i></a></td>
+							<td><a href='javascript:void(0)' onclick='delcopy(this)'>删除</a></td>
+						</tr>
+						{/foreach}
+						{/if}
+						</tbody>
+					</table>
+					<div class="addOneBorder"><a href="javascript:void(0);" onclick='addcopy()'>+增加一个</a></div>
+				</div>
+			</div>
+                        {/if}
+			<input type="hidden" name="mode" value="{$temp}" />
+			<input type="hidden" name="service_count" value="5"/>
+		</form>
+	</div>
+</div>
+<script type="text/javascript">
+    function selectpic(event) {
+        $('#licenseImg').modal('hide');
+        var chooseId = $('#J-choose').val();
+        var chooseImg = $('#J-choose_img').val();
+        if (chooseId === '') {
+            return;
+        }
+        var dom = $(event).attr('dom');
+        $('#' + dom).val(chooseImg);
+        $('#' + dom).parent().siblings('input').val(chooseImg);
+    }
+    function addcopy(){
+        var can_select_num = Number($("input[name='service_count']").val());
+        var selected_count = $('.J-tbody').find('tr').length;
+        if(selected_count >= can_select_num){
+            layer.msg('最多只能添加'+can_select_num+'个');
+            return false;
+        }
+        var html="";
+        html +="<tr><td><select name='articleclass[]'>";
+        html +="<option value='0'>请选择文章栏目</option>";
+        {if $articleClassList}
+        {foreach $articleClassList as $articleClass}
+        html +="<option {if $articleClass['cate_id'] == $articleChoose['cate_id']} selected='selected' {/if} value='{$articleClass['cate_id']}'>{$articleClass['name']}</option>";
+        {/foreach}
+            {/if}
+                html +="</select></td>";
+                html +=" <td><input type='text' name='childcount[]'/></td>";
+                html +="<td>";
+                html +="<select name='articlesort[]'>";
+                html +="<option value='1'>按发布时间升序</option>";
+                html +="<option value='2'>按发布时间降序</option>";
+                html +="</select>";
+                html +="</td>";
+                html +="<td>";
+                html +="<a href='javascript:void(0);' onclick='moveUp(this)'><i class='icon icon-up-arrow'></i></a>";
+                html +="<a href='javascript:void(0);' onclick='moveDown(this)'><i class='icon icon-down-arrow'></i></a>";
+                html +="</td>";
+                html +="<td><a href='javascript:void(0)' onclick='delcopy(this)'>删除</a></td></tr>";
+                $('.J-tbody').append(html);
+            }
+            $('.pic_link').change(function(){
+                $('#pic_src').val($(this).val());
+            })
+</script>
+{/if}
+{if $temp == 'help_home'}
+<div class="help-home-json" style="display: none">{$result_json}</div>
+{if $hasHelpcenter}
+<div class="help-list J-helpList" data-is_show="{$spec_attr['is_show']}">
+	{if $spec_attr['copylist']}
+	{foreach $spec_attr['copylist'] as $articleclass}
+	<div class="help-item">
+		<h3>{$articleclass['name']}</h3>
+		<ul>
+			{if $articleclass['articlelist']}
+			{foreach $articleclass['articlelist'] as $article}
+			<li>
+				<a href="{:__URLS('SHOP_MAIN/helpcenter/index?id='. $article['question_id'].'&cate_id='.$article['cate_id'])}" title="{$article['title']}" target="_blank">{$article['title']}</a>
+			</li>
+			{/foreach}
+			{/if}
+		</ul>
+	</div>
+	{/foreach}
+	{/if}
+</div>
+{/if}
+<div class="help-cover">
+	<div class="help-ctn">
+		<div class="help-ctn-mt">
+			<span>服务热线</span>
+			<div class="contact">{$spec_attr['phone']}</div>
+			<div class="contact">{$spec_attr['email']}</div>
+		</div>
+	</div>
+	<div class="help-scan">
+		<div class="code">
+			<img src="{$spec_attr['pic_src'][0]}" />
+		</div>
+	</div>
+</div>
+{/if}
+
+{if $temp == 'link_mode'}
+<!--友情链接-->
+<div class="link-mode-json" style="display: none">{$result_json}</div>
+<div id="linkInsert" class="link-dia lyrow">
+	<div class="modal-body">
+		<div class="moduleTips">模块小贴士：用于网站与网站之间的导流互推。</div>
+                <div class="form-group">
+                    <label class="col-sm-2 control-label">显示隐藏</label>
+                    <div class="col-sm-6">
+                        <label class="radio-inline">
+                            <input type="radio" name="is_show" value="1" {if $spec_attr['is_show']==1} checked {/if}>是
+                        </label>
+                        <label class="radio-inline">
+                            <input type="radio" name="is_show" value="0" {if $spec_attr['is_show']!=1} checked {/if}>否
+                        </label>
+                    </div>
+                </div>
+		<!--表格-->
+		<table class="table v-table  table-striped table-main J-table" style="margin-bottom: 0px">
+			<thead>
+			<tr>
+				<th>名称</th>
+				<th>跳转地址</th>
+				<th>新窗口打开</th>
+				<th>排序</th>
+				<th>操作</th>
+			</tr>
+			</thead>
+			<tbody class='J-tbody' >
+			{if $spec_attr['copylist']}
+			{foreach $spec_attr['copylist'] as $key => $copy}
+			<tr data-key="{$key}">
+				<td><input type='text' class="ipt80" name='copyname[]' value="{$copy['copyname']}"/></td>
+                <td><input type="text" placeholder="跳转链接" class="ipt80 floorpic{$key}" name='copylink[]' value="{$copy['copylink']}"><a href="javascript:void(0);" data-toggle="selectUrlPc"><i class="icon icon-link"></i></a></td>
+				<td><input type='checkbox' name='opennew[]' {if $copy['opennew']} checked {/if}/></td>
+				<td><a href='javascript:void(0);' onclick='moveUp(this)'><i class='icon icon-up-arrow'></i></a><a href='javascript:void(0);' onclick='moveDown(this)'><i class='icon icon-down-arrow'></i></a></td>
+				<td><a href='javascript:void(0)' onclick='delcopy(this)'>删除</a></td>
+			</tr>
+			{/foreach}
+			{/if}
+			</tbody>
+			<input type="hidden" name="mode" value="{$temp}" />
+		</table>
+		<div class="addOneBorder"><a href="javascript:void(0);">+增加一个</a></div>
+	</div>
+</div>
+<script type="text/javascript">
+  require(['utilAdmin','visualizationB'],function(utilAdmin,modal){  
+	      function addcopy(){
+			var alltr = $('.J-tbody').find('tr');
+			var arrkey = [];
+			alltr.each(function(){
+				arrkey.push($(this).data('key'));
+			});
+			var max = 0;
+			if(arrkey.length>0){
+				max = utilAdmin.arrayMax(arrkey);//取最大值
+			}
+			var html="";
+			html += '<tr data-key="'+(max+1)+'">';
+			html +=	"<td><input type='text' class='ipt80' name='copyname[]'/></td>";
+			html += '<td><input type="text" name="copylink[]" class="ipt80 floorpic'+(max+1)+'">  <a href="javascript:void(0);" data-toggle="selectUrlPc"><i class="icon icon-link"></i></a></td>';
+			html +="<td><input type='checkbox' name='opennew[]'/></td>";
+			html +="<td>";
+			html +="<a href='javascript:void(0);' onclick='moveUp(this)'><i class='icon icon-up-arrow'></i></a>";
+			html +="<a href='javascript:void(0);' onclick='moveDown(this)'><i class='icon icon-down-arrow'></i></a>";
+			html +="</td>";
+			html +="<td><a href='javascript:void(0)' onclick='delcopy(this)'>删除</a></td></tr>";
+			$('.J-tbody').append(html);
+    }
+	$('.addOneBorder').on('click','a',function(){
+		addcopy();
+	})
+  })
+
+</script>
+{/if}
+{if $temp == 'link_home'}
+<div class="link-home-json" style="display: none">{$result_json}</div>
+<div data-is_show="{$spec_attr['is_show']}"></div>
+{if $spec_attr['copylist']}
+	{foreach $spec_attr['copylist'] as $link}
+	<a href="{$link['copylink']}"  {if $link['opennew']} target="_blank" {/if}>{$link['copyname']}</a>
+	{/foreach}
+{/if}
+{/if}
+{if $temp == 'home_header_mode'}
+<div class="homeheader-mode-json" style="display: none">{$result_json}</div>
+<div id="homeheaderInsert" class="link-dia lyrow">
+	<div class="modal-body">
+		<div class="moduleTips">模块小贴士：搜索关键字。</div>
+                <div class="form-group">
+                        <label class="col-sm-2 control-label">是否开启关键词</label>
+                        <div class="col-sm-5">
+                                <label class="radio-inline">
+                                        <input type="radio" name="showkeyword" id="isOpenYes" value="1" {if $spec_attr['showkeyword']==1} checked {/if}> 是
+                                </label>
+                                <label class="radio-inline">
+                                        <input type="radio" name="showkeyword" id="isOpenNo" value="0" {if $spec_attr['showkeyword']!=1} checked {/if} > 否
+                                </label>
+                        </div>
+                </div>
+		<!--表格-->
+		<table class="table v-table  table-striped table-main J-table" style="margin-bottom: 0px">
+			<thead>
+			<tr>
+				<th>关键词</th>
+				<th>跳转链接</th>
+				<th>新窗口打开</th>
+				<th>排序</th>
+				<th>操作</th>
+			</tr>
+			</thead>
+			<tbody class='J-tbody' >
+			{if $spec_attr['copylist']}
+			{foreach $spec_attr['copylist'] as $key => $copy}
+			<tr data-key="{$key}">
+                            <td><input type='text' class="ipt80" name='copyname[]' value="{$copy['copyname']}"/></td>
+                            <td><input type="text" placeholder="跳转链接" class="ipt80 floorpic{$key}" name='copylink[]' value="{$copy['copylink']}"><a href="javascript:void(0);" data-toggle="selectUrlPc"><i class="icon icon-link"></i></a></td>
+                            <td><input type='checkbox' name='opennew[]' {if $copy['opennew']} checked {/if}/></td>
+                            <td><a href='javascript:void(0);' onclick='moveUp(this)'><i class='icon icon-up-arrow'></i></a><a href='javascript:void(0);' onclick='moveDown(this)'><i class='icon icon-down-arrow'></i></a></td>
+                            <td><a href='javascript:void(0)' onclick='delcopy(this)'>删除</a></td>
+			</tr>
+			{/foreach}
+			{/if}
+			</tbody>
+			<input type="hidden" name="mode" value="{$temp}" />
+		</table>
+		<div class="addOneBorder"><a href="javascript:void(0);">+增加一个</a></div>
+	</div>
+</div>
+<script type="text/javascript">
+	require(['utilAdmin'],function(utilAdmin){
+
+	$("input[name=showkeyword]").click(function () {
+		var index = $("input[name=showkeyword]").index($(this));
+		if (index == 0) {
+			$(".J-table").show();
+			$(".addOneBorder").show();
+		} else {
+			$(".J-table").hide();
+			$(".addOneBorder").hide();
+		}
+	});
+	if($("input[name='showkeyword']:checked").val()==0){
+		$(".J-table").hide();
+		$(".addOneBorder").hide();
+	}else{
+			$(".J-table").show();
+			$(".addOneBorder").show();
+	}
+	$('.addOneBorder').on('click','a',function(){
+		addcopy();
+	})
+    function addcopy(){
+        var alltr = $('.J-tbody').find('tr');
+        var arrkey = [];
+        alltr.each(function(){
+            arrkey.push($(this).data('key'));
+        });
+        var max = 0;
+        if(arrkey.length>0){
+            max = utilAdmin.arrayMax(arrkey);//取最大值
+        }
+        var html="";
+        html += '<tr data-key="'+(max+1)+'">';
+        html +=	"<td><input type='text' name='copyname[]'/ class='ipt80'></td>";
+        html += '<td><input type="text" name="copylink[]" class="ipt80 floorpic'+(max+1)+'">  <a href="javascript:void(0);" data-toggle="selectUrlPc" ><i class="icon icon-link"></i></a></td>';
+        html +="<td><input type='checkbox' name='opennew[]'/></td>";
+        html +="<td>";
+        html +="<a href='javascript:void(0);' onclick='moveUp(this)'><i class='icon icon-up-arrow'></i></a>";
+        html +="<a href='javascript:void(0);' onclick='moveDown(this)'><i class='icon icon-down-arrow'></i></a>";
+        html +="</td>";
+        html +="<td><a href='javascript:void(0)' onclick='delcopy(this)'>删除</a></td></tr>";
+        $('.J-tbody').append(html);
+    }
+
+	})
+
+</script>
+{/if}
+{if $temp == 'homeheader_home'}
+<div class="homeheader-home-json" style="display: none">{$result_json}</div>
+{if $spec_attr['copylist'] && $spec_attr['showkeyword']}
+	{foreach $spec_attr['copylist'] as $link}
+	<a href="{if $link['copylink']}{$link['copylink']}{else}javascript:void(0){/if}"  {if $link['opennew']} target="_blank" {/if}>{$link['copyname']}</a>
+	{/foreach}
+{/if}
+{/if}
+{if $temp == 'copy_mode'}
+<!--版权信息-->
+<div class="copy-mode-json" style="display: none">{$result_json}</div>
+<div id="copyInsert"  class="copyInfo-dia">
+    <div class="modal-body">
+        <div class="moduleTips">模块小贴士：展示网站版权及认证机构。</div>
+        <form class="form-horizontal" role="form">
+            <div class="form-group">
+                    <label class="col-sm-2 control-label">显示隐藏</label>
+                    <div class="col-sm-6">
+                        <label class="radio-inline">
+                            <input type="radio" name="is_show" value="1" {if $spec_attr['is_show']==1} checked {/if}>是
+                        </label>
+                        <label class="radio-inline">
+                            <input type="radio" name="is_show" value="0" {if $spec_attr['is_show']!=1} checked {/if}>否
+                        </label>
+                    </div>
+                </div>
+            <div class="form-group">
+                <label class="col-sm-2 control-label">版权信息</label>
+                <div class="col-sm-10 control_value">
+                    <textarea class="form-control ta_resize" rows="4" cols="3" name="copyright" onpropertychange="this.style.posHeight=this.scrollHeight"
+                              placeholder="XXX公司 © 版权所有">{$spec_attr['copyright']}</textarea>
+                </div>
+
+            </div>
+            <div class="form-group">
+                <label class="col-sm-2 control-label">认证机构</label>
+                <div class="col-sm-10">
+                    <!--表格-->
+                    <table class="table table-hover v-table table-bordered" style="margin-bottom: 0px">
+                        <thead>
+                        <tr>
+                            <th>缩略图</th>
+                            <th>图片链接</th>
+                            <th>跳转链接</th>
+                            <th>新窗口打开</th>
+                            <th>排序</th>
+                            <th>操作</th>
+                        </tr>
+                        </thead>
+                        <tbody class='J-tbody'>
+                        {if $spec_attr['copylist']}
+                        {foreach $spec_attr['copylist'] as $key => $copy}
+                        <tr data-key="{$key}">
+                            <td><div class="add-lbt" ><img src="{$copy['copypic']}" class="pic_src{$key}" alt="" width="33" height="33"></div></td>
+                            <td class="td20"><input type="text" name="pic_link[]" class="ipt80  pic_link" value="{$copy['copypic']}"><a href="javascript:void(0);" data-toggle="decoPicture2"><input type="hidden" id="pic_src{$key}" name="pic_src[]" class="J-pic" value="{$copy['copypic']}"><i class="icon icon-pic"></i></a></td>
+                            <td class="td20"><input type="text" name="link[]" class="ipt80 floorpic{$key}" {if isset($copy['copylink'])} value="{$copy['copylink']}" {/if}><a href="javascript:void(0);" data-toggle="selectUrlPc" ><i class="icon icon-link"></i></a></td>
+                            <td><label for="opennew_{$key}" class="checkbox-inline"><input type="checkbox" id="opennew_{$key}"  name="opennew[]" {if $copy['opennew']==1} checked {/if}><span>是</span></label></td>
+                            <td>
+                                <a href="javascript:void(0);" onclick="moveUp(this)"><i class="icon icon-up-arrow"></i></a>
+                                <a href="javascript:void(0);" onclick="moveDown(this)"><i class="icon icon-down-arrow"></i></a>
+                            </td>
+                            <td><a href="javascript:void(0);" onclick="delcopy(this)">删除</a></td>
+                        </tr>
+                        {/foreach}
+                        {/if}
+                        </tbody>
+                    </table>
+                    <div class="addOneBorder"><a href="javascript:void(0);" onclick='addcopy()'>+增加一个</a></div>
+                </div>
+                <input type="hidden" name="mode" value="{$temp}" />
+            </div>
+
+        </form>
+    </div>
+</div>
+<script type="text/javascript">
+  require(['utilAdmin','visualizationB'],function(utilAdmin,modal){ 
+	      function addcopy(){
+			var alltr = $('.J-tbody').find('tr');
+			var arrkey = [];
+			alltr.each(function(){
+				arrkey.push($(this).data('key'));
+			})
+			var max = 0;
+			if(arrkey.length>0){
+				max = utilAdmin.arrayMax(arrkey);//取最大值
+			}
+			var html = "";
+			html += '<tr data-key="'+(max+1)+'"><td><div class="add-lbt"><img src="http://iph.href.lu/33x33" class="pic_src'+(max+1)+'" alt="" width="33" height="33"></div></td>';
+			html += '<td class="td20"><input type="text" name="pic_link[]" class="ipt80 pic_link'+(max+1)+'">  <a href="javascript:void(0);" data-toggle="decoPicture2"><input type="hidden" id="pic_src'+(max+1)+'" name="pic_src[]" class="J-pic" value=""><i class="icon icon-pic"></i></a></td>';
+			html += '<td class="td20"><input type="text" name="link[]" class="ipt80 floorpic'+(max+1)+'">  <a href="javascript:void(0);" data-toggle="selectUrlPc" ><i class="icon icon-link"></i></a></td>';
+			html += '<td><label for="opennew_'+(max+1)+'" class="checkbox-inline"><input type="checkbox" id="opennew_'+(max+1)+'" name="opennew[]"><span>是</span></label></td>';
+			html += '<td>';
+			html += '<a href="javascript:void(0);" onclick="moveUp(this)"><i class="icon icon-up-arrow"></i></a>';
+			html += '<a href="javascript:void(0);" onclick="moveDown(this)"><i class="icon icon-down-arrow"></i></a>';
+			html += '</td>';
+			html += '<td><a href="javascript:void(0);" onclick="delcopy(this)">删除</a></td></tr>';
+			$('.J-tbody').append(html);
+    }
+	$('.addOneBorder').on('click','a',function(){
+		addcopy();
+	})
+        $('.J-tbody').on('change','.pic_link',function(){
+            var key = $(this).parents('tr').data('key');
+            console.log(key);
+            console.log($(this).val());
+            $('.pic_src'+key).attr('src',$(this).val());
+            $('#pic_src'+key).val($(this).val());
+        })
+   })
+
+
+</script>
+{/if}
+{if $temp == 'copy_home'}
+<div class="copy-home-json" style="display: none">{$result_json}</div>
+<div class="company copyright" data-is_show="{$spec_attr['is_show']}">{$spec_attr['copyright']}</div>
+{if $spec_attr['copylist']}
+<div class="web">
+{foreach $spec_attr['copylist'] as $certification}
+    <a  href="{$certification['copylink']}"  {if $certification['opennew']} target="_blank" {/if}><img width="33" height="33" src="{$certification['copypic']}" /></a>
+{/foreach}
+</div>
+{/if}
+{/if}
+
+{if $temp == 'right_mode'}
+<!--右边工具栏-->
+<div class="right-mode-json" style="display: none">{$result_json}</div>
+<div id="rightsMenu" class="rightsMenu-dia" >
+	<div class="modal-body">
+		<div class="moduleTips">模块小贴士：设置工具条，更便捷的</div>
+		<form class="form-horizontal" role="form" id="rightInsert">
+
+			<div class="form-group">
+				<label class="col-sm-2 control-label">侧栏类目</label>
+				<div class="col-sm-10">
+					<label class="checkbox-inline">
+						<input name="tool" type="checkbox" value="my" {if $spec_attr['my']} checked='checked' {/if} />我的
+					</label>
+					<label class="checkbox-inline">
+						<input name="tool" type="checkbox" value="cart" {if $spec_attr['cart']} checked='checked' {/if} />购物车
+					</label>
+					<label class="checkbox-inline">
+						<input name="tool" type="checkbox" value="history" {if $spec_attr['history']} checked='checked' {/if} />浏览足迹
+					</label>
+					<label class="checkbox-inline">
+						<input name="tool" type="checkbox" value="collect" {if $spec_attr['collect']} checked='checked' {/if} />我的收藏
+					</label>
+					<label class="checkbox-inline">
+						<input name="tool" type="checkbox" value="service" {if $spec_attr['service']} checked='checked' {/if} />客服
+					</label>
+					<label class="checkbox-inline">
+						<input name="tool" type="checkbox" value="qrcode" {if $spec_attr['qrcode']} checked='checked' {/if} />二维码
+					</label>
+					<label class="checkbox-inline">
+						<input name="tool" type="checkbox" value="top" {if $spec_attr['top']} checked='checked' {/if} />回到顶部
+					</label>
+				</div>
+			</div>
+			<input type="hidden" name="mode" value="{$temp}" />
+		</form>
+	</div>
+</div>
+{/if}
+{if $temp == 'right_home'}
+<div class="right-home-json" style="display: none">{$result_json}</div>
+<div id="quick-links" class="quick-links">
+	<ul>
+		{if $spec_attr['my']}<li class="quick-area quick-login sidebar-user-trigger">
+		<!-- 用户 --> <a href="javascript:void(0);" class="quick-links-a"><i class="setting"></i></a>
+		<div class="sidebar-user quick-sidebar" style="display: none">
+			<i class="arrow-right"></i>
+			<div class="sidebar-user-info">
+				<!-- 没有登录的情况 _start -->
+				<div class="VSLUSER-NOT-LOGIN">
+					<a href="{:__URLS('SHOP_MAIN/member/index')}" class="ajax-login">
+						<div class="user-pic">
+							<div class="user-pic-mask"></div>
+							<img id="login_member_logo" src="../template/shop/new/public/image/0000000000_21_120x120.jpg">
+						</div>
+					</a>
+					<br>
+					<p id="not_logged">
+						你好！请<a href="{:__URLS('SHOP_MAIN/member/index')}"
+							   class="quick-login-a color ajax-login">登录</a> | <a
+							href="{:__URLS('SHOP_MAIN/login/mobile')}"
+							class="color ajax-register">注册</a>
+					</p>
+					<p id="right_login_info">
+						你好！<span id="right_login_info_name"></span>
+					</p>
+				</div>
+				<!-- 没有登录的情况 _end -->
+				<!-- 有登录的情况 _start -->
+				<div class="js-user-already-login" style="display: none;">
+					<div class="user-have-login">
+						<div class="user-pic">
+							<div class="user-pic-mask"></div>
+							<img src="" class="VSLUSER-PIC">
+						</div>
+						<div class="user-info">
+							<p>
+								用&nbsp;&nbsp;&nbsp;户： <span class="VSLUSER-NAME"></span>
+							</p>
+						</div>
+					</div>
+					<p class="m-t-10">
+										<span class="prev-login"> 上次登录时间：
+											<span class="VSLUSER-LAST-LOGIN"></span>
+										</span>
+						<a href="{:__URLS('SHOP_MAIN/member/index')}" class="btn account-btn" target="_blank">个人中心</a>
+						<a href="{:__URLS('SHOP_MAIN/member/orderlist')}" class="btn order-btn" target="_blank">订单中心</a>
+					</p>
+				</div>
+				<!-- 有登录的情况 _end -->
+			</div>
+		</div>
+	</li>{/if}
+		{if $spec_attr['cart']}<li class="sidebar-tabs" data-ns-flag="shopping_cart">
+		<!-- 购物车 -->
+		<div class="cart-list quick-links-a sidebar-cartbox-trigger">
+			<i class="cart"></i>
+			<div class="span">购物车</div>
+			<span class="ECS_CARTINFO"> <span
+					class="cart_num js-cart-count">0</span>
+								<div class="sidebar-cart-box">
+									<h3 class="sidebar-panel-header">
+										<a href="javascript:void(0);" class="title">
+											<i class="cart-icon"></i> <em class="title">购物车</em>
+										</a>
+										<span class="close-panel"></span>
+									</h3>
+								</div>
+							</span>
+		</div>
+	</li>{/if}
+		{if $spec_attr['history']}<li class="sidebar-tabs" data-ns-flag="love_history">
+		<a href="javascript:void(0);" class="mpbtn_history quick-links-a sidebar-historybox-trigger">
+			<i class="history"></i>
+		</a>
+		<div class="popup" style="left: -121px; visibility: hidden;">
+			<font id="mpbtn_histroy">我看过的</font> <i class="arrow-right"></i>
+		</div>
+	</li>{/if}
+		{if $spec_attr['collect']}<li id="collectGoods" class="sidebar-tabs" data-ns-flag="collections_goods">
+		<a href="javascript:void(0);" class="mpbtn_collect quick-links-a">
+			<i class="collect"></i>
+		</a>
+		<div class="popup" style="left: -121px; visibility: hidden;">
+			我收藏的商品 <i class="arrow-right"></i>
+		</div>
+	</li>{/if}
+	</ul>
+</div>
+<div class="quick-toggle">
+	<ul>
+		{if $spec_attr['service']}<li class="quick-area">
+		<a class="quick-links-a J-service WS-SHOW-CHAT" href="javascript:void(0);">
+			<i class="customer-service"></i>
+		</a>
+	</li>{/if}
+		{if $spec_attr['qrcode']}<li class="quick-area">
+		<a class="quick-links-a" href="javascript:void(0);"> <i class="qr-code"></i></a>
+		<div class="sidebar-code quick-sidebar" style="display: none;">
+			<i class="arrow-right"></i>
+			<img src="{:__IMG($web_info['web_qrcode'])}">
+		</div>
+	</li>{/if}
+		{if $spec_attr['top']}<li class="returnTop">
+		<a href="javascript:void(0);" class="return_top quick-links-a">
+			<i class="top"></i>
+		</a>
+		<div class="popup" style="left: -121px; visibility: hidden;">
+			返回顶部 <i class="arrow-right"></i>
+		</div>
+	</li>{/if}
+	</ul>
+</div>
+{/if}
+
+{if $temp == 'h-shop'}
+<!--精选好店-->
+<div class="h-result-json" style="display: none">{$result_json}</div>
+<div  class="goodShop-dia">
+	<div class="modal-body">
+		<div class="moduleTips">模块小贴士：推荐商城店铺，增加店铺曝光率。最多推荐18个。。</div>
+		<form class="form-horizontal" role="form" id="{$temp}Insert" method="post"  enctype="multipart/form-data">
+			<div class="form-group">
+				<label class="col-sm-2 control-label">模块名称</label>
+				<div class="col-sm-6">
+					<input type="text" placeholder="模块名称"  value="{$lift}" ectype="required" name="lift" class="form-control">
+				</div>
+			</div>
+			<div class="form-group">
+				<label class="col-sm-2 control-label">店招类型</label>
+				<div class="col-sm-6">
+					<label class="radio-inline">
+						<input type="radio" name="type" value="1" class="ui-radio" id="type_1" {if $spec_attr['type']} checked {/if}> 自动推荐
+					</label>
+					<label class="radio-inline">
+						<input type="radio" name="type" value="0" class="ui-radio" id="type_0" {if !$spec_attr['type']} checked {/if}> 手动推荐
+					</label>
+				</div>
+			</div>
+			<div class="form-group s-auto" {if !$spec_attr['type']} style="display:none;"{/if} >
+				<label class="col-sm-2 control-label">推荐条件</label>
+				<div class="col-sm-4">
+					<select class="form-control" name="sort">
+						<option value="0" {if !$spec_attr['sort']} selected="selected" {/if}>请选择</option>
+						<option value="1" {if $spec_attr['sort'] == 1} selected="selected" {/if}>按入驻时间升序</option>
+						<option value="2" {if $spec_attr['sort'] == 2} selected="selected" {/if}>按入驻时间降序</option>
+						<option value="3" {if $spec_attr['sort'] == 3} selected="selected" {/if}>按销售额升序</option>
+						<option value="4" {if $spec_attr['sort'] == 4} selected="selected" {/if}>按销售额降序</option>
+					</select>
+				</div>
+			</div>
+			<div class="infoTab s-manual" {if $spec_attr['type']} style="display:none;"{/if} >
+				<ul id="myTab" class="nav nav-tabs">
+					<li class="active"><a href="#shopList" data-toggle="tab">店铺列表({$shopcount})</a></li>
+					<li><a href="#shopChosed" data-toggle="tab">已选店铺({$recommendcount})</a></li>
+					<li class="fr">
+						<div class="search">
+							<input type="text" class="searchs" name="keyword_shop" placeholder="店铺名称">
+							<button class="search_to" type="button" onclick="searchshop()">搜索</button>
+						</div>
+					</li>
+				</ul>
+				<div id="myTabContent" class="tab-content">
+					<div class="tab-pane fade in active" id="shopList">
+						<!--表格-->
+						<table class="table table-hover v-table">
+							<thead>
+							<tr>
+								<th class="col-md-8">店铺名称</th>
+								<th>操作</th>
+							</tr>
+							</thead>
+							<tbody class='J-all'>
+							{if $shops}
+							{foreach $shops as $key => $shop}
+							<tr>
+								<td class="picword_td">
+								<!--<div class="col-sm-3 pic_td"><img src="{:__IMG($shop['shop_logo'])}" alt="" width="40" height="40"></div>
+								<div class="col-sm-9 word_td">
+									<p class="tdTitles J-shopname">{$shop['shop_name']}</p>
+								</div>-->
+									<div class="media text-left">
+										<div class="media-left"><p><img src="{:__IMG($shop['shop_logo'])}" style="width:60px;height:60px;"></p></div>
+										<div class="media-body break-word">
+											<div class="line-2-ellipsis line-title">
+												<a href="javascript:void(0)" target="_blank" class="a-goods-title">{$shop['shop_name']}</a>
+											</div>
+										</div>
+									</div>
+								</td>
+								<td>{if $shop['selected']==1}<a class="mr-04" href='javascript:void(0)' data-id="{$shop['shop_id']}" onclick="cancel(this,'selected')">取消推荐</a>{else}<a href='javascript:void(0)' class="mr-04" data-id="{$shop['shop_id']}" onclick="select(this)">推荐</a>{/if}<a href="javasrcipt:void(0)" class="mr-04" onclick="moveUp(this)">上移</a><a href="javasrcipt:void(0)"  onclick="moveDown(this)">下移</a></td>
+							</tr>
+							{/foreach}
+							{else}
+							<tr><td colspan="3" style='text-align:center;'>暂未选择店铺</td></tr>
+							{/if}
+							</tbody>
+						</table>
+					</div>
+					<div class="tab-pane fade" id="shopChosed">
+						<!--表格-->
+						<table class="table table-hover v-table">
+							<thead>
+							<tr>
+								<th class="col-md-8">店铺名称</th>
+								<th>操作</th>
+							</tr>
+							</thead>
+							<tbody class='J-select'>
+							{if $recommend_shops}
+							{foreach $recommend_shops as $key => $rshop}
+							<tr data-id="{$rshop['shop_id']}">
+								<td>
+									<!--<div class="col-sm-3 pic_td"><img src="{:__IMG($rshop['shop_logo'])}" alt="" width="40" height="40"></div>
+									<div class="col-sm-9 word_td">
+										<p class="tdTitles J-shopname">{$rshop['shop_name']}</p>
+									</div>-->
+									<div class="media text-left">
+										<div class="media-left"><p><img src="{:__IMG($rshop['shop_logo'])}" style="width:60px;height:60px;"></p></div>
+										<div class="media-body break-word">
+											<div class="line-2-ellipsis line-title">
+												<a href="javascript:void(0)" target="_blank" class="a-goods-title">{$rshop['shop_name']}</a>
+											</div>
+										</div>
+									</div>
+								</td>
+								<td><a href='javascript:void(0)' data-id="{$rshop['shop_id']}" onclick="cancel(this,'selected')">取消推荐</a>&nbsp;&nbsp;<a href="javasrcipt:void(0)" onclick="moveUp(this)">上移</a>&nbsp;&nbsp;<a href="javasrcipt:void(0)"  onclick="moveDown(this)">下移</a><input type="hidden" name="selected[]" value="{$rshop['shop_id']}"></td>
+							</tr>
+							{/foreach}
+							{/if}
+							</tbody>
+						</table>
+					</div>
+				</div>
+			</div>
+<input type="hidden" name="mode" value="{$temp}">
+<input type="hidden" name="shopnumber" value="18">
+<input type="hidden" name="suffix" value="{$suffix}">
+		</form>
+	</div>
+</div>
+<script language="JavaScript">
+
+
+    function moveUp(obj){
+        var current = $(obj).parent().parent();//获取当前<tr>
+        var prev = current.prev();  //获取当前<tr>前一个元素
+        if (current.index() > 0) {
+            current.insertBefore(prev);
+        } //插入到当前<tr>前一个元素前
+    }
+    // 下移
+    function moveDown(obj){
+        var current = $(obj).parent().parent();//获取当前<tr>
+        var next = current.next(); //获取当前<tr>后面一个元素
+        if (next) {
+            current.insertAfter(next);
+        }  //插入到当前<tr>后面一个元素后面
+    }
+    function searchshop(){
+        var shopname = $('input[name=keyword_shop]').val();
+        $('.J-shopname').each(function(){
+            if($(this).html().indexOf(shopname)==-1){
+                $(this).closest('tr').hide();
+            }else{
+                $(this).closest('tr').show();
+            }
+        })
+    }
+    function select(obj){
+        var obj = $(obj);
+        var shop_id = obj.data('id');
+        var can_select_num = $("input[name='shopnumber']").val();
+        var selected_count = $('.J-select').find('tr[data-id]').length;
+        if(selected_count >= can_select_num){
+            layer.msg('最多只能推荐'+can_select_num+'个');
+            return false;
+        }
+        obj.html('取消推荐');
+        obj.attr('onclick',"cancel(this)");
+        var select_obj = obj.parent().parent().clone();
+        $('.J-noselect').hide();
+        select_obj.find('td:eq(1)').append("<input type='hidden' name='selected[]' value='"+shop_id+"'>");
+        $('.J-select').append(select_obj);
+        $('.J-count').html(selected_count+1);
+    }
+    function cancel(obj){
+        var obj = $(obj);
+        var shop_id = obj.data('id');
+        $('.J-all').find('a[data-id|='+shop_id+']').html('推荐').attr('onclick',"select(this)");
+        obj.attr('onclick',"select(this)");
+        obj.html('推荐');
+        $('.J-select').find('tr[data-id|='+shop_id+']').remove();
+        var selected_count = $('.J-select').find('tr[data-id]').length;
+        if(selected_count <=0){
+            $('.J-noselect').show();
+        }
+        $('.J-count').html(selected_count);
+    }
+
+    $("input[name='type']").click(function() {
+        var val = $(this).val();
+        if (val == 0) {
+            $(".s-manual").show();
+            $(".s-auto").hide();
+        } else {
+            $(".s-manual").hide();
+            $(".s-auto").show();
+        }
+    });
+
+</script>
+{/if}
+{if $temp == 'h-shop1'}
+<div style="display: none" class="h-promp-json">{$result_json}</div>
+<div class="goodShop">
+	{if $lift}
+	<div class="w1200 titles">
+		<h3>{$lift}</h3>
+	</div>
+	{/if}
+	<!--好店列表-->
+	<div class="w1200 goodShopList clearfix">
+		<div class="goodShopList-left fl">
+			{if $shop_big}
+			<div class="left-brand-item">
+				<div class="left-brand-img">
+					<img src="{if $shop_big.picture}{:__IMG($shop_big.picture)}{else}PLATFORM_STATIC/images/jqqd.png{/if}" alt="">
+				</div>
+				<a href="{$shop_big.url}" class="brand-mask">
+					<div class="coupon">
+						<span data-spm-anchor-id="875.7931836/B.2016073.i0.31b64265q7qTaZ">{$shop_big.shop_name}</span>
+					</div>
+					<div class="enter">
+						<span>点击进入</span>
+					</div>
+				</a>
+			</div>
+			{/if}
+		</div>
+		<div class="goodShopList-right fl">
+			{if $shop_list}
+			<div class="brand-list">
+				<ul>
+					{foreach $shop_list as $key => $list}
+					<li>
+						<div class="brand-img">
+							<img width="148px" height="96px" src="{if $list.picture}{:__IMG($list.picture)}{else}PLATFORM_STATIC/images/jqqd.png{/if}" alt="">
+						</div>
+						<a href="{$list.url}" target="_blank" class="brand-mask">
+							<div class="coupon">
+								<span data-spm-anchor-id="875.7931836/B.2016073.i0.31b64265q7qTaZ">{$list.shop_name}</span>
+							</div>
+							<div class="enter">
+								<span>点击进入</span>
+							</div>
+						</a>
+					</li>
+					{/foreach}
+					{if $shop_num}
+					{for start="0" end="$shop_num"}
+					<li>
+						<div class="brand-img">
+							<img width="148px" height="74px" src="http://iph.href.lu/148x74" alt="">
+						</div>
+					</li>
+					{/for}
+					{/if}
+					<li class="last">
+						<div class="brand-img">
+							<a href="javascript:void(0);">发现更多好店>></a>
+						</div>
+					</li>
+
+				</ul>
+			</div>
+			{/if}
+		</div>
+	</div>
+</div>
+{/if}
+
+{if $temp == 'homeBanner'}
+<div class="shop_banner_json" style="display: none">{$result_json}</div>
+<!--首页轮播编辑模态框-->
+<div id="bannerEdit1" class="bannerEdit-dia">
+	<div class="modal-body" style="height: 500px;overflow-y: scroll;">
+		<div class="moduleTips">模块贴士：可以最多展示8张图片，通常用于精彩活动、主打商品等。尺寸1920px*520px，最少上传两张图片最多八张。</div>
+		<form class="form-horizontal" role="form">
+
+			<div class="form-group">
+				<label class="col-sm-2 control-label">轮播图片</label>
+				<div class="col-sm-10">
+					<!--表格-->
+					<table class="table table-hover v-table table-bordered" style="margin-bottom: 0px">
+						<thead>
+						<tr>
+							<th>缩略图</th>
+							<th>图片链接</th>
+							<th>跳转链接</th>
+							<th>新窗口打开</th>
+							<th>排序</th>
+							<th>操作</th>
+						</tr>
+						</thead>
+						<tbody class='J-tbody'>
+						{if isset($spec_attr['leftBannerList']) && !empty($spec_attr['leftBannerList'])}
+						{foreach $spec_attr['leftBannerList'] as $ki => $item}
+						<tr data-key="{$ki}"><td><div class="add-lbt"><img src="{$item['pic_src']}" class="pic_src{$ki}" alt=""></div></td>
+							<td class="td20"><input type="text" name="leftBannerLink[]" class="ipt80 pic_link" value="{$item['pic_link']}"><a href="javascript:void(0);" data-toggle="decoPicture2"><input type="hidden" id="pic_src{$ki}" name="leftBanner[]" class="J-pic" value="{$item['pic_src']}"><i class="icon icon-pic"></i></a></td>
+							<td class="td20"><input type="text" name="leftBannerUrlLink[]" class="ipt80 floorpic{$ki}" {if isset($item['link'])} value="{$item['link']}" {/if}><a href="javascript:void(0);" data-toggle="selectUrlPc"><i class="icon icon-link"></i></a></td>
+							<td><label for="opennew_{$ki}" class="checkbox-inline"><input type="checkbox" id="opennew_{$ki}"  name="leftBannerOpennew[]" {if $item['opennew']==1} checked {/if}><span>是</span></label></td>
+							<td>
+								<a href="javascript:void(0);" onclick="moveUp(this)"><i class="icon icon-up-arrow"></i></a>
+								<a href="javascript:void(0);" onclick="moveDown(this)"><i class="icon icon-down-arrow"></i></a>
+							</td>
+							<td><a href="javascript:void(0);" onclick="delcopy(this)">删除</a></td></tr>
+						{/foreach}
+						{/if}
+						</tbody>
+					</table>
+					<div class="addOneBorder"><a href="javascript:void(0);" class="addOne">+增加一个</a></div>
+				</div>
+
+			</div>
+
+			<div class="form-group">
+				<label class="col-sm-2 control-label">快捷入口</label>
+				<div class="col-sm-10">
+					<label class="radio-inline">
+						<input type="radio" name="entrance" id="entrance-show" value="1" {if $spec_attr['entrance'] ==1 } checked {/if} > 显示
+					</label>
+					<label class="radio-inline">
+						<input type="radio" name="entrance" id="entrance-none" value="2" {if $spec_attr['entrance'] !=1 } checked{/if} > 隐藏
+					</label>
+				</div>
+
+			</div>
+
+			<div class="form-group entrance-content">
+				<label class="col-sm-2 control-label">  </label>
+				<div class="col-sm-10">
+					<ul class="clearfix entrance-ul">
+						{if isset($spec_attr['leftAdvList']) && !empty($spec_attr['leftAdvList'])}
+						{foreach $spec_attr['leftAdvList'] as $ka => $itema}
+						<li data-key='{$ka}'>
+							<div class="entrance-th">入口{$ka}</div>
+							<div class="entrance-img"><img class="pic_src{$ka}" src="{if $itema['pic_src']}{$itema['pic_src']}{else}http://iph.href.lu/50x50?text=30x30{/if}" alt=""></div>
+						    <div class="entrance-imgAddress"><input type="text" class="ipt80" name="leftAdvName[]" placeholder="入口名称" value="{$itema['leftAdvName']}"></div>
+							<div class="entrance-imgAddress"><input type="text" class="ipt80 picadv" name="leftAdvLink[]" placeholder="图片地址" value="{$itema['pic_link']}"><a href="javascript:void(0);" data-toggle="decoPicture3"><input type="hidden" id="adv_src{$ka}" name="leftAdv[]" class="J-pic" value="{$itema['pic_src']}"><i class="icon icon-pic"></i></a></div>
+							<div class="entrance-imgAddress"><input type="text" name="leftAdvUrlLink[]" placeholder="跳转链接" class="ipt80 advpic{$ka}" {if isset($itema['link'])} value="{$itema['link']}" {/if}><a href="javascript:void(0);" data-toggle="selectUrlPc"><i class="icon icon-link"></i></a></div>
+							<div class="entrance-open"><label for="advopennew_{$ka}"><input type="checkbox" name="leftAdvOpennew[]" id="advopennew_{$ka}"{if $itema['opennew']==1} checked {/if}>新窗口打开</label></div>
+						</li>
+						{/foreach}
+						{/if}
+					</ul>
+				</div>
+
+			</div>
+			<input type="hidden" name="mode" value="{$temp}" />
+			<input type="hidden" name="service_count" value="{$pic_number}">
+		</form>
+	</div>
+</div>
+<!--banner编辑模态框-->
+<script type="text/javascript">
+require(['utilAdmin'],function(utilAdmin){
+    function addcopy() {
+        var can_select_num = Number($("input[name='service_count']").val());
+        var selected_count = $('.J-tbody').find('tr').length;
+        var alltr = $('.J-tbody').find('tr');
+        var arrkey = [];
+        alltr.each(function(){
+            arrkey.push($(this).data('key'));
+        })
+        var max = 0;
+        if(arrkey.length>0){
+            max = utilAdmin.arrayMax(arrkey);//取最大值
+        }
+        if (selected_count >= can_select_num) {
+            layer.msg('最多只能添加' + can_select_num + '个');
+            return false;
+        }
+        var html = "";
+        html += '<tr data-key="'+(max+1)+'"><td><div class="add-lbt"><img src="http://iph.href.lu/1920x520" class="pic_src'+(max+1)+'" alt=""></div></td>';
+        html += '<td class="td20"><input type="text" name="leftBannerLink[]" class="ipt80 pic_link"><a href="javascript:void(0);" data-toggle="decoPicture2"><input type="hidden" id="pic_src'+(max+1)+'" name="leftBanner[]" class="J-pic" value=""><i class="icon icon-pic"></i></a></td>';
+        html += '<td class="td20"><input type="text" name="leftBannerUrlLink[]" class="ipt80 floorpic'+(max+1)+'"><a href="javascript:void(0);" data-toggle="selectUrlPc"><i class="icon icon-link"></i></a></td>';
+        html += '<td><label for="opennew_'+(max+1)+'" class="checkbox-inline"><input type="checkbox" id="opennew_'+(max+1)+'"  name="leftBannerOpennew[]"><span>是</span></label></td>';
+        html += '<td>';
+        html += '<a href="javascript:void(0);" onclick="moveUp(this)"><i class="icon icon-up-arrow"></i></a>';
+        html += '<a href="javascript:void(0);" onclick="moveDown(this)"><i class="icon icon-down-arrow"></i></a>';
+        html += '</td>';
+        html += '<td><a href="javascript:void(0);" onclick="delcopy(this)">删除</a></td></tr>';
+        $('.J-tbody').append(html);
+    }
+
+	$('.addOneBorder').on('click','a',function(){
+		addcopy();
+	})
+        $('.J-tbody').on('change','.pic_link',function(){
+            var key = $(this).parents('tr').data('key');
+            console.log(key);
+            console.log($(this).val());
+            $('.pic_src'+key).attr('src',$(this).val());
+            $('#pic_src'+key).val($(this).val());
+        });
+        $('.entrance-ul').on('change','.picadv',function(){
+            var key = $(this).parents('li').data('key');
+            console.log(key);
+            console.log($(this).val());
+            $('.pic_src'+key).attr('src',$(this).val());
+            $('#adv_src'+key).val($(this).val());
+        })
+})
+
+</script>
+{/if}
+{if $temp == 'home_bannerResponse'}
+<div style="display: none" class="h-banner-json">{$result_json}</div>
+<div class="swiper-container swiper-container1 swiper-no-swiping">
+	<div class="swiper-wrapper" style="height: 540px">
+	{if isset($spec_attr['leftBannerList']) && !empty($spec_attr['leftBannerList'])}
+	{foreach $spec_attr['leftBannerList'] as $ki => $item}
+        <div class="swiper-slide"><a href="{if $item['link']}{$item['link']}{else}javascript:void(0);{/if}"  target="{if $item['opennew']}_blank{/if}"  class="lbtTwo bg-full" style="background-image:url('{$item['pic_link']}');width: 100%;height: 100%"></a></div>
+	{/foreach}
+	{/if}
+	</div>
+	<!-- 如果需要分页器 -->
+	<div class="swiper-pagination"></div>
+</div>
+{if $spec_attr['entrance']==1}
+<div class="w1200" style="position: relative;">
+	<div class="vip-outcon">
+		<div class="vip-con">
+			<div class="user-img">
+				<a href="{:__URLS('SHOP_MAIN/member/index')}"><img src="ADMIN_IMG/decorate/weidenglu.png" alt=""></a>
+			</div>
+			<p class="infor">Hi,欢迎来到团大人</p>
+			<div class="outcon-btn">
+				<a href="{:__URLS('SHOP_MAIN/login/index')}" class="login">登录</a>
+				<a href="{:__URLS('SHOP_MAIN/shop/shopindex')}">注册</a>
+			</div>
+			<div class="entrance">
+				<div class="entrance-title">快捷入口</div>
+				<div class="entrance-list">
+					<ul class="clearfix">
+						{foreach $spec_attr['leftAdvList'] as $ka => $itemka}
+						<li>
+							<a href="{$itemka['link']}" {if $itemka['opennew']} target='_blank' {/if}>
+							<div class="entrance-img"><img src="{$itemka['pic_link']}" alt=""></div>
+							<p>{$itemka['leftAdvName']}</p>
+							</a>
+						</li>
+						{/foreach}
+					</ul>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+{/if}
+{/if}

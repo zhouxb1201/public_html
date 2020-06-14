@@ -1,0 +1,85 @@
+{extend name="platform/new_base" /}
+{block name="resources"/}
+{/block}
+{block name="main"}
+                <!-- page  -->
+                <input type="hidden" id="start_time" value="{$start_date}">
+                <input type="hidden" id="end_time" value="{$end_date}">
+                <div class="mb-20 flex flex-pack-justify flex-align-center">
+                    <p>今日新增会员：{$user_today_num} | 本月新增会员：{$user_month_num} | 平台总会员：{$user_count_num}</p>
+                    <div class="date-input-control">
+                        <input type="text" class="form-control" id="date" placeholder="注册时间"><i class="icon icon-calendar"></i>
+                    </div>
+                </div>
+                <div class="h-500 pt-15" id="member" ></div>
+                <!-- page end -->
+{/block}
+{block name="script"}
+<script>
+require(['util'],function(util){
+    var start_time = $("#start_time").val();
+    var end_time = $("#end_time").val();
+    loading(start_time,end_time);
+    function loading(startDate,endDate){
+    $.ajax({
+        type : "post",
+        url : "{:__URL('PLATFORM_MAIN/statistics/getMemberMonthCount')}",
+        data:{"start_date":startDate,"end_date":endDate},
+        success : function(data) {
+            var memberOption = {
+                title: {
+                    subtext: '会员新增趋势',
+					left: 'center',
+					top:'20'
+                },
+                tooltip: {
+                    trigger: 'axis'
+                },
+                legend: {
+                    data:['新增会员数']
+                },
+                grid: {
+                    left: '3%',
+                    right: '4%',
+                    bottom: '3%',
+                    containLabel: true
+                },
+                xAxis: {
+                    type: 'category',
+                    boundaryGap: false,
+                    data: data[0]
+                },
+                yAxis: {
+                    type: 'value',
+                    name:'数量'
+                },
+                series: [
+                    {
+                        name:'新增会员数',
+                        type:'line',
+                        stack: '总额',
+                        data:data[1]
+                    }
+                ]
+            };
+            util.chart('member',memberOption)
+        }
+    });
+    }
+    // util.date('#date',{"opens": "left",single:false},function(start, end, label){
+    //     var startDate = start.format('YYYY-MM-DD');
+    //     var endDate = end.format('YYYY-MM-DD');
+    //     loading(startDate,endDate);
+    // });
+    util.layDate('#date',true,function(value, date, endDate){
+        var start_date=date.year+"-"+date.month+"-"+date.date;
+        var end_date=endDate.year+"-"+endDate.month+"-"+endDate.date;
+        if(date.date !== undefined){
+            loading(start_date,end_date);
+        }
+    })
+
+
+})
+</script>
+{/block}

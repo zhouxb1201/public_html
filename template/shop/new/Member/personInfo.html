@@ -1,0 +1,941 @@
+{extend name="shop/new/Member/base" /}
+{include file='shop/new/urlModel'/}
+{block name="resources"}
+<link rel="stylesheet" href="__TEMP__/shop/new/public/css/bootstrap.min.css">
+<link rel="stylesheet" href="__TEMP__/shop/new/public/css/common.css">
+<link rel="stylesheet" href="__TEMP__/shop/new/public/css/shop.css">
+{/block}
+{block name="main"}
+<div class="v-main-right fl">
+    <div class="v-container">
+        <!--page-->
+        <form class="form-list" id="form-list">
+            <div class="control-group clearfix">
+                <label class="control-label">
+                    头像：
+                </label>
+                <div class="controls">
+                    <div class="user-profile">
+                        <div class="profile-avatar">
+                            {if condition="$member_info.user_info.user_headimg neq '' and $member_info.user_info.user_headimg neq '0'"}
+                            <img class="user_heading" src="{:__IMG($member_info.user_info.user_headimg)}" width="70px" height="70px">
+                            {else}
+                            <img width="70px" height="70px" class="user_heading" src="__TEMP__/shop/new/public/image/0000000000_21_120x120.jpg" />
+                            {/if}
+                            <a href="javascript:void(0);" name="person_index_info_head01" class="img-edit" data-toggle="modal" data-target="#avatar-modal">编辑</a>
+                            <div class="edit_bg"></div>
+                        </div>
+                        <a target="_blank" class="vip vip-new"></a>
+                    </div>
+                </div>
+            </div>
+
+            <div class="control-group clearfix">
+                <label class="control-label">
+                    <em>*</em>用户名：
+                </label>
+                <div class="controls">
+                    <input id="user_name" name="username" type="text" class="text" maxlength="12"  value="{$member_info.user_info.user_name}" {if $member_info.user_info.user_name}disabled{/if} >&nbsp;&nbsp;可用作登录，保存之后不能修改
+                </div>
+            </div>
+
+            <div class="control-group clearfix">
+                <label class="control-label">昵称：</label>
+                <div class="controls">
+                    <input id="nick_name" name="nickName" type="text" class="text" maxlength="20" value="{$member_info.user_info.nick_name}">
+                </div>
+            </div>
+
+            <div class="control-group clearfix">
+                <label class="control-label"><em>*</em>手机：</label>
+                <div class="controls lh26">
+                    <span>{$member_info['user_info']['user_tel']}</span>
+                    <a href="{:__URL('SHOP_MAIN/member/modifyMobile')}" name="person_index_info_data02">更换手机</a>
+                </div>
+            </div>
+
+            {if $notice['noticeEmail']==1}
+            {if condition="$member_info['user_info']['user_email'] neq ''"}
+            <div class="control-group clearfix">
+                <label class="control-label">电子邮箱：</label>
+                <div class="controls lh26">
+                    <span>{$member_info['user_info']['user_email']}</span>
+                    <a href="{:__URL('SHOP_MAIN/member/modifyEmail')}" name="person_index_info_data03">更换邮箱</a>
+                </div>
+            </div>
+            {else}
+            <div class="control-group clearfix">
+                <label class="control-label">电子邮箱：</label>
+                <div class="controls lh26">
+                    <span>您的账号还没有绑定邮箱</span>
+                    <a href="{:__URL('SHOP_MAIN/member/bindEmail')}" name="person_index_info_data03">去关联</a>
+                </div>
+            </div>
+            {/if}
+            {/if}
+            <div id="custom_list">
+
+            </div>
+            <div class="control-group clearfix priority-low">
+                <label class="control-label">&nbsp;</label>
+                <div class="fl">
+                    <button type="submit" class="ms-stand-btn1" name="person_index_info_data05" style="outline:none;border: 1px solid transparent;">保存</button>
+                </div>
+
+            </div>
+        </form>
+        <!--page-->
+    </div>
+</div>
+
+<script id="test" type="text/html">
+    {{each data1 as items index}}
+    <%if (items.tag=='input'){%>
+            <div class="control-group clearfix">
+                <label class="control-label">
+                    <%if (items.required){%>
+                    <em>*</em>
+                    <%}%>
+                    {{items.label}}：
+                </label>
+                <div class="controls">
+                    <%if (items.value){%>
+                    <input id="input{{index}}" <%if (items.required){%> required <%}%> name="name{{index}}" type="text" class="text" maxlength="12" value="{{items.value}}" placeholder="{{items.placeholder}}" autocomplete="off" data-placeholder="{{items.placeholder}}" data-tag="{{items.tag}}" data-name="{{items.name}}" data-label="{{items.label}}" data-required="{{items.required}}" data-default="{{items.default}}" data-index="{{index}}">
+                    <% } else{ %>
+                    <input id="input{{index}}" <%if (items.required){%> required <%}%> name="name{{index}}" type="text" class="text" maxlength="12" value="{{items.default}}" placeholder="{{items.placeholder}}" autocomplete="off" data-placeholder="{{items.placeholder}}" data-tag="{{items.tag}}" data-name="{{items.name}}" data-label="{{items.label}}" data-required="{{items.required}}" data-default="{{items.default}}" data-index="{{index}}">
+                    <% } %>
+                    
+                </div>
+            </div>
+    <%}%>
+
+    <%if (items.tag=='textarea'){%>
+            <div class="control-group clearfix">
+                <label class="control-label">
+                    <%if (items.required){%>
+                    <em>*</em>
+                    <%}%>
+                    {{items.label}}：
+                </label>
+                <div class="controls">
+                    <%if (items.value){%>
+                    <textarea id="textarea{{index}}" <%if (items.required){%> required <%}%> name="textarea{{index}}" class="text h-100 resize_none" data-tag="{{items.tag}}" data-name="{{items.name}}" data-label="{{items.label}}" data-required="{{items.required}}" data-default="{{items.default}}" data-index="{{index}}">{{items.value}}</textarea>
+                    <% } else{ %>
+                    <textarea id="textarea{{index}}" <%if (items.required){%> required <%}%> name="textarea{{index}}" class="text h-100 resize_none" data-tag="{{items.tag}}" data-name="{{items.name}}" data-label="{{items.label}}" data-required="{{items.required}}" data-default="{{items.default}}" data-index="{{index}}">{{items.default}}</textarea>
+                    <% } %>
+                    
+                </div>
+            </div>
+    <%}%>
+
+    <%if (items.tag=='select'){%>
+            <div class="control-group clearfix">
+                <label class="control-label">
+                    <%if (items.required){%>
+                    <em>*</em>
+                    <%}%>
+                    {{items.label}}：
+                </label>
+                <div class="controls">
+                    <select name="select{{index}}" <%if (items.required){%> min="-1" title="此项为必填项" <%}%> id="select{{index}}" class="text" data-tag="{{items.tag}}" data-name="{{items.name}}" data-label="{{items.label}}" data-required="{{items.required}}" data-options="{{items.options}}" data-index="{{index}}">
+                        <option value="-2">请选择</option>
+                        {{each items.options as item index}}    
+                                <option value="{{index}}" <% if (items.value==index) {%> selected <%}%> >{{items.options[index]}}</option>
+                        {{/each}}
+                    </select>
+                </div>
+            </div>
+    <%}%>
+
+    <%if (items.tag=='phone'){%>
+            <div class="control-group clearfix">
+                <label class="control-label">
+                    <%if (items.required){%>
+                    <em>*</em>
+                    <%}%>
+                    {{items.label}}：
+                </label>
+                <div class="controls">
+                <input id="phone{{index}}" <%if (items.required){%> required <%}%> isPhone="true" name="phone{{index}}" type="text" class="text" maxlength="12" value="{{items.value}}" placeholder="{{items.placeholder}}" autocomplete="off" data-tag="{{items.tag}}" data-name="{{items.name}}" data-label="{{items.label}}" data-required="{{items.required}}" data-placeholder="{{items.placeholder}}" data-index="{{index}}">
+                </div>
+            </div>
+    <%}%>
+
+    <%if (items.tag=='card'){%>
+            <div class="control-group clearfix">
+                <label class="control-label">
+                    <%if (items.required){%>
+                    <em>*</em>
+                    <%}%>
+                    {{items.label}}：
+                </label>
+                <div class="controls">
+                    <input id="card{{index}}" <%if (items.required){%> required <%}%> idCard="true" name="card{{index}}" type="text" class="text" maxlength="19" value="{{items.value}}" placeholder="{{items.placeholder}}" autocomplete="off" data-tag="{{items.tag}}" data-name="{{items.name}}" data-label="{{items.label}}" data-required="{{items.required}}" data-placeholder="{{items.placeholder}}" data-index="{{index}}">
+                </div>
+            </div>
+    <%}%>
+
+    <%if (items.tag=='radio'){%>
+            <div class="control-group clearfix">
+                <label class="control-label">
+                    <%if (items.required){%>
+                    <em>*</em>
+                    <%}%>
+                    {{items.label}}：
+                </label>
+                <div class="controls" id="radio{{index}}" data-tag="{{items.tag}}" data-name="{{items.name}}" data-label="{{items.label}}" data-required="{{items.required}}" data-options="{{items.options}}" data-index="{{index}}">
+                    {{each items.options as item index1}}
+                    <label class="sex-label"> 
+                        <input class="" type="radio" data-parent="radio" <%if (items.required){%> required <%}%> name="radio{{index}}" value="{{items.options[index1]}}" <% if (items.value==items.options[index1]) { %>checked <% } %>  >
+                        <span>{{items.options[index1]}}</span>
+                    </label>
+                    {{/each}}
+                </div>
+            </div>
+      <%}%>
+
+    <%if (items.tag=='checkbox'){%>
+            <div class="control-group clearfix">
+                <label class="control-label">
+                    <%if (items.required){%>
+                    <em>*</em>
+                    <%}%>
+                    {{items.label}}：
+                </label>
+                <div class="controls" id="checkbox{{index}}" data-tag="{{items.tag}}" data-name="{{items.name}}" data-label="{{items.label}}" data-required="{{items.required}}" data-options="{{items.options}}" data-index="{{index}}">
+                    {{each items.options as item index1}}
+                    <label class="sex-label">
+                        <input type="checkbox" data-parent="checkbox" <%if (items.required){%> required <%}%> name="checkbox{{index}}" value="{{items.options[index1]}}" {{each items.value as item2 index2}} <% if (items.value[index2]==items.options[index1]) { %>checked <% } %> {{/each}}>
+                        <span>{{items.options[index1]}}</span>
+                    </label>
+                    {{/each}}
+                </div>
+            </div>
+
+    <%}%>
+
+    <%if (items.tag=='date'){%>
+        <div class="control-group clearfix">
+            <label class="control-label">
+                <%if (items.required){%>
+                <em>*</em>
+                <%}%>
+                {{items.label}}：
+            </label>
+            <div class="controls">
+                <input id="date{{index}}" name="date{{index}}" <%if (items.required){%> required <%}%> type="text" class="text" value="{{items.value}}" placeholder="请选择日期" autocomplete="off" readonly data-tag="{{items.tag}}" data-name="{{items.name}}" data-label="{{items.label}}" data-required="{{items.required}}" data-type="{{items.type}}" data-default="{{items.default}}" data-index="{{index}}">
+            </div>
+         </div>
+    <%}%>
+
+    <%if (items.tag=='date_range'){%>
+        <div class="control-group clearfix">
+            <label class="control-label">
+                <%if (items.required){%>
+                <em>*</em>
+                <%}%>
+                {{items.label}}：
+            </label>
+            <div class="controls">
+                <input id="RangeDate{{index}}" name="RangeDate{{index}}" <%if (items.required){%> required <%}%> type="text" class="text" value="{{items.value}}" placeholder="请选择日期范围" autocomplete="off" readonly data-tag="{{items.tag}}" data-name="{{items.name}}" data-label="{{items.label}}" data-required="{{items.required}}" data-start_default="{{items.start_default}}" data-end_default="{{items.end_default}}" data-start_type="{{items.start_type}}" data-end_type="{{items.end_type}}" data-index="{{index}}">
+            </div>
+         </div>
+    <%}%>
+
+    <%if (items.tag=='area'){%>
+            <div class="control-group clearfix">
+                <label class="control-label">
+                    <%if (items.required){%>
+                    <em>*</em>
+                    <%}%>
+                    {{items.label}}：
+                </label>
+                <div class="controls" id="area{{index}}" data-tag="{{items.tag}}" data-name="{{items.name}}" data-label="{{items.label}}" data-required="{{items.required}}" data-type="{{items.type}}" data-index="{{index}}">
+                    <input type="hidden" id="pids{{index}}" name="pids{{index}}"  value="{{items.pid}}" data-index="{{index}}">
+                    <input type="hidden" id="cids{{index}}" name="cids{{index}}" value="{{items.cid}}" data-index="{{index}}">
+                    <input type="hidden" id="dids{{index}}" name="dids{{index}}" value="{{items.did}}" data-index="{{index}}">
+                     <%if (items.type=="1"){%>
+                        <select class="selects getProvince" id="province_id{{index}}" name="province_id{{index}}" <%if (items.required){%> min="-1" title="此项为必填项" <%}%> >
+                            <option value="-2" >请选择省</option>
+                        </select>
+                     <%}%>
+                     <%if (items.type=="2"){%>
+                        <select class="selects getProvince" id="province_id{{index}}" name="province_id{{index}}" >
+                            <option value="-2" >请选择省</option>
+                        </select>
+                        <select class="selects getCity" id="city_id{{index}}" name="city_id{{index}}" <%if (items.required){%> min="-1" title="此项为必填项" <%}%>>
+                            <option value="-2">请选择市</option>
+                        </select> 
+                     <%}%>
+                     <%if (items.type=="3"){%>
+                        <select class="selects getProvince" id="province_id{{index}}" name="province_id{{index}}" >
+                            <option value="-2" >请选择省</option>
+                        </select>
+                        <select class="selects getCity" id="city_id{{index}}" name="city_id{{index}}">
+                            <option value="-2">请选择市</option>
+                        </select>
+                        <select class="selects getDistrict" id="district_id{{index}}" name="district_id{{index}}" <%if (items.required){%> min="-1" title="此项为必填项" <%}%> >
+                            <option value="-2">请选择区</option>
+                        </select>
+                    <%}%>
+                </div>
+            </div>
+    <%}%>
+    <%if (items.tag=='img'){%>
+        <div class="control-group clearfix">
+            <label class="control-label">
+                <%if (items.required){%>
+                <em>*</em>
+                <%}%>
+                {{items.label}}：
+            </label>
+            <div class="controls" id="imgs{{index}}" data-tag="{{items.tag}}" data-name="{{items.name}}" data-label="{{items.label}}" data-required="{{items.required}}" data-max="{{items.max}}" data-index="{{index}}">
+                    <div class="imgUpload">
+                        <!--图片选择对话框-->
+                        <div class="div_imgfile">图片上传</div>
+                        <!--图片预览容器-->
+                        <div class="evaluate_right_imgs div_imglook">
+                            {{each items.value as item index3}}
+                            <div class="lookimg" num="{{index3}}">
+                                <img src="{{items.value[index3]}}">
+                                <div class="lookimg_delBtn" style="display: none;">移除</div>
+                                <div class="lookimg_progress"><div>
+                                </div></div>
+                            </div>
+                            {{/each}}
+                            <div style="clear: both;"></div>
+                        </div>
+                    </div>
+            </div>
+         </div>
+    <%}%>
+
+
+    {{/each}}
+</script>
+
+<input type="hidden" id="p_id" value="{$member_info['user_info']['province_id']}">
+<input type="hidden" id="c_id" value="{$member_info['user_info']['city_id']}">
+<input type="hidden" id="d_id" value="{$member_info['user_info']['district_id']}">
+<!--boostrap模态框-->
+<div class="modal fade" id="avatar-modal" aria-hidden="true" aria-labelledby="avatar-modal-label" role="dialog" tabindex="-1">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+
+            <form class="avatar-form">
+                <div class="modal-header">
+                    <button class="close" data-dismiss="modal" type="button">&times;</button>
+                    <h4 class="modal-title" id="avatar-modal-label">上传头像</h4>
+                </div>
+                <div class="modal-body">
+                    <div class="avatar-body">
+                        <div class="avatar-upload">
+                            <input class="avatar-src" name="avatar_src" type="hidden">
+                            <input class="avatar-data" name="avatar_data" type="hidden">
+                            <label for="avatarInput" style="line-height: 35px;">图片上传</label>
+                            <button class="btn" type="button" style="height: 35px;" onclick="$('input[id=avatarInput]').click();">上传头像</button>
+                            <span id="avatar-name"></span>
+                            <input class="avatar-input hide" id="avatarInput" name="avatar_file" type="file"></div>
+                        <div class="row">
+                            <div class="col-md-9">
+                                <div class="avatar-wrapper"></div>
+                            </div>
+                            <div class="col-md-3">
+                                <div>预览</div>
+                                <div class="avatar-preview preview-lg" id="imageHead"></div>
+
+                            </div>
+                        </div>
+                        <div class="row avatar-btns">
+                            <div class="col-md-4">
+                                <div class="btn-group">
+                                    <button class="btn fa fa-undo" data-method="rotate" data-option="-90" type="button" title="Rotate -90 degrees"> 向左旋转</button>
+                                </div>
+                                <div class="btn-group">
+                                    <button class="btn fa fa-repeat" data-method="rotate" data-option="90" type="button" title="Rotate 90 degrees"> 向右旋转</button>
+                                </div>
+                            </div>
+                            <div class="col-md-3">
+                                <button class="btn btn-block avatar-save fa fa-save" type="button" data-dismiss="modal"> 保存修改</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+<div class="loading" aria-label="Loading" role="img" tabindex="-1"></div>
+<input type="hidden" id="custom_status" value="{$custom_member_status}">
+{/block}
+{block name="javascript"}
+<script>
+    require(['dialog','template-web','imgUp'], function (dialog,template,imgUp) {
+        dialog.AvatarUpload();
+        loadinga();
+        var getDataLength = '';
+        function loadinga(){
+            $.ajax({
+                type : "post",
+                url :  __URL('SHOP_MAIN/member/getMemberBaseInfo'),
+                dataType : "json",
+                success : function(data) {
+                    if(data.data.custom_person){
+                        var status=data.data.custom_person.status;
+                            if(status==$('#custom_status').val()){    
+                                var data1=data.data.custom_person.form_data;
+                            }else{
+                                var data1=data.data.custom_data;
+                            }
+                    }else{
+                          var data1=data.data.custom_data;
+                    }
+                    
+                    for(var i in data1){
+                        if(data1[i].tag=='select'){
+                             data1[i].options = data1[i].options.split('\n');
+                        };
+                        if(data1[i].tag=='radio'){
+                            data1[i].options = data1[i].options.split('\n');
+                        };
+                        if(data1[i].tag=='checkbox'){
+                            data1[i].options = data1[i].options.split('\n');
+                        };
+                        if(data1[i].tag=='checkbox'){
+                            data1[i].value = data1[i].value.split('\n');
+                        };
+                        if(data1[i].tag=='date'){
+                            if(data1[i].value){
+                                data1[i].value = dialog.turnDate(data1[i].value);
+                            }  
+                        };
+                        if(data1[i].tag=='date_range'){
+                            if(data1[i].value){
+                                var arr=data1[i].value.split(',');
+                                data1[i].value=dialog.turnDate(parseInt(arr[0]))+' - '+dialog.turnDate(parseInt(arr[1]));
+                            }
+                        };
+                        if(data1[i].tag=='area'){
+                            if(data1[i].value){
+                                var arr=data1[i].value.split(",");
+                                 arr1=arr[1].split('/');
+                                 data1[i].pid=arr1[0];
+                                 data1[i].cid=arr1[1];
+                                 data1[i].did=arr1[2];
+
+                            }
+
+                        };
+                        if(data1[i].tag=='img'){
+                            if(data1[i].value){
+                                data1[i].value = data1[i].value.split(',');
+                            }
+                            
+                        }
+
+                    }
+                    getDataLength = data1.length;
+                    var html = template('test', {data1:data1});
+                    document.getElementById('custom_list').innerHTML = html;
+                    if($('input[id^="date"]')){ 
+                        $('input[id^="date"]').each(function(){
+                            var index=$(this).data('index');
+                            dialog.layDate("#date"+index);
+                        })
+                        
+                    }
+
+                    if($('input[id^="RangeDate"]')){ 
+                        $('input[id^="RangeDate"]').each(function(){
+                            var index=$(this).data('index');
+                            dialog.layDate("#RangeDate"+index,true);
+                        })
+                        
+                    }
+
+                    if($('div[id^="imgs"]')){
+                        $('div[id^="imgs"]').each(function(){
+                            var index=$(this).data('index');
+                            var max=$(this).data('max');
+                            imgUp.imgUpload("#imgs"+index,max);
+                        })
+                    }
+
+                    $('input[id^="pids"]').each(function(){
+                        var _this=$(this);
+                        var index=$(this).data('index');
+                        var pid=$('input[id="pids'+index+'"]').val();
+                        $.ajax({
+                            type : "post",
+                            url :  __URL('SHOP_MAIN/member/getprovince'),
+                            dataType : "json",
+                            success : function(data) {
+                                if (data != null && data.length > 0) {
+                                    var str = "";
+                                    for (var i = 0; i < data.length; i++) {
+                                        if(data[i].province_id==pid){
+                                            str += '<option  selected value="'+data[i].province_id+'">'+data[i].province_name+'</option>';
+                                        }else{
+                                            str += '<option value="'+data[i].province_id+'">'+data[i].province_name+'</option>';
+                                        }
+                                    }
+                                    _this.siblings(".getProvince").append(str);
+                                    // $(".getProvince").append(str);
+                                }
+                            }
+                        });
+
+                    })
+
+                    $('input[id^="cids"]').each(function(){
+                        var _this=$(this);
+                        var index=$(this).data('index');
+                        var cid=$('input[id="cids'+index+'"]').val();
+                        var pid=$('input[id="cids'+index+'"]').prev().val();
+                        if(pid){
+                            $.ajax({
+                                type : "post",
+                                url :  __URL('SHOP_MAIN/member/getcity'),
+                                data:{
+                                    'province_id' : pid
+                                },
+                                dataType : "json",
+                                success : function(data) {
+                                    if (data != null && data.length > 0) {
+                                        var str = "";
+                                        for (var i = 0; i < data.length; i++) {
+                                            if(data[i].city_id==cid){
+                                                str += '<option  selected value="'+data[i].city_id+'">'+data[i].city_name+'</option>';
+                                            }else{
+                                                str += '<option value="'+data[i].city_id+'">'+data[i].city_name+'</option>';
+                                            }
+                                        }
+                                        _this.siblings(".getCity").append(str);
+                                    }
+                                }
+                            });
+                        }
+
+                    })
+
+                    $('input[id^="dids"]').each(function(){
+                        var _this=$(this);
+                        var index=$(this).data('index');
+                        var did=$('input[id="dids'+index+'"]').val();
+                        var cid=$('input[id="dids'+index+'"]').prev().val();
+                        if(cid){
+                            $.ajax({
+                                type : "post",
+                                url :  __URL('SHOP_MAIN/member/getDistrict'),
+                                dataType : "json",
+                                data:{
+                                    'city_id' : cid
+                                },
+                                success : function(data) {
+
+                                    if (data != null && data.length > 0) {
+                                        var str = "";
+                                        for (var i = 0; i < data.length; i++) {
+                                            if(data[i].district_id==did){
+                                                str += '<option  selected value="'+data[i].district_id+'">'+data[i].district_name+'</option>';
+                                            }else{
+                                                str += '<option value="'+data[i].district_id+'">'+data[i].district_name+'</option>';
+                                            }
+                                        }
+                                        _this.siblings(".getDistrict").append(str);
+                                    }
+                                }
+                            });
+                        }
+
+                    })
+
+                    
+                    
+
+
+                }
+            });
+
+        }
+        loading();
+        function loading(){
+            var pid = $("#p_id").val();
+            var did = $("#d_id").val();
+            $.ajax({
+                type : "post",
+                url :  __URL('SHOP_MAIN/member/getprovince'),
+                dataType : "json",
+                success : function(data) {
+                    if (data != null && data.length > 0) {
+                        var str = "";
+                        for (var i = 0; i < data.length; i++) {
+                            if(data[i].province_id==pid){
+                                str += '<option  selected value="'+data[i].province_id+'">'+data[i].province_name+'</option>';
+                            }else{
+                                str += '<option value="'+data[i].province_id+'">'+data[i].province_name+'</option>';
+                            }
+                        }
+                        $(".getProvince").append(str);
+                    }
+                }
+            });
+        }
+        $('.form-list').on('change','.getProvince',function(){
+            var _this=$(this);
+            $.ajax({
+                type : "post",
+                url :  __URL('SHOP_MAIN/member/getcity'),
+                dataType : "json",
+                data :{
+                    province_id:_this.val()
+                },
+                success : function(data) {
+                    if (data != null && data.length > 0) {
+                        var str = "";
+                        str += "<option value='-1'>请选择市</option>";
+                        for (var i = 0; i < data.length; i++) {
+                            str += '<option value="'+data[i].city_id+'">'+data[i].city_name+'</option>';
+                        }
+                        _this.siblings('.getCity').children().remove();
+                        _this.siblings('.getDistrict').children().remove();
+                        _this.siblings('.getCity').append(str);
+                        // $("#city_id").children().remove();
+                        // $("#district_id").children().remove();
+                        // $("#city_id").append(str);
+                    }
+                }
+            });
+        });
+        $('.form-list').on('change','.getCity',function(){
+            var _this=$(this);
+            $.ajax({
+                type : "post",
+                url :  __URL('SHOP_MAIN/member/getDistrict'),
+                dataType : "json",
+                data :{
+                    city_id:_this.val()
+                },
+                success : function(data) {
+                    if (data != null && data.length > 0) {
+                        var str = "";
+                        str += "<option value='-1'>请选择区</option>";
+                        for (var i = 0; i < data.length; i++) {
+                            str += '<option value="'+data[i].district_id+'">'+data[i].district_name+'</option>';
+                        }
+                        _this.siblings('.getDistrict').children().remove();
+                        _this.siblings('.getDistrict').append(str);
+                        // $("#district_id").children().remove();
+                        // $("#district_id").append(str);
+                    }
+                }
+            });
+        });
+
+        dialog.validate($('.form-list'),function(form){
+
+            var reg1=/^(?!(\d+)$)[\u4e00-\u9fffa-zA-Z\d\-_]+$/;
+
+            var user_name = $("#user_name").val();
+            var nick_name = $("#nick_name").val();
+
+            if (reg1.test(user_name) != true) {
+                layer.msg('用户名不能为纯数字');
+                return false;
+            }
+
+            var post_data = '';
+            // 自定义表单数据
+            var dataObj=[];
+
+            function getData(){
+                if($('input[id^="input"]')){
+                    $('input[id^="input"]').each(function(){
+                        var index=$(this).data('index');
+                        if(i == index){
+                            var obj={};
+                            obj.tag=$('input[id="input'+index+'"]').data('tag');
+                            obj.name=$('input[id="input'+index+'"]').data('name');
+                            obj.label=$('input[id="input'+index+'"]').data('label');
+                            obj.required=$('input[id="input'+index+'"]').data('required');
+                            obj.placeholder=$('input[id="input'+index+'"]').data('placeholder');
+                            obj.default=$('input[id="input'+index+'"]').data('default');
+                            obj.value=$('input[id="input'+index+'"]').val();
+                            dataObj.push(obj);
+                        }
+
+                    });
+                }
+                if($('textarea[id^="textarea"]')){   
+                    $('textarea[id^="textarea"]').each(function(){
+                        var index=$(this).data('index');
+                        if( i == index){
+                            var obj={};
+                            obj.tag=$('textarea[id="textarea'+index+'"]').data('tag');
+                            obj.name=$('textarea[id="textarea'+index+'"]').data('name');
+                            obj.label=$('textarea[id="textarea'+index+'"]').data('label');
+                            obj.required=$('textarea[id="textarea'+index+'"]').data('required');
+                            obj.default=$('textarea[id="textarea'+index+'"]').data('default');
+                            obj.value=$('textarea[id="textarea'+index+'"]').val();
+                            dataObj.push(obj);
+                        }
+                    });
+                }
+                if($('select[id^="select"]')){   
+                    $('select[id^="select"]').each(function(){
+                        var index=$(this).data('index');
+                        if(i == index){
+                            var obj={};
+                            obj.tag=$('select[id="select'+index+'"]').data('tag');
+                            obj.name=$('select[id="select'+index+'"]').data('name');
+                            obj.label=$('select[id="select'+index+'"]').data('label');
+                            obj.required=$('select[id="select'+index+'"]').data('required');
+                            obj.options=$('select[id="select'+index+'"]').data('options').join('\n');
+                            obj.value=$('select[id="select'+index+'"] option:selected').val();
+                            dataObj.push(obj);
+                        }
+                    });
+                }
+                if($('div[id^="radio"]')){
+                    $('div[id^="radio"]').each(function(){
+                        var index=$(this).data('index');
+                        if(i == index){
+                            var obj={};
+                            obj.tag=$('div[id="radio'+index+'"]').data('tag');
+                            obj.name=$('div[id="radio'+index+'"]').data('name');
+                            obj.label=$('div[id="radio'+index+'"]').data('label');
+                            obj.required=$('div[id="radio'+index+'"]').data('required');
+                            obj.options=$('div[id="radio'+index+'"]').data('options').join('\n');
+                            obj.value=$('div[id="radio'+index+'"]').find('input[name="radio'+index+'"]:checked').val();
+                            dataObj.push(obj);
+                        }
+                })
+                }
+                if($('div[id^="checkbox"]')){
+                    $('div[id^="checkbox"]').each(function(){
+                        var index=$(this).data('index');
+                        if(i == index){
+                            var obj={};
+                            obj.tag=$('div[id="checkbox'+index+'"]').data('tag');
+                            obj.name=$('div[id="checkbox'+index+'"]').data('name');
+                            obj.label=$('div[id="checkbox'+index+'"]').data('label');
+                            obj.required=$('div[id="checkbox'+index+'"]').data('required');
+                            obj.options=$('div[id="checkbox'+index+'"]').data('options').join('\n');
+                            var chk_value =[];//定义一个数组 
+                            $('div[id="checkbox'+index+'"]').find('input[name="checkbox'+index+'"]:checked').each(function(){
+                                chk_value.push($(this).val());
+                            });
+                            obj.value=chk_value.join("\n");
+                            dataObj.push(obj);
+                        }
+                })
+                }
+
+                if($('input[id^="phone"]')){   
+                    $('input[id^="phone"]').each(function(){
+                        var index=$(this).data('index');
+                        if(i == index){
+                            var obj={};
+                            obj.tag=$('input[id="phone'+index+'"]').data('tag');
+                            obj.name=$('input[id="phone'+index+'"]').data('name');
+                            obj.label=$('input[id="phone'+index+'"]').data('label');
+                            obj.required=$('input[id="phone'+index+'"]').data('required');
+                            obj.placeholder=$('input[id="phone'+index+'"]').data('placeholder');
+                            obj.value=$('input[id="phone'+index+'"]').val();
+                            dataObj.push(obj);
+                        }
+                    });
+                }
+                if($('input[id^="card"]')){   
+                    $('input[id^="card"]').each(function(){
+                        var index=$(this).data('index');
+                        if(i == index){
+                            var obj={};
+                            obj.tag=$('input[id="card'+index+'"]').data('tag');
+                            obj.name=$('input[id="card'+index+'"]').data('name');
+                            obj.label=$('input[id="card'+index+'"]').data('label');
+                            obj.required=$('input[id="card'+index+'"]').data('required');
+                            obj.placeholder=$('input[id="card'+index+'"]').data('placeholder');
+                            obj.value=$('input[id="card'+index+'"]').val();
+                            dataObj.push(obj);
+                        }
+                    });
+                }
+                if($('input[id^="date"]')){ 
+                    $('input[id^="date"]').each(function(){
+                        var index=$(this).data('index');
+                        if(i == index){
+                            var obj={};
+                            obj.tag=$('input[id="date'+index+'"]').data('tag');
+                            obj.name=$('input[id="date'+index+'"]').data('name');
+                            obj.label=$('input[id="date'+index+'"]').data('label');
+                            obj.required=$('input[id="date'+index+'"]').data('required');
+                            obj.type=$('input[id="date'+index+'"]').data('type');
+                            obj.default=$('input[id="date'+index+'"]').data('default');
+                            // obj.value=$('input[id="date'+index+'"]').val();
+                            if($('input[id="date'+index+'"]').val()!=''){
+                                var date1=new Date($('input[id="date'+index+'"]').val());
+                                obj.value=date1.getTime();
+                            }else{
+                                obj.value='';
+                            }
+                            dataObj.push(obj);
+                        }
+                    }) 
+                }
+                if($('input[id^="RangeDate"]')){ 
+                    $('input[id^="RangeDate"]').each(function(){
+                        var index=$(this).data('index');
+                        if(i == index){
+                            var obj={};
+                            obj.tag=$('input[id="RangeDate'+index+'"]').data('tag');
+                            obj.name=$('input[id="RangeDate'+index+'"]').data('name');
+                            obj.label=$('input[id="RangeDate'+index+'"]').data('label');
+                            obj.required=$('input[id="RangeDate'+index+'"]').data('required');
+                            obj.start_default=$('input[id="RangeDate'+index+'"]').data('start_default');
+                            obj.end_default=$('input[id="RangeDate'+index+'"]').data('end_default');
+                            obj.start_type=$('input[id="RangeDate'+index+'"]').data('start_type');
+                            obj.end_type=$('input[id="RangeDate'+index+'"]').data('end_type');
+                            var str=$('input[id="RangeDate'+index+'"]').val();
+                            if(str!=''){
+                                var date2=new Date(str.slice(0,10));
+                                var date3=new Date(str.slice(13));
+                                var startDate=date2.getTime();
+                                var endDate=date3.getTime();
+                                obj.value=startDate+','+endDate;
+                            }else{
+                                obj.value='';
+                            }
+                            dataObj.push(obj);
+                        }
+                    })
+                }
+                if($('div[id^="area"]')){
+                    $('div[id^="area"]').each(function(){
+                        var index=$(this).data('index');
+                        if(i == index){
+                            var obj={};
+                            obj.tag=$('div[id="area'+index+'"]').data('tag');
+                            obj.name=$('div[id="area'+index+'"]').data('name');
+                            obj.label=$('div[id="area'+index+'"]').data('label');
+                            obj.required=$('div[id="area'+index+'"]').data('required');
+                            obj.type=$('div[id="area'+index+'"]').data('type');
+
+                            var arrName=[];
+                            var arrNameId=[];
+                            arrName.push($('div[id="area'+index+'"]').find('.getProvince option:selected').text());
+                            arrNameId.push($('div[id="area'+index+'"]').find('.getProvince option:selected').val());
+                            if( $('div[id="area'+index+'"]').find('.getCity').length != 0){
+                                arrName.push($('div[id="area'+index+'"]').find('.getCity option:selected').text());
+                                arrNameId.push($('div[id="area'+index+'"]').find('.getCity option:selected').val());
+                            }
+                            if( $('div[id="area'+index+'"]').find('.getDistrict').length != 0){
+                                arrName.push($('div[id="area'+index+'"]').find('.getDistrict option:selected').text());
+                                arrNameId.push($('div[id="area'+index+'"]').find('.getDistrict option:selected').val());
+                            }
+                            
+                            obj.value=arrName.join('/')+","+arrNameId.join('/');
+                            dataObj.push(obj);
+                        }
+                    })
+                }
+                // 获取图片
+                if($('div[id^="imgs"]')){
+                    $('div[id^="imgs"]').each(function(){
+                        var index=$(this).data('index');
+                        if(i == index){
+                            var obj={};
+                            obj.tag=$('div[id="imgs'+index+'"]').data('tag');
+                            obj.name=$('div[id="imgs'+index+'"]').data('name');
+                            obj.label=$('div[id="imgs'+index+'"]').data('label');
+                            obj.required=$('div[id="imgs'+index+'"]').data('required');
+                            obj.max=$('div[id="imgs'+index+'"]').data('max');
+                            var imgs_arr=[];
+                            var imgs_arr_submit=[];
+                            var imgs_str='';//图片value的正确数据格式
+                            var imgs_str_base='';// base64经转化的正确数据格式
+                            $('div[id="imgs'+index+'"]').find('.evaluate_right_imgs').find('img').each(function () {
+                                var imgsrc = $(this).attr("src");
+                                
+                                if(imgsrc.indexOf('data')==0){
+                                    imgs_arr.push(imgsrc);
+                                }else{
+                                    imgs_arr_submit.push(imgsrc);
+                                    imgs_str = imgs_arr_submit.join(',');
+                                }
+                                    obj.value = imgs_str;
+                                    
+                            });
+                            if(imgs_arr.length > 0){
+                                $.ajax({
+                                    type: "post",
+                                    url:  __URL(SHOPMAIN + "/member/saveCustomImg"),
+                                    async:false,
+                                    data: {
+                                        "imgarr":imgs_arr,
+                                    },
+                                    success: function (data) {
+                                        imgs_str_base = data;
+                                    }
+                                })
+                            }
+                            if(imgs_str_base != ''){
+                                if(imgs_str != ''){
+                                    obj.value += ',';
+                                    obj.value += imgs_str_base;
+                                }else{
+                                    obj.value = imgs_str_base;
+                                }
+                            }
+                            
+                            dataObj.push(obj);
+                        }
+                    })
+                }
+            }
+            for(var i = 0; i < getDataLength;i++){
+                getData()
+            }
+
+
+
+
+            // 自定义表单数据
+
+            if(user_name=='' || user_name==null){
+                layer.msg('用户名不能为空');
+                $("#nick_name").focus();
+                return false;
+            }
+
+            var postData={};
+            postData.form_data=dataObj;
+            postData.status=$('#custom_status').val();
+            $.ajax({
+                type: "post",
+                url:  __URL(SHOPMAIN + "/member/person"),
+                data: {
+                    "user_name":user_name,
+                    "nick_name":nick_name,
+                    "post_data":JSON.stringify(postData),
+                    
+                },
+                success: function (data) {
+                 if(data['code']>0){
+                     layer.msg('保存成功');
+                     window.location.reload();
+                 }else{
+                     layer.msg('保存失败');
+                 }
+                },
+            })
+
+        })
+
+
+
+
+
+    })
+</script>
+{/block}

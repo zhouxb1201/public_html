@@ -1,0 +1,318 @@
+ {extend name="platform/new_base" /}
+{block name="resources"/}
+{/block}
+{block name="main"}
+                <div class="screen-title">
+                    <span class="text">基本信息</span>
+					<input type="hidden" id="uid" value="{$list[0]['uid']}">
+                </div>
+                <div class="row panel-detail">   
+                	<div class="col-md-6">
+                        <div class="item">
+                            <div class="media">
+							  <div class="media-left">
+							    <img src="{if $list[0]['user_headimg']}{:__IMG($list[0]['user_headimg'])}{else}/public/static/images/headimg.png{/if}" width="160px" height="160px" >
+							  </div>
+							  <div class="media-body">
+							    <p class="p">ID：{$list[0]['uid']}{if $list[0]['user_status']!=1} <a href="javascript:void(0);" class="text-primary ml-15 delBlackList" data-id ="{$list[0]['uid']}">移除黑名单</a>{else}<a href="javascript:void(0);" class="text-primary ml-15 joinBlackList" data-id ="{$list[0]['uid']}">加入黑名单</a>{/if}</p>
+							    <p class="p">昵称：{if $list[0]['user_name']}{$list[0]['user_name']}{elseif $list[0]['nick_name']}{$list[0]['nick_name']}{else/}未设置昵称{/if}</p>
+							    <p class="p">手机号码：{$list[0]['user_tel']}</p>
+								  <p class="p">会员等级:
+									  <select id="level" class="form-control select-form-control inline-block">
+										  {foreach name="level_list['data']" item="value"}
+										  <option value="{$value['level_id']}" {if $value['level_id']==$list[0]['member_level']}selected{/if}>{$value.level_name}</option>
+										  {/foreach}
+									  </select></p>
+							  </div>
+							</div>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="item">
+                            <div class="media-body">
+								<p class="p flex flex-pack-justify">余额：<span class="default_balance">{$list[0]['balance']}</span>元 <a href="javascript:void(0);" class="text-primary ml-15 adjustBalance" data-id ="{$list[0]['uid']}">调整余额</a></p>
+								<p class="p flex flex-pack-justify">积分：<span class="default_point">{$list[0]['point']}</span> <a href="javascript:void(0);" class="text-primary ml-15 adjustPoint" data-id ="{$list[0]['uid']}">调整积分</a></p>
+								<p class="p">成长值：{$list[0]['growth_num']}</p>
+								<p class="p">订单数：{$list[0]['order_num']}</p>
+							    <p class="p">消费金额：{$list[0]['order_money']}元</p>
+							    <p class="p">注册时间：{$list[0]['reg_time']}</p>
+							</div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="screen-title">
+                    <span class="text">流水明细</span>
+                </div>
+                <ul class="nav nav-tabs v-nav-tabs" role="tablist">
+                    <li role="presentation" class="active"><a href="#balanceLog" aria-controls="balanceLog" role="tab" data-toggle="tab" class="flex-auto-center">余额明细</a></li>
+                    <li role="presentation"><a href="#pointLog" aria-controls="pointLog" role="tab" data-toggle="tab" class="flex-auto-center">积分明细</a></li>
+                    <li role="presentation"><a href="{:__URL('PLATFORM_MAIN/Order/selfOrderList')}&member_id={$list[0]['uid']}" class="flex-auto-center">成交订单</a></li>
+                </ul>
+                <div class="tab-content">
+	                <div role="tabpanel" class="tab-pane fade in active" id="balanceLog">
+		                <table class="table v-table table-auto-center">
+		                    <thead>
+		                        <tr>
+									<th>流水号</th>
+									<th>变动类型</th>
+									<th>变动金额</th>
+									<th>备注</th>
+									<th>变动时间</th>
+		                        </tr>
+		                    </thead>
+		                    <tbody class="list">
+
+		                    </tbody>
+		                </table>
+						<nav aria-label="Page navigation" class="clearfix">
+							<ul id="page"  class="pagination pull-right"></ul>
+						</nav>
+	                </div>
+	                <div role="tabpanel" class="tab-pane fade " id="pointLog">
+		                <table class="table v-table table-auto-center">
+		                    <thead>
+		                        <tr>
+									<th>流水号</th>
+									<th>变动类型</th>
+									<th>变动数目</th>
+									<th>备注</th>
+									<th>变动时间</th>
+		                        </tr>
+		                    </thead>
+		                    <tbody class="list1">
+
+		                        
+		                    </tbody>
+		                </table>
+						<nav aria-label="Page navigation" class="clearfix">
+							<ul id="page1" class="pagination pull-right"></ul>
+						</nav>
+	                </div>
+				</div>
+                <!-- page end -->
+{/block}
+{block name="script"}
+<script>
+require(['util'],function(util){
+    util.initPage(getList);
+    function getList(page_index){
+        var uid = $("#uid").val();
+        $.ajax({
+            type : "get",
+            url : "{:__URL('PLATFORM_MAIN/member/accountDetail')}",
+            async : true,
+            data : {
+                "member_id" : uid,
+                "page_index":page_index
+            },
+            success : function(data) {
+                var html = '';
+                if (data["data"].length > 0) {
+                    for (var i = 0; i < data["data"].length; i++) {
+                        html += '<tr>';
+                        html += '<td>' + data["data"][i]["records_no"] + '</td>';
+                        html += '<td>' + data["data"][i]["type_name"];
+                        html += '<td >' + data["data"][i]["number"] + '</td>';
+                        html += '<td >' + data["data"][i]["text"] + '</td>';
+                        html += '<td>' + data["data"][i]["create_time"] + '</td>';
+                        html += '</tr>';
+                    }
+                } else {
+                    html += '<tr><td class="h-200" colspan="5">暂无符合条件的数据记录</td></tr>';
+                }
+                $('#page').paginator('option', {
+                    totalCounts: data['total_count']  // 动态修改总数
+                });
+                $(".list").html(html);
+            }
+        });
+    }
+	util.initPage(getList1,"page1");
+	function getList1(page_index){
+            var uid = $("#uid").val();
+            $.ajax({
+                type : "get",
+                url : "{:__URL('PLATFORM_MAIN/member/pointDetail')}",
+                async : true,
+                data : {
+                    "member_id" : uid,
+                    "page_index":page_index
+                },
+                success : function(data) {
+                    var html = '';
+                    if (data["data"].length > 0) {
+                        for (var i = 0; i < data["data"].length; i++) {
+                            html += '<tr>';
+                            html += '<td>' + data["data"][i]["records_no"] + '</td>';
+                            html += '<td>' + data["data"][i]["type_name"];
+                            html += '<td >' + data["data"][i]["number"] + '</td>';
+                            html += '<td >' + data["data"][i]["text"] + '</td>';
+                            html += '<td>' + data["data"][i]["create_time"] + '</td>';
+                            html += '</tr>';
+                        }
+                    } else {
+                        html += '<tr><td class="h-200" colspan="5">暂无符合条件的数据记录</td></tr>';
+                    }
+                    $('#page1').paginator('option', {
+                        totalCounts: data['total_count']  // 动态修改总数
+                    });
+                    $(".list1").html(html);
+                }
+            });
+        }
+
+    // 调整余额
+	$('.adjustBalance').on('click',function(){
+            var id = $(this).data('id');
+            var html = '<form class="form-horizontal padding-15" id="">';
+            html += '<div class="form-group"><label class="col-md-3 control-label">余额</label><div class="col-md-8"><input type="number" id="adjustBalance" class="form-control" onkeydown="if(event.keyCode==13){event.keyCode=0;event.returnValue=false;}" /><p class="help-block">输入负值时代表减少余额</p></div></div>';
+            html += "<div class='form-group'>" ;
+            html +="<label class='col-md-3 control-label'>备注</label>";
+            html +="<div class='col-md-8'>";
+            html +="<textarea class='form-control' id='adjustBalance_memo' rows='4' placeholder='输入备注的内容'></textarea>";
+            html +="</div>";
+            html += '</form>';
+            util.confirm('调整余额',html,function(){
+                var default_balance = $(".default_balance").html();
+                var num = this.$content.find('#adjustBalance').val();
+                if(num==''){
+                    util.message('调整余额不能为空','danger');
+                    return false;
+                }
+                var text = this.$content.find('#adjustBalance_memo').val();
+                var money = parseFloat(default_balance)+parseFloat(num);
+                if(money<0){
+                    util.message('余额不能为负数','danger');
+                    return false;
+                }
+                $.ajax({
+                    type : "post",
+                    url : "{:__URL('PLATFORM_MAIN/member/addMemberAccount')}",
+                    data : {
+                        "id" : id,
+                        "type" : 2,
+                        "num" : num,
+                        "text" : text
+                    },
+                    success : function(data) {
+                        if (data["code"] > 0) {
+                            $(".default_balance").html(money);
+                            util.message(data["message"],'success',getList($('#page_index').val()));
+                        }else{
+                            util.message(data["message"],'danger');
+                        }
+                    }
+                });
+            })
+        })
+    // 调整积分
+	$('.adjustPoint').on('click',function(){
+            var id = $(this).data('id');
+            var html = '<form class="form-horizontal padding-15" id="">';
+            html += '<div class="form-group"><label class="col-md-3 control-label">积分</label><div class="col-md-8"><input type="number" id="adjustPoint" class="form-control" onkeydown="if(event.keyCode==13){event.keyCode=0;event.returnValue=false;}"  /><p class="help-block">输入负值时代表减少积分</p></div></div>';
+            html += "<div class='form-group'>" ;
+            html +="<label class='col-md-3 control-label'>备注</label>";
+            html +="<div class='col-md-8'>";
+            html +="<textarea class='form-control' id='adjustPoint_memo' rows='4' placeholder='输入备注的内容'></textarea>";
+            html +="</div>";
+            html += '</form>';
+            util.confirm('调整积分',html,function(){
+                var default_point = $(".default_point").html();
+                var num = this.$content.find('#adjustPoint').val();
+                var text = this.$content.find('#adjustPoint_memo').val();
+                var check = /^-?\d+$/;
+                if(!check.test(num)){
+                    util.message('积分调整只能为整数','danger');
+                    return false;
+				}
+                $.ajax({
+                    type : "post",
+                    url : "{:__URL('PLATFORM_MAIN/member/addMemberAccount')}",
+                    data : {
+                        "id" : id,
+                        "type" : 1,
+                        "num" : num,
+                        "text" : text
+                    },
+                    success : function(data) {
+                        if (data["code"] > 0) {
+                            var point = parseInt(default_point)+parseInt(num);
+                            $(".default_point").html(point);
+                            util.message(data["message"],'success',getList1($('#page_index').val()));
+                        }else{
+                            util.message(data["message"],'danger');
+                        }
+                    }
+                });
+            })
+        })
+    // 修改等级
+    $('#level').on('change',function(){
+        var level_id = $(this).val();
+        var uid = $('#uid').val();
+        util.alert('是否修改会员等级？',function(){
+            $.ajax({
+                type : "post",
+                url : "{:__URL('PLATFORM_MAIN/Member/adjustMemberLevel')}",
+                async : true,
+                data : {
+                    "uid" : uid,
+					"level_id":level_id
+                },
+                success : function(data) {
+                    if (data["code"] > 0) {
+                        util.message(data["message"],'success',location.reload());
+                    }else{
+                        util.message(data["message"],'danger');
+                    }
+                }
+            });
+        })
+    })
+    // 加入黑名单
+	$('.joinBlackList').on('click',function(){
+            var uid = $(this).data('id');
+            util.alert('是否加入该会员至黑名单？',function(){
+                $.ajax({
+                    type : "post",
+                    url : "{:__URL('PLATFORM_MAIN/Member/memberLock')}",
+                    async : true,
+                    data : {
+                        "id" : uid
+                    },
+                    success : function(data) {
+                        if (data["code"] > 0) {
+                            util.message(data["message"],'success',location.reload());
+                        }else{
+                            util.message(data["message"],'danger');
+                        }
+                    }
+                });
+            })
+        })
+    // 移除黑名单
+	$('.delBlackList').on('click',function(){
+            var uid = $(this).data('id');
+            util.alert('是否移除黑名单？',function(){
+                $.ajax({
+                    type : "post",
+                    url : "{:__URL('PLATFORM_MAIN/Member/memberUnlock')}",
+                    async : true,
+                    data : {
+                        "id" : uid
+                    },
+                    success : function(data) {
+                        if (data["code"] > 0) {
+                            util.message(data["message"],'success',location.reload());
+                        }else{
+                            util.message(data["message"],'danger');
+                        }
+                    }
+                });
+            })
+        })
+
+})
+</script>
+{/block}

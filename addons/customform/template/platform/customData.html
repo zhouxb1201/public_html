@@ -1,0 +1,171 @@
+{block name="main"}
+        <form class="v-filter-container">
+            <div class="filter-fields-wrap">
+                <div class="filter-item clearfix">
+                    <div class="filter-item__field">
+                        <div class="v__control-group">
+                            <label class="v__control-label">关键字</label>
+                            <div class="v__controls">
+                                <input type="text" id="search_text" class="v__control_input" autocomplete="off">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="filter-item__field">
+                        <div class="v__control-group">
+                            <label class="v__control-label">表单类型</label>
+                            <div class="v__controls">
+                                <select class="v__control_input" id="custom_type">
+                                    {foreach name="usage_num" key="k" item="v"}
+                                    <option value="{$v}"{if $k==0}selected{/if}>{if $v==1}确认订单填写资料{/if}{if $v==2}会员资料{/if}{if $v==3}分销商申请资料{/if}{if $v==4}股东申请资料{/if}{if $v==5}区域代理申请资料{/if}{if $v==6}队长申请资料{/if}{if $v==7}渠道商申请资料{/if}</option>
+                                    {/foreach}
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="filter-item clearfix">
+                    <div class="filter-item__field">
+                        <div class="v__control-group">
+                            <label class="v__control-label"></label>
+                            <div class="v__controls">
+                                <a class="btn btn-primary search"><i class="icon icon-search"></i> 搜索</a>
+                                <a class="btn btn-success ml-15 dataExcel">导出EXCEL</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </form>
+		<div class="screen-title">
+			<span class="text">数据列表</span>
+		</div>
+<div class="flex-auto-center mb-20 bg-info text-center border-info">
+    <div class="flex-1 padding-15">
+        <h3 class="strong">数据总数</h3>
+        <p id="count_num">{$count_num}</p>
+    </div>
+</div>
+		<table class="table v-table table-auto-center">
+			<thead>
+			<tr>
+				<th>会员ID</th>
+				<th>会员信息</th>
+				{foreach $custom_data as $v}
+				<th>{$v['name']}</th>
+				{/foreach}
+			</tr>
+			</thead>
+			<tbody id="list">
+
+
+
+
+			</tbody>
+		</table>
+		<input type="hidden" id="page_index" value="">
+		<nav aria-label="Page navigation" class="clearfix">
+			<ul id="page" class="pagination pull-right"></ul>
+		</nav>
+<input type="hidden"  value="{$custom_usage}" id="custom_usage">
+<input type="hidden"  value="{$custom_id}" id="custom_id">
+{/block}
+{block name="script"}
+<script>
+    require(['util','mousewheel','pictureViewer'],function(util,mousewheel,pictureViewer){
+        util.initPage(getList);
+        function getList(page_index){
+            $("#page_index").val(page_index);
+            if($("#custom_type").val()){
+               var custom_usage = $("#custom_type").val();
+            }else{
+                custom_usage = $("#custom_usage").val();
+            }
+            var search_text = $("#search_text").val();
+            $.ajax({
+                type : "post",
+                url : "{$getCustomDataUrl}",
+                async : true,
+                data : {
+                    "page_index" : page_index,
+                    "usage" : custom_usage,
+                    "search_text" : search_text,
+                },
+                success : function(data) {
+                    var html = '';
+                    if (data["data"].length > 0) {
+                        for (var i = 0; i < data["data"].length; i++) {
+                            html += '<tr>';
+                            html += '<td>'+ data["data"][i]["uid"]+'</td>';
+                            html += '<td>';
+                            html +='<div class="media">';
+                            html +='<div class="media-left">';
+                            html +='<img src="'+__IMG(data["data"][i]["user_headimg"])+'" height="60" width="60" alt="">';
+                            html +='</div>';
+                            html +='<div class="media-body text-left">';
+                            if(data["data"][i]["user_name"]){
+                                html +='<div class="line-1-ellipsis">'+data["data"][i]["user_name"] +'</div>';
+                            }else{
+                                html +='<div class="line-1-ellipsis">'+data["data"][i]["nick_name"] +'</div>';
+                            }
+                            html +='<div>'+data["data"][i]["user_tel"] +'</div>';
+                            html +='</div>';
+                            html +='</div>';
+                            html +='</td>';
+                            for (var j = 0; j < data["data"][i]["custom_data"].length; j++) {
+                                if(data["data"][i]["custom_data"][j]["tag"]=='img'){
+                                    html += '<td>';
+                                    html += '<div class="preview-image-list">';
+                                    for(var t = 0; t < data["data"][i]["custom_data"][j]["value"].length; t++){
+                                        html += '<div class="cover"><img src="'+__IMG(data["data"][i]["custom_data"][j]["value"][t])+'" alt=""></div>';
+                                    }
+                                    html += '</div>';
+                                    html += '</td>';
+                                }else{
+                                    html += '<td>' + data["data"][i]["custom_data"][j]["value"] + '</td>';
+                                }
+                            }
+                            html += '</tr>';
+                        }
+                    } else {
+                        html += '<tr align="center" class="h-200"><td colspan="20">暂无符合条件的数据记录</td></tr>';
+                    }
+                    $('#page').paginator('option', {
+                        totalCounts: data['total_count']  // 动态修改总数
+                    });
+                    $("#count_num").html(data['total_count']);
+                    $("#list").html(html);
+                    util.tips();
+                }
+            });
+        }
+        $('.search').on('click',function(){
+            util.initPage(getList);
+        });
+        $('.dataExcel').on('click',function(){
+            var custom_id = $("#custom_id").val();
+            var search_text = $("#user").val();
+            if($("#custom_type").val()){
+                var custom_usage = $("#custom_type").val();
+            }else{
+                custom_usage = $("#custom_usage").val();
+            }
+            window.location.href="{$customDataExcelUrl}?custom_id="+custom_id+"&search_text="+search_text+"&usage="+custom_usage;
+        })
+
+        // 预览图片插件
+            $('.table').on('click', '.preview-image-list .cover', function () {
+                var this_ = $(this);
+                var images = this_.parents('.preview-image-list').find('.cover');
+                var imagesArr = new Array();
+                $.each(images, function (i, image) {
+                    imagesArr.push($(image).children('img').attr('src'));
+                });
+                $.pictureViewer({
+                    images: imagesArr, //需要查看的图片，数据类型为数组
+                    initImageIndex: this_.index() + 1, //初始查看第几张图片，默认1
+                    scrollSwitch: true //是否使用鼠标滚轮切换图片，默认false
+                });
+            });
+    })
+</script>
+{/block}

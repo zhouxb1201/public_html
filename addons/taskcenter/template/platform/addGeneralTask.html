@@ -1,0 +1,547 @@
+{block name="main"}
+<!-- page -->
+<style>
+    .form_time{margin-left:15px !important;}
+    .red_font{color:#ff0000}
+</style>
+<ul class="nav nav-tabs v-nav-tabs add_tab1" role="tablist">
+    <li role="presentation" class="active"><a href="#basic_setting" aria-controls="goods_info" role="tab" data-toggle="tab" class="flex-auto-center">基本设置</a></li>
+    <li role="presentation" class="goods_spec"><a href="#task_rule" aria-controls="goods_attribute" role="tab" data-toggle="tab" class="flex-auto-center">任务规则</a></li>
+    <li role="presentation"><a href="#reward_setting" aria-controls="goods_detail" role="tab" data-toggle="tab" class="flex-auto-center">奖励设置</a></li>
+</ul>
+<form class="form-horizontal pt-15 form-validate widthFixedForm">
+    <div id="myTabContent" class="tab-content">
+        <div class="tab-pane fade tab-1 active in" id="basic_setting">
+            <div class="form-group">
+                <label class="col-md-2 control-label"><span class="red_font">*</span>任务名称</label>
+                <div class="col-md-5">
+                    <input type="text" name="task_name" id="task_name" value="{$task_info['task_name']}" required maxlength="4" class="form-control">
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-md-2 control-label"><span class="red_font">*</span>任务类型</label>
+                <div class="col-md-5">
+                    <label class="radio-inline">
+                        <input type="radio" name="task_type"  checked value="1" {if $task_info['task_kind']==1}checked{/if}> 单次任务
+                    </label>
+                    <label class="radio-inline">
+                        <input type="radio" name="task_type" value="2" {if $task_info['task_kind']==2}checked{/if}> 周期任务
+                    </label>
+                    <div class="help-block mb-0">单次任务每人只能领取一次，周期任务可在一个周期内领取多次</div>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-md-2 control-label"><span class="text-bright">*</span>任务图片</label>
+                <div class="col-md-5">
+
+                    {if $task_info['task_img_src']}
+                        <div class="picture-list" id="wap_register_adv">
+                            <a href="javascript:;" class="close-box">
+                                <i class="icon icon-danger" data-id="{$task_info['task_img']}" style="margin-right:10px;" title="删除"></i>
+                                <img src="{$task_info['task_img_src']}">
+                            </a>
+                        </div>
+                    {else}
+                        <div class="picture-list" id="wap_register_adv">
+                            <a href="javascript:void(0);" class="plus-box" data-toggle="singlePicture"><i class="icon icon-plus"></i></a>
+                        </div>
+                    {/if}
+                    <p class="help-block">建议700 * 394，支持JPG\GIF\PNG格式</p>
+                </div>
+            </div>
+            <div class="form-group ">
+                <label class="col-md-2 control-label"><span class="red_font">*</span>任务时间</label>
+                <div class="col-md-8">
+                    <div class="v-datetime-input-control">
+                        <label for="effect_time">
+                            <input type="text" class="form-control" id="effect_time" placeholder="请选择时间" value="{if $general_poster_id }{if $task_info['start_task_date'] != '1970-01-01'}{$task_info['start_task_date']}{/if} - {if $task_info['end_task_date'] != '1970-01-01'}{$task_info['end_task_date']}{/if}{/if}" autocomplete="off" name="effect_time" required>
+                            <i class="icon icon-calendar"></i>
+                            <input type="hidden" id="start_task_time" name="start_task_time" value="{if $task_info['start_task_date'] != '1970-01-01'}{$task_info['start_task_date']}{/if}">
+                            <input type="hidden" id="end_task_time" name="end_task_time" value="{if $task_info['end_task_date'] != '1970-01-01'}{$task_info['end_task_date']}{/if}">
+                        </label>
+                    </div>
+                    <div class="help-block mb-0">开始时间点为选中日期的0:00:00，结束时间点为选中日期的23:59:59</div>
+                </div>
+
+            </div>
+            <div class="form-group">
+                <label class="col-md-2 control-label"><span class="red_font">*</span>任务限时</label>
+                <div class="col-md-5">
+                    <div class="input-group w-200">
+                        <input class="form-control" type="number" step="0.1" name="task_limit_time" id="task_limit_time" value="{$task_info['task_limit_time']}" required>
+                        <div class="input-group-addon">小时</div>
+                    </div>
+                    <div class="help-block mb-0">领取任务后必须在限定时间完成，0为不限时</div>
+                </div>
+            </div>
+            <!--<div class="form-group">
+                <label class="col-md-2 control-label"><span class="red_font">*</span>任务状态</label>
+                <div class="col-md-5">
+                    &lt;!&ndash;<label class="radio-inline">
+                        <input type="radio" name="task_status" checked value="1" {if $task_info['task_status']==1}checked{/if}> 开启
+                    </label>
+                    <label class="radio-inline">
+                        <input type="radio" name="task_status" value="0" {if $task_info['task_status']==2}checked{/if}> 关闭
+                    </label>&ndash;&gt;
+                    <div class="switch-inline">
+                        <input type="checkbox" name="task_status" id="task_status" {if $task_info['task_status']==1}checked{/if}>
+                        <label for="task_status" class=""></label>
+                    </div>
+
+                </div>
+            </div>-->
+        </div>
+        <div class="tab-pane fade tab-2" id="task_rule">
+            <div class="screen-title2" data-id="t2">
+                <span class="text">规则设置</span>
+            </div>
+            <table class="table table-hover">
+                <thead>
+                <tr>
+                    <th>任务类型</th>
+                    <th>任务规则</th>
+                    <th>操作</th>
+                </tr>
+                </thead>
+                <tbody id="general_task_list">
+                <tr class="J-referrals {if $task_rule['referrals'] == 0}hide{/if}">
+                    <td>
+                        <span class="label label-warning">推荐人数</span>
+                    </td>
+                    <td>
+                        <div class="input-group w-400">
+                            <div class="input-group-addon">推荐</div>
+                            <input type="number" name="referrals" id="referrals" class="form-control" min="0" value="{$task_rule['referrals']}">
+                            <div class="input-group-addon">人</div>
+                        </div>
+                    </td>
+                    <td>
+                        <a href="javascript:;" class="delete_task_type text-red1">删除</a>
+                    </td>
+                </tr>
+
+                <tr class="J-distribution_commission {if $task_rule['distribution_commission'] == 0}hide{/if}">
+                    <td>
+                        <span class="label label-warning">分销佣金</span>
+                    </td>
+                    <td>
+                        <div class="input-group w-400">
+                            <div class="input-group-addon">达到</div>
+                            <input type="number" name="distribution_commission" id="distribution_commission" class="form-control" min="0" value="{$task_rule['distribution_commission']}">
+                            <div class="input-group-addon">元</div>
+                        </div>
+                    </td>
+                    <td>
+                        <a href="javascript:;" class="delete_task_type text-red1">删除</a>
+                    </td>
+                </tr>
+                <tr class="J-distribution_orders {if $task_rule['distribution_orders'] == 0}hide{/if}">
+                    <td>
+                        <span class="label label-warning">分销订单</span>
+                    </td>
+                    <td>
+                        <div class="input-group w-400">
+                            <div class="input-group-addon">达到</div>
+                            <input type="number" name="distribution_orders" id="distribution_orders" class="form-control" min="0" value="{$task_rule['distribution_orders']}">
+                            <div class="input-group-addon">笔</div>
+                        </div>
+                    </td>
+                    <td>
+                        <a href="javascript:;" class="delete_task_type text-red1">删除</a>
+                    </td>
+                </tr>
+                <tr class="J-order_total_money {if $task_rule['order_total_money'] == 0}hide{/if}">
+                    <td>
+                        <span class="label label-warning">订单满额</span>
+                    </td>
+                    <td>
+                        <div class="input-group w-400">
+                            <div class="input-group-addon">满</div>
+                            <input type="number" name="order_total_money" id="order_total_money" class="form-control" min="0" value="{$task_rule['order_total_money']}">
+                            <div class="input-group-addon">元</div>
+                        </div>
+                    </td>
+                    <td>
+                        <a href="javascript:;" class="delete_task_type text-red1">删除</a>
+                    </td>
+                </tr>
+                <tr class="J-order_total_sum {if $task_rule['order_total_sum'] == 0}hide{/if}">
+                    <td>
+                        <span class="label label-warning">订单累计</span>
+                    </td>
+                    <td>
+                        <div class="input-group w-400">
+                            <div class="input-group-addon">累计</div>
+                            <input type="number" name="order_total_sum" id="order_total_sum" class="form-control" min="0" value="{$task_rule['order_total_sum']}">
+                            <div class="input-group-addon">元</div>
+                        </div>
+                    </td>
+                    <td>
+                        <a href="javascript:;" class="delete_task_type text-red1">删除</a>
+                    </td>
+                </tr>
+                <tr class="J-pay_order_total_num {if $task_rule['pay_order_total_num'] == 0}hide{/if}">
+                    <td>
+                        <span class="label label-warning">支付订单</span>
+                    </td>
+                    <td>
+                        <div class="input-group w-400">
+                            <div class="input-group-addon">达到</div>
+                            <input type="number" name="pay_order_total_num" id="pay_order_total_num" class="form-control" min="0" value="{$task_rule['pay_order_total_num']}">
+                            <div class="input-group-addon">笔</div>
+                        </div>
+                    </td>
+                    <td>
+                        <a href="javascript:;" class="delete_task_type text-red1">删除</a>
+                    </td>
+                </tr>
+                <tr class="J-goods_id {if $task_rule['goods_id'] == 0}hide{/if}">
+                    <td><span class="label label-warning">指定商品</span></td>
+                    <td>
+                        <div class="input-group w-400">
+                            <div class="input-group-addon">购买</div>
+                            <input name="goods_name" disabled id="goods_name" class="form-control" min="0" value="{$goods_name}">
+                            <input type="hidden" name="goods_id" id="goods_id" value="{$task_rule['goods_id']}">
+                            <div class="input-group-addon search-color btn" id="selectGoods">选择商品</div>
+                        </div>
+                    </td>
+                    <td>
+                        <a href="javascript:;" class="delete_task_type text-red1">删除</a>
+                    </td>
+                </tr>
+                <tr class="J-goods_comment_num {if $task_rule['goods_comment_num'] == 0}hide{/if}">
+                    <td>
+                        <span class="label label-warning">商品评价</span>
+                    </td>
+                    <td>
+                        <div class="input-group w-400">
+                            <div class="input-group-addon">累计评价</div>
+                            <input type="number" name="goods_comment_num" id="goods_comment_num" class="form-control" min="0" value="{$task_rule['goods_comment_num']}">
+                            <div class="input-group-addon">次</div>
+                        </div>
+                    </td>
+                    <td>
+                        <a href="javascript:;" class="delete_task_type text-red1">删除</a>
+                    </td>
+                </tr>
+                <tr class="J-total_recharge {if $task_rule['total_recharge'] == 0}hide{/if}">
+                    <td>
+                        <span class="label label-warning">累计充值</span>
+                    </td>
+                    <td>
+                        <div class="input-group w-400">
+                            <div class="input-group-addon">达到</div>
+                            <input type="number" name="total_recharge" id="total_recharge" class="form-control" min="0" value="{$task_rule['total_recharge']}">
+                            <div class="input-group-addon">元</div>
+                        </div>
+                    </td>
+                    <td>
+                        <a href="javascript:;" class="delete_task_type text-red1">删除</a>
+                    </td>
+                </tr>
+                <tr class="J-single_recharge {if $task_rule['single_recharge'] == 0}hide{/if}">
+                    <td>
+                        <span class="label label-warning">单次充值</span>
+                    </td>
+                    <td>
+                        <div class="input-group w-400">
+                            <div class="input-group-addon">满</div>
+                            <input type="number" name="single_recharge" id="single_recharge" class="form-control" min="0" value="{$task_rule['single_recharge']}">
+                            <div class="input-group-addon">元</div>
+                        </div>
+                    </td>
+                    <td>
+                        <a href="javascript:;" class="delete_task_type text-red1">删除</a>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <div class="input-group w-200">
+                            <select class="form-control col-md-2" name="select_task_rule" id="select_task_rule">
+                                <option value="referrals">推荐人数</option>
+                                <option value="distribution_commission">分销佣金</option>
+                                <option value="distribution_orders">分销订单</option>
+                                <option value="order_total_money">订单满额</option>
+                                <option value="order_total_sum">订单累计</option>
+                                <option value="pay_order_total_num">支付订单</option>
+                                <option value="goods_id">指定商品</option>
+                                <option value="goods_comment_num">商品评价</option>
+                                <option value="total_recharge">累计充值</option>
+                                <option value="single_recharge">单次充值</option>
+                            </select><div class="input-group-addon search-color btn" id="add_task_rule">增加规则</div>
+                        </div>
+                    </td>
+                    <td></td>
+                    <td></td>
+                </tr>
+                </tbody>
+            </table>
+            <div class="screen-title2" data-id="t2">
+                <span class="text">任务说明</span>
+            </div>
+            <div class="form-group">
+                <div class="col-md-12">
+                    <div id="UE-protocol" data-content='{if $task_info.task_explain}{$task_info.task_explain}{/if}'></div>
+                </div>
+            </div>
+        </div>
+        <!--奖励设置-->
+        <div class="tab-pane fade tab-3" id="reward_setting">
+            <div class="form-group">
+                <label class="col-md-2 control-label">送积分</label>
+                <div class="col-md-5">
+                    <div class="input-group w-200">
+                        <input class="form-control" type="number" name="send_points" id="send_points" value="{$poster_reward_arr['point']}">
+                        <div class="input-group-addon">个</div>
+                    </div>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-md-2 control-label">送余额</label>
+                <div class="col-md-5">
+                    <div class="input-group w-200">
+                        <input class="form-control" type="number" name="send_balance" id="send_balance" value="{$poster_reward_arr['balance']}">
+                        <div class="input-group-addon">个</div>
+                    </div>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-md-2 control-label">送微信红包</label>
+                <div class="col-md-5">
+                    <div class="input-group w-200">
+                        <input class="form-control" type="number" name="send_wchat_packet" id="send_wchat_packet" value="{$poster_reward_arr['wchat_red_packet']}">
+                        <div class="input-group-addon">元</div>
+                    </div>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-md-2 control-label">加会员成长值</label>
+                <div class="col-md-5">
+                    <div class="input-group w-200">
+                        <input class="form-control" type="number" name="send_member_growth" id="send_member_growth" value="{$poster_reward_arr['growth']}">
+                        <div class="input-group-addon">成长值</div>
+                    </div>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-md-2 control-label">送礼品券</label>
+                <div class="col-md-5">
+ 
+                        <select class="form-control w-200" name="gift_voucher_id" id="gift_voucher_id">
+                            <option value="0">请选择</option>
+                            {foreach name="gift_voucher_info" item="gift_voucher"}
+                                <option {if $gift_voucher['gift_voucher_id'] == $poster_reward_arr['gift_voucher_id']}selected{/if} value="{$gift_voucher['gift_voucher_id']}">{$gift_voucher['giftvoucher_name']}</option>
+                            {/foreach}
+                        </select>
+
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-md-2 control-label">送优惠券</label>
+                <div class="col-md-5">
+                        <select class="form-control w-200" name="coupon_type_id" id="coupon_type_id">
+                            <option value="0">请选择</option>
+                            {foreach name="coupon_type_info" item="coupon_type"}
+                            <option {if $coupon_type['coupon_type_id'] == $poster_reward_arr['coupon_type_id']}selected{/if} value="{$coupon_type['coupon_type_id']}">{$coupon_type['coupon_name']}</option>
+                            {/foreach}
+                        </select>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="col-md-2 control-label"></label>
+        <div class="col-md-8">
+            <button class="btn btn-primary add" type="submit">添加</button>
+            <a href="javascript:history.go(-1);" class="btn btn-default">返回</a>
+        </div>
+    </div>
+</form>
+
+<!-- page end -->
+{/block}
+{block name="script"}
+<script>
+    require(['util'], function (util) {
+        // util.layDate("#start_task_time");
+        // util.layDate("#end_task_time");
+        util.layDate('#effect_time',true,function(value, date, endDate){
+            var date1=date.year+'-'+date.month+'-'+date.date;
+            var date2=endDate.year+'-'+endDate.month+'-'+endDate.date;
+            if(value){
+                $('#start_task_time').val(date1);
+                $('#end_task_time').val(date2);
+                $('#effect_time').parents('.form-group').removeClass('has-error');
+            }
+            else{
+                $('#start_task_time').val('');
+                $('#end_task_time').val('');
+            }
+        });
+        //选择商品
+        $('#selectGoods').click(function () {
+            util.activityDialog('url:/platform/addons/execute/addons/taskcenter/controller/Taskcenter/action/generalTaskDialogGoodsList',function(data){
+            });
+        });
+        //点击增加对应的规则tr
+        $('#add_task_rule').click(function(){
+            switch($('#select_task_rule').val()){
+                case 'referrals':
+                    $('tr.J-referrals').removeClass('hide');
+                    $('tr.J-referrals').show();
+                    break;
+                case 'distribution_commission':
+                    $('tr.J-distribution_commission').removeClass('hide');
+                    $('tr.J-distribution_commission').show();
+                    break;
+                case 'distribution_orders':
+                    $('tr.J-distribution_orders').removeClass('hide');
+                    $('tr.J-distribution_orders').show();
+                    break;
+                case 'order_total_money':
+                    $('tr.J-order_total_money').removeClass('hide');
+                    $('tr.J-order_total_money').show();
+                    break;
+                case 'order_total_sum':
+                    $('tr.J-order_total_sum').removeClass('hide');
+                    $('tr.J-order_total_sum').show();
+                    break;
+                case 'pay_order_total_num':
+                    $('tr.J-pay_order_total_num').removeClass('hide');
+                    $('tr.J-pay_order_total_num').show();
+                    break;
+                case 'goods_id':
+                    $('tr.J-goods_id').removeClass('hide');
+                    $('tr.J-goods_id').show();
+                    break;
+                case 'goods_comment_num':
+                    $('tr.J-goods_comment_num').removeClass('hide');
+                    $('tr.J-goods_comment_num').show();
+                    break;
+                case 'total_recharge':
+                    $('tr.J-total_recharge').removeClass('hide');
+                    $('tr.J-total_recharge').show();
+                    break;
+                case 'single_recharge':
+                    $('tr.J-single_recharge').removeClass('hide');
+                    $('tr.J-single_recharge').show();
+                    break;
+            }
+            // console.log($('#select_task_rule').val());
+        })
+        //删除任务规则
+        $('.delete_task_type').click(function(){
+            $(this).parent().parent().find('input').val('');
+            $(this).parent().parent().hide();
+        })
+        //添加任务
+        util.validate($('.form-validate'),function(form){
+            var data = {};
+            data.task_type = 0;
+
+            //任务id
+            if('{$general_poster_id}'){
+                data.general_poster_id = '{$general_poster_id}';
+            }
+            //任务名称
+            var task_name = $('#task_name').val();
+            data.task_name = task_name;
+            //任务类型
+            var task_kind = $('input[name=task_type]:checked').val();
+            data.task_kind = task_kind;
+            // console.log(task_type);
+            //任务图片
+            var task_img = $('#wap_register_adv i').data('id');
+            data.task_img = task_img;
+            // console.log(task_img);
+            //开启时间
+            var start_task_time = $('#start_task_time').val();
+            data.start_task_time = start_task_time;
+            //结束时间
+            var end_task_time = $('#end_task_time').val();
+            data.end_task_time = end_task_time;
+            if (util.DateTurnTime(start_task_time) > util.DateTurnTime(end_task_time)) {
+                $("#effect_time").focus();
+                util.message("开始时间大于结束时间");
+                return;
+            }
+            //任务限时
+            var task_limit_time = $('#task_limit_time').val();
+            data.task_limit_time = task_limit_time;
+            //任务状态
+            var task_status = $('input[name=task_status]').is(':checked')?1:0;
+            data.task_status = task_status;
+            /**********************任务规则***************************/
+            data.task_rule = {};
+            var referrals = $('#referrals').val();
+            data.task_rule.referrals = referrals;
+            var distribution_commission = $('#distribution_commission').val();
+            data.task_rule.distribution_commission = distribution_commission;
+            var distribution_orders = $('#distribution_orders').val();
+            data.task_rule.distribution_orders = distribution_orders;
+            // var distribution_orders = $('#distribution_orders').val();
+            // data.task_rule.distribution_orders = distribution_orders;
+            var order_total_money = $('#order_total_money').val();
+            data.task_rule.order_total_money = order_total_money;
+            var order_total_sum = $('#order_total_sum').val();
+            data.task_rule.order_total_sum = order_total_sum;
+            //支付订单多少笔
+            var pay_order_total_num = $('#pay_order_total_num').val();
+            data.task_rule.pay_order_total_num = pay_order_total_num;
+            var goods_id = $('#goods_id').val();
+            data.task_rule.goods_id = goods_id;
+            var goods_comment_num = $('#goods_comment_num').val();
+            data.task_rule.goods_comment_num = goods_comment_num;
+            var total_recharge = $('#total_recharge').val();
+            data.task_rule.total_recharge = total_recharge;
+            var single_recharge = $('#single_recharge').val();
+            data.task_rule.single_recharge = single_recharge;
+            if(!referrals && !distribution_commission && !distribution_orders && !order_total_money && !order_total_sum && !pay_order_total_num && !goods_id && !goods_comment_num && !total_recharge && !single_recharge){
+                util.message('请填写任务规则！', 'danger');return;
+            }
+            //任务说明
+            var task_explain = $('#UE-protocol').data('content');
+            data.task_explain = task_explain;
+            /***************************奖励设置*********************************/
+            var reward_obj = {};
+            //送积分
+            var send_points = $('#send_points').val();
+            reward_obj['task_type'] = 0;//普通任务
+            reward_obj['point'] = send_points;
+            //送余额
+            var send_balance = $('#send_balance').val();
+            reward_obj['balance'] = send_balance;
+            //送微信红包
+            var send_wchat_packet = $('#send_wchat_packet').val();
+            reward_obj['wchat_red_packet'] = send_wchat_packet;
+            //加会员成长值
+            var send_member_growth = $('#send_member_growth').val();
+            reward_obj['growth'] = send_member_growth;
+            //送礼品券
+            var gift_voucher_id = $('#gift_voucher_id').val();
+            reward_obj['gift_voucher_id'] = gift_voucher_id;
+            //送优惠券
+            var coupon_type_id = $('#coupon_type_id').val();
+            reward_obj['coupon_type_id'] = coupon_type_id;
+            data.general_reward = reward_obj;
+            if(!send_points && !send_wchat_packet && !send_member_growth && !gift_voucher_id && !coupon_type_id){
+                util.message('请填写奖励！', 'danger');return;
+            }
+            // console.log(data);return;
+            // $.post('{$addGeneralTask}',
+            $('.add').attr({disabled: "disabled"}).html('提交中...');
+            $.post('{$addPosterTask}',
+                data,
+                function(res){
+                    if (res["code"] > 0) {
+                        util.message('添加成功', 'success', "{:__URL('platform/Menu/addonmenu?addons=generalTaskList')}");
+                        // util.message('添加成功', 'success', "");
+                    } else {
+                        util.message(res["message"], 'danger');
+                    }
+                }
+            );
+        })
+    });
+</script>
+{/block}

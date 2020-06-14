@@ -1,0 +1,43 @@
+page{
+  font-size: 28rpx;
+  background-color: #f8f8f8;
+}
+.radio-text{
+  padding-right: 30rpx;
+}
+.radioGroup{
+  display: inline-block;
+}
+.post_group{
+  background-color: #fff;
+}
+.post_group .post_cell{
+  display: flex;
+  width: 100%;
+  padding: 20rpx 30rpx;
+  box-sizing: border-box;
+  line-height: 48rpx;
+  border-bottom: 1px solid #ebedf0;
+}
+.post_group .post_cell .post_title{
+  max-width: 180rpx;
+  flex: 1;
+}
+.section{
+  width: 100%;
+}
+.picker_title{
+  width: 180rpx;
+}
+.picke_tips{
+  color: #323233b0;
+}
+.save_btn{
+  margin: 60rpx 30rpx;
+  background-color: #f44;
+  color: #fff;
+  font-size: 28rpx;
+  height: 88rpx;
+  line-height: 84rpx;
+  border-radius: 50rpx;
+}

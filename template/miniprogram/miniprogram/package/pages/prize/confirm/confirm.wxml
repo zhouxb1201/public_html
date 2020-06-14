@@ -1,0 +1,123 @@
+<view class='useraddress' wx:if="{{(items.type == 5 && items.goods_type == 1) || items.type == 6}}">
+  <view class='cart_bottom_bg' bindtap='addressListShow'>
+    <view class='no_address' wx:if="{{!addressShow}}">
+      <van-icon class='icon_add' name="add-o" size='24px' />
+      <text class='adress_text'>添加收货地址</text>
+      <van-icon class='icon_arrow' name="arrow" />
+    </view>
+    <view wx:else class='has_address'>
+      <van-icon class='icon_location' name="location" size='24px' />
+      <view class='address_box'>
+        <view>
+          <text class='consigner'>{{items.address.consigner}}</text>
+          <text class='mobile'>{{items.address.mobile}}</text>
+        </view>
+        <view class='address_text'>
+          {{items.address.province_name}}{{items.address.city_name}}{{items.address.district_name}}{{items.address.address_detail}}
+        </view>
+      </view>
+      <van-icon class='icon_arrow' name="arrow" />
+    </view>
+  </view>
+</view>
+<!--选择门店-->
+<view class='useraddress' wx:if="{{items.type == 5 && items.goods_type == 0}}">
+  <view class='cart_bottom_bg' data-shopid='{{items.shop_id}}' bindtap="getStoreList">
+    <view class='no_address' wx:if="{{!store_name}}">
+      <van-icon class='icon_add cr_3283fa' name="add" size='24px' />
+      <text class='adress_text'>添加门店</text>
+      <van-icon class='icon_arrow' name="arrow" size='14px' />
+    </view>
+    <view class='store-info' wx:else>
+      <view class='van-col van-col--14'>使用门店</view>
+      <view class='text-right van-col van-col--10'>{{store_name}}</view>
+      <van-icon class='icon_arrow' name="arrow" size='14px' />
+    </view>
+  </view>
+</view>
+
+
+
+
+<view class="confrim-wrap">
+  <view class="confrim-left">
+    <view class="img">
+      <image mode='widthFix' src="{{items.pic != '' ? items.pic : defaultImg}}"></image>
+    </view>
+    <view class="confrim-goods-info">
+      <view>{{items.prize_name}}</view>
+      <view>{{items.name}}</view>
+    </view>
+  </view>
+  <view class="confrim-right">x1</view>
+</view>
+<view class="btn-receive">
+  <view class="btn-receive-wrap">
+    <view class="action-btn" bindtap='onReceive'>立即领取</view>
+  </view>
+</view>
+
+
+
+
+<!-- 地址列表弹框 -->
+<van-popup show="{{ addressListShow }}" position="bottom" custom-style="height:100%;" bind:click-overlay="addressListClose">
+  <view class='popup_title'>
+    <view class='addressClose' bindtap='addressListClose'>
+      <text class='icon_left iconfont v-icon-arrow-left2'></text> 返回
+    </view>
+    <view class='addressTitle'>收货地址</view>
+  </view>
+  <view class='popup_info'>
+    <view class='item' wx:for="{{address_list}}" wx:key='' wx:for-item="addressItem" data-addressid='{{addressItem.id}}' bindtap='addressSelect'>
+      <icon wx:if="{{addressItem.id == addressid}}" type="success" color="red" size='20' />
+      <icon wx:else type="circle" size='20' />
+      <view class='item_info'>
+        <view class='cell'>
+          <text>{{addressItem.consigner}}</text>，
+          <text>{{addressItem.mobile}}</text>
+        </view>
+        <view class='cell'>
+          <text>{{addressItem.province_name}}</text>
+          <text>{{addressItem.address}}</text> </view>
+        <view></view>
+      </view>
+    </view>
+  </view>
+  <view class='close'>
+    <button class='closeBtn' bindtap='onAddressPage'>新增地址</button>
+  </view>
+</van-popup>
+
+
+
+<!-- 门店地址弹出框 -->
+<van-popup show="{{shopStoreShow}}" position="bottom" custom-style="height:100%;" bind:click-overlay="storeListClose">
+  <view class='popup_title'>门店地址</view>
+  <view class='popup_info'>
+    <view class='item' wx:for="{{store_list}}" wx:key='' wx:for-item="storeItem" data-storename='{{storeItem.store_name}}' data-storeid='{{storeItem.store_id}}' bindtap='storeSelect'>
+      <icon wx:if="{{storeItem.store_id == store_id}}" type="success" color="red" size='20' />
+      <icon wx:else type="circle" size='20' />
+      <view class='item_info'>
+        <view class='cell'>
+          <text>{{storeItem.store_name}}</text>，
+          <text>{{storeItem.distance}}km</text>
+        </view>
+        <view class='cell'>
+          <text>{{storeItem.province_name}}</text>
+          <text>{{storeItem.city_name}}</text>
+          <text>{{storeItem.dictrict_name}}</text>
+          <text>{{storeItem.address}}</text>
+        </view>
+      </view>
+    </view>
+  </view>
+  <view class='no_more'>没有更多</view>
+  <view class='close-store'>
+    <button class='closebtn' bindtap='storeListClose'>关闭</button>
+  </view>
+</van-popup>
+
+
+<!-- 关联手机 -->
+<phone-compoent phoneShow='{{phoneShow}}' bind:phoneEven='phonereResult'></phone-compoent>

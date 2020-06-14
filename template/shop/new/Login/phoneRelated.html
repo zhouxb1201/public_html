@@ -1,0 +1,561 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>关联手机</title>
+    <link rel="stylesheet" href="__TEMP__/shop/new/public/css/common.css">
+    <link rel="stylesheet" href="__TEMP__/shop/new/public/css/shop.css">
+    {if $colorStyle && $colorStyle!='default'}
+    <link rel="stylesheet" href="PLATFORM_NEW_CSS/indexDecorate/css/{$colorStyle}.css">
+    {/if}
+    <script src="__TEMP__/shop/new/public/scripts/lib/require.js" data-main="__TEMP__/shop/new/public/scripts/app/main"></script>
+
+</head>
+
+<body>
+    <div class="v-layout-login">
+        <div class="v-head-full retrieve">
+            <div class="v-head w1200 clearfix">
+                <div class="logo-left clearfix">
+                    <a href="{:__URL('SHOP_MAIN')}" class="fl"><img src="{$pc_info['logo']}" alt=""></a>
+                    <i class="shu fl"></i>
+                    <span class="title fl">关联手机</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="relate-box">
+            <div class="w1200">
+                <div class="bind-box">
+                    <ul class="bind-box-ul clearfix tabs">
+                        <li class="active"><a href="#tab1">新注册会员绑定</a></li>
+                        <li><a href="#tab2">已有账户绑定</a></li>
+                    </ul>
+                    <div class="tab_container">
+                        <div id="tab1" class="tab_content newBind" style="display: block; ">
+
+                            <form action="">
+                                <div class="login-msg msg" style="display: none">
+                                    <p class="error hint">账户名错误</p>
+                                </div>
+                                <dl class="clearfix">
+                                    <dt class="userName fl"><img src="PLATFORM_STATIC/login_register/L-account.png" alt=""></dt>
+                                    <dd class="userName-ipt fl"><input type="text" id="mobile" class="inputs" placeholder="请输入您的手机号"></dd>
+                                </dl>
+                                <!--请输入验证码-->
+                                <div class="tip clearfix v-code pr" style="display: none">
+                                    <input type="text" placeholder="请输入验证码" class="v-code-ipt">
+                                    <a href="javascript:void(0);" class="vCode-a"><img id="verify_img" src="{:__URL('SHOP_MAIN/captcha')}" alt="captcha" onclick="this.src='{:__URL('SHOP_MAIN/captcha?tag=1')}'+'&send='+Math.random()"></a>
+                                </div>
+                                <dl class="clearfix">
+                                    <dt class="userName fl"><img src="PLATFORM_STATIC/login_register/code.png" alt=""></dt>
+                                    <dd class="userName-ipt fl pr">
+                                        <input type="number" class="inputs" id="mobileregistermodel-sms_captcha" placeholder="请输入验证码">
+                                        <button type="button" class="obtain-code" id="sendOutCode" >获取验证码</button>
+                                    </dd>
+                                </dl>
+
+                                <dl class="clearfix">
+                                    <dt class="userName fl"><img src="PLATFORM_STATIC/login_register/L-pwd.png" alt=""></dt>
+                                    <dd class="userName-ipt fl"><input type="password" id="password" class="inputs" placeholder="请输入长度6-20位密码"></dd>
+                                </dl>
+
+                                <dl class="clearfix">
+                                    <dt class="userName fl"><img src="PLATFORM_STATIC/login_register/确认密码.png" alt=""></dt>
+                                    <dd class="userName-ipt fl"><input type="password" class="inputs" id="repass" placeholder="请输入确认密码"></dd>
+                                </dl>
+
+                                <dl class="clearfix">
+                                    <dt class="userName fl"><img src="PLATFORM_STATIC/login_register/确认密码.png" alt=""></dt>
+                                    <dd class="userName-ipt fl"><input type="text" class="inputs" id="extend_code" placeholder="请输入邀请码"></dd>
+                                </dl>
+
+                                <div class="tip clearfix">
+                                    <div class="fl">
+                                        <input type="checkbox" id="agree">
+                                        我已阅读并接受<a href="{:__URL('SHOP_MAIN/helpcenter/index','id=17&class_id=6')}" class="blue">《用户注册协议》</a>
+                                    </div>
+                                </div>
+
+                                <div class="submits">
+                                    <input type="button" class="submit okSubmit btnregister" value="注册并绑定">
+                                </div>
+
+                            </form>
+
+                        </div>
+                        <div id="tab2" class="tab_content newBind" style="display: none; ">
+                            <form action="">
+                                <div class="login-msg msg1" style="display: none">
+                                    <p class="error hint1">账户名错误</p>
+                                </div>
+                                <dl class="clearfix">
+                                    <dt class="userName fl"><img src="PLATFORM_STATIC/login_register/L-account.png" alt=""></dt>
+                                    <dd class="userName-ipt fl"><input type="text" class="inputs" id="iphone" placeholder="请输入您的手机号"></dd>
+                                </dl>
+                                <dl class="clearfix">
+                                    <dt class="userName fl"><img src="PLATFORM_STATIC/login_register/code.png" alt=""></dt>
+                                    <dd class="userName-ipt fl pr">
+                                        <input type="number" class="inputs" placeholder="请输入验证码" id="mobile_code">
+                                        <button class="obtain-code" id="sendCode">获取验证码</button>
+                                    </dd>
+                                </dl>
+                                <div class="submits">
+                                    <input type="button" class="submit okSubmit bMobile" value="绑定手机">
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <input type="hidden" id="uid" value="">
+    {$bottom}
+</body>
+    <script>
+        require(['common','dialog'], function (common,dialog) {
+        function isIE() {
+            if (!!window.ActiveXObject || "ActiveXObject" in window){
+                location.href="{:__URL('SHOP_MAIN/login/versionLow')}";
+            }
+        }
+        isIE();
+        
+            common.tabToggle();
+            dialog.footerImg();
+            var myreg=/^[1][3,4,5,6,7,8,9][0-9]{9}$/;
+            loading();
+            function loading(){
+                $(".rights").css("display","none");
+            }
+            $("#mobile").change(function(){
+                var mobile = $("#mobile").val();
+                if(!myreg.test(mobile)){
+                    $(".hint").html('请输入正确的手机格式');
+                    $(".msg").css("display", "block");
+                    $("#mobile").focus();
+                    return false;
+                }else{
+                    $.ajax({
+                        type: "GET",
+                        url: "{:__URL('SHOP_MAIN/login/checkMobile')}",
+                        data: {"mobile":$('#mobile').val()},
+                        success: function(data){
+                            if(data){
+                                $(".hint").html('该手机号已被注册');
+                                $(".msg").css("display", "block");
+                                $("#mobile").val('');
+                                $("#mobile").focus();
+                                return false;
+                            }else{
+                                $(".msg").css("display", "none");
+                            }
+                        }
+                    });
+                }
+            });
+            $("#iphone").change(function(){
+                var mobile = $("#iphone").val();
+                if(!myreg.test(mobile)){
+                    $(".hint1").html('请输入正确的手机格式');
+                    $(".msg1").css("display", "block");
+                    $("#iphone").focus();
+                    return false;
+                }else{
+                    $.ajax({
+                        type: "GET",
+                        url: "{:__URL('SHOP_MAIN/login/checkMobile')}",
+                        data: {"mobile":$('#iphone').val()},
+                        success: function(data){
+                            if(data){
+                                $(".msg1").css("display", "none");
+                            }else{
+                                $(".hint1").html('该手机号未被注册');
+                                $(".msg1").css("display", "block");
+                                $("#iphone").val('');
+                                $("#iphone").focus();
+                                return false;
+                            }
+                        }
+                    });
+                }
+            });
+            $("#password").change(function(){
+                var password = $("#password").val();
+                if(password == ""){
+                    $(".hint").html('请输入密码');
+                    $(".login-msg").css("display", "block");
+                    $("#password").focus();
+                    return false;
+                }else if(password.length<6){
+                    $(".hint").html('密码最小长度为6');
+                    $(".msg").css("display", "block");
+                    $("#password").focus();
+                    return false;
+                }else{
+                    $(".msg").css("display", "none");
+                }
+            });
+
+            $("#repass").change(function(){
+                var repass = $("#repass").val();
+                var password = $("#password").val();
+                if( !(repass == password)){
+                    $(".hint").html('两次密码不一致');
+                    $(".msg").css("display", "block");
+                    $("#repass").focus();
+                    return false;
+                }else{
+                    $(".msg").css("display", "none");
+                }
+            });
+            $("#sendOutCode").click(function () {
+                var mobile = $("#mobile").val();
+                if(mobile == "" || mobile == undefined || mobile == null){
+                    $(".hint").html('请输入手机号');
+                    $(".login-msg").css("display", "block");
+                    $("#mobile").focus();
+                    return false;
+                }else if(!myreg.test(mobile)){
+                    $(".hint").html('请输入正确的手机格式');
+                    $(".msg").css("display", "block");
+                    $("#mobile").focus();
+                    return false;
+                }else{
+                    $(".msg").css("display", "none");
+                }
+                if ("{$login_verify_code['pc']}" == 1 && $("#num").val() >= 3) {
+                    var vertification = $("#captcha").val();
+                }
+                $.ajax({
+                    type: "POST",
+                    url: "{:__URL('SHOP_MAIN/login/sendsmsregistercode')}",
+                    data: {"mobile": mobile, "vertification": vertification},
+                    success: function (data) {
+                        if (data['code'] == 0) {
+                            $(".hint").html('发送成功');
+                            $(".msg").css("display", "block");
+                            time();
+                        } else {
+                            $("#num").val(data['num']);
+                            if (data['num'] >= 3) {
+                                $(".v-code").css("display", "block");
+                            }
+                            $(".hint").html(data["message"]);
+                            $(".msg").css("display", "block");
+                            $(".verifyimg").attr("src", "{:__URL('SHOP_MAIN/captcha')}");
+                            return false;
+                        }
+                    }
+                });
+            });
+
+            var wait=60;
+            function time() {
+                if (wait == 0) {
+                    $("#sendOutCode").removeAttr("disabled");
+                    $("#sendOutCode").html("获取验证码");
+                    wait = 60;
+                    return;
+                } else {
+                    $("#sendOutCode").attr("disabled", 'disabled');
+                    $("#sendOutCode").html(wait+"s");
+                    wait--;
+                }
+                setTimeout(function() {
+                        time()
+                    },
+                    1000);
+            }
+
+            $(".btnregister").click(function(){
+                var agree=$('#agree').is(':checked')?'1':'0';
+                var mobile = $("#mobile").val();
+                if(mobile == "" || mobile == undefined || mobile == null){
+                    $(".hint").html('请输入手机号');
+                    $(".msg").css("display", "block");
+                    $("#mobile").focus();
+                    return false;
+                }else if(!myreg.test(mobile)){
+                    $(".hint").html('请输入正确的手机格式');
+                    $(".msg").css("display", "block");
+                    $("#mobile").focus();
+                    return false;
+                }else{
+                    $(".login-msg").css("display", "none");
+                }
+                var code = $("#mobileregistermodel-sms_captcha").val();
+                if ("{$notice['noticeMobile']}" == 1){
+                    //短信开启
+                    if(code == "" || code == undefined || code == null){
+                        $(".hint").html('请输入手机验证码');
+                        $(".msg").css("display", "block");
+                        $("#mobileregistermodel-sms_captcha").focus();
+                        return false;
+                    }else if(code.length != 6){
+                        $(".hint").html('请输入正确的手机验证码');
+                        $(".msg").css("display", "block");
+                        $("#mobileregistermodel-sms_captcha").focus();
+                    }else{
+                        $(".msg").css("display", "none");
+                    }
+                    var res = false;
+                    $.ajax({
+                        type:"post",
+                        url:"{:__URL('SHOP_MAIN/login/registerCheckCode')}",
+                        data:{'send_param':code},
+                        async : false,
+                        dataType:'json',
+                        success:function(data){
+                            if (data['code'] == 0) {
+                                if(agree == '0'){
+                                    $(".hint").html('需同意用户注册协议');
+                                    $(".msg").css("display", "block");
+                                    res = true;
+                                }else{
+                                    $(".msg").css("display", "none");
+                                }
+                            }else {
+                                $("#num").val(data['num']);
+                                if(data['num']>=3){
+                                    $(".v-code").css("display", "block");
+                                    $(".verifyimg").attr("src",'{:__URL('SHOP_MAIN/captcha?tag=1')}&send='+Math.random());
+                                }
+                                $(".hint").html('手机验证码错误');
+                                $(".msg").css("display", "block");
+                                $("#mobileregistermodel-sms_captcha").focus();
+                                res = true;
+                            }
+                        }
+                    });
+                    if(res){
+                        return false;
+                    }
+                }
+                var password = $("#password").val();
+                if(password == ""){
+                    $(".hint").html('请输入密码');
+                    $(".msg").css("display", "block");
+                    $("#password").focus();
+                    return false;
+                }else if(password.length<6){
+                    $(".hint").html('密码最小长度为6');
+                    $(".msg").css("display", "block");
+                    $("#password").focus();
+                    return false;
+                }else{
+                    $(".msg").css("display", "none");
+                }
+                var vertification = $.trim($('#captcha').val());
+                if("{$login_verify_code['pc']}" == 1 && $("#num").val()>=3) {
+                    if (vertification == undefined || vertification == "") {
+                        $(".hint").html('请输入验证码');
+                        $(".msg").css("display", "block");
+                        $("#captcha").focus();
+                        return false;
+                    } else {
+                        $(".msg").css("display", "none");
+                        var result = "";
+                        $.ajax({
+                            type: "post",
+                            url: "{:__URL('SHOP_MAIN/login/vertify')}",
+                            data: {'vertification': vertification},
+                            async: false,
+                            dataType: 'json',
+                            success: function (data) {
+                                if (data['code'] == 1) {
+                                    $(".msg").css("display", "none");
+                                    result = true;
+                                } else {
+                                    $(".hint").html('验证码错误');
+                                    $(".msg").css("display", "block");
+                                    $("#captcha").focus();
+                                    $(".verifyimg").attr("src", "{:__URL('SHOP_MAIN/captcha')}");
+                                    result = false;
+                                }
+                                return result;
+                            }
+                        });
+                    }
+                    if (!result) {
+                        return false;
+                    }
+                }
+                var repass = $("#repass").val();
+                if( !(repass == password)){
+                    $(".hint").html('两次密码不一致');
+                    $(".msg").css("display", "block");
+                    $("#repass").focus();
+                    return false;
+                }else{
+                    $(".msg").css("display", "none");
+                }
+
+                $.ajax({
+                    type: "POST",
+                    url: "{:__URL('SHOP_MAIN/login/register')}",
+                    data: {
+                        "mobile" : mobile,
+                        "password" : password,
+                        "mobile_code": code
+                    },
+                    success: function(data){
+                        if (data['code'] == 1) {
+                            layer.msg('注册成功')
+                            window.location.href = "{:__URL('SHOP_MAIN/index/index')}";
+                        }else{
+                            $(".hint").html(data['message']);
+                            $(".msg").css("display", "block");
+                        }
+                    }
+                });
+            });
+            $("#iphone").change(function(){
+                var mobile = $("#iphone").val();
+                if(!myreg.test(mobile)){
+                    $(".hint1").html('请输入正确的手机格式');
+                    $(".msg1").css("display", "block");
+                    $("#mobile").focus();
+                    return false;
+                }
+                if(myreg.test(mobile)){
+                    $.ajax({
+                        type: "GET",
+                        url: "{:__URL('SHOP_MAIN/login/checkMobile')}",
+                        data: {"mobile":mobile},
+                        success: function(data){
+                            if(data){
+                                $(".hint1").html('该手机号已被注册,请绑定');
+                                $("#uid").val(data['uid']);
+                                $(".msg1").css("display", "block");
+                                $("#mobile").focus();
+                            }else{
+                                $(".hint1").html('该手机号未注册');
+                                $(".msg1").css("display", "block");
+                                $("#iphone").val('');
+                                $("#mobile").focus();
+                                return false;
+                            }
+                        }
+                    });
+                }
+            });
+            $("#sendCode").click(function (e) {
+                e.preventDefault();
+                var mobilea = $("#iphone").val();
+                if(mobilea == "" || mobilea == undefined || mobilea == null){
+                    $(".hint1").html('请输入手机号');
+                    $(".msg1").css("display", "block");
+                    $("#iphone").focus();
+                    return false;
+                }else if(!myreg.test(mobilea)){
+                    $(".hint1").html('请输入正确的手机格式');
+                    $(".msg1").css("display", "block");
+                    $("#iphone").focus();
+                    return false;
+                }else{
+                    $(".msg1").css("display", "none");
+                    $.ajax({
+                        type: "GET",
+                        url: "{:__URL('SHOP_MAIN/login/checkMobile')}",
+                        data: {"mobile":$('#iphone').val()},
+                        success: function(data){
+                            if(data){
+                                $(".msg1").css("display", "none");
+                            }else{
+                                $(".hint1").html('该手机号未被注册');
+                                $(".msg1").css("display", "block");
+                                $("#iphone").val('');
+                                $("#iphone").focus();
+                                return false;
+                            }
+                        }
+                    });
+                }
+                $.ajax({
+                    type: "POST",
+                    url: "{:__URL('SHOP_MAIN/login/sendSmsBindMobile')}",
+                    data: {"mobile": mobilea},
+                    success: function (data) {
+                        if (data['code'] == 0) {
+                            $(".hint1").html('发送成功');
+                            $(".msg1").css("display", "block");
+                            timea();
+                        } else {
+                            $(".hint1").html(data["message"]);
+                            $(".msg1").css("display", "block");
+                            return false;
+                        }
+                    }
+                });
+            });
+            var waita=60;
+            function timea() {
+                if (waita == 0) {
+                    $("#sendCode").removeAttr("disabled");
+                    $("#sendCode").html("获取验证码");
+                    waita = 60;
+                    return;
+                } else {
+                    $("#sendCode").attr("disabled", 'disabled');
+                    $("#sendCode").html(waita+"s");
+                    waita--;
+                }
+                setTimeout(function() {
+                        timea()
+                    },
+                    1000);
+            }
+            $(".bMobile").click(function(){
+                var mobile = $.trim($('#iphone').val());
+                var mobile_code = $.trim($('#mobile_code').val());
+                var extend_code = $("#extend_code").val();
+                if( mobile == "" || mobile == undefined || mobile == null ) {
+                    $(".hint1").html('请输入手机号');
+                    $(".msg1").css("display", "block");
+                    $("#iphone").focus();
+                    return false;
+                }else{
+                    $(".msg1").css("display", "none");
+                }
+                if(mobile_code == undefined || mobile_code == "" || mobile_code == null){
+                    $(".hint1").html('请输入手机验证码');
+                    $(".msg1").css("display", "block");
+                    $("#mobile_code").focus();
+                    return false;
+                } else{
+                    $(".msg1").css("display", "none");
+                }
+                $.ajax({
+                    type: "POST",
+                    url: "{:__URL('SHOP_MAIN/login/register')}",
+                    data: {
+                        "mobile" : mobile,
+                        "mobile_code" : mobile_code,
+                        "extend_code" : extend_code,
+                        "uid" : $("#uid").val()
+                    },
+                    success: function(data){
+                        if (data['code'] >0) {
+                            $(".msg1").css("display", "none");
+                            layer.msg('绑定成功');
+                            window.location.href =data['url'];
+                        }else if (data['code'] ==-1){
+                            $(".hint1").html(data['message']);
+                            $(".msg1").css("display", "block");
+                        }else{
+                            $(".hint1").html('绑定失败');
+                            $(".msg1").css("display", "block");
+                        }
+                    }
+                });
+            });
+        });
+    </script>
+
+
+</html>

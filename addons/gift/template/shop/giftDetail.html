@@ -1,0 +1,201 @@
+
+{block name="resources"}
+<style>
+    body{
+        background:#fff;
+    }
+#showbox span {
+  background: url(__TEMP__/shop/new/public/image/whitebg.png) repeat;
+}
+</style>
+{/block}
+{block name="main"}
+<div class="shopIndex-main">
+    <!--page-->
+    <!--商品信息部分-->
+    <div class="goods-info clearfix w1200">
+        <!--商品图片及相册-->
+        <div class="preview">
+            <div class="">
+                <!--页面必要代码,img标签上请务必带上图片真实尺寸px-->
+                <div id="showbox">
+                    <!-- 否则显示商品组图 -->
+                    {foreach name="$gift_info.img_list" item ="img" key = "k"}
+                    <img src="{:__IMG($img['pic_cover_big'])}" alt="" width="400" height="400">
+                    {/foreach}
+                </div>
+                <!--展示图片盒子-->
+                <div id="showsum"></div>
+                <!--展示图片里边-->
+                <p class="showpage">
+                    <a href="javascript:void(0);" id="showlast"> &lt; </a>
+                    <a href="javascript:void(0);" id="shownext"> &gt; </a>
+                </p>
+            </div>
+        </div>
+        <!--商品详细信息-->
+        <div class="detail-info">
+            <!--商品名称-->
+            <div class="goods-name js-goods-name">{$gift_info.gift_name}</div>
+            <!--价钱-->
+            <div class="price-info clearfix">
+                <div class="price fl">
+                    <p>销售价<span class="pNum J-price">￥{$gift_info.price}</span></p>
+                </div>
+            </div>
+                </div>
+                <!--店铺信息-->
+                {if $shopStatus}
+                <div class="store-info">
+                    <dl class="store-logo">
+                        <a href="{:__URL('ADDONS_SHOP_MAIN','addons=shopIndex&shop_id='.$shop_info['base_info']['shop_id'])}" target="_blank" class="store-logo-img">
+                            <!--<img src="{:__IMG($shop_info['base_info']['shop_logo_img'])}" data-original="/upload/common/1529805405.png" class="lazy_load">-->
+                            <img src="{:__IMG($shop_info['base_info']['shop_logo_img'])}">
+                        </a>
+                    </dl>
+                    <dl class="store-name third-store">
+                        <a href="{:__URL('ADDONS_SHOP_MAIN','addons=shopIndex&shop_id='.$shop_info['base_info']['shop_id'])}" target="_blank" class="name" title="{$shop_info['base_info']['shop_company_name']}">{$shop_info['base_info']['shop_name']}</a>
+                        <input type="hidden" value="{$shop_info['base_info']['shop_id']}" id="store_shop_id">
+                    </dl>
+                    <dl>
+
+                        <div class="detailsScore clearfix">
+                            <div class="ds-item">
+                                <p>综合</p>
+                                <p class="red">{$shop_info['base_info']['shop_evaluate']['comprehensive']}</p>
+                            </div>
+                            <div class="ds-item">
+                                <p>描述</p>
+                                <p class="red">{$shop_info['base_info']['shop_evaluate']['shop_desc']}</p>
+                            </div>
+                            <div class="ds-item">
+                                <p>服务</p>
+                                <p class="red">{$shop_info['base_info']['shop_evaluate']['shop_service']}</p>
+                            </div>
+                            <div class="ds-item">
+                                <p>物流</p>
+                                <p class="red">{$shop_info['base_info']['shop_evaluate']['shop_stic']}</p>
+                            </div>
+
+                        </div>
+                    </dl>
+                    <dl class="store-other clearfix">
+                        <dt>客服:</dt>
+                        <dd>
+                            <a href="tencent://message/?uin={$shop_info['base_info']['shop_qq']}&site={$shop_info['base_info']['shop_qq']}&menu=yes" class="qq-border"><i class="icon-qq"></i></a>
+                        </dd>
+                    </dl>
+                    <dl class="store-other clearfix">
+                        <dt>电话:</dt>
+                        <dd>{$shop_info['base_info']['shop_phone']}</dd>
+                    </dl>
+                    <!--            <dl class="store-other clearfix">
+                                    <dt>地区:</dt>
+                                    <dd>广东广州</dd>
+                                </dl>-->
+                    <dl class="shopsOptions">
+                        <a href="{:__URL('ADDONS_SHOP_MAIN','addons=shopIndex&shop_id='.$shop_info['base_info']['shop_id'])}" class="enter">进入店铺</a>
+                        <a class="collect-shop" href="javascript:void(0);">
+                            {if condition="$is_member_fav_shop==0||$is_member_fav_shop==-1"}
+                            收藏店铺
+                            {else/}
+                            取消收藏
+                            {/if}
+                        </a>
+                    </dl>
+                </div>
+                {/if}
+            </div>
+            <!--商品评价部分-->
+            <div class="w1200 goods-seconds clearfix">
+                <div class="left-con">
+                    <div class="tabs-container">
+                        <ul class="tabs clearfix goods-seconds-tab">
+                            <li class="active"><a href="#tab1">商品详情</a></li>
+                        </ul>
+                        <div class="tab_container">
+                            <div id="tab1" class="tab_content goods-details" style="display: block; ">
+                            {$gift_info.description}
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="right-con">
+                <h3 class="right-title">店内排行榜</h3>
+                <div class="right-con-content">
+                    <ul class="right-con-content-ul clearfix">
+                        <li class="active">销售量</li>
+                        <li>收藏数</li>
+                    </ul>
+                    <div class="right-con-content-shop">
+                        <ul class="right-con-content-shop-ul clearfix">
+                            {foreach name="goods_rank" item="goods" key="k" }
+                            {if condition = "($k+1) <= 10" }
+                            <li class="clearfix">
+                                <div class="pic">
+                                    <a href="{:__URL('SHOP_MAIN/goods/goodsinfo','goodsid='.$goods['goods_id'])}" title='{$goods.goods_name}'>
+                                        <img src="{:__IMG($goods['pic_cover_mid'])}" alt="">
+                                    </a>
+                                </div>
+                                <div class="desc">
+                                    <div class="desc-title"><a href="{:__URL('SHOP_MAIN/goods/goodsinfo','goodsid='.$goods['goods_id'])}" title="{$goods.goods_name}">{$goods.goods_name}</a></div>
+                                    <div class="money red">￥{$goods.promotion_price}</div>
+                                    <div>销量：{$goods.sales}</div>
+                                </div>
+                            </li>
+                            {/if}
+                            {/foreach}
+                        </ul>
+                        <ul class="right-con-content-shop-ul clearfix" style='display:none;'>
+                            {foreach name="goods_collection" item="goods" key="k" }
+                            <li class="clearfix">
+                                <div class="pic">
+                                    <a href="{:__URL('SHOP_MAIN/goods/goodsinfo','goodsid='.$goods['goods_id'])}" title='{$goods.goods_name}'>
+                                        <img src="{:__IMG($goods['pic_cover_mid'])}" alt="">
+                                    </a>
+                                </div>
+                                <div class="desc">
+                                    <div class="desc-title"><a href="{:__URL('SHOP_MAIN/goods/goodsinfo','goodsid='.$goods['goods_id'])}" title="{$goods.goods_name}">{$goods.goods_name}</a></div>
+                                    <div class="money red">￥{$goods.promotion_price}</div>
+                                    <div>收藏数：{$goods.collects}</div>
+                                </div>
+                            </li>
+                            {/foreach}
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!--猜你喜欢部分-->
+        <div class="guessBuy w1200">
+            <ul class="clearfix guessBuy-ul">
+                <li class="active" data-type='guess'>猜你喜欢</li>
+                <li data-type='history'>浏览历史</li>
+                <div class="fr J-changeLike">
+                    <a href="javascript:void(0);">换一批</a>
+                </div>
+                <div class="fr J-del" style='display:none;'>
+                    <a href="javascript:void(0);">清空</a>
+                </div>
+            </ul>
+            <div class="browse-history-con">
+                <div class="browse-history-inner">
+                    <ul id="user_like" class="recommend-panel">
+                    </ul>
+                </div>
+            </div>
+        </div>
+        <!--page-->
+    </div>
+<input type="hidden" id="is_member_fav_shop" value="{$is_member_fav_shop}">
+    <input type="hidden" id="uid" value="{$uid}">
+    {/block}
+    {block name="javascript"}
+    <script>
+        require(['dialog', 'common', 'goods'], function (Dialog, common, Goods) {
+            Goods.goodsOperation();
+            Goods.detailsImg();
+            common.tabToggle();
+        });
+    </script>
+    {/block}

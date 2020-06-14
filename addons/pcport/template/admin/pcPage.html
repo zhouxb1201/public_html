@@ -1,0 +1,462 @@
+{if $type=='home_templates' ||  $type == 'custom_templates'}
+<div class="pageHome">
+    <div class='J-home demo' data-homehtml='topBanner' type='J-top' style="height:80px">
+
+    </div>
+    <div class="headers lyrow" data-mode="home_header_mode" data-purebox="home_header_mode" ectype="homeheader">
+    <div class="site-nav">
+            <div class="w w1200 clearfix">
+                <div class="pull-left">欢迎来到团大人电商平台
+                    <a href="javascript:void(0);" class="red login">登录</a>
+                    <a href="javascript:void(0);" class="red">注册</a>
+                </div>
+                <div class="pull-right">
+                    <a href="javascript:void(0);">购物车</a>
+                    <a href="javascript:void(0);">个人中心</a>
+                    <a href="javascript:void(0);">移动商城</a>
+                    {if $hasHelpcenter}<a href="javascript:void(0);">帮助中心</a>{/if}
+                </div>
+            </div>
+        </div>
+    <div class="shopHeader">
+            <div class="w w1200 clearfix">
+
+                <div class="fl oneItem">
+                    <div class="logo">
+                        <a href="javascript:void(0);" class="logo_a"><img src="{$web_info['logo']}" alt=""></a>
+                    </div>
+                </div>
+
+                <div class="fl twoItem">
+                    <ul class="search-tabs clearfix">
+                        <li class="active">商品</li>
+                        <li>店铺</li>
+                    </ul>
+                    <div class="search">
+                        <input type="text" class="search_input" placeholder="手机">
+                        <button type="submit" class="searchs">搜索</button>
+                    </div>
+                    <div class="quickSearch" data-type="range">
+                    </div>
+                </div>
+
+                <div class="fl threeItem">
+                    <div class="carBorder">
+                        <a href="javascript:void(0);"><i class="icon-cart icon carsIcon"></i> 我的购物车</a>
+                        <div class="circle">1</div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    <div class="setup_box">
+        <div class="barbg"></div>
+        <a href="javascript:void(0);" class="move-edit" ectype="model_edit"><i class="icon icon-edit"></i>编辑</a>
+    </div>
+</div>
+</div>
+<div class="navs lyrow" data-mode="home_nav_mode" data-purebox="home_nav_mode">
+    <div class="w w1200 pr" data-type="range">
+        <div class="nav_main" >
+            <ul class="clearfix navitems" >
+                {if $attr['showcat']==1}
+                <li class="navitems-group"><a class="fore" href="{:__URLS('SHOP_MAIN/goods/category')}" target="_blank">全部分类</a>
+                    {if  $attr['slide']==1}
+                    <div class="nav-con">
+                        <ul class="normal-nav">
+                            <li class="pr"><a href="javascript:void(0);">女装 / 男装 / 内衣<span class="pa0"><b class="icon-right-arrow icon-dir-right3"></b></span></a> </li>
+                            <li class="pr"><a href="javascript:void(0);">女装 / 男装 / 内衣<span class="pa0"><b class="icon-right-arrow icon-dir-right3"></b></span></a> </li>
+                            <li class="pr"><a href="javascript:void(0);">女装 / 男装 / 内衣<span class="pa0"><b class="icon-right-arrow icon-dir-right3"></b></span></a> </li>
+                            <li class="pr"><a href="javascript:void(0);">女装 / 男装 / 内衣<span class="pa0"><b class="icon-right-arrow icon-dir-right3"></b></span></a> </li>
+                            <li class="pr"><a href="javascript:void(0);">女装 / 男装 / 内衣<span class="pa0"><b class="icon-right-arrow icon-dir-right3"></b></span></a> </li>
+                            <li class="pr"><a href="javascript:void(0);">女装 / 男装 / 内衣<span class="pa0"><b class="icon-right-arrow icon-dir-right3"></b></span></a> </li>
+                            <li class="pr"><a href="javascript:void(0);">女装 / 男装 / 内衣<span class="pa0"><b class="icon-right-arrow icon-dir-right3"></b></span></a> </li>
+                            <li class="pr"><a href="javascript:void(0);">女装 / 男装 / 内衣<span class="pa0"><b class="icon-right-arrow icon-dir-right3"></b></span></a> </li>
+                            <li class="pr"><a href="javascript:void(0);">女装 / 男装 / 内衣<span class="pa0"><b class="icon-right-arrow icon-dir-right3"></b></span></a> </li>
+                            <li class="pr"><a href="javascript:void(0);">女装 / 男装 / 内衣<span class="pa0"><b class="icon-right-arrow icon-dir-right3"></b></span></a> </li>
+                            <li class="pr"><a href="javascript:void(0);">女装 / 男装 / 内衣<span class="pa0"><b class="icon-right-arrow icon-dir-right3"></b></span></a> </li>
+                        </ul>
+                        <div class="index-sort-detail">
+                            <div class="cate-list">
+                                <div class="sort-two-item">
+                                    <!--标题-->
+                                    <div class="sort-two-item-title">
+                                        <h4>女装</h4>
+                                        <a class="more" href="javascript:void(0);">更多></a>
+                                    </div>
+                                    <!--三级分类-->
+                                    <div class="sort-three-item">
+                                        <a href="javascript:void(0);">羽绒服</a>
+                                        <a href="javascript:void(0);">连衣裙</a>
+                                        <a href="javascript:void(0);">羽绒服</a>
+                                        <a href="javascript:void(0);">连衣裙</a>
+                                        <a href="javascript:void(0);">羽绒服</a>
+                                        <a href="javascript:void(0);">连衣裙</a>
+                                        <a href="javascript:void(0);">羽绒服</a>
+                                        <a href="javascript:void(0);">连衣裙</a>
+                                        <a href="javascript:void(0);">羽绒服</a>
+                                        <a href="javascript:void(0);">连衣裙</a>
+                                        <a href="javascript:void(0);">羽绒服</a>
+                                        <a href="javascript:void(0);">连衣裙</a>
+                                        <a href="javascript:void(0);">羽绒服</a>
+                                        <a href="javascript:void(0);">连衣裙</a>
+                                        <a href="javascript:void(0);">羽绒服</a>
+                                        <a href="javascript:void(0);">连衣裙</a>
+                                        <a href="javascript:void(0);">羽绒服</a>
+                                        <a href="javascript:void(0);">连衣裙</a>
+                                        <a href="javascript:void(0);">羽绒服</a>
+                                        <a href="javascript:void(0);">连衣裙</a>
+                                        <a href="javascript:void(0);">羽绒服</a>
+                                        <a href="javascript:void(0);">连衣裙</a>
+                                        <a href="javascript:void(0);">羽绒服</a>
+                                        <a href="javascript:void(0);">连衣裙</a>
+                                        <a href="javascript:void(0);">羽绒服</a>
+                                        <a href="javascript:void(0);">连衣裙</a>
+                                        <a href="javascript:void(0);">羽绒服</a>
+                                        <a href="javascript:void(0);">连衣裙</a>
+                                        <a href="javascript:void(0);">羽绒服</a>
+                                        <a href="javascript:void(0);">连衣裙</a>
+                                        <a href="javascript:void(0);">羽绒服</a>
+                                        <a href="javascript:void(0);">连衣裙</a>
+                                    </div>
+                                </div>
+                                <div class="sort-two-item">
+                                    <!--标题-->
+                                    <div class="sort-two-item-title">
+                                        <h4>女装</h4>
+                                        <a class="more" href="javascript:void(0);">更多></a>
+                                    </div>
+                                    <!--三级分类-->
+                                    <div class="sort-three-item">
+                                        <a href="javascript:void(0);">羽绒服</a>
+                                        <a href="javascript:void(0);">连衣裙</a>
+                                        <a href="javascript:void(0);">羽绒服</a>
+                                        <a href="javascript:void(0);">连衣裙</a>
+                                        <a href="javascript:void(0);">羽绒服</a>
+                                        <a href="javascript:void(0);">连衣裙</a>
+                                        <a href="javascript:void(0);">羽绒服</a>
+                                        <a href="javascript:void(0);">连衣裙</a>
+                                        <a href="javascript:void(0);">羽绒服</a>
+                                        <a href="javascript:void(0);">连衣裙</a>
+                                        <a href="javascript:void(0);">羽绒服</a>
+                                        <a href="javascript:void(0);">连衣裙</a>
+                                        <a href="javascript:void(0);">羽绒服</a>
+                                        <a href="javascript:void(0);">连衣裙</a>
+                                        <a href="javascript:void(0);">羽绒服</a>
+                                        <a href="javascript:void(0);">连衣裙</a>
+                                        <a href="javascript:void(0);">羽绒服</a>
+                                        <a href="javascript:void(0);">连衣裙</a>
+                                        <a href="javascript:void(0);">羽绒服</a>
+                                        <a href="javascript:void(0);">连衣裙</a>
+                                        <a href="javascript:void(0);">羽绒服</a>
+                                        <a href="javascript:void(0);">连衣裙</a>
+                                        <a href="javascript:void(0);">羽绒服</a>
+                                        <a href="javascript:void(0);">连衣裙</a>
+                                        <a href="javascript:void(0);">羽绒服</a>
+                                        <a href="javascript:void(0);">连衣裙</a>
+                                        <a href="javascript:void(0);">羽绒服</a>
+                                        <a href="javascript:void(0);">连衣裙</a>
+                                        <a href="javascript:void(0);">羽绒服</a>
+                                        <a href="javascript:void(0);">连衣裙</a>
+                                        <a href="javascript:void(0);">羽绒服</a>
+                                        <a href="javascript:void(0);">连衣裙</a>
+                                    </div>
+                                </div>
+                                <div class="sort-two-item">
+                                    <!--标题-->
+                                    <div class="sort-two-item-title">
+                                        <h4>女装</h4>
+                                        <a class="more" href="javascript:void(0);">更多></a>
+                                    </div>
+                                    <!--三级分类-->
+                                    <div class="sort-three-item">
+                                        <a href="javascript:void(0);">羽绒服</a>
+                                        <a href="javascript:void(0);">连衣裙</a>
+                                        <a href="javascript:void(0);">羽绒服</a>
+                                        <a href="javascript:void(0);">连衣裙</a>
+                                        <a href="javascript:void(0);">羽绒服</a>
+                                        <a href="javascript:void(0);">连衣裙</a>
+                                        <a href="javascript:void(0);">羽绒服</a>
+                                        <a href="javascript:void(0);">连衣裙</a>
+                                        <a href="javascript:void(0);">羽绒服</a>
+                                        <a href="javascript:void(0);">连衣裙</a>
+                                        <a href="javascript:void(0);">羽绒服</a>
+                                        <a href="javascript:void(0);">连衣裙</a>
+                                        <a href="javascript:void(0);">羽绒服</a>
+                                        <a href="javascript:void(0);">连衣裙</a>
+                                        <a href="javascript:void(0);">羽绒服</a>
+                                        <a href="javascript:void(0);">连衣裙</a>
+                                        <a href="javascript:void(0);">羽绒服</a>
+                                        <a href="javascript:void(0);">连衣裙</a>
+                                        <a href="javascript:void(0);">羽绒服</a>
+                                        <a href="javascript:void(0);">连衣裙</a>
+                                        <a href="javascript:void(0);">羽绒服</a>
+                                        <a href="javascript:void(0);">连衣裙</a>
+                                        <a href="javascript:void(0);">羽绒服</a>
+                                        <a href="javascript:void(0);">连衣裙</a>
+                                        <a href="javascript:void(0);">羽绒服</a>
+                                        <a href="javascript:void(0);">连衣裙</a>
+                                        <a href="javascript:void(0);">羽绒服</a>
+                                        <a href="javascript:void(0);">连衣裙</a>
+                                        <a href="javascript:void(0);">羽绒服</a>
+                                        <a href="javascript:void(0);">连衣裙</a>
+                                        <a href="javascript:void(0);">羽绒服</a>
+                                        <a href="javascript:void(0);">连衣裙</a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    {/if}
+                </li>
+                {/if}
+                {foreach $navigator as $navigator}
+                <li class="navitems-group"><a class="fore" href="{$navigator['url']}"  {if $navigator['opennew'] == 1}target="_blank"{/if}>{$navigator['name']}</a></li>
+                {/foreach}
+            </ul>
+        </div>
+
+    </div>
+    <div class="setup_box">
+        <div class="barbg"></div>
+        <a href="javascript:void(0);" class="move-edit menuNavs" ectype="model_edit"><i class="icon icon-edit"></i>编辑</a>
+    </div>
+</div>
+{/if}
+
+{if $type == 'shop_templates' ||  $type == 'goods_templates'}
+<div class='pageHome'>
+    <div class='J-home'>
+        <div class="site-nav">
+            <div class="w w1200 clearfix">
+                <div class="pull-left">欢迎来到团大人电商平台
+                    <a href="javascript:void(0);" class="red login">登录</a>
+                    <a href="javascript:void(0);" class="red">注册</a>
+                </div>
+                <div class="pull-right">
+                    <a href="javascript:void(0);">购物车</a>
+                    <a href="javascript:void(0);">个人中心</a>
+                    {if $hasHelpcenter}<a href="javascript:void(0);">帮助中心</a>{/if}
+                </div>
+            </div>
+        </div>
+        <div class="header">
+            <div class="w w1200 clearfix">
+                <div class="pull-left">
+                    <div class="logo">
+                        <a href="javascript:void(0);"><img src="ADMIN_IMG/decorate/LOGO.png" alt=""></a>
+                    </div>
+                    <div class="shop">店铺:
+                        <span>XXXX旗舰店</span>
+                        <a href="javascript:void(0);" class="enterShop">进入店铺</a>
+                        <span class="desc">
+                        <span>[描述 <b class="red shu">5</b></span>
+                    <span>服务 <b class="red shu">5</b></span>
+                    <span>物流 <b class="red">5</b>]</span>
+                    </span>
+                        <!--<a href="javascript:void(0);"><i class="icon icon-down-arrow"></i></a>-->
+                    </div>
+                </div>
+                <div class="pull-right">
+                    <div class="search">
+                        <input type="text" class="search_input" placeholder="手机">
+                        <button type="submit" class="search_store">搜店铺</button>
+                        <button type="submit" class="search_web">搜全站</button>
+                    </div>
+                    <div class="collect_code">
+                        <a href="javascript:void(0);">
+                            <i class="icon icon-collection1"></i>
+                            收藏店铺
+                        </a>
+                        <a href="javascript:void(0);">
+                            <i class="icon icon-qr-code"></i>
+                            用手机逛本店
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="hd_main store_hd_main">
+    <div data-homehtml='shopBanner'>
+        <div class="hd_bg">
+            <div class="header lyrow ui-draggable ui-box-display" data-mode="header_mode" data-purebox="header" style="padding-bottom: 0px;">
+                <div class="storeBanner aa">
+                    <div class="banner-box storeBanner-img" data-type="range" >
+                        <img src="http://iph.href.lu/1920x120" alt="" class="imgWidth">
+                        <div class="storeName">XXXX旗舰店</div>
+                    </div>
+                    <div class="setup_box" data-html="not">
+                        <div class="barbg"></div>
+                        <a href="javascript:void(0);" class="move-edit" ectype='model_edit'><i class="icon icon-edit"></i>编辑</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="navs">
+        <div class="w w1200 lyrow" data-mode="nav_mode" data-purebox="nav_mode">
+            <div class="nav_main"  >
+                <ul class="clearfix" data-type="range">
+                    {foreach $navigator as $navigator}
+                    <li class="navitems-group" ><a class="fore" href="{$navigator['url']}"  {if $navigator['opennew'] == 1}target="_blank"{/if}>{$navigator['name']}</a></li>
+                    {/foreach}
+                </ul>
+            </div>
+            <div class="setup_box" data-html="not">
+                <div class="barbg"></div>
+                <a href="javascript:void(0);" class="move-edit menuNavs" ectype="model_edit"><i class="icon icon-edit"></i>编辑</a>
+            </div>
+        </div>
+    </div>
+</div>
+{/if}
+{if $hearder_body != 1}
+<div class="prompt" data-html="not">以上为页头区域</div>
+{if $type == 'goods_templates'}
+<div class='w w1200'>
+    <div class='goodsleft_1'><img src="ADMIN_IMG/decorate/goodsDetail.png" alt=""></div><!--占位1-->
+    <div class='goodsright_1'><img src="ADMIN_IMG/decorate/store-info.png" alt=""></div><!--占位2-->
+    <div class='goodsright_2'><img src="ADMIN_IMG/decorate/goodsright_2.png" alt=""></div><!--占位3-->
+
+    {/if}
+    <div class="demo ui-sortable" {if $type == 'goods_templates'}  data-area='J-detailbanner' type='goodst' {else} type='default' {/if} style="min-height: 100px; background-color: transparent;{if $type == 'goods_templates'} display: inline-block;float: left;width: 80%;min-width:80%; {/if}" >
+
+
+</div>
+{if $type == 'goods_templates'}
+<div class='goodsleft_2'><img src="ADMIN_IMG/decorate/goodsleft_2.png" alt=""></div><!--占位4-->
+<div class="clearfix"></div>
+</div>
+<div class="demo ui-sortable" data-area='J-detail' style='display:block;min-height:100px;'>
+    <div class="visual-item ui-draggable lyrow" data-mode="goodsRecom" data-purebox="goods" ectype="visualItme" data-diff="0">
+        <div class="drag ui-draggable-handle" data-html="not">
+            <div class="pic"><img src="ADMIN_IMG/decorate/navLeft_01.png" alt=""><p class="txt">商品推荐</p></div>
+            <!--编辑删除-->
+            <div class="setup_box" data-html="not">
+                <div class="barbg"></div>
+                <a href="javascript:void(0);" class="move-edit" ectype='model_edit'><i class="icon icon-edit"></i>编辑</a>
+                <a href="javascript:void(0);" class="move-edit move-del"><i class="icon icon-delete"></i>删除</a>
+            </div>
+        </div>
+        <div class="view" style="display: block;">
+            <div class="goodsRecom" data-type="range" data-lift="" data-rec_type="" data-count="" data-sort="">
+                <div class="w1200 titles" data-goodsTitle='title'>
+                    <h3>商品推荐</h3>
+                </div>
+                <!--推荐内容-->
+                <div class="goodsRecom-ul w1200">
+                    <ul class="clearfix">
+                        <li>
+                            <div class="product_box">
+                                <div class="product_img"><a href="javascript:void(0);"><img src="http://iph.href.lu/220x220" alt=""></a></div>
+                                <div class="product_info">
+                                    <div class="product_name"><a class="pName" href="javascript:void(0);">时尚潮流眼镜 时尚时尚最时尚时尚潮流眼镜时尚潮流眼镜 时尚时尚最时尚时尚潮流眼镜11111111111111111111111111</a></div>
+                                    <div class="product_store"><a class="sName" href="javascript:void(0);">美的眼镜旗舰店</a> <a class="proprietary notproprietary"
+                                                                                                                          href="javascript:void(0);">自营</a></div>
+                                    <div class="product_sell clearfix"><span class="price pull-left">￥198.00</span><span class="sellsNum pull-right">销量：<b>9999</b></span></div>
+                                </div>
+                            </div>
+                        </li>
+                        <li>
+                            <div class="product_box">
+                                <div class="product_img"><a href="javascript:void(0);"><img src="http://iph.href.lu/220x220" alt=""></a></div>
+                                <div class="product_info">
+                                    <div class="product_name"><a class="pName" href="javascript:void(0);">时尚潮流眼镜 时尚时尚最时尚时尚潮流眼镜时尚潮流眼镜 时尚时尚最时尚时尚潮流眼镜11111111111111111111111111</a></div>
+                                    <div class="product_store"><a class="sName" href="javascript:void(0);">美的眼镜旗舰店</a> <a class="proprietary" href="javascript:void(0);">自营</a></div>
+                                    <div class="product_sell clearfix"><span class="price pull-left">￥198.00</span><span class="sellsNum pull-right">销量：<b>9999</b></span></div>
+                                </div>
+                            </div>
+                        </li>
+                        <li>
+                            <div class="product_box">
+                                <div class="product_img"><a href="javascript:void(0);"><img src="http://iph.href.lu/220x220" alt=""></a></div>
+                                <div class="product_info">
+                                    <div class="product_name"><a class="pName" href="javascript:void(0);">时尚潮流眼镜 时尚时尚最时尚时尚潮流眼镜时尚潮流眼镜 时尚时尚最时尚时尚潮流眼镜11111111111111111111111111</a></div>
+                                    <div class="product_store"><a class="sName" href="javascript:void(0);">美的眼镜旗舰店</a> <a class="proprietary" href="javascript:void(0);">自营</a></div>
+                                    <div class="product_sell clearfix"><span class="price pull-left">￥198.00</span><span class="sellsNum pull-right">销量：<b>9999</b></span></div>
+                                </div>
+                            </div>
+                        </li>
+                        <li>
+                            <div class="product_box">
+                                <div class="product_img"><a href="javascript:void(0);"><img src="http://iph.href.lu/220x220" alt=""></a></div>
+                                <div class="product_info">
+                                    <div class="product_name"><a class="pName" href="javascript:void(0);">时尚潮流眼镜 时尚时尚最时尚时尚潮流眼镜时尚潮流眼镜 时尚时尚最时尚时尚潮流眼镜11111111111111111111111111</a></div>
+                                    <div class="product_store"><a class="sName" href="javascript:void(0);">美的眼镜旗舰店</a> <a class="proprietary" href="javascript:void(0);">自营</a></div>
+                                    <div class="product_sell clearfix"><span class="price pull-left">￥198.00</span><span class="sellsNum pull-right">销量：<b>9999</b></span></div>
+                                </div>
+                            </div>
+                        </li>
+                        <li>
+                            <div class="product_box">
+                                <div class="product_img"><a href="javascript:void(0);"><img src="http://iph.href.lu/220x220" alt=""></a></div>
+                                <div class="product_info">
+                                    <div class="product_name"><a class="pName" href="javascript:void(0);">时尚潮流眼镜 时尚时尚最时尚时尚潮流眼镜时尚潮流眼镜 时尚时尚最时尚时尚潮流眼镜11111111111111111111111111</a></div>
+                                    <div class="product_store"><a class="sName" href="javascript:void(0);">美的眼镜旗舰店</a> <a class="proprietary" href="javascript:void(0);">自营</a></div>
+                                    <div class="product_sell clearfix"><span class="price pull-left">￥198.00</span><span class="sellsNum pull-right">销量：<b>9999</b></span></div>
+                                </div>
+                            </div>
+                        </li>
+                        <li>
+                            <div class="product_box">
+                                <div class="product_img"><a href="javascript:void(0);"><img src="http://iph.href.lu/220x220" alt=""></a></div>
+                                <div class="product_info">
+                                    <div class="product_name"><a class="pName" href="javascript:void(0);">时尚潮流眼镜 时尚时尚最时尚时尚潮流眼镜时尚潮流眼镜 时尚时尚最时尚时尚潮流眼镜11111111111111111111111111</a></div>
+                                    <div class="product_store"><a class="sName" href="javascript:void(0);">美的眼镜旗舰店</a> <a class="proprietary" href="javascript:void(0);">自营</a></div>
+                                    <div class="product_sell clearfix"><span class="price pull-left">￥198.00</span><span class="sellsNum pull-right">销量：<b>9999</b></span></div>
+                                </div>
+                            </div>
+                        </li>
+                        <li>
+                            <div class="product_box">
+                                <div class="product_img"><a href="javascript:void(0);"><img src="http://iph.href.lu/220x220" alt=""></a></div>
+                                <div class="product_info">
+                                    <div class="product_name"><a class="pName" href="javascript:void(0);">时尚潮流眼镜 时尚时尚最时尚时尚潮流眼镜时尚潮流眼镜 时尚时尚最时尚时尚潮流眼镜11111111111111111111111111</a></div>
+                                    <div class="product_store"><a class="sName" href="javascript:void(0);">美的眼镜旗舰店</a> <a class="proprietary" href="javascript:void(0);">自营</a></div>
+                                    <div class="product_sell clearfix"><span class="price pull-left">￥198.00</span><span class="sellsNum pull-right">销量：<b>9999</b></span></div>
+                                </div>
+                            </div>
+                        </li>
+                        <li>
+                            <div class="product_box">
+                                <div class="product_img"><a href="javascript:void(0);"><img src="http://iph.href.lu/220x220" alt=""></a></div>
+                                <div class="product_info">
+                                    <div class="product_name"><a class="pName" href="javascript:void(0);">时尚潮流眼镜 时尚时尚最时尚时尚潮流眼镜时尚潮流眼镜 时尚时尚最时尚时尚潮流眼镜11111111111111111111111111</a></div>
+                                    <div class="product_store"><a class="sName" href="javascript:void(0);">美的眼镜旗舰店</a> <a class="proprietary" href="javascript:void(0);">自营</a></div>
+                                    <div class="product_sell clearfix"><span class="price pull-left">￥198.00</span><span class="sellsNum pull-right">销量：<b>9999</b></span></div>
+                                </div>
+                            </div>
+                        </li>
+                        <li>
+                            <div class="product_box">
+                                <div class="product_img"><a href="javascript:void(0);"><img src="http://iph.href.lu/220x220" alt=""></a></div>
+                                <div class="product_info">
+                                    <div class="product_name"><a class="pName" href="javascript:void(0);">时尚潮流眼镜 时尚时尚最时尚时尚潮流眼镜时尚潮流眼镜 时尚时尚最时尚时尚潮流眼镜11111111111111111111111111</a></div>
+                                    <div class="product_store"><a class="sName" href="javascript:void(0);">美的眼镜旗舰店</a> <a class="proprietary" href="javascript:void(0);">自营</a></div>
+                                    <div class="product_sell clearfix"><span class="price pull-left">￥198.00</span><span class="sellsNum pull-right">销量：<b>9999</b></span></div>
+                                </div>
+                            </div>
+                        </li>
+                        <li>
+                            <div class="product_box">
+                                <div class="product_img"><a href="javascript:void(0);"><img src="http://iph.href.lu/220x220" alt=""></a></div>
+                                <div class="product_info">
+                                    <div class="product_name"><a class="pName" href="javascript:void(0);">时尚潮流眼镜 时尚时尚最时尚时尚潮流眼镜时尚潮流眼镜 时尚时尚最时尚时尚潮流眼镜11111111111111111111111111</a></div>
+                                    <div class="product_store"><a class="sName" href="javascript:void(0);">美的眼镜旗舰店</a> <a class="proprietary" href="javascript:void(0);">自营</a></div>
+                                    <div class="product_sell clearfix"><span class="price pull-left">￥198.00</span><span class="sellsNum pull-right">销量：<b>9999</b></span></div>
+                                </div>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>
+{/if}
+
+<div class="clearfix"></div>
+{/if}

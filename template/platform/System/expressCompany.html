@@ -1,0 +1,174 @@
+{extend name="platform/new_base" /}
+{block name="resources"/} {/block}
+{/block}
+{block name="main"}
+<input type="hidden" id="shop_id" value="{$shop_id}">
+<input type="hidden" id="website_id" value="{$website_id}">
+        <div class="mb-10 flex flex-pack-justify">
+            <a href="javascript:void(0)" class="btn btn-primary setCompany">配置物流查询</a>
+            <div></div>
+            <div class="input-group search-input-group">
+                <input type="text" class="form-control" placeholder="请输入物流公司名称或编号" id="search_text">
+                <span class="input-group-btn"><button class="btn btn-primary J-search">搜索</button></span>
+            </div>
+        </div>
+        <table class="table v-table table-auto-center">
+            <thead>
+            <tr>
+                <th>物流公司</th>
+                <th>物流编号</th>
+                <!--<th>联系电话</th>-->
+                <!--<th>是否默认</th>-->
+                <!--<th>排序</th>-->
+                <th>是否启用</th>
+                <th class="col-md-2 pr-14 operationLeft">操作</th>
+            </tr>
+            </thead>
+            <tbody id="list">
+            </tbody>
+        </table>
+        <input type="hidden" id="page_index">
+        <nav aria-label="Page navigation" class="clearfix">
+            <ul id="page" class="pagination pull-right"></ul>
+        </nav>
+{/block}
+
+{block name="script"}
+<script type="text/javascript">
+    require(['util'], function (util) {
+        util.initPage(LoadingInfo);
+        $("#list").on('click', '.disabled-company', function () {
+            $(".tooltip.fade.top.in").remove();
+            $.ajax({
+                type: "POST",
+                url: __URL(PLATFORMMAIN + "/express/setUnused"),
+                data: {
+                    "co_id": $(this).attr('data-co-id')
+                },
+                success: function (data) {
+                    if (data['code'] > 0) {
+                        util.message(data['message'], 'success', LoadingInfo($("#page_index").val()));
+                    } else {
+                        util.message(data['message'], 'danger');
+                    }
+                }
+            })
+        })
+
+        $("#list").on('click', '.able-company', function () {
+            $(".tooltip.fade.top.in").remove();
+            $.ajax({
+                type: "POST",
+                url: __URL(PLATFORMMAIN + "/express/setUse"),
+                data: {
+                    "co_id": $(this).attr('data-co-id')
+                },
+                success: function (data) {
+                    if (data['code'] > 0) {
+                        util.message(data['message'], 'success', LoadingInfo($("#page_index").val()));
+                    } else {
+                        util.message(data['message'], 'error');
+                    }
+                }
+            })
+        })
+
+        $(".J-search").on("click",function(){
+            LoadingInfo(1);
+        })
+
+    //列表
+    function LoadingInfo(page_index) {
+        var shop_id = $("#shop_id").val();
+        var website_id = $("#website_id").val();
+        $("#page_index").val(page_index);
+        var search_text = $("#search_text").val();
+        $.ajax({
+            type: "post",
+            url: "{:__URL('PLATFORM_MAIN/Express/expressCompany')}",
+            async: true,
+            data: {
+                "page_index": page_index, "search_text": search_text
+            },
+            success: function (data) {
+                var html = '';
+                if (data["data"].length > 0) {
+                    for (var i = 0; i < data["data"].length; i++) {
+                        var curr = data['data'][i];
+                        html += '<tr>';
+                        html += '<td>' + curr.company_name + '</td>';
+                        html += '<td>' + curr.express_no + '</td>';
+                        // html += '<td>' + curr.phone + '</td>';
+                        if (curr.shop_id == shop_id && curr.website_id == website_id) {
+                            html += '<td><span class="label label-success">是</span></td>';
+                        } else {
+                            html += '<td><span class="label label-danger">否</span></td>';
+                        }
+                        html += '<td class="operationLeft fs-0">';
+                        if (curr.shop_id == shop_id && curr.website_id == website_id) {
+                            html += '<a href="javascript:void(0);" class="btn-operation disabled-company" data-co-id="' + curr.co_id + '" >禁用</a>';
+                            html += '<a href="' + __URL(PLATFORMMAIN + '/express/freighttemplatelist?co_id=' + curr.co_id) + '" class="btn-operation">运费模板</a>';
+                        } else {
+                            html += '<a href="javascript:void(0);" class="btn-operation able-company" data-co-id="' + curr.co_id + '" >启用</a>';
+                        }
+                        html += '</tr>';
+                    }
+                } else {
+                    html += '<tr align="center"><td colspan="4" class="h-200">暂无符合条件的数据记录</td></tr>';
+                }
+                $("#list").html(html);
+                util.tips();
+                $('#page').paginator('option', {
+                    totalCounts: data['total_count']  // 动态修改总数
+                });
+            }
+        });
+    }
+    function loading(){
+            $.ajax({
+                type:"get",
+                url : "{:__URL('PLATFORM_MAIN/config/setCompany')}",
+                async : true,
+                success : function(data) {
+                    $("#keyValue").val(data);
+                }
+            });
+        }
+        //配置物流查询
+        $('body').on('click','.setCompany',function(){
+            var html = '<form class="form-horizontal padding-15" id="">';
+            html += '<div class="form-group"><label class="col-md-3 control-label"><span class="text-bright">*</span>接口平台</label><div class="col-md-8"><label class="radio-inline"><input type="radio" id="jidong_is_use" checked disabled>京东万象</label><div class="help-block mb-0">请前往<a href="https://wx.jdcloud.com/market/api/10480" target="_blank" class="text-primary">京东万象</a>购买快递套餐</div></div></div>';
+            html += '<div class="form-group"><label class="col-md-3 control-label"><span class="text-bright">*</span>KEY值</label><div class="col-md-8"><input type="text" class="form-control" id="keyValue" required value=""><div class="help-block mb-0">请登录<a href="https://wx.jdcloud.com/user/baseInfo" target="_blank" class="text-primary">京东万象</a>->用户中心->基本信息处查看KEY值</div></div></div>';
+            html += '</form>';
+            loading();
+            util.confirm('配置物流查询接口',html,function(){
+                var keyValue= $("#keyValue").val();
+                if(keyValue==''){
+                    util.message('请填写KEY值');
+                    this.$content.find('#keyValue').focus();
+                    return false;
+                }
+                $.ajax({
+                    type:"post",
+                    url:"{:__URL('PLATFORM_MAIN/config/setCompany')}",
+                    data:{
+                        'keyValue':keyValue
+                    },
+                    async:true,
+                    success:function (data) {
+                        if (data["code"] > 0) {
+                            util.message( data["message"],'success',loading('payment'));
+                        }else{
+                            util.message( data["message"],'danger');
+                        }
+                    }
+                });
+
+            },'large')
+        })
+    })
+
+
+</script>
+{/block}
+

@@ -1,0 +1,36 @@
+<view class='balance_box'>
+  <view class='can_use_balance cell_group'>
+    <view class='can_use_balance_title'>可用余额</view>
+    <view class='can_use_balance_detail'>
+      <view class='can_use_balance_value'>¥ {{can_use_money}}</view>
+      <navigator url='../log/index'>
+        <view class='ondetail'>查看明细</view>
+      </navigator>
+    </view>
+  </view>
+
+  <view class='cell_group'>
+    <view class='cell bottomLine'>
+      <view class='cell_title'>
+        <view>总余额</view>
+        <view class='cell_label'>余额总数</view>
+      </view>
+      <view class='cell_value'>¥ {{balance}}</view>
+    </view>
+    <view class='cell'>
+      <view class='cell_title'>
+        <view>冻结余额</view>
+        <view class='cell_label'>已经冻结余额</view>
+      </view>
+      <view class='cell_value'>¥ {{freezing_balance}}</view>
+    </view>
+  </view>
+
+  <view class='foot_group'>
+    <button class='btn recharge' bindtap='onRechargePage'>充值</button>
+    <button class='btn' disabled="{{is_use == 0?true:''}}" bindtap='onWithdrawPage'>{{is_use == 0?'提现未开启':'提现'}}</button>
+  </view>
+</view>
+
+<!-- 关联手机 -->
+<phone-compoent phoneShow='{{phoneShow}}' bind:phoneEven='phonereResult'></phone-compoent>

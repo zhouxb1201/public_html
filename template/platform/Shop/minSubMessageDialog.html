@@ -1,0 +1,44 @@
+<div class="links-dialog">
+
+    <ul class="nav nav-tabs v-nav-tabs pt-15" role="tablist">
+        <li role="presentation" class="active"><a href="#keyWord" aria-controls="mall" role="tab" data-toggle="tab" class="flex-auto-center">商城页面</a></li>
+    </ul>
+    <div class="tab-content min-h-200">
+        <div role="tabpanel" class="tab-pane fade in active" id="keyWord">
+            <div class="" id="custom">
+                {volist name='config' id='vo' key='j'}
+                <div class="linkDialog-title">
+                    {switch name="j"}
+                    {case value="1"}付款成功{/case}
+                    {case value="2"}订单关闭{/case}
+                    {case value="3"}余额变动{/case}
+                    {case value="4"}售后情况{/case}
+                    {default /}其他
+                    {/switch}
+                </div>
+                    {foreach $vo as $v}
+                    <a href="javascript:void(0);" class="btn btn-default selectedKeyWord" data-key="" data-id="{$v.id}">{$v.name}</a>
+                    {/foreach}
+                {/volist}
+            </div>
+        </div>
+    </div>
+
+    <input type="hidden" id="selectedData2">
+</div>
+
+<script>
+    $(function(){
+        // 选中页面
+        $('.links-dialog').on('click','.selectedKeyWord',function(){
+            var id = $(this).data("id");
+            var key = $(this).html();
+            var selecteddata = {
+                id: id,
+                key: key
+            };
+            $('#selectedData2').data('params',selecteddata);
+        });
+    })
+
+</script>

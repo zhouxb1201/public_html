@@ -1,0 +1,41 @@
+@import "/css/iconfont.wxss";
+
+.group{
+  background-color: #fff;
+  margin: 20rpx;
+  border-radius: 20rpx;
+  box-shadow: 0 0 10px 0 rgba(0,0,0,.05);
+  overflow: hidden;
+  position: relative;
+}
+.phone{
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 20rpx 30rpx;
+}
+
+.icon-phone{
+  display: flex;
+  align-items: center;
+}
+.icon-phone .icon{
+  font-size: 75rpx;
+  color: #f44;
+}
+.phone-info{
+  padding-left: 10rpx;
+}
+.phone-info .phone-text{
+  font-size: 22rpx;
+  color: #B9B9B9;
+  display: flex;
+  align-items: center;
+  justify-content: space-around;
+}
+.icon_phone_right{
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #909399;
+}

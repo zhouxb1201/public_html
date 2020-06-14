@@ -1,0 +1,47 @@
+{extend name="shop/new/base" /}
+{block name="main"}
+<div class="v-main">
+    <!--page-->
+    <div class="v-main-content clearfix w1200 shopMain">
+        <div class="v-main-left fl menus">
+           <div class="breadcrumb"><a href="{:__URL('SHOP_MAIN')}">首页</a>><a href="javascript:void(0);">帮助中心</a></div>
+            <div class="help-title">{$cate_list.name}</div>
+            <div id="firstpane" class="menu_list">
+                {foreach $cate_list as $key => $cate}
+                    {if condition="$cate['cate_id'] eq $cate_id"}
+                    <p class="menu_head current">{$cate.name}</p>
+                    <div id="r{$cate_id}" style="display:block" class="menu_body">
+                    {else/}
+                    <p class="menu_head">{$cate.name}</p>
+                    <div id="r{$cate_id}" style="display:none" class="menu_body">
+                    {/if}
+                    {foreach name="question_list" id="question"}
+                    {if condition="$question['cate_id'] eq $cate['cate_id']"}
+                    <a href="{:__URL('SHOP_MAIN/helpcenter/index','id='.$question['question_id'].'&cate_id='.$question['cate_id'])}" target="_self">{$question.title}</a>
+                    {/if}
+                    {/foreach}
+                    </div>
+                {/foreach}
+                </div>
+            </div>
+            <div class="v-main-right fl">
+                <div class="help-container">
+                    <h3>{$help_document_info['title']}</h3>
+                    <div class="artcle">{$help_document_info['content']}</div>
+                </div>
+            </div>
+
+
+        </div>
+        <!--page-->
+    </div>
+</div>
+{/block}
+{block name="javascript"}
+<script>
+    require(['dialog'], function (Dialog) {
+        Dialog.menus();
+        Dialog.withAccount(".search-tabs","li","active");
+    });
+</script>
+{/block}

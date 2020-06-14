@@ -1,0 +1,595 @@
+{extend name="shop/new/Member/base" /}
+{block name="main"}
+    <div class="v-main-right fl">
+                    <div class="v-container">
+                        <!--page-->
+                        <div class="returnGoods">
+                            <div {if $detail['refund_status']==0} class="step step1"{/if} {if $detail['refund_status']==2} class="step step2"{/if} {if $detail['refund_status']==4 || $detail['refund_status']==-3 || $detail['refund_status']==-1 } class="step step2"{/if} {if $detail['refund_status']==3} class="step step2"{/if}  {if $detail['refund_status']==5} class="step step3"{/if}>
+                                <span style="width: 187px">买家申请退货</span>
+                                <span style="width: 234px">买家回寄商品</span>
+                                <span>商家处理退款</span>
+                                <span>退款完成</span>
+                            </div>
+                            {if $detail['refund_status']==0}
+                            <div class="return-step1">
+                                <div class="return-tips">
+                                    <div class="tips-title">温馨提示</div>
+                                    <div class="tips-content">
+                                        <p>1、退款前建议先与商家沟通达成一致再进行退款。</p>
+                                        <p>2、退款成功金额将原路返回。</p>
+                                    </div>
+                                </div>
+
+                                <div class="return-content1">
+                                    {foreach name="detail['goods_list']" item="goods" key="k"}
+                                    <input type="hidden" name="order_goods_id[]" value="{$goods.order_goods_id}">
+                                    <dl class="clearfix">
+                                        <dt>退货商品：</dt>
+                                        <dd class="clearfix">
+                                            <div class="return-content1-pic fl"><img src="{if $goods.pic_cover}{:__IMG($goods.pic_cover)}{else}/template/shop/new/public/image/missing.png{/if}" alt=""></div>
+                                            <div class="return-content1-desc fl">
+                                                <p>{$goods.goods_name}</p>
+                                                <p>
+                                                    {foreach name="goods.spec" item = "v"}
+                                                    {$v['spec_name']} {$v['spec_value_name']}
+                                                    {/foreach}
+                                                </p>
+                                            </div>
+                                        </dd>
+                                    </dl>
+                                    {/foreach}
+
+                                    <dl class="clearfix">
+                                        <dt>处理方式：</dt>
+                                        <dd class="pt20">
+                                            <div class="radio fl">
+                                                <label>
+                                                        <input type="radio" name="deals" value="1" checked> 仅退款
+                                                    </label>
+                                            </div>
+                                            {if $detail['goods_type'] != '3'}
+                                            <div class="radio fl">
+                                                <label>
+                                                        <input type="radio" name="deals" value="2"> 退货退款
+                                                    </label>
+                                            </div>
+                                            {/if}
+                                        </dd>
+                                    </dl>
+                                    <dl class="clearfix">
+                                        <dt>退货原因：</dt>
+                                        <dd class="pt10">
+                                            <div class="sels">
+                                                <select name="" class="reason-sel">
+                                                    <option value="1">拍错/多拍/不想要</option>
+                                                    <option value="2">协商一致退款</option>
+                                                    <option value="3">缺货</option>
+                                                    <option value="4">未按约定时间发货</option>
+                                                    <option value="5">其他</option>
+                                                </select>
+                                            </div>
+                                        </dd>
+                                    </dl>
+                                    {if $detail['presell_id']}
+                                    {if $detail['refund_eth_money'] && $detail['refund_eos_money']}
+                                    <dl class="clearfix">
+                                        <dt>退款ETH：</dt>
+                                        <dd class="pt20">{$detail['refund_eth_money']}</dd>
+                                    </dl>
+                                    <dl class="clearfix">
+                                        <dt>ETH手续费：</dt>
+                                        <dd class="pt20">{$detail['refund_eth_charge']}</dd>
+                                    </dl>
+                                    <dl class="clearfix">
+                                        <dt>ETH实际到账：</dt>
+                                        <dd class="pt20">{$detail['refund_eth_val']}</dd>
+                                    </dl>
+                                    <dl class="clearfix">
+                                        <dt>退款EOS：</dt>
+                                        <dd class="pt20">{$detail['refund_eos_money']}</dd>
+                                    </dl>
+                                    {/if}
+                                    {if $detail['refund_eth_money'] && $detail['refund_max_money']}
+                                    <dl class="clearfix">
+                                        <dt>退款金额：</dt>
+                                        <dd class="pt20">{$detail['refund_max_money']}</dd>
+                                    </dl>
+                                    <dl class="clearfix">
+                                        <dt>退款ETH：</dt>
+                                        <dd class="pt20">{$detail['refund_eth_money']}</dd>
+                                    </dl>
+                                    <dl class="clearfix">
+                                        <dt>ETH手续费：</dt>
+                                        <dd class="pt20">{$detail['refund_eth_charge']}</dd>
+                                    </dl>
+                                    <dl class="clearfix">
+                                        <dt>ETH实际到账：</dt>
+                                        <dd class="pt20">{$detail['refund_eth_val']}</dd>
+                                    </dl>
+                                    {/if}
+                                    {if $detail['refund_eos_money'] && $detail['refund_max_money']}
+                                    <dl class="clearfix">
+                                        <dt>退款金额：</dt>
+                                        <dd class="pt20">{$detail['refund_max_money']}</dd>
+                                    </dl>
+                                    <dl class="clearfix">
+                                        <dt>退款EOS：</dt>
+                                        <dd class="pt20">{$detail['refund_eos_money']}</dd>
+                                    </dl>
+                                    {/if}
+                                    {else}
+                                    {if $detail['refund_max_money']}
+                                    <dl class="clearfix">
+                                        <dt>退款金额：</dt>
+                                        <dd class="pt10">
+                                            <input type="number" class="returnMoney" id="returnMoney">
+                                            最多退款{$detail['refund_max_money']}元
+                                        </dd>
+                                    </dl>
+                                    {/if}
+                                    {if $detail['refund_eth_money']}
+                                    <dl class="clearfix">
+                                        <dt>退款ETH：</dt>
+                                        <dd class="pt20">{$detail['refund_eth_money']}</dd>
+                                    </dl>
+                                    <dl class="clearfix">
+                                        <dt>ETH手续费：</dt>
+                                        <dd class="pt20">{$detail['refund_eth_charge']}</dd>
+                                    </dl>
+                                    <dl class="clearfix">
+                                        <dt>ETH实际到账：</dt>
+                                        <dd class="pt20">{$detail['refund_eth_val']}
+                                        </dd>
+                                    </dl>
+                                    {/if}
+                                    {if $detail['refund_eos_money']}
+                                    <dl class="clearfix">
+                                        <dt>退款EOS：</dt>
+                                        <dd class="pt20">{$detail['refund_eos_money']}
+                                        </dd>
+                                    </dl>
+                                    {/if}
+                                    {/if}
+                                    {if $detail['refund_point']}
+                                    <dl class="clearfix">
+                                        <dt>退还积分：</dt>
+                                        <dd class="pt10">
+                                            <input type="number" class="returnMoney" id="returnPoint" value="{$detail['refund_point']}" disabled="disabled">
+                                        </dd>
+                                    </dl>
+                                    {/if}
+                                </div>
+
+                                <div class="step1-button">
+                                    <a href="javascript:void(0);" class="applyRefund">确认提交</a>
+                                    <a href="{:__URL('SHOP_MAIN/member/orderlist')}" class="back">返回</a>
+                                </div>
+                            </div>
+                            {/if}
+                            {if $detail['refund_status']==1}
+                            <div class="return-step1_1">
+                                <div class="return-tips">
+                                    <div class="tips-title">温馨提示</div>
+                                    <div class="tips-content">
+                                        <p>退款申请已提交，等待商家处理，如果商家同意，退款金额则原路退回到你的账户上。</p>
+                                    </div>
+                                </div>
+
+                                <div class="return-content1">
+                                    {foreach name="detail['goods_list']" item="goods" key="k"}
+                                    <input type="hidden" name="order_goods_id[]" value="{$goods.order_goods_id}">
+                                    <dl class="clearfix">
+                                        <dt>退货商品：</dt>
+                                        <dd class="clearfix">
+                                            <div class="return-content1-pic fl"><img src="{:__IMG($goods.pic_cover)}" alt=""></div>
+                                            <div class="return-content1-desc fl">
+                                                <p>{$goods.goods_name}</p>
+                                                <p>
+                                                    {foreach name="goods.spec" item = "v"}
+                                                    {$v['spec_name']} {$v['spec_value_name']}
+                                                    {/foreach}
+                                                </p>
+                                            </div>
+                                        </dd>
+                                    </dl>
+                                    {/foreach}
+                                    <dl class="clearfix">
+                                        <dt>处理方式：</dt>
+                                        <dd class="pt20">退货退款</dd>
+                                    </dl>
+                                    <dl class="clearfix">
+                                        <dt>退货原因：</dt>
+                                        <dd class="pt20">协商一致退款</dd>
+                                    </dl>
+                                    {if $detail['presell_id']}
+                                    {if $detail['refund_eth_money'] && $detail['refund_eos_money']}
+                                    <dl class="clearfix">
+                                        <dt>退款ETH：</dt>
+                                        <dd class="pt20">{$detail['refund_eth_money']}</dd>
+                                    </dl>
+                                    <dl class="clearfix">
+                                        <dt>ETH手续费：</dt>
+                                        <dd class="pt20">{$detail['refund_eth_charge']}</dd>
+                                    </dl>
+                                    <dl class="clearfix">
+                                        <dt>ETH实际到账：</dt>
+                                        <dd class="pt20">{$detail['refund_eth_val']}</dd>
+                                    </dl>
+                                    <dl class="clearfix">
+                                        <dt>退款EOS：</dt>
+                                        <dd class="pt20">{$detail['refund_eos_money']}</dd>
+                                    </dl>
+                                    {/if}
+                                    {if $detail['refund_eth_money'] && $detail['refund_max_money']}
+                                    <dl class="clearfix">
+                                        <dt>退款金额：</dt>
+                                        <dd class="pt20">{$detail['refund_max_money']}</dd>
+                                    </dl>
+                                    <dl class="clearfix">
+                                        <dt>退款ETH：</dt>
+                                        <dd class="pt20">{$detail['refund_eth_money']}</dd>
+                                    </dl>
+                                    <dl class="clearfix">
+                                        <dt>ETH手续费：</dt>
+                                        <dd class="pt20">{$detail['refund_eth_charge']}</dd>
+                                    </dl>
+                                    <dl class="clearfix">
+                                        <dt>ETH实际到账：</dt>
+                                        <dd class="pt20">{$detail['refund_eth_val']}</dd>
+                                    </dl>
+                                    {/if}
+                                    {if $detail['refund_eos_money'] && $detail['refund_max_money']}
+                                    <dl class="clearfix">
+                                        <dt>退款金额：</dt>
+                                        <dd class="pt20">{$detail['refund_max_money']}</dd>
+                                    </dl>
+                                    <dl class="clearfix">
+                                        <dt>退款EOS：</dt>
+                                        <dd class="pt20">{$detail['refund_eos_money']}</dd>
+                                    </dl>
+                                    {/if}
+                                    {else}
+                                    {if $detail['require_refund_money']}
+                                    <dl class="clearfix">
+                                        <dt>退款金额：</dt>
+                                        <dd class="pt20">{$detail['require_refund_money']}元</dd>
+                                    </dl>
+                                    {/if}
+                                    {if $detail['refund_eth_money']}
+                                    <dl class="clearfix">
+                                        <dt>退款ETH：</dt>
+                                        <dd class="pt20">{$detail['refund_eth_money']}</dd>
+                                    </dl>
+                                    <dl class="clearfix">
+                                        <dt>ETH手续费：</dt>
+                                        <dd class="pt20">{$detail['refund_eth_charge']}</dd>
+                                    </dl>
+                                    <dl class="clearfix">
+                                        <dt>ETH实际到账：</dt>
+                                        <dd class="pt20">{$detail['refund_eth_val']}
+                                        </dd>
+                                    </dl>
+                                    {/if}
+                                    {if $detail['refund_eos_money']}
+                                    <dl class="clearfix">
+                                        <dt>退款EOS：</dt>
+                                        <dd class="pt20">{$detail['refund_eos_money']}
+                                        </dd>
+                                    </dl>
+                                    {/if}
+                                    {/if}
+                                    <dl class="clearfix">
+                                        <dt>退还积分：</dt>
+                                        <dd class="pt20">{$detail['refund_point']}</dd>
+                                    </dl>
+                                </div>
+
+                                <div class="step1-button">
+                                    <a href="javascript:void(0);" class="cancelReturn">取消退款退货</a>
+                                    <a href="javascript:void(0);" class="back">返回</a>
+                                </div>
+                            </div>
+                            {/if}
+                            {if $detail['refund_status']==2}
+                            <div class="return-step2">
+                                <div class="return-tips">
+                                    <div class="tips-title">温馨提示</div>
+                                    <div class="tips-content">
+                                        <p>请把商品回寄到以下地址：{$shop_info['consigner']},{$shop_info['mobile']},{$shop_info['address']}</p>
+                                    </div>
+                                </div>
+
+                                <div class="return-content1">
+                                    {foreach name="detail['goods_list']" item="goods" key="k"}
+                                    <input type="hidden" name="order_goods_id[]" value="{$goods.order_goods_id}">
+                                    <dl class="clearfix">
+                                        <dt>退货商品：</dt>
+                                        <dd class="clearfix">
+                                            <div class="return-content1-pic fl"><img src="{:__IMG($goods.pic_cover)}" alt=""></div>
+                                            <div class="return-content1-desc fl">
+                                                <p>{$goods.goods_name}</p>
+                                                <p>
+                                                    {foreach name="goods.spec" item = "v"}
+                                                    {$v['spec_name']} {$v['spec_value_name']}
+                                                    {/foreach}
+                                                </p>
+                                            </div>
+                                        </dd>
+                                    </dl>
+                                    {/foreach}
+                                    <dl class="clearfix">
+                                        <dt>物流公司：</dt>
+                                        <dd class="pt10">
+                                            <div class="sels">
+                                                <select name="" class="reason-sel company_name">
+                                                    {foreach name="companyList" item = "v" key='k'}
+                                                    <option value="{$k}">{$v['company_name']}</option>
+                                                    {/foreach}
+                                                </select>
+                                            </div>
+                                        </dd>
+                                    </dl>
+                                    <dl class="clearfix">
+                                        <dt>物流单号：</dt>
+                                        <dd class="pt10">
+                                            <input  type="text" class=" refund_shipping_no">
+                                        </dd>
+                                    </dl>
+                                </div>
+
+                                <div class="step1-button">
+                                    <a href="javascript:void(0);" class="j-applyRefund">提交</a>
+                                    <a href="{:__URL('SHOP_MAIN/member/orderlist')}" class="back">返回</a>
+                                </div>
+                            </div>
+                            {/if}
+                            {if $detail['refund_status']==3}
+                            <div class="return-step2_1">
+                                <div class="return-tips">
+                                    <div class="tips-title">温馨提示</div>
+                                    <div class="tips-content">
+                                        <p>请把商品回寄到以下地址：{$seller_name},{$seller_mobile},{$shop_address}</p>
+                                    </div>
+                                </div>
+
+                                <div class="return-content1">
+                                    {foreach name="detail['goods_list']" item="goods" key="k"}
+                                    <dl class="clearfix">
+                                        <dt>退货商品：</dt>
+                                        <dd class="clearfix">
+                                            <div class="return-content1-pic fl"><img src="{:__IMG($goods.pic_cover)}" alt=""></div>
+                                            <div class="return-content1-desc fl">
+                                                <p>{$goods.goods_name}</p>
+                                                <p>
+                                                    {foreach name="goods.spec" item = "v"}
+                                                    {$v['spec_name']} {$v['spec_value_name']}
+                                                    {/foreach}
+                                                </p>
+                                            </div>
+                                        </dd>
+                                    </dl>
+                                    {/foreach}
+                                    <dl class="clearfix">
+                                        <dt>物流公司：</dt>
+                                        <dd class="pt20">{$detail.refund_shipping_company_name}</dd>
+                                    </dl>
+                                    <dl class="clearfix">
+                                        <dt>物流单号：</dt>
+                                        <dd class="pt20">{$detail.refund_shipping_code}</dd>
+                                    </dl>
+                                </div>
+                            </div>
+                        {/if}
+                        {if $detail['refund_status']==4 }
+                            <div class="return-step3">
+                                <div><i class="icon-success icon"></i></div>
+                                <div class="agreeReturn">商家已同意退款申请，请耐心等待商家打款</div>
+                                <div class="step1-button" style="padding-left: 0;margin-top:100px">
+                                    <a href="{:__URL('SHOP_MAIN/member/orderlist')}">返回</a>
+                                </div>
+                            </div>
+                        {/if}
+                        {if $detail['refund_status']==-3 || $detail['refund_status']==-1}
+                            <div class="return-step3_1">
+                                <div><i class="icon-danger icon"></i></div>
+                                <div class="refuseReturn">商家拒绝退款申请</div>
+                                <div class="refuseReason">原因：{$detail['reason']}</div>
+                                <div class="step1-button" style="padding-left: 0;margin-top:100px">
+                                    {if count($detail.goods_list) > 1}
+                                    <a href="{:__URL('SHOP_MAIN/member/refundMoneya','order_id='.$detail['order_id'])}">重新申请</a>
+                                    {else}
+                                    <a href="{:__URL('SHOP_MAIN/member/refundMoneya','order_goods_id='.$detail['goods_list'][0]['order_goods_id'])}">重新申请</a>
+                                    {/if}
+                                    <a href="{:__URL('SHOP_MAIN/member/orderlist')}" class="back">返回</a>
+                                </div>
+                            </div>
+                        {/if}
+                        {if $detail['refund_status']==5 }
+                            <<div class="return-step4">
+                                <div class="agree">退款成功，退款到账可能会有1-3天延迟，请留意你的账户！</div>
+                                <div class="step1-button" style="padding-left: 0;margin-top:100px">
+                                    <a href="{:__URL('SHOP_MAIN/member/orderlist')}">返回</a>
+                                </div>
+                            </div>
+                        {/if}
+                        </div>
+                        <!--page-->
+                    </div>
+<input type="hidden" id="order_id" value="{$detail['order_id']}">
+<input type="hidden" id="max_money" value="{$detail['refund_max_money']}">
+<input type="hidden" id="eth_money" value="{$detail['refund_eth_money']}">
+<input type="hidden" id="eos_money" value="{$detail['refund_eos_money']}">
+                </div>
+    {/block}
+    {block name="javascript"}
+    <script>
+        require(['common','dialog'], function (common,dialog) {
+            var post_flag = false;
+            dialog.cancelReturn();
+            var max_money = Number($("#max_money").val());
+            var eth_money = $("#eth_money").val();
+            var eos_money = $("#eos_money").val();
+            $(".applyRefund").on('click',function(){
+                var refund_require_money = Number($('#returnMoney').val());
+                var refund_reason = $('.reason-sel').val();
+                var order_goods_id = [];
+                $('input[name="order_goods_id[]"]').each(function (k,v) {
+                    order_goods_id.push($(this).val());
+                });
+                var order_id = $('#order_id').val();
+                var reg = /^\d+((.{0,1})\d{0,2})$/;
+                if(eth_money || eos_money){
+
+                }else{
+                    if(max_money>0){
+                        if(refund_require_money==''){
+                            layer.msg('退款金额不能为空');
+                            $('#returnMoney').focus();
+                            return false;
+                        }else if(!reg.test(refund_require_money)){
+                            layer.msg('请输入正确的退款金额');
+                            $('#returnMoney').focus();
+                            return false;
+                        }else if(refund_require_money>max_money){
+                            layer.msg('退款金额最多为'+max_money);
+                            $('#returnMoney').focus();
+                            return false;
+                        }
+                    }
+                }
+                var type =  $("input[type='radio'][name='deals']:checked").val();
+                if(post_flag){
+                    layer.msg('请勿重复提交');
+                    return false;
+                }
+                post_flag = true;
+                if(type==1){
+                    $.ajax({
+                        type: "post",
+                        url: __URL(SHOPMAIN + "/member/orderGoodsRefundAskfor"),
+                        data: {
+                            "refund_require_money": refund_require_money,
+                            "refund_reason": refund_reason,
+                            "order_goods_id": order_goods_id,
+                            "order_id":order_id
+                        },
+                        success: function (data) {
+                            if(data['code']>0){
+                                layer.msg('退款申请成功');
+                                post_flag = false;
+                                function load(){
+                                    location.href=__URL(SHOPMAIN + "/member/orderlist");
+                                }
+                                setTimeout(load(),1500);
+                            }else{
+                                layer.msg(data['message'])
+                            }
+                        }
+                    })
+                }
+                if(type==2){
+                    $.ajax({
+                        type: "post",
+                        url: __URL(SHOPMAIN + "/member/orderRefundAsk"),
+                        data: {
+                            "refund_require_money": refund_require_money,
+                            "refund_reason": refund_reason,
+                            "order_goods_id": order_goods_id,
+                            "order_id":order_id
+                        },
+                        success: function (data) {
+                            if(data['code']>0){
+                                layer.msg('退款退货申请成功');
+                                post_flag = false;
+                                function load(){
+                                    location.href=__URL(SHOPMAIN + "/member/orderlist");
+                                }
+                                setTimeout(load(),1500);
+                            }else{
+                                layer.msg(data['message'])
+                            }
+                        }
+                    })
+                }
+
+            })
+            $(".j-applyRefund").on('click',function(){
+                var refund_express_company =  $(".company_name").val();
+                var refund_shipping_no = $('.refund_shipping_no').val();
+                var order_goods_id = [];
+                $('input[name="order_goods_id[]"]').each(function (k,v) {
+                    order_goods_id.push($(this).val());
+                });
+                var order_id = $('#order_id').val();
+                if(refund_express_company==''){
+                    layer.msg('物流公司不能为空');
+                    $('.company_name').focus();
+                    return false;
+                }
+                if(refund_shipping_no==''){
+                    layer.msg('物流公司单号不能为空');
+                    $('.refund_shipping_no').focus();
+                    return false;
+                }
+                if(post_flag){
+                    layer.msg('请勿重复提交');
+                    return false;
+                }
+                post_flag = true;
+                $.ajax({
+                        type: "post",
+                        url: __URL(SHOPMAIN + "/member/orderGoodsRefundExpress"),
+                        data: {
+                            "refund_shipping_no": refund_shipping_no,
+                            "refund_express_company": refund_express_company,
+                            "order_goods_id": order_goods_id,
+                            "order_id":order_id
+                        },
+                        success: function (data) {
+                            if(data['code']>0){
+                                layer.msg('提交成功');
+                                post_flag = false;
+                                function load(){
+                                    location.href=__URL(SHOPMAIN + "/member/orderlist");
+                                }
+                                setTimeout(load(),1500);
+                            }else{
+                                layer.msg('提交失败')
+                            }
+                        }
+                    })
+            })
+            $('body').on('click',".cancelReturn",function(){
+                var order_goods_id = [];
+                $('input[name="order_goods_id[]"]').each(function (k,v) {
+                    order_goods_id.push($(this).val());
+                });
+                var order_id = $('#order_id').val();
+                layer.confirm('确认取消退款？', {
+                    btn: ['确定','取消'] //按钮
+                }, function(){
+                    $.ajax({
+                        type: "post",
+                        url: __URL(SHOPMAIN + "/member/cancelOrderRefund"),
+                        data: {
+                            "order_goods_id": order_goods_id,
+                            "order_id":order_id
+                        },
+                        success: function (data) {
+                            if(data['code']>0){
+                                layer.msg('取消退款成功');
+                                function load(){
+                                    location.href=__URL(SHOPMAIN + "/member/orderlist");
+                                }
+                                setTimeout(load(),1500);
+                            }else{
+                                layer.msg(data['message']);
+                            }
+                        }
+                    })
+                });
+
+            })
+        });
+    </script>
+{/block}

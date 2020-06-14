@@ -1,0 +1,101 @@
+<form class="form-horizontal">
+    <!--关联分类-->
+    <div class="form-group" style="margin-right: auto;margin-left: auto;">
+        <div class="col-md-12">
+            <div class="transfer-box">
+                <div class="item" style="width: 100%">
+                    <div class="transfer-title">
+                        <div class="checkbox line-1-ellipsis flex flex-pack-justify">
+                            <div>分类列表</div>
+                            <div>
+                                <label class="checkbox-inline" style="padding-top: 0"><input type="checkbox" name="goods_labels" checked disabled>当前品类已关联</label>
+                                <label class="checkbox-inline" style="padding-top: 0"><input type="checkbox" name="goods_labels" class="bgcccc" checked disabled>其他品类已关联</label>
+                                <label class="checkbox-inline" style="padding-top: 0"><input type="checkbox" name="goods_labels" disabled>未关联品类</label>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="transfer-search">
+                        <div class="transfer-search-div padding-10" style="padding-bottom: 0">
+                            <input type="text" class="form-control" placeholder="请输入分类名称" id="category_txt_selected">
+                            <i class="icon icon-custom-search"></i>
+                        </div>
+                    </div>
+                    <div id="category_id" class="heights tree-checkbox-group">
+                        {if $goodsCategoryList} 
+                        {foreach name="goodsCategoryList" item="v"}
+                        <div class="item_chek">
+                            <div class="checkbox checkbox_first">
+                                <i class="icon icon-drop-down mr-04"></i><label for="{$v.category_id}"> <input type="checkbox" value="{$v.category_id}" id="{$v.category_id}" name="module_chek" class="checkOne {if $v.attr_id > 0 && $attr_id != $v.attr_id}bgccc{/if}" {if $attr_id == $v.attr_id} checked {/if} data-name="{$v.category_name}" >{$v.category_name}</label>
+                            </div>
+                            {if condition="$v['child_list'] neq ''"}
+                            {volist name="v['child_list']" id="two"}
+                            <div class="checkbox_seconds">
+                                <!--复选框二级选框-->
+                                 <i class="icon icon-drop-down checkbox_seconds_icon"></i><label for="{$two.category_id}" class="checkbox-inline"><input type="checkbox" id="{$two.category_id}" value="{$two.category_id}" name="module_chek" class="checkTwo {if $two.attr_id > 0 && $attr_id != $two.attr_id}bgccc{/if}" {if $attr_id == $two.attr_id} checked {/if} data-name="{$two.category_name}" >{$two.category_name}</label>
+                                 <div class="checkbox_three item_content">
+                                {if condition="$two['child_list'] neq '' "}
+                                {volist name="two['child_list']" id="three"}
+                                    <label for="{$three.category_id}" class="checkbox-inline"><input type="checkbox" name="module_chek" id="{$three.category_id}" value="{$three.category_id}" {if $attr_id == $three.attr_id} checked {/if} class="checkThree {if $three.attr_id > 0 && $attr_id != $three.attr_id}bgccc{/if}" data-name="{$three.category_name}" >{$three.category_name}</label>
+                                {/volist}
+                                {/if}
+                                 </div>
+                            </div>
+                            {/volist}
+                            {/if}
+                        </div>
+                        {/foreach}
+                        {/if}
+
+                    </div>
+                </div>
+
+            </div>
+            <div class="mb-0 help-block">品类需要关联分类使用，发布商品选择分类后自动获取所关联品类的“规格、品牌、属性”等。</div>
+        </div>
+    </div>
+</form>
+
+<script>
+require(['util'],function(util){
+    // 分类名称搜索
+    $("#category_txt_selected").on('keyup', function () {
+        var val = $(this).val();
+        if(val==''){
+            $('.item_chek').removeClass('hide');
+            $('.checkbox_first').removeClass('hide');
+            $('.checkbox_seconds').removeClass('hide');
+            $('.checkbox_three').removeClass('hide');
+        }else{
+            $('.item_chek').addClass('hide');
+            $('.checkbox_first').addClass('hide');
+            $('.checkbox_seconds').addClass('hide');
+            $('.checkbox_three').addClass('hide');
+            $('.checkOne').each(function(i,e){
+                var name0 = $(this).data('name')+ '';
+                if (name0.indexOf(val) != -1) {
+                    $(e).parents('.item_chek').removeClass('hide');
+                    $(e).parents('.checkbox_first').removeClass('hide');
+                }
+            });
+            $('.checkTwo').each(function(i,e){
+                var name1 = $(this).data('name')+ '';
+                if (name1.indexOf(val) != -1) {
+                    $(e).parents('.item_chek').removeClass('hide');
+                    $(e).parents('.checkbox_seconds').removeClass('hide');
+                    $(e).parents('.checkbox_seconds').siblings('.checkbox_first').removeClass('hide');
+                }
+            });
+            $('.checkThree').each(function(i,e){
+                var name2 = $(this).data('name')+ '';
+                if (name2.indexOf(val) != -1) {
+                    $(e).parents('.item_chek').removeClass('hide');
+                    $(e).parents('.checkbox_three').removeClass('hide');
+                    $(e).parents('.checkbox_seconds').removeClass('hide');
+                    $(e).parents('.checkbox_seconds').siblings('.checkbox_first').removeClass('hide');
+                }
+            });
+        }
+
+    })
+})
+</script>

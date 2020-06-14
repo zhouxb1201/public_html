@@ -1,0 +1,92 @@
+{block name="main"}
+<!-- page -->
+<div class="mb-20 flex flex-pack-end">
+    <div class="input-group search-input-group">
+        <input type="text" id="search_text" class="form-control" placeholder="门店/使用账号">
+        <span class="input-group-btn"><button class="btn btn-primary" id="search">搜索</button></span>
+    </div>
+</div>
+<table class="table v-table table-auto-center">
+    <thead>
+    <tr>
+        <th>核销门店</th>
+        <th>使用帐号</th>
+        <th>礼品券号码</th>
+        <th>赠品</th>
+        <th>使用时间</th>
+    </tr>
+    </thead>
+    <tbody id="records_list">
+    </tbody>
+</table>
+<nav aria-label="Page navigation" class="clearfix">
+    <ul id="page" class="pagination pull-right"></ul>
+</nav>
+
+<!-- page end -->
+
+{/block}
+{block name="script"}
+<script id="tpl_records_list" type="text/html">
+    <%each data as item index%>
+    <tr>
+        <%if item.shop_id == 0%>
+        <td>自营店</td>
+        <%else%>
+        <td><%item.shop_name%></td>
+        <%/if%>
+        <td><%item.user_tel%></td>
+        <td><%item.gift_voucher_code%></td>
+        <td><%item.gift_name%></td>
+        <td><%timeStamp(item.use_time)%></td>
+    </tr>
+    <%/each%>
+</script>
+<script>
+    require(['utilAdmin', 'tpl'], function (utilAdmin, tpl) {
+        utilAdmin.initPage(LoadingInfo);
+        tpl.helper("timeStamp", function (timeStamp) {
+            if (timeStamp > 0) {
+                var date = new Date();
+                date.setTime(timeStamp * 1000);
+                var y = date.getFullYear();
+                var m = date.getMonth() + 1;
+                m = m < 10 ? ('0' + m) : m;
+                var d = date.getDate();
+                d = d < 10 ? ('0' + d) : d;
+                var h = date.getHours();
+                h = h < 10 ? ('0' + h) : h;
+                var minute = date.getMinutes();
+                var second = date.getSeconds();
+                minute = minute < 10 ? ('0' + minute) : minute;
+                second = second < 10 ? ('0' + second) : second;
+                return y + '-' + m + '-' + d + ' ' + h + ':' + minute + ':' + second;
+            } else {
+                return "";
+            }
+        });
+
+        $("#search").on('click', function () {
+            LoadingInfo(1);
+        });
+
+        function LoadingInfo(page_index) {
+            $('#page_index').val(page_index ? page_index : 1);
+            $.ajax({
+                type: "post",
+                url: '{$historygiftvoucherUrl}' + '?gift_voucher_id=' + {$gift_voucher_id},
+                data: {
+                    'search_text': $("#search_text").val(),
+                    'page_index': page_index
+                },
+                success: function (data) {
+                    $("#records_list").html(tpl('tpl_records_list', data))
+                    $('#page').paginator('option', {
+                        totalCounts: data['total_count']  // 动态修改总数
+                    });
+                }
+            });
+        }
+    })
+</script>
+{/block}

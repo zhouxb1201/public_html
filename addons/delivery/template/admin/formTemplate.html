@@ -1,0 +1,274 @@
+{block name="main"}
+<form class="form-horizontal form-validate widthFixedForm">
+    <div class="form-group">
+        <label class="col-md-2 control-label"><span class="text-bright">*</span>电子面单名称</label>
+        <div class="col-md-5">
+            <input type="text" id="template_name" class="form-control" name="template_name" required autocomplete="off">
+            <div class="help-block mb-0">建议根据快递公司以及模版样式选择的打印尺寸命名</div>
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="col-md-2 control-label"><span class="text-bright">*</span>快递公司</label>
+        <div class="col-md-5">
+            <select name="express_company" id="express_company" class="form-control">
+                <option value="-1">请选择</option>
+            </select>
+            <div class="help-block mb-0">“快递鸟”所支持打印电子面单的快递公司，与系统启用的物流公司无关</div>
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="col-md-2 control-label"><span class="text-bright">*</span>打印样式</label>
+        <div class="col-md-5">
+            <select name="form_style" id="form_style" class="form-control">
+                <option value="-1">请选择</option>
+            </select>
+            <div class="help-block mb-0">电子面单打印样式，更具实际纸质情况选择</div>
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="col-md-2 control-label">网点名称</label>
+        <div class="col-md-5">
+            <input type="text" id="send_site_name" name="send_site_name" class="form-control">
+            <div class="help-block mb-0">合作的快递公司网点名称</div>
+        </div>
+    </div>
+    
+    <div class="form-group">
+        <label class="col-md-2 control-label">网点编码</label>
+        <div class="col-md-5">
+            <input type="text" id="send_site" name="send_site" class="form-control">
+            <div class="help-block mb-0">合作的快递公司网点编码</div>
+        </div>
+    </div>
+    
+    <div class="form-group">
+        <label class="col-md-2 control-label"><span class="text-bright">*</span>邮费支付方式</label>
+        <div class="col-md-5">
+            <div>
+                    <label class="radio-inline">
+                            <input type="radio" value="1" checked name="pay_type" required> 现付
+                    </label>
+                    <label class="radio-inline">
+                            <input type="radio" value="2" name="pay_type" required> 到付
+                    </label>
+                    <label class="radio-inline">
+                            <input type="radio"  value="3" name="pay_type" required> 月付
+                    </label>
+            </div>
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="col-md-2 control-label">客户ID</label>
+        <div class="col-md-5">
+            <input type="text" id="client_account" class="form-control" name="client_account">
+            <div class="help-block mb-0">与快递公司网点签约后获得的客户ID</div>
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="col-md-2 control-label">接口联调密码</label>
+        <div class="col-md-5">
+            <input type="text" id="client_pwd" name="client_pwd" class="form-control">
+            <div class="help-block mb-0">与快递公司网点签约后获得的接口联调密码，不同快递公司可能需要下载不同的客户端才能查看，可咨询合作网点。</div>
+        </div>
+    </div>
+    <div class="form-group J-month">
+        <label class="col-md-2 control-label">月结编码</label>
+        <div class="col-md-5">
+            <input type="text" id="monthly_code" name="monthly_code" class="form-control">
+            <div class="help-block mb-0">跟快递公司签约后显示的结算编码（部分快递可不签约也能使用，建议签约）</div>
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="col-md-2 control-label">通知快递员上门揽件</label>
+        <div class="col-md-5">
+            <div class="switch-inline">
+                <input type="checkbox" id="is_notice" name="is_notice">
+                <label for="is_notice" class=""></label>
+            </div>
+            <div class="help-block mb-0">开启后，打印时则自动通知快递员过来收件</div>
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="col-md-2 control-label">自动修改发货状态</label>
+        <div class="col-md-5">
+            <div class="switch-inline">
+                <input type="checkbox" id="auto_delivery" name="auto_delivery">
+                <label for="auto_delivery" class=""></label>
+            </div>
+            <div class="help-block mb-0">开启后，打印时则自动修改发货状态</div>
+        </div>
+    </div>
+    <div class="form-group" id="default_group">
+        <label class="col-md-2 control-label">是否默认</label>
+        <div class="col-md-5">
+            <div class="switch-inline">
+                <input type="checkbox" id="is_default" name="is_default">
+                <label for="is_default" class=""></label>
+            </div>
+        </div>
+    </div>
+
+    <div class="form-group"></div>
+    <div class="form-group">
+        <label class="col-md-2 control-label"></label>
+        <div class="col-md-8">
+            <button class="btn btn-primary" type="submit">保存</button>
+            <a href="javascript:history.go(-1);" class="btn btn-default">返回</a>
+        </div>
+    </div>
+</form>
+{/block}
+{block name="script"}
+<script id="tpl_company_list" type="text/html">
+    <%each data as item index%>
+    <option value="<%item.form_express_company_id%>"><%item.company_name%></option>
+    <%/each%>
+</script>
+<script id="tpl_style_list" type="text/html">
+    <%each data as item index%>
+    <option value="<%item.form_style_id%>"><%item.style_name%></option>
+    <%/each%>
+</script>
+<script>
+    require(['util', 'tpl'], function (util, tpl) {
+        // 获取物流公司和对应模板数据
+        var company_list = [];
+        var style_list = {};
+        $.ajax({
+            type: 'post',
+            url: '{$formExpressCompanyListUrl}',
+            async: false,
+            success: function (data) {
+                company_list = data.company_list;
+                style_list = data.style_list;
+            }
+        })
+	function checkMonth(){
+            var status = $('input[name="pay_type"]:checked').val();
+            if (status == '1') {
+                $('.J-month').hide();
+            } else if (status == '2') {
+                $('.J-month').hide();
+            } else{
+                $('.J-month').show();
+            }
+        }
+
+ $('input[name=pay_type]').change(function() {
+          if (this.value == '1') {
+              $('.J-month').hide();
+          } else if (this.value == '2') {
+              $('.J-month').hide();
+          } else{
+              $('.J-month').show();
+          }
+      });
+        var id = '{$id}';
+        if (id) {
+            // 获取详情内容
+            $.ajax({
+                type: 'post',
+                url: '{$formTemplateDetailUrl}',
+                data: {
+                    'id': id
+                },
+                success: function (data) {
+                    $("#template_name").val(data.template_name);
+                    $("#client_account").val(data.client_account)
+                    $("#client_pwd").val(data.client_pwd)
+                    $("#monthly_code").val(data.monthly_code)
+                    $("#send_site").val(data.send_site)
+                    $("#send_site_name").val(data.send_site_name)
+                    $("input[name='pay_type'][value="+data.pay_type+"]").attr("checked",true);
+
+
+                    if(data.is_notice==1){
+                        $("#is_notice").prop('checked', true);
+                    }
+                    if(data.auto_delivery==1){
+                        $("#auto_delivery").prop('checked', true);
+                    }
+                    if(data.is_default==1){
+                        $("#is_default").prop('checked', true);
+                    }
+                    
+                    if (data.is_default == 1) {
+                        $("#default_group").hide()
+                    }
+                    setCompanyOption(data.form_express_company_id)
+                    setStyleOption(data.form_express_company_id, data.form_style_id);
+                    checkMonth();
+                }
+            })
+        } else {
+            $("button[type=submit]").html('添加')
+            setCompanyOption()
+            setStyleOption()
+        }
+
+        $("#express_company").on('change', function () {
+            setStyleOption($(this).val())
+        })
+
+        function setCompanyOption(company_id) {
+            $("#express_company").html(tpl('tpl_company_list', {data: company_list}));
+            $("#express_company").val(company_id ? company_id : $("#express_company option:first").val())
+        }
+
+        function setStyleOption(company_id, style_id) {
+            if (company_id === undefined) {
+                company_id = $("#express_company").val()
+            }
+            $("#form_style").html(tpl('tpl_style_list', {data: style_list[company_id]}));
+            $("#form_style").val(style_id ? style_id : $("#form_style option:first").val())
+        }
+
+        var flag = true
+        util.validate($('.form-validate'), function (form) {
+
+            var template_name = $("#template_name").val();
+            var client_account = $("#client_account").val()
+            var client_pwd = $("#client_pwd").val()
+            var monthly_code = $("#monthly_code").val()
+            var send_site = $("#send_site").val()
+            var send_site_name = $("#send_site_name").val()
+            var pay_type = $('input[name="pay_type"]:checked').val();
+            var is_notice = $("input[name='is_notice']").is(':checked')?1:0;
+            var auto_delivery = $("input[name='auto_delivery']").is(':checked')?1:0;
+            var is_default = $("input[name='is_default']").is(':checked')?1:0;
+            var form_express_company_id = $("#express_company").val();
+            var form_style_id = $("#form_style").val()
+
+            if (flag){
+                flag = false
+                $.ajax({
+                    type: 'post',
+                    url: '{$saveFormTemplateUrl}',
+                    data: {
+                        'form_template_id': '{$id}',
+                        'template_name': template_name,
+                        'client_account': client_account,
+                        'client_pwd': client_pwd,
+                        'monthly_code': monthly_code,
+                        'send_site': send_site,
+                        'send_site_name': send_site_name,
+                        'pay_type': pay_type,
+                        'is_notice': is_notice,
+                        'auto_delivery': auto_delivery,
+                        'is_default': is_default,
+                        'form_express_company_id': form_express_company_id,
+                        'form_style_id': form_style_id
+                    },
+                    success: function (data) {
+                        if (data.code > 0) {
+                            util.message('保存成功', 'success', "{:__URL('ADDONS_ADMIN_MAINformList')}")
+                        } else {
+                            util.message(data.message)
+                        }
+                    }
+                })
+            }
+        })
+    });
+</script>
+{/block}

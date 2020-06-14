@@ -1,0 +1,278 @@
+
+{extend name="shop/new/Member/base" /}
+{block name="main"}
+<div class="v-main-right fl">
+    <div class="v-container">
+        <!--page-->
+        <div class="edit-content">
+            <div class="step step1">
+                <span>验证身份</span>
+                <span>更换邮箱</span>
+                <span>完成</span>
+            </div>
+
+            <!--第一步-->
+            <div class="validation-form validation-step1">
+                <div class="fp-box">
+                    <div class="login-box">
+                        <form action="">
+                            <div class="login-msg" style="display: none">
+                                <p class="error hint">账户名错误</p>
+                            </div>
+                            <dl class="clearfix">
+                                <dt class="userName fl"><img src="PLATFORM_STATIC/login_register/emailIcon.png" alt=""></dt>
+                                <dd class="userName-ipt fl"><input type="text" class="inputs" id="mobile" disabled value="{$member_info.user_info.user_email}"></dd>
+                            </dl>
+                            <dl class="clearfix">
+                                <dt class="userName fl"><img src="PLATFORM_STATIC/login_register/确认密码.png" alt=""></dt>
+                                <dd class="userName-ipt fl pr">
+                                    <input type="password" class="inputs" id="mobile-code" placeholder="请输入验证码">
+                                    <button  class="obtain-code sendcode">获取验证码</button>
+                                </dd>
+                            </dl>
+                            <div class="submits">
+                                <input type="button" class="submit okSubmit next1" value="下一步">
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+
+            <!--第2步-->
+            <div class="validation-form validation-step2" style="display: none">
+                <div class="fp-box">
+                    <div class="login-box">
+                <form action="">
+                    <div class="login-msg login-msg1" style="display: none">
+                        <p class="error hint1">账户名错误</p>
+                    </div>
+                    <dl class="clearfix">
+                        <dt class="userName fl"><img src="PLATFORM_STATIC/login_register/emailIcon.png" alt=""></dt>
+                        <dd class="userName-ipt fl"><input type="text" class="inputs" id="mobile1"  value=""></dd>
+                    </dl>
+                    <dl class="clearfix">
+                        <dt class="userName fl"><img src="PLATFORM_STATIC/login_register/确认密码.png" alt=""></dt>
+                        <dd class="userName-ipt fl pr">
+                            <input type="password" class="inputs" id="mobile-code1" placeholder="请输入验证码">
+                            <button  class="obtain-code sendOutcode">获取验证码</button>
+                        </dd>
+                    </dl>
+                    <div class="submits">
+                        <input type="button" class="submit okSubmit next2" value="下一步">
+                    </div>
+                </form>
+                        </div>
+                </div>
+            </div>
+
+            <!--第三步-->
+            <div class="validation-step3 tc" style="display: none">
+                <p>恭喜您，更换邮箱成功！</p>
+                <p><a href="{:__URL('SHOP_MAIN/login')}" class="blue">重新登录</a></p>
+            </div>
+
+        </div>
+        <!--page-->
+    </div>
+</div>
+{/block}
+{block name="javascript"}
+<script>
+    require(['dialog'],function(dialog){
+        loading();
+        function loading(){
+            $(".rights").css("display","none");
+        }
+        var myreg=/^[a-zA-Z0-9_.-]+@[a-zA-Z0-9-]+(\.[a-zA-Z0-9-]+)*\.[a-zA-Z0-9]{2,6}$/;
+        //发送邮箱验证码
+        $(".sendcode").click(function(){
+            var mobile = $("#mobile").val();
+            if(mobile){
+                //验证邮箱号邮箱是否已经注册
+                $.ajax({
+                    type: "post",
+                    url: "{:__URL('SHOP_MAIN/member/emailCode')}",
+                    data: {"email":mobile},
+                    async: false,
+                    success: function(data){
+                        if (data['code'] >0) {
+                            $(".hint").html('发送成功');
+                            $(".login-msg").css("display", "block");
+                            time();
+                        }else if(data['code'] ==-1){
+                            $(".hint").html('发送失败,请稍后再试');
+                            $(".login-msg").css("display", "block");
+                            time();
+                            return false;
+                        }
+                    }
+                });
+            }else{
+                $(".hint").html('请填写邮箱号');
+                $(".login-msg").css("display", "block");
+                $("#mobile").focus();
+                return false;
+            }
+        });
+        //点击下一步
+        $(".next1").click(function(){
+            var mobile_code = $("#mobile-code").val();
+            var mobile = $("#mobile").val();
+            if(mobile && mobile_code ){
+                $.ajax({
+                    type : "post",
+                    url : "{:__URL('SHOP_MAIN/member/checkEmailCode')}",
+                    async : false,
+                    data : {"email_code" : mobile_code},
+                    success : function(data){
+                        if(data['code']>0){
+                            $(".login-msg").css("display", "none");
+                            $(".validation-step1").hide();
+                            $(".validation-step2").show();
+                            $('.step').addClass('step2')
+                        }else{
+                            $(".hint").html('邮箱验证码不正确');
+                            $(".login-msg").css("display", "block");
+                            $("#mobile-code").focus();
+                            return false;
+                        }
+                    }
+                })
+            }else if(mobile==""){
+                $(".hint").html('请填写邮箱');
+                $(".login-msg").css("display", "block");
+                $("#mobile").focus();
+                return false;
+            }else if(mobile_code==""){
+                $(".hint").html('请填写邮箱验证码');
+                $(".login-msg").css("display", "block");
+                $("#mobile-code").focus();
+                return false;
+            }
+        });
+        //检测邮箱是否已注册
+        $("#mobile1").change(function(){
+            var mobile = $("#mobile1").val();
+            if(!myreg.test(mobile)){
+                $(".hint1").html('请输入正确的邮箱格式');
+                $(".login-msg1").css("display", "block");
+                $("#mobile1").focus();
+                return false;
+            }
+            $.ajax({
+                type: "POST",
+                url: "{:__URL('SHOP_MAIN/member/checkEmail')}",
+                data: {"email":mobile},
+                success: function(data){
+                    if(data){
+                        $(".hint1").html('该邮箱已经注册');
+                        $(".login-msg1").css("display", "block");
+                        $("#mobile1").focus();
+                        $("#mobile1").val('');
+                        return false;
+                    }else{
+                        $(".login-msg1").css("display", "none");
+                    }
+                }
+            });
+        });
+        //发送邮箱验证码
+        $(".sendOutcode").click(function(e){
+            e.preventDefault();
+            var mobile = $("#mobile1").val();
+            if(mobile){
+                //验证邮箱号邮箱是否已经注册
+                $.ajax({
+                    type: "post",
+                    url: "{:__URL('SHOP_MAIN/member/checkNewEmailValidation')}",
+                    data: {"email":mobile},
+                    async: false,
+                    success: function(data){
+                        if (data['code'] >0) {
+                            $(".hint1").html('发送成功');
+                            $(".login-msg1").css("display", "block");
+                            clearTimeout(time());
+                            timea();
+                        }else if(data['code'] ==-1){
+                            $(".hint1").html('发送失败,请稍后再试');
+                            $(".login-msg1").css("display", "block");
+                            clearTimeout(time());
+                            timea();
+                            return false;
+                        }
+                    }
+                });
+            }else{
+                $(".hint1").html('请填写邮箱');
+                $(".login-msg1").css("display", "block");
+                $("#mobile1").focus();
+                return false;
+            }
+        });
+        //点击确认
+        $(".next2").click(function(){
+            var mobile_code = $("#mobile-code1").val();
+            var mobile = $("#mobile1").val();
+            if(mobile && mobile_code ){
+                $.ajax({
+                    type : "POST",
+                    url : "{:__URL('SHOP_MAIN/member/nbEmail')}",
+                    async : false,
+                    data : {"email_code" : mobile_code,'email':mobile},
+                    success : function(data){
+                        if(data['code']>0){
+                            $(".login-msg1").css("display", "none");
+                            $(".validation-step2").hide();
+                            $(".validation-step3").show();
+                            $('.step').addClass('step3')
+                        }else{
+                            $(".hint1").html('邮箱验证码不正确');
+                            $(".login-msg1").css("display", "block");
+                            $("#mobile-code1").focus();
+                            return false;
+                        }
+                    }
+                })
+            }else if(mobile==""){
+                $(".hint1").html('请填写邮箱');
+                $(".login-msg1").css("display", "block");
+                $("#mobile1").focus();
+                return false;
+            }else if(mobile_code==""){
+                $(".hint1").html('请填写邮箱验证码');
+                $(".login-msg1").css("display", "block");
+                $("#mobile-code1").focus();
+                return false;
+            }
+        });
+        var wait=60;
+        function time() {
+            if (wait == 0) {
+                $(".sendcode").removeAttr("disabled");
+                $(".sendcode").html("获取验证码");
+                wait = 60;
+                return;
+            }else{
+                $(".sendcode").attr("disabled", 'disabled');
+                $(".sendcode").html(wait+"s");
+                wait--;
+            }
+            setTimeout(function() {time()},1000);
+        }
+        var waita=60;
+        function timea() {
+            if (waita == 0) {
+                $(".sendOutcode").removeAttr("disabled");
+                $(".sendOutcode").html("获取验证码");
+                waita = 60;
+                return;
+            }else{
+                $(".sendOutcode").attr("disabled", 'disabled');
+                $(".sendOutcode").html(waita+"s");
+                waita--;
+            }
+            setTimeout(function() {timea()},1000);
+        }
+    })
+</script>
+{/block}

@@ -1,0 +1,160 @@
+{extend name="admin/base" /}
+{block name="resources"}{/block}
+{block name="main"}
+<!--表格-->
+<div class="mb-20 flex flex-pack-justify">
+    <div class="">
+        <a href="{:__URL('ADMIN_MAIN/express/freightTemplateEdit&co_id='.$co_id)}" class="btn btn-primary J-add"><i class="icon icon-add1"></i> 添加模板</a>
+    </div>
+    <div class="input-group search-input-group">
+        <input type="text" class="form-control" id="search_text" name="search_text" placeholder="模板名称">
+        <span class="input-group-btn "><a class="btn btn-primary search_to">搜索</a></span>
+    </div>
+</div>
+<table class="table v-table">
+    <thead>
+    <tr>
+        <th>模板名称</th>
+        <th>计费方式</th>
+        <th>首(重/件/体积)费</th>
+        <th>续(重/件/体积)费</th>
+        <th>状态</th>
+        <th>是否默认</th>
+        <th class="col-md-2 pr-14 operationLeft">操作</th>
+    </tr>
+    </thead>
+    <tbody class="trs">
+    </tbody>
+</table>
+<div class="page clearfix">
+    <div class="M-box3 m-style fr">
+    </div>
+</div>
+
+<input type="hidden" id="hidden_co_id" value="{$co_id}">
+{/block}
+<!-- page end -->
+{block name='script'}
+<script>
+  require(['utilAdmin'], function (utilAdmin) {
+    $(function () {
+        LoadingInfo(1);
+    })
+
+    function LoadingInfo(page_index) {
+        $('#page_index').val(page_index ? page_index : '1');
+        $.ajax({
+            url: "{:__URL('ADMIN_MAIN/express/freighttemplatelist')}",
+            type: 'POST',
+            dataType: 'JSON',
+            data: {
+                "page_index": page_index,
+                "page_size": $("#showNumber").val(),
+                "co_id": $("#hidden_co_id").val(),
+                "search_text": $("#search_text").val()
+            },
+            success: function (data) {
+                var html = "";
+                if (data["data"].length > 0) {
+                    $.each(data['data'], function (k, v) {
+                        html += '<tr>';
+                        html += '<td>' + v.shipping_fee_name + '</td>';
+                        if (v.calculate_type == 1) {
+                            html += "<td>按重计费</td>";
+                            html += "<td>" + v.main_level_fee + "(元)/" + v.main_level_num + "(kg)</td>";
+                            html += "<td>" + v.per_extra_level_fee + "(元)/" + v.extra_level_num + "(kg)</td>";
+                        } else if (v.calculate_type == 2) {
+                            html += "<td>按件计费</td>";
+                            html += "<td>" + v.main_level_fee + "(元)/" + v.main_level_num + "(件)</td>";
+                            html += "<td>" + v.per_extra_level_fee + "(元)/" + v.extra_level_num + "(件)</td>";
+                        } else if (v.calculate_type == 3) {
+                            html += "<td>按体积计费</td>";
+                            html += "<td>" + v.main_level_fee + "(元)/" + v.main_level_num + "(m³)</td>";
+                            html += "<td>" + v.per_extra_level_fee + "(元)/" + v.extra_level_num + "(m³)</td>";
+                        }
+
+                        if (v.is_enabled == 1) {
+                            html += "<td><span class='label label-success'>有效</span></td>";
+                        } else {
+                            html += "<td><span class='label label-danger'>无效</span></td>";
+                        }
+                        if (v.is_default == 1) {
+                            html += "<td>是</td>";
+                            html += "<td class='fs-0 operationLeft'>";
+                            html += "<a class='btn-operation' href=" + __URL('ADMIN_MAIN/express/freighttemplateedit?shipping_fee_id=' + v.shipping_fee_id + '&co_id=' + v.co_id) + ">编辑</a>"
+                            html += "</td>";
+                        } else {
+                            html += "<td>否</td>";
+                            html += "<td class='fs-0 operationLeft'>";
+                            html += '<a class="btn-operation defaults" href="javascript:void(0);" data-shippingFeeId="' + v.shipping_fee_id + '">设为默认</a>';
+                            html += "<a class='btn-operation' href=" + __URL('ADMIN_MAIN/express/freighttemplateedit?shipping_fee_id=' + v.shipping_fee_id + '&co_id=' + v.co_id) + ">编辑</a>"
+                            html += '<a href="javascript:void(0);" class="del btn-operation text-red1" data-shippingFeeId="' + v.shipping_fee_id + '">删除</a>';
+                            html += "</td>";
+                        }
+                    })
+                    utilAdmin.page(".M-box3", data['total_count'], data["page_count"], page_index, LoadingInfo);
+                } else {
+                    html = '<tr align="center"><td colspan="7" class="h-200">暂无符合条件的数据记录</td></tr>';
+                }
+                $(".trs").html(html);
+                utilAdmin.tips();
+            }
+        });
+    }
+
+    function setDefaultShippingFee(shipping_fee_id) {
+        var co_id = $("#hidden_co_id").val();
+        $.ajax({
+            url: "{:__URL('ADMIN_MAIN/express/setDefaultShippingFee')}",
+            type: "POST",
+            dataType: "JSON",
+            data: {
+                "co_id": co_id,
+                "shipping_fee_id": shipping_fee_id
+            },
+            success: function (data) {
+                if (data['code'] > 0) {
+                    utilAdmin.message(data['message'],'success', function () {
+                        LoadingInfo($("#page_index").val());
+                    });
+                } else {
+                    utilAdmin.message(data['message'],'danger');
+                }
+            }
+        });
+    }
+
+    function freightTemplateDelete(shipping_fee_id) {
+        utilAdmin.alert('确定要删除吗?',function(){
+            $.ajax({
+                type: "post",
+                url: "{:__URL('ADMIN_MAIN/express/freighttemplatedelete')}",
+                data: {'shipping_fee_id': shipping_fee_id},
+                dataType: "json",
+                success: function (data) {
+                    if (data["code"] > 0) {
+                        utilAdmin.message(data["message"],'success');
+                        LoadingInfo($('#page_index').val());
+                    } else {
+                        utilAdmin.message(data['message'],'danger');
+                    }
+                }
+            })
+        })
+    }
+
+    $("body").on("click",".defaults",function(){
+        var shipping_fee_id=$(this).attr("data-shippingFeeId");
+        setDefaultShippingFee(shipping_fee_id);
+    })
+    $("body").on("click",".del",function(){
+        var shipping_fee_id=$(this).attr("data-shippingFeeId");
+        console.log(shipping_fee_id);
+        freightTemplateDelete(shipping_fee_id);
+    })
+    $("body").on("click",".search_to",function(){
+        LoadingInfo(1);
+    })
+  })
+</script>
+{/block}

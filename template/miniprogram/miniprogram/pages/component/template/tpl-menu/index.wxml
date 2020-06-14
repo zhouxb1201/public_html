@@ -1,0 +1,10 @@
+<view class='menu' style='background:{{temDataitem.style.background}}'>
+  <view wx:for="{{temDataitem.data}}" wx:key="">
+    <view class='row-{{temDataitem.style.rownum}}'>      
+      <nav-components type='1' url='{{item.linkurl}}' param='' class='item'>
+        <image class='image' mode='widthFix' src="{{item.imgurl}}"></image>
+        <view class='text' style="color:{{item.color}}">{{item.text}}</view>
+      </nav-components>
+    </view>
+  </view>
+</view>

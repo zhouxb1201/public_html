@@ -1,0 +1,6 @@
+{
+  "usingComponents": {
+    "phone-compoent": "/pages/component/phone/phonecom"
+  },
+  "navigationBarTitleText": "提现账户"
+}

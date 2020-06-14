@@ -1,0 +1,60 @@
+<!--miniprogram/package/pages/scratchcard/scratchcard.wxml-->
+<view class='banner'>
+  <image mode='widthFix' src="{{publicUrl}}/wap/static/images/scratchcard-bg.png"></image>
+</view>
+<view class="right-tag">
+  <view class="menu" bindtap='openExplain'>活动说明</view>
+  <view class="menu" bindtap='toPrize'>我的奖品</view>
+</view>
+<view class="scratchcard-main">
+  <view class='scratchcard-main-wrap'>
+    <view class="scratchcard-main-box" id="scratchWrap">
+      <text>{{termname}}</text>
+      <canvas canvas-id='luck' disable-scroll="true" bindtouchstart="onTouchStart" bindtouchmove="onTouchMove" bindtouchend="onTouchEnd" style='display:{{isHide}}'></canvas>
+    </view>
+  </view>
+</view>
+<view class="scratchcard-chance" wx:if="{{frequency !== (-9999)}}">
+  剩余抽奖次数：
+  <text>{{frequency}}</text>次
+</view>
+<view class="btn-continue">
+  <button disabled="{{isContinue}}" class='{{isContinue ? boxColor_gray : boxColor_yellow}}' bindtap='onContinue'>再刮一次</button>
+</view>
+
+
+<!--中奖名单-->
+<view class='prize-wrap'>
+  <text class='prize-title'>幸运刮刮卡中奖记录</text>
+  <view class='prize-list-wrap'>
+    <view class='item-ul' style='position:relative;top:{{scrollY}}rpx;'>
+      <view class='item-li' wx:for="{{listData}}" wx:for-index="index" wx:for-item="item" wx:key="">
+        <text class='title'>{{filter.telvague(item.user_tel)}}</text>
+        <text class='date'>{{item.term_name}}</text>
+      </view>
+    </view>
+  </view>
+</view>
+
+<wxs src='../../../utils/addmul.wxs' module='filter' />
+
+<!--活动说明-->
+<explain isShow="{{isExplain}}" info="{{info}}" bind:explainClose="closeExplain"></explain>
+
+<!--活动结束弹框-->
+<popupActivityEnd isShow="{{activity}}"></popupActivityEnd>
+
+<!--中奖弹框-->
+<popupWinPrize isShow="{{winPrize}}" termname="{{termname}}" prizename="{{prizename}}"></popupWinPrize>
+
+<!--未中奖弹框-->
+<popupNoPrize isShow="{{noPrize}}"></popupNoPrize>
+
+<topnav-component></topnav-component>
+
+
+<!-- 登录组件 -->
+<login-component loginShow='{{loginShow}}' bind:request='requestLogin'></login-component>
+
+<!-- 关联手机 -->
+<phone-compoent phoneShow='{{phoneShow}}' bind:phoneEven='phonereResult'></phone-compoent>

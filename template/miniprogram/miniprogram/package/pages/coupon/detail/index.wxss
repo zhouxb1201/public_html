@@ -1,0 +1,224 @@
+page{
+  font-size: 28rpx;
+  background-color: #f8f8f8;
+}
+.van_cell{
+  display: flex;
+  padding: 20rpx 30rpx;
+  line-height: 48rpx;
+  font-size: 28rpx;
+}
+
+.head_card{
+  background-color: #fff;
+}
+.card__group_box{
+  margin: 20rpx;
+  border-radius: 20rpx;
+  overflow: hidden;
+  box-shadow: 0 0 10px 0 rgba(0,0,0,.05);
+}
+.card__group_box .cell_head{
+  background-color: #f90;
+  color: #fff;
+}
+.card__group_box .cell_head .icon{
+  min-width: 1em;
+  height: 48rpx;
+  font-size: 28rpx;
+  line-height: 48rpx;
+}
+.card__group_box .cell_head .shop_left{
+  margin-right: 10rpx;
+}
+.card__group_box .cell_head .title{
+  flex: 1;
+}
+.card__group_box .cell_head .flex_right{
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.card__group_box .cell_head .flex_right .arrow_right{
+  font-size: 24rpx;
+}
+
+.borderless{
+  border-bottom: 1px dashed #fff;
+}
+.cell_text{
+  color: #fff;
+  background-color: #f44;
+}
+
+.cell_value .info .coupon_type{
+  display: flex;
+  align-items: center;
+  margin-top: 10rpx;
+}
+.cell_value .info .coupon_name{
+  padding-left: 20rpx;
+}
+
+.top_fixed{
+  position: fixed;
+  top: 0;
+}
+
+.sort {    
+    width: 100%;
+    padding:0;
+    background: #fff;
+    align-items: center;
+    display: flex;
+}
+.sort .item {
+    flex: 1;
+    position: relative;
+    text-align: center;
+    font-size: 28rpx;
+    padding: 25rpx 30rpx;
+    color: #666;
+    vertical-align: middle;
+}
+.sort .item:first-child {
+    border: 0;
+}
+.sort .item .icon{
+  display: inline-block;
+}
+.sort .item.on text {
+    color: #fd5454;
+}
+.sort .item.on .icon{
+  color: #fd5454;
+}
+.DESC{
+  transform:rotate(0deg);
+}
+.ASC{
+  transform:rotate(180deg);
+  
+}
+
+
+.goodsRank .gooditem{
+  box-sizing: border-box;
+  width: calc(50% - 16rpx);
+  float: left;
+  margin: 8rpx;
+  background-color: #fff;
+  border-radius: 50rpx;
+  overflow: hidden;
+}
+.goodsRank .goodbox::after{
+  display:block;
+  clear:both;
+  content:"";
+  visibility:hidden;
+  height:0
+}
+.goodsRank .gooditem .gooddetail{
+  padding: 10rpx;
+}
+.goodsRank .gooditem .goodimg{
+  height: 360rpx;
+  overflow: hidden;  
+} 
+.goodsRank .gooditem .goodname{
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.goodsRank .gooditem .goodprice{
+  color: #ff454e;
+  font-size: 32rpx;
+  font-weight: 600;
+}
+.goodsRank .gooditem .marketprice{
+  text-decoration:line-through;
+  font-size: 26rpx;
+  margin-left: 20rpx;
+  color: rgba(119, 116, 116, 0.829);
+}
+.goodsRank .gooditem .saleNum{
+  font-size: 24rpx;
+  color: rgb(129, 129, 129);
+}
+.goodsRank .no_gooddata{  
+  margin: 0 20rpx;
+  height: 100rpx;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: #ccc;
+}
+.rightShow{
+  position: relative;
+  height: 100%;
+}
+.rightShow .rs_goods{
+  padding: 20rpx;
+  border-bottom: 1px solid rgba(102, 102, 102, 0.089); 
+  display: flex;
+  flex-flow: wrap;
+}
+.rightShow .rs_goods .btn_box{
+  width: 45%;
+  padding: 8rpx;
+}
+.rightShow .rs_goods .text{
+  width: 100%;
+  border: 1px solid rgba(204, 204, 204, 0.658);
+  display: inline-block;
+  font-size: 25rpx; 
+  text-align: center;
+  padding: 10rpx;   
+  box-sizing: border-box;
+}
+.rightShow .rs_goods .active{
+  background-color: #ff454e;
+  color: #fff;
+  border-color: #ff454e;
+}
+.rightShow .priceRange{
+  padding: 20rpx;
+  border-bottom: 1px solid rgba(102, 102, 102, 0.089); 
+}
+.rightShow .priceRange .rangeTitle{
+  font-size: 30rpx;
+  margin: 20rpx 0;
+}
+.rightShow .priceRange .range input{
+  display: inline-block;
+  border:1px solid rgba(204, 204, 204, 0.658);
+  width: 150rpx;
+  height: 60rpx;
+  padding: 8rpx;
+}
+.rightShow .sign{
+  display: inline-block;
+  height: 60rpx;
+  line-height: 60rpx;
+  vertical-align: top;
+  margin: 0 20rpx;
+}
+.buttomBtn{
+  position: absolute;
+  bottom: 0;
+  width: 100%;
+}
+.buttomBtn .btn{
+  width: 50%;
+  display: inline-block;
+  text-align: center;
+  max-height: 100rpx;
+  line-height: 100rpx;  
+}
+.buttomBtn .cancel{
+  background-color: #f8f8f8;
+}
+.buttomBtn .makesure{
+  background-color: #ff454e;
+  color: #fff; 
+}

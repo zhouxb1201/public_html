@@ -1,0 +1,28 @@
+<view class='giftvoucher_detail'>
+  <view class="gif_head item {{state == 2 ? 'using_out' : ''}}">
+    <view class='info '>
+      <view class='img'>
+        <image src="{{giftvoucherdetail.pic_cover_mid != '' ?giftvoucherdetail.pic_cover_mid :'/images/no-goods.png'}}"></image>
+      </view>
+      <view class='text'>
+        <view class='name'>{{giftvoucherdetail.gift_name}}</view>
+        <view class='time'>{{giftvoucherdetail.start_time}} ~ {{giftvoucherdetail.end_time}}</view>
+      </view>
+    </view>
+    <view wx:if='{{state == 2}}' class='icon overtime iconfont v-icon-coupon-use'></view>
+  </view>
+
+  <view class='code_card'>    
+    <view class='code_img' wx:if='{{giftvoucherdetail.gift_voucher_codeImg}}'>
+      <image src='{{giftvoucherdetail.gift_voucher_codeImg}}'></image>
+    </view>
+    <view class='code_num'>{{giftvoucherdetail.gift_voucher_code}}</view>
+  </view>
+
+  <view class='group_cell'>
+    <view class='title'>使用时间</view>
+    <view class='value'>{{giftvoucherdetail.start_time}} ~ {{giftvoucherdetail.end_time}}</view>
+    <view class='title'>使用说明</view>
+    <view class='value'>{{giftvoucherdetail.desc}}</view>
+  </view>
+</view>

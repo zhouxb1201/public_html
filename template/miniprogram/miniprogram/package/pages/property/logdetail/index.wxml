@@ -1,0 +1,17 @@
+<view class='log_detail'>
+  <view class="head">
+    <view class="title">{{type_name}}</view>
+    <view class="value {{change_money < 0 ? 'order_money_red' : 'order_money_green'}}">{{change_money}}</view>
+  </view>
+  <view class="cell_group">
+    <view class="cell_item" wx:for='{{arr}}' wx:key='index'>
+      <view class="cell_title">{{item.title}}</view>
+      <view class="cell_value" style="color:{{item.color}}">{{item.value}}</view>
+    </view>
+  </view>
+  <view class="tips" wx:if="{{tip_text}}">
+    {{tip_text}}
+  </view>
+</view>
+
+

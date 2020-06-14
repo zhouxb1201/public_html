@@ -1,0 +1,48 @@
+<view class="success-box">
+  <view class="text">
+    <text>恭喜你，成功领取</text>
+    <text class="name">{{name}}</text>
+  </view>
+  <view class="list-box">
+    <view class="list-group">
+      <view class="item" wx:for="{{couponList}}" wx:key="">
+        <view class="info">
+          <view class="title">
+            <text class="letter-price price" wx:if="{{item.coupon_genre != 3}}">￥{{filters.toFix(item.money)}}</text>
+            <text class="price" wx:else>{{filters.toNumber(item.discount)}}折</text>
+            <text wx:if="{{item.coupon_genre != 1}}">满{{item.at_least}}可用</text>
+          </view>
+          <view class="name">
+            <text>{{item.shop_name}}</text>
+            <text class="fs-12 text-regular">{{item.goods_range}}</text>
+          </view>
+          <view class="time">
+            <text>{{filters.formatDate(item.start_time)}}</text>~
+            <text>{{filters.formatDate(item.end_time)}}</text>
+          </view>
+        </view>
+      </view>
+
+      <view class="item" wx:for="{{giftList}}" wx:key="">
+        <view class="info">
+          <view class="title">
+            <text class="letter-price price">{{item.gift_voucher_name}}</text>
+          </view>
+          <view class="name">
+            <text>{{item.shop_name}}</text>
+          </view>
+          <view class="time">
+            <text>{{filters.formatDate(item.start_time)}}</text>~
+            <text>{{filters.formatDate(item.end_time)}}</text>
+          </view>
+        </view>
+      </view>
+
+
+    </view>
+  </view>
+</view>
+
+
+<!-- 保留2小数 -->
+<wxs module="filters" src="../../../../../utils/addmul.wxs"></wxs>

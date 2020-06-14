@@ -1,0 +1,168 @@
+{extend name="platform/new_base" /}
+{block name="resource"}
+<style>
+    .label-danger a{padding-top:5px;}
+</style>
+{/block}
+{block name="main"}
+                <!-- page -->
+                <form class="form-horizontal pt-15 form-validate widthFixedForm">
+                    <div class="form-group">
+                        <label class="col-md-2 control-label"><span class="text-bright">*</span>分类名称</label>
+                        <div class="col-md-5">
+                            <input type="text" class="form-control" id="short_name" name="short_name" required>
+                            <p class="help-block mb-0">为了移动商城更好的呈现，建议输入4-5个字</p>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-md-2 control-label">分类全称</label>
+                        <div class="col-md-5">
+                            <input type="text" class="form-control" id="category_name" name="category_name" >
+                            <p class="help-block mb-0">PC商城优先呈现分类全称，如全称没设置则读取分类名称</p>
+                        </div>
+                    </div>
+                    
+                    <div class="form-group J-cate">
+                        <label class="col-md-2 control-label">上级分类</label>
+                        <div class="col-md-5">
+                            <select class="form-control" id="pid">
+                                <option value="0" data-pid="0">顶级分类</option>
+                                {foreach name="category_list" item="v1"}
+                                <option value="{$v1['category_id']}" data-pid="{$v1['pid']}" data-attr_id="{$v1['attr_id']}" {if condition="$category_id eq $v1['category_id']"}selected{/if}>{$v1['short_name']}</option>
+                                {foreach name="v1['child_list']" item="v2"}
+                                <option value="{$v2['category_id']}"  data-pid="{$v2['pid']}" data-attr_id="{$v2['attr_id']}" {if condition="$category_id eq $v2['category_id']"}selected{/if}>&nbsp;&nbsp;&nbsp;&nbsp;{$v2['short_name']}</option>
+                                {/foreach}
+                                {/foreach}
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-md-2 control-label">商品品类</label>
+                        <div class="col-md-5">
+                            <select class="form-control" id="attr_id">
+                                <option value="0">选择类型</option>
+                                {volist name="goodsAttributeList" id="vo"}
+                                <option value="{$vo.attr_id}" {if condition="$attr_id eq $vo.attr_id"}selected{/if}>{$vo.attr_name}</option>
+                                {/volist}
+                            </select>
+                            <p class="help-block mb-0">关联品类后，发布商品时将对应读取该品类下关联的品牌、规格、属性模版数据</p>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-md-2 control-label">是否可见</label>
+                        <div class="col-md-5">
+                            <div class="switch-inline">
+                                <input type="checkbox" id="is_visible">
+                                <label for="is_visible" class=""></label>
+                            </div>
+                            <p class="help-block mb-0">开启后，用户在商城里才会看到该商品分类。关闭则隐藏分类。</p>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-md-2 control-label">排序</label>
+                        <div class="col-md-5">
+                            <input type="text" class="form-control" id="sort" name="sort" min="0">
+                            <p class="help-block mb-0">分类排序，数字越大越靠前。</p>
+                        </div>
+                    </div>
+                    <div class="form-group J-img" style="display: none;">
+                        <label class="col-md-2 control-label">分类图片</label>
+                        <div class="col-md-5">
+                            <div class="picture-list" id="pictureList">
+                                <a href="javascript:void(0);" class="plus-box" data-toggle="singlePicture"><i class="icon icon-plus"></i></a>
+                            </div>
+                            <p class="help-block mb-0">建议100*100，支持JPG/GIF/PNG格式，图片大小建议1M以内，图片在移动端展示。</p>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="col-md-2 control-label"></label>
+                        <div class="col-md-8">
+                            <button class="btn btn-primary" id="add_category" type="submit">添加</button>
+                            <a href="javascript:history.go(-1);" class="btn btn-default">返回</a>
+                        </div>
+                    </div>
+
+                </form>
+
+                <!-- page end -->
+{/block}
+
+
+{block name="script"}
+<script>
+require(['util'],function(util){
+    $('#pid').change(function(){
+        if($(this).find('option:selected').data('pid') > 0){
+            $('.J-img').show();
+        }else{
+            $('.J-img').hide();
+        }
+        var attr_id = $(this).find('option:selected').data('attr_id');
+        console.log(attr_id);
+        if(attr_id){
+            $("#attr_id").val(attr_id);
+        }else{
+            $("#attr_id").val('0');
+        }
+    })
+    if($('.J-cate').find('option:selected').data('pid') > 0){
+        $('.J-img').show();
+    }else{
+        $('.J-img').hide();
+    }
+            var flag = false;
+    util.validate($('.form-validate'),function(form) {
+            var category_name = $("#category_name").val();
+            var short_name = $("#short_name").val();
+            var pid = $("#pid").val();
+            var keywords = $("#keywords").val();
+            var sort = $("#sort").val();
+            if ($("#is_visible").prop("checked")) {
+                var is_visible = 1;
+            } else {
+                var is_visible = 0;
+            }
+            //var category_pic = $("#Logo").val();
+            var category_pic = $('.picture-list img').attr("src");
+            var attr_id = $("#attr_id").val();
+            if (attr_id.length > 0) {
+                var attr_name = $("#attr_id").find("option:selected").text();
+            } else {
+                var attr_name = '';
+            }
+            if(flag){
+                return false;
+            }
+        flag = true;
+
+        $.ajax({
+                type: "post",
+                url: "{:__URL('PLATFORM_MAIN/goods/addgoodscategory')}",
+                data: {
+                    'category_name': category_name,
+                    'pid': pid,
+                    'keywords': keywords,
+                    'sort': sort,
+                    'is_visible': is_visible,
+                    'category_pic': category_pic,
+                    "short_name": short_name,
+                    "attr_id": attr_id,
+                    "attr_name": attr_name
+                },
+                async: true,
+                success: function (data) {
+                    if (data["code"] > 0) {
+                        util.message(data["message"], 'success', "{:__URL('PLATFORM_MAIN/goods/goodscategorylist')}");
+                    } else {
+                        util.message(data["message"], 'danger');
+                    }
+                }
+            });
+    })
+
+
+
+})
+</script>
+{/block}

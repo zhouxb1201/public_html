@@ -1,0 +1,72 @@
+<form class="form-horizontal padding-15" id="">
+    <div class="form-group">
+        <label class="col-md-3 control-label">提现流水号</label>
+        <div class="col-md-8">
+            <p class="form-control-static">{$list["withdraw_no"]}</p>
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="col-md-3 control-label">提现类型</label>
+        <div class="col-md-8">
+            <p class="form-control-static">{if $list["type"]==1 || $list["type"]==4}银行卡{elseif $list["type"]==2}微信{elseif $list["type"]==3}支付宝{/if}</p>
+        </div>
+    </div>
+    {if $list["type"]==1 || $list["type"]==4}
+    <div class="form-group">
+        <label class="col-md-3 control-label">银行名称</label>
+        <div class="col-md-8">
+            <p class="form-control-static">{$list["open_bank"]}</p>
+        </div>
+    </div>
+    {/if}
+    <div class="form-group">
+        <label class="col-md-3 control-label">提现账户</label>
+        <div class="col-md-8">
+            <p class="form-control-static">{$list["account_number"]}</p>
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="col-md-3 control-label">账户姓名</label>
+        <div class="col-md-8">
+            <p class="form-control-static">{$list["realname"]}</p>
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="col-md-3 control-label">提现金额</label>
+        <div class="col-md-8">
+            <p class="form-control-static">{$list["cash"]}</p>
+        </div>
+    </div>
+
+    <div class="form-group">
+        <label class="col-md-3 control-label">申请时间</label>
+        <div class="col-md-8">
+            <p class="form-control-static">{$list["ask_for_date"]}</p>
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="col-md-3 control-label">状态</label>
+        <div class="col-md-8">
+            <p class="form-control-static">{if $list["status"]==2}待打款{elseif $list["status"]==5}打款失败{/if}</p>
+        </div>
+    </div>
+    <!--<div class="form-group">-->
+        <!--<label class="col-md-3 control-label">备注</label>-->
+        <!--<div class="col-md-8">-->
+            <!--<textarea class="form-control" rows="4" id="make_money_memo" placeholder="输入备注的内容"></textarea>-->
+        <!--</div>-->
+    <!--</div>-->
+    <div class="form-group">
+        <label class="col-md-3 control-label">打款方式</label>
+        <div class="col-md-8">
+            <p class="form-control-static">
+                {if $list['type']==4}
+                <input type="radio" name="withdraw_method" checked="checked" value="2"> 手动打款</p>
+                {else}
+            <input type="radio" name="withdraw_method" checked="checked" value="1"> 在线打款
+            &nbsp;&nbsp;&nbsp<input type="radio" name="withdraw_method" value="2"> 手动打款</p>
+                {/if}
+        </div>
+    </div>
+    <input type="hidden" value="{$list["id"]}" id='withdraw_id'>
+</form>

@@ -1,0 +1,450 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <meta http-equiv="X-UA-Compatible" content="ie=edge">
+        <title>{if condition="$title_before neq ''"}{$title_before}&nbsp;-&nbsp;{/if}{if condition="$title neq ''"}{$title}{/if}</title>
+        {if $path_info == 'member/person'}
+        <link rel="stylesheet" href="__TEMP__/shop/new/public/css/bootstrap.min.css">
+        {/if}
+        <link rel="stylesheet" href="__TEMP__/shop/new/public/css/common.css">
+        <link rel="stylesheet" href="__TEMP__/shop/new/public/css/shop.css">
+        {if $colorStyle && $colorStyle!='default'}
+        <link rel="stylesheet" href="PLATFORM_NEW_CSS/indexDecorate/css/{$colorStyle}.css">
+        {/if}
+        <link rel="shortcut icon" href="{$pc_info['icon']}" type="image/x-icon" />
+        <script src="__TEMP__/shop/new/public/scripts/lib/require.js" data-main="__TEMP__/shop/new/public/scripts/app/main"></script>
+        <script type="text/javascript">
+            var SHOPMAIN = 'SHOP_MAIN';//外置JS调用
+            var APPMAIN = 'APP_MAIN';//外置JS调用
+            var UPLOAD = "__UPLOAD__";//外置JS调用
+            var TEMP_IMG = "./template/{$style}/public/images";
+            var UPLOADSHOP = 'upload/{$website_id}/shop/';//存放公共图片、网站logo、独立图片、没有任何关联的图片
+            var STATIC = "./public/static";
+            var _hmt = _hmt || [];
+            (function() {
+                _hmt.push(['_setCustomVar', 1, 'website_id', '{$website_id}', 1]);
+                var hm = document.createElement("script");
+                hm.src = "https://hm.baidu.com/hm.js?f46ca15b784c6cd06d0dcce624712fc9";
+                var s = document.getElementsByTagName("script")[0];
+                s.parentNode.insertBefore(hm, s);
+            })();
+        </script>
+    </head>
+    {include file='shop/new/urlModel'/}
+    {block name="resources"}
+
+    {/block}
+        {if($is_qlkefu && $seller_domain)}
+		{if(!empty($member_info['uid']))}
+		{if(!$goods_info['goods_id'])}
+		<script src="__TEMP__/shop/new/public/scripts/lib/jquery-1.8.3.min.js"></script>
+		{/if}
+		<script src="{$seller_domain}"></script>
+		<script>
+		var uid = "{$member_info['uid']}";
+		var uName = "{$member_info['user_info']['username']?$member_info['user_info']['username']:''}";
+		var avatar = "{$member_info['user_info']['user_headimg']?$member_info['user_info']['user_headimg']:''}";
+		var regTime = "{$member_info['user_info']['reg_time']?$member_info['user_info']['reg_time']:''}";
+		var goods_id = "{$goods_info['goods_id']?$goods_info['goods_id']:0}";
+		var goods_name = "{$goods_info['goods_name']?$goods_info['goods_name']:''}";
+		var price = "{$goods_info['price']?$goods_info['price']:0}";
+		var pic_cover = "{$goods_info['picture_detail']?__IMG($goods_info['picture_detail']['pic_cover']):''}";
+		var goods = {goods_id:goods_id, goods_name:goods_name,price:price,pic_cover:pic_cover};
+		qlkefuChat.init({uid: uid, uName: uName, avatar: avatar,regTime: regTime, goods: goods});
+		</script>
+		{/if}
+		{/if}
+    <body>
+    <input type="hidden" id="hidden_uid" value="{$uid}" />
+        {block name="top"}
+        {include file='shop/new/top'/}
+        {/block}
+        {block name="head"}
+        {include file='shop/new/Member/header'/}
+        {/block}
+        <div class="v-main">
+            <div class="v-main-content clearfix w1200">
+
+                {include file='shop/new/Member/controlLeftMenu'/}
+                {block name="main"}
+                <!-- 内容 -->
+                {/block}
+
+            </div>
+        </div>
+        <div class="associated-dialog" style="display: none">
+                <div class="login-box" style="height: 300px">
+                <form action="">
+                    <h3 class="title">关联手机</h3>
+
+                    <div class="associated-msg login-msg" style="display: none">
+                        <p class="associated-error error"></p>
+                    </div>
+
+                    <dl class="clearfix">
+                        <dt class="userName fl"><img src="PLATFORM_STATIC/login_register/L-account.png" alt=""></dt>
+                        <dd class="userName-ipt fl"><input type="text" id="mobile" class="inputs" placeholder="请输入您的手机号"></dd>
+                    </dl>
+
+                    <dl class="clearfix">
+                        <dt class="userName fl"><img src="/public/platform/static/login_register/code.png" alt=""></dt>
+                        <dd class="userName-ipt fl pr">
+                            <input type="text" class="inputs" id="mobileCode1" placeholder="请输入验证码">
+                            <button type="button" class="obtain-code sendOutCode">获取验证码</button>
+                        </dd>
+                    </dl>
+
+                    <dl class="clearfix hide">
+                        <dt class="userName fl"><img src="PLATFORM_STATIC/login_register/L-pwd.png" alt=""></dt>
+                        <dd class="userName-ipt fl"><input type="password" id="password" class="inputs" placeholder="请输入长度6-20位密码"></dd>
+                    </dl>
+
+                    <dl class="clearfix hide">
+                        <dt class="userName fl"><img src="PLATFORM_STATIC/login_register/确认密码.png" alt=""></dt>
+                        <dd class="userName-ipt fl"><input type="password" class="inputs" id="repass" placeholder="请输入确认密码"></dd>
+                    </dl>
+
+                    <div id="slider1"></div>
+
+                    <div class="submits mb20">
+                        <input type="button" class="submit okSubmit associated" value="绑定手机">
+                    </div>
+
+                </form>
+            </div>
+        </div>
+        {block name="bottom"}
+        {if $bottom}
+        {$bottom}
+        {/if}
+        <!-- 底部 -->
+        {/block}
+        {block name="javascript"}
+        {/block}
+        <script>
+            require(['dialog'], function (Dialog) {
+                Dialog.footerImg();
+                //懒加载
+                Dialog.lazyLoad();
+                var categoryList = "";
+                $(document).ready(function () {
+                    var is_qlkefu = "{$is_qlkefu}";
+                	var seller_domain = "{:$seller_domain}";
+                	if(Dialog.isLogin(1)){
+                    	if(is_qlkefu==0 || !seller_domain){
+                    		$('.J-service').attr('href', "tencent://message/?uin={$pc_info['web_qq']}&Site={$pc_info['web_qq']}&Menu=yes");
+                        	$('.J-service').attr("target","_blank");
+                    	}
+                	}else{
+                        $(".WS-SHOW-CHAT").click(function () {
+                        	Dialog.loginMember("会员登录", ".login-dialog");
+                        });
+                	}
+
+//                    $.ajax({
+//                        type: "post",
+//                        url: "{:__URL('SHOP_MAIN/index/getgoodscategorylist')}",
+//                        async: true,
+//                        data: {},
+//                        success: function (data) {
+//                            categoryList = data;
+//
+//                        }
+//                    });
+
+
+                    $.ajax({
+                        type: "post",
+                        url: "{:__URL('SHOP_MAIN/components/getlogininfo')}",
+                        success: function (data) {
+                            var login_info_html = '';
+                            if (data !== null && data !== "") {
+                                var img = data["user_info"]["user_headimg"];
+                                var name='';
+                                if(data["user_info"]["user_name"]!=''){
+                                    name = data["user_info"]["user_name"];
+                                }else if(data["user_info"]["nick_name"]){
+                                    name = data["user_info"]["nick_name"];
+                                }else{
+                                    name = data["user_info"]["user_tel"];
+                                }
+                                $("#not_logged").css("display", "none");
+                                $("#right_login_info").css("display", "block");
+                                $("#right_login_info_name").text(name);
+                                if (img == '' || img == null) {
+                                    img = '__TEMP__/shop/new/public/image/0000000000_21_120x120.jpg';
+                                    $("#login_member_logo").attr('src', "__TEMP__/shop/new/public/images/0000000000_21_120x120.jpg");
+                                } else {
+                                    img = __IMG(img);
+                                    $("#login_member_logo").attr('src', img);
+                                }
+                                $('div.vip-con').find('.user-img').html('<a href="' + __URL('SHOP_MAIN/member/index') + '"><img src="' + img + '" alt=""></a>');
+                                $('div.vip-con').find('.infor').html(name + ',欢迎您回来！');
+                                $('div.vip-con').find('.outcon-btn').html('<a href="javascript:void(0);" target="_top" class="J-logout">退出</a>');
+                                login_info_html = '<a class="sn-login main-color" href="' + __URL('SHOP_MAIN/member/index') + '" target="_top">' + name + '</a>,欢迎您回来！<a class="red J-logout" href="javascript:void(0);" target="_top">退出</a>';
+                            } else {
+                                $("#not_logged").css("display", "block");
+                                $("#not_logged .ajax-login").attr("href", __URL('SHOP_MAIN/member/index'));
+                                $("#not_logged .ajax-register").attr("href", __URL('SHOP_MAIN/login/register'));
+                                $("#right_login_info").css("display", "none");
+                                login_info_html = '欢迎来到{$mall_name}<a class="red login" href="' + __URL('SHOP_MAIN/login/index') + '" target="_top">登录</a><a class="red" href="' + __URL('SHOP_MAIN/login/register') + '" target="_top">&nbsp;&nbsp;注册</a>';
+                                $('div.vip-con').find('.infor').html('Hi,欢迎来到{$mall_name}');
+                                $('div.vip-con').find('.outcon-btn').html('<a class="login" href="' + __URL('SHOP_MAIN/login/index') + '">登录</a><a href="' + __URL('SHOP_MAIN/login/register') + '">注册</a>');
+                            }
+                            $('.J-logininfo').html(login_info_html);
+                        }
+                    });
+                    $(".J-search").click(function () {
+                        var keyword_obj = $(this).parents(".search").find(".J-keyword");
+                        var keywords = keyword_obj.val();
+                        if ($.trim(keywords).length == 0 || $.trim(keywords) == "请输入关键词") {
+                            keywords = keyword_obj.attr("data-searchwords");
+                        }
+                        $(keyword_obj).val(keywords);
+                        if (keywords == null)
+                        {
+                            keywords = "";
+                        }
+
+//                        if ($.cookie("searchRecord") != undefined) {
+//                            var arr = eval($.cookie("searchRecord"));
+//                        } else {
+                        var arr = new Array();
+//                        }
+                        if (arr.length > 0) {
+                            if ($.inArray(keywords, arr) < 0) {
+                                arr.push(keywords);
+                            }
+                        } else {
+                            arr.push(keywords);
+                        }
+//                        $.cookie("searchRecord", JSON.stringify(arr));
+                        if ($(".search-tabs .active").data('type') == 'goods') {
+                            window.location.href = __URL('SHOP_MAIN/goods/goodslist?keyword=' + keywords);
+                        } else {
+                            window.location.href ="{:__URL('ADDONS_SHOP_MAIN','addons=shopStreet')}"+"&shop_name="+keywords;
+                        }
+                    });
+                    //全站搜索
+                    $('.J-platform_goods').on("click",function(){
+                        var keyword=$('.J-keyword').val();
+                        location.href=__URL("SHOP_MAIN/goods/goodslist?keyword="+keyword);
+                    });
+                    //本店搜索
+                    $('.J-shop_goods').on("click",function(){
+                        var keyword=$('.J-keyword').val();
+                        location.href="{:__URL('ADDONS_SHOP_MAIN','addons=shopGoodList&shop_id='.$shop_id)}"+"&keyword="+keyword;
+                    });
+                });
+                Dialog.withAccount(".search-tabs", "li", "active");
+                Dialog.withAccount(".sortSearch-tab", "li", "active");
+                Dialog.withAccount(".sort-tab", "li", "active");
+                Dialog.scoreShow();
+                Dialog.lbt();
+                Dialog.right();
+                Dialog.sortShow();
+                Dialog.refreshCart();
+                Dialog.getQrcode();
+                Dialog.getQrcodeForShop("{$shop_id}");
+
+
+                $('.J-category').on("mouseenter", 'li', function () {
+                    $(".index-sort-detail").show();
+                    var cid = $(this).data("id");
+                    var second = categoryList[cid].child_list;
+                    var html = '';
+                    if (second.length > 0) {
+                        for (var i = 0; i < second.length; i++) {
+                            var third = second[i].child_list;
+                            var category_name = second[i].category_name;
+                            if(category_name == ''){
+                                category_name = second[i].short_name;
+                            }
+                            html += '<div class="sort-two-item-title">';
+                            html += '<h4><a href="' + __URL('SHOP_MAIN/goods/goodslist?category_id=' + second[i].category_id) + '">' + category_name + '</a></h4>';
+                            html += '</div>';
+                            html += '<div class="sort-three-item">';
+                            if (third.length > 0) {
+                                for (var j = 0; j < third.length; j++) {
+                                    var third_category_name = third[j].category_name;
+                                    if(third_category_name == ''){
+                                        third_category_name = third[j].short_name;
+                                    }
+                                    html += '<a href="' + __URL('SHOP_MAIN/goods/goodslist?category_id=' + third[j].category_id) + '">' + third_category_name + '</a>';
+                                }
+                            }
+                            html += '</div>';
+                        }
+                    }
+                    $(".J-childcategory").html(html);
+                });
+                $('.J-cart').on("mouseenter", function () {
+                    Dialog.refreshCart();
+                });
+                $('body').on("click", '.J-collectShop', function () {
+                    var shop_id = $(this).data('id');
+                    Dialog.collectionShopOperation(shop_id, 'shop', '', this);
+                });
+                $('body').on("click", '.J-cancelCollectShop', function () {
+                    var shop_id = $(this).data('id');
+                    Dialog.collectionShopOperation(shop_id, 'shop', '', this);
+                });
+                $('body').on("click", '.J-deleteCart', function () {
+                    var cart_id = $(this).data('id');
+                    Dialog.deleteShoppingCartById(cart_id);
+                });
+                $('body').on('click', '.J-logout', function () {
+                    $.ajax({
+                        url: "{:__URL('SHOP_MAIN/member/logout')}",
+                        type: "post",
+                        success: function (res) {
+                            if (res['code'] > 0) {
+                                layer.msg('退出成功！', {icon: 1, time: 1000}, function () {
+                                    location.href=__URL('SHOP_MAIN/index/index');
+                                });
+                                return true;
+                            } else {
+                                if (res["message"] !== null) {
+                                    layer.msg(res["message"], {icon: 2, time: 1000});
+                                }
+                            }
+                        }
+                    });
+                });
+
+                //获取短信验证码
+                $(".sendOutCode").click(function () {
+                    var myreg=/^[1][3,4,5,6,7,8,9][0-9]{9}$/;
+                    var mobile = $("#mobile").val();
+                    if(mobile == "" || mobile == undefined || mobile == null){
+                        $(".associated-error").html('请输入手机号');
+                        $(".associated-msg").css("display", "block");
+                        $("#mobile").focus();
+                        return false;
+                    }else if(!myreg.test(mobile)){
+                        $(".associated-error").html('请输入正确的手机格式');
+                        $(".associated-msg").css("display", "block");
+                        $("#mobile").focus();
+                        return false;
+                    }else{
+                        $(".associated-msg").css("display", "none");
+                    }
+                    // if ("{$login_verify_code['pc']}" == 1 && $("#num").val() >= 3) {
+                    //     var vertification = $("#captcha").val();
+                    // }
+                    $.ajax({
+                        type: "POST",
+                        url: "{:__URL('SHOP_MAIN/login/sendSmsBindMobile')}",
+                        data: {"mobile": mobile},
+                        success: function (data) {
+                            if (data['code'] == 0) {
+                                $(".associated-error").html('发送成功');
+                                $(".associated-msg").css("display", "block");
+                                time();
+                            } else {
+                                // $("#num").val(data['num']);
+                                // if (data['num'] >= 3) {
+                                //     $(".v-code").css("display", "block");
+                                // }
+                                $(".associated-error").html(data["message"]);
+                                $(".associated-msg").css("display", "block");
+                                // $(".verifyimg").attr("src", "{:__URL('SHOP_MAIN/captcha')}");
+                                return false;
+                            }
+                        }
+                    });
+
+                    $.ajax({
+                        type: "POST",
+                        url: "{:__URL('SHOP_MAIN/login/isBindPhone')}",
+                        data: {"mobile": mobile},
+                        success: function (res) {
+                            //说明没有绑定，需要输入密码
+                            if (res['code'] == 1) {
+                                $('.clearfix').removeClass('hide');
+                                $('.clearfix').addClass('show');
+                            }
+                        }
+                    });
+
+                });
+
+                var wait=60;
+                function time() {
+                    if (wait == 0) {
+                        $(".sendOutCode").removeAttr("disabled");
+                        $(".sendOutCode").html("获取验证码");
+                        wait = 60;
+                        return;
+                    } else {
+                        $(".sendOutCode").attr("disabled", 'disabled');
+                        $(".sendOutCode").html(wait+"s");
+                        wait--;
+                    }
+                    setTimeout(function() {
+                            time()
+                        },
+                        1000);
+                }
+                $("#repass").change(function(){
+                    var repass = $("#repass").val();
+                    var password = $("#password").val();
+                    if( !(repass == password)){
+                        $(".associated-error").html('两次密码不一致');
+                        $(".associated-msg").css("display", "block");
+                        $("#repass").focus();
+                        return false;
+                    }else{
+                        $(".msg").css("display", "none");
+                    }
+                });
+                $(".associated").click(function(){
+                    var mobile = $.trim($('#mobile').val());
+                    var mobile_code = $.trim($('#mobileCode1').val());
+                    // var extend_code = $("#extend_code").val();
+                    if( mobile == "" || mobile == undefined || mobile == null ) {
+                        $(".associated-error").html('请输入手机号');
+                        $(".associated-msg").css("display", "block");
+                        $("#iphone").focus();
+                        return false;
+                    }else{
+                        $(".msg1").css("display", "none");
+                    }
+                    if(mobile_code == undefined || mobile_code == "" || mobile_code == null){
+                        $(".associated-error").html('请输入手机验证码');
+                        $(".associated-msg").css("display", "block");
+                        $("#mobile_code").focus();
+                        return false;
+                    } else{
+                        $(".msg1").css("display", "none");
+                    }
+                    //密码
+                    var password = $('#repass').val();
+                    $.ajax({
+                        type: "POST",
+                        url: "{:__URL('SHOP_MAIN/login/shopAssociateAccount')}",
+                        data: {
+                            "mobile" : mobile,
+                            "mobile_code" : mobile_code,
+                            'password':password,
+                            // "extend_code" : extend_code,
+                            // "uid" : $("#uid").val()
+                        },
+                        success: function(data){
+                            if (data['code'] >0) {
+                                layer.msg('关联成功');
+                                window.location.reload();
+                            } else {
+                                $(".associated-error").html('绑定失败');
+                                $(".associated-msg").css("display", "block");
+                            }
+                        }
+                    });
+                });
+            });
+        </script>
+    </body>
+
+</html>

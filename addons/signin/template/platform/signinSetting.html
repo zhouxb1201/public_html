@@ -1,0 +1,422 @@
+{block name="main"}
+<style>.form-additional{width:auto;}.form-additional .control-label {text-align: right;width: 120px;cursor:auto;}</style>
+        <!-- page -->
+        <form class="form-horizontal pt-15 form-validate widthFixedForm">
+            <div class="form-group">
+                <label class="col-md-2 control-label"><span class="text-bright">*</span>活动状态</label>
+                <div class="col-md-5">
+                    <!--<label class="radio-inline">
+                        <input type="radio" name="is_signin" {if $info['is_use']==1}checked{/if} value="1"> 开启
+                    </label>
+                    <label class="radio-inline">
+                        <input type="radio" name="is_signin" value="0" {if $info['is_use']==0}checked{/if}> 关闭
+                    </label>-->
+                    <div class="switch-inline">
+                        <input type="checkbox" name="is_signin" id="is_signin" {if $info['is_use']==1}checked{/if}>
+                        <label for="is_signin" class=""></label>
+                    </div>
+                </div>
+            </div>
+            <div class="form-group">
+				<label class="col-md-2 control-label"><span class="text-bright">*</span>每日签到</label>
+				<div class="col-md-5">
+					<div class="form-additional rule-list">
+						<div class="form-group">
+							<label class="col-md-5 control-label">送积分</label>
+							<div class="col-md-7 control-group">
+								<div class="input-group">
+									<input type="number" class="form-control point" min="0" required mustnum="true" name="point" id="point" value="{$list['data']['point']}">
+									<div class="input-group-addon">个</div>
+								</div>
+							</div>
+						</div>
+						<div class="form-group">
+							<label class="col-md-5 control-label">送余额</label>
+							<div class="col-md-7 control-group">
+								<div class="input-group">
+									<input type="number" class="form-control money" min="0" required name="money" id="money" value="{$list['data']['money']}">
+									<div class="input-group-addon">元</div>
+								</div>
+							</div>
+						</div>
+						<div class="form-group">
+							<label class="col-md-5 control-label">增加成长值</label>
+							<div class="col-md-7 control-group">
+								<div class="input-group">
+									<input type="number" class="form-control growth_num" min="0" required name="growth_num" id="growth_num" value="{$list['data']['growth_num']}">
+									<div class="input-group-addon">成长值</div>
+								</div>
+								
+							</div>
+						</div>
+						{if($prize['giftvoucher']['is_use']==1)}
+						<div class="form-group">
+							<label class="col-md-5 control-label">送礼品券</label>
+							<div class="col-md-7 control-group">
+					            <select class="form-control gift_voucher_id" name="gift_voucher_id" id="gift_voucher_id" required="" aria-required="true" aria-describedby="gift_voucher-error" aria-invalid="false">
+					            	<option value="0">请选择礼品券</option>
+					            	{volist name="prize['giftvoucher']['list']" id="gi"}
+					            		<option value="{$gi['gift_voucher_id']}" {if($list['data']['gift_voucher_id']==$gi['gift_voucher_id'])}selected = "selected"{/if}>{$gi['giftvoucher_name']}</option>
+					            	{/volist}
+					            </select><span id="gift_voucher-error" class="help-block-error"></span>
+							</div>
+						</div>
+						{/if}
+						{if($prize['coupontype']['is_use']==1)}
+						<div class="form-group">
+							<label class="col-md-5 control-label">送优惠券</label>
+							<div class="col-md-7 control-group">
+					            <select class="form-control coupon_type_id" name="coupon_type_id" id="coupon_type_id" required="" aria-required="true" aria-describedby="coupon_type-error" aria-invalid="false">
+					            	<option value="0">请选择优惠券</option>
+					            	{volist name="prize['coupontype']['list']" id="co"}
+					            		<option value="{$co['coupon_type_id']}" {if($list['data']['coupon_type_id']==$co['coupon_type_id'])}selected = "selected"{/if}>{$co['coupon_name']}</option>
+					            	{/volist}
+					            </select><span id="coupon_type-error" class="help-block-error"></span>
+							</div>
+						</div>
+						{/if}
+						<input type="hidden" class="rule_id" name="rule_id" value="{if($list['data']['rule_id'])}{$list['data']['rule_id']}{else}0{/if}" autocomplete="off">
+						<input type="hidden" class="days" name="sort" value="0" autocomplete="off">
+					</div>
+				</div>
+				<input type="hidden" id="sign_in_id" name="sign_in_id" value="{if($info['sign_in_id'])}{$info['sign_in_id']}{else}0{/if}" autocomplete="off">
+			</div>
+			<div class="form-group">
+                <label class="col-md-2 control-label">连续签到奖励</label>
+                <div class="col-md-5">
+                    <!--<label class="radio-inline">
+                        <input type="radio" name="state" {if $info['state']==1}checked{/if} value="1"> 开启
+                    </label>
+                    <label class="radio-inline">
+                        <input type="radio" name="state" value="0" {if $info['state']==0}checked{/if}> 关闭
+                    </label>-->
+                    <div class="switch-inline">
+                        <input type="checkbox" name="state" id="state" {if $info['state']==1}checked{/if}>
+                        <label for="state" class=""></label>
+                    </div>
+                </div>
+            </div>
+            <div class="form-group {if($info['state']==0)}hide{/if}" id="rule">
+				<label class="col-md-2 control-label"><span class="text-bright">*</span>签到规则</label>
+				<div class="col-md-5">
+					<div class="tab-content">
+		                <table class="table v-table table-auto-center table-bordered">
+		                    <tbody>
+		                        <tr>
+		                            <td class="col-md-3">
+		                            	<p>签到天数 </p>
+		                            </td>
+		                            <td><p>余额</p></td>
+		                            <td><p>操作</p></td>
+		                        </tr>
+		                        {if(!empty($list['list'][1]))}
+		                        {volist name="$list['list']" id="li" offset="1" key="k"}
+		                        <tr class="rule-list">
+		                            <td class="col-md-4">
+		                            	<div class="form-group" style="margin:0;">
+					                    <div class="input-group">
+					                    	<div class="input-group-addon">连续签到</div>
+					                        <input type="number" name="days{$k}" class="form-control days" min="2" required mustnum="true" value="{$li['days']}">
+					                        <div class="input-group-addon">天</div>
+					                    </div>
+					                    </div>
+		                            </td>
+		                            <td class="text-left col-md-6">
+										<div class="form-group">
+											<label class="col-md-4 control-label">送积分</label>
+											<div class="col-md-7 control-group">
+												<div class="input-group">
+													<input type="number" class="form-control point" name="point{$k}" min="0" required mustnum="true" value="{$li['point']}">
+													<div class="input-group-addon">个</div>
+												</div>
+											</div>
+										</div>
+										<div class="form-group">
+											<label class="col-md-4 control-label">送余额</label>
+											<div class="col-md-7 control-group">
+												<div class="input-group">
+													<input type="number" class="form-control money" name="money{$k}" min="0" required value="{$li['money']}">
+													<div class="input-group-addon">元</div>
+												</div>
+											</div>
+										</div>
+										<div class="form-group">
+											<label class="col-md-4 control-label">增加成长值</label>
+											<div class="col-md-7 control-group">
+												<div class="input-group">
+													<input type="number" class="form-control growth_num" name="growth_num{$k}" min="0" required value="{$li['growth_num']}">
+													<div class="input-group-addon">成长值</div>
+												</div>
+											</div>
+										</div>
+										{if($prize['giftvoucher']['is_use']==1)}
+										<div class="form-group">
+											<label class="col-md-4 control-label">送礼品券</label>
+											<div class="col-md-7 control-group">
+									            <select class="form-control gift_voucher_id" name="gift_voucher_id{$k}" required="" aria-required="true" aria-describedby="gift_voucher-error{$k}" aria-invalid="false">
+									            	<option value="0">请选择礼品券</option>
+									            	{volist name="prize['giftvoucher']['list']" id="gi"}
+									            		<option value="{$gi['gift_voucher_id']}" {if($li['gift_voucher_id']==$gi['gift_voucher_id'])}selected = "selected"{/if}>{$gi['giftvoucher_name']}</option>
+									            	{/volist}
+									            </select><span id="gift_voucher-error{$k}" class="help-block-error"></span>
+											</div>
+										</div>
+										{/if}
+										{if($prize['coupontype']['is_use']==1)}
+										<div class="form-group">
+											<label class="col-md-4 control-label">送优惠券</label>
+											<div class="col-md-7 control-group">
+									            <select class="form-control coupon_type_id" name="coupon_type_id{$k}" required="" aria-required="true" aria-describedby="coupon_type-error{$k}" aria-invalid="false">
+									            	<option value="0">请选择优惠券</option>
+									            	{volist name="prize['coupontype']['list']" id="co"}
+									            		<option value="{$co['coupon_type_id']}" {if($li['coupon_type_id']==$co['coupon_type_id'])}selected = "selected"{/if}>{$co['coupon_name']}</option>
+									            	{/volist}
+									            </select><span id="coupon_type-error{$k}" class="help-block-error"></span>
+											</div>
+										</div>
+										{/if}
+		                            </td>
+		                            <td>{if($k!=1)}<a href="javacript:void(0);" class="text-red1" onclick="javascript:del(this)">删除</a>{/if}</td>
+		                            <input type="hidden" class="rule_id" name="rule_id" value="{$li['rule_id']}" autocomplete="off">
+		                        </tr>
+		                        {/volist}
+		                        {else}
+		                        <tr class="rule-list">
+		                            <td class="col-md-4">
+		                            	<div class="form-group" style="margin:0;">
+					                    <div class="input-group">
+					                    	<div class="input-group-addon">连续签到</div>
+					                        <input type="number" name="days1" class="form-control days" min="2" mustnum="true" value="">
+					                        <div class="input-group-addon">天</div>
+					                    </div>
+					                    </div>
+		                            </td>
+		                            <td class="text-left col-md-6">
+										<div class="form-group">
+											<label class="col-md-4 control-label">送积分</label>
+											<div class="col-md-7 control-group">
+												<div class="input-group">
+													<input type="number" class="form-control point" name="point1" min="0" mustnum="true" value="">
+													<div class="input-group-addon">个</div>
+												</div>
+											</div>
+										</div>
+										<div class="form-group">
+											<label class="col-md-4 control-label">送余额</label>
+											<div class="col-md-7 control-group">
+												<div class="input-group">
+													<input type="number" class="form-control money" name="money1" min="0" value="">
+													<div class="input-group-addon">元</div>
+												</div>
+											</div>
+										</div>
+										<div class="form-group">
+											<label class="col-md-4 control-label">增加成长值</label>
+											<div class="col-md-7 control-group">
+												<div class="input-group">
+													<input type="number" class="form-control growth_num" name="growth_num1" min="0" value="">
+													<div class="input-group-addon">成长值</div>
+												</div>
+											</div>
+										</div>
+										{if($prize['giftvoucher']['is_use']==1)}
+										<div class="form-group">
+											<label class="col-md-4 control-label">送礼品券</label>
+											<div class="col-md-7 control-group">
+									            <select class="form-control gift_voucher_id" name="gift_voucher_id1" required="" aria-required="true" aria-describedby="gift_voucher-error1" aria-invalid="false">
+									            	<option value="0">请选择礼品券</option>
+									            	{volist name="prize['giftvoucher']['list']" id="gi"}
+									            		<option value="{$gi['gift_voucher_id']}">{$gi['giftvoucher_name']}</option>
+									            	{/volist}
+									            </select><span id="gift_voucher-error1" class="help-block-error"></span>
+											</div>
+										</div>
+										{/if}
+										{if($prize['coupontype']['is_use']==1)}
+										<div class="form-group">
+											<label class="col-md-4 control-label">送优惠券</label>
+											<div class="col-md-7 control-group">
+									            <select class="form-control coupon_type_id" name="coupon_type_id1" required="" aria-required="true" aria-describedby="coupon_type-error1" aria-invalid="false">
+									            	<option value="0">请选择优惠券</option>
+									            	{volist name="prize['coupontype']['list']" id="co"}
+									            		<option value="{$co['coupon_type_id']}">{$co['coupon_name']}</option>
+									            	{/volist}
+									            </select><span id="coupon_type-error1" class="help-block-error"></span>
+											</div>
+										</div>
+										{/if}
+		                            </td>
+		                            <td></td>
+		                            <input type="hidden" class="rule_id" name="rule_id" value="0" autocomplete="off">
+		                        </tr>
+		                        {/if}
+		                        <tr id="increase-list">
+		                            <td colspan="3" class="text-left">
+		                            	<a href="javacript:void(0);" id="increase" class="text-primary">+增加一个规则</a>
+		                            </td>
+		                        </tr>
+		                    </tbody>
+		                </table>
+	                </div>
+				</div>
+			</div>
+            <div class="form-group"></div>
+            <div class="form-group">
+                <label class="col-md-2 control-label"></label>
+                <div class="col-md-8">
+                    <button class="btn btn-primary save" type="submit">保存</button>
+                    <a href="javascript:history.go(-1);" class="btn btn-default">返回</a>
+                </div>
+            </div>
+        </form>
+
+        <!-- page end -->
+{/block}
+{block name="script"}
+<script>
+	var prize = {
+   		giftvoucher:{:json_encode($prize['giftvoucher'])},
+   		coupontype:{:json_encode($prize['coupontype'])}
+    }
+	var rulelist = {:json_encode($list['list'][1])};
+    require(['util'],function(util){
+        $("input[name='state']").change(function () {
+            if($(this).is(':checked')) {
+                $("#rule").removeClass('hide');
+                var n = 1;
+               	$(".rule-list").each(function(){
+                    $("input[name='days"+n+"']").attr('required','required');
+                    $("input[name='point"+n+"']").attr('required','required');
+                    $("input[name='money"+n+"']").attr('required','required');
+                    $("input[name='growth_num"+n+"']").attr('required','required');
+               		n = n + 1;
+               	});
+            } else{
+                $("#rule").addClass('hide');
+                var n = 1;
+               	$(".rule-list").each(function(){
+                    $("input[name='days"+n+"']").removeAttr('required');
+                    $("input[name='point"+n+"']").removeAttr('required');
+                    $("input[name='money"+n+"']").removeAttr('required');
+                    $("input[name='growth_num"+n+"']").removeAttr('required');
+               		n = n + 1;
+               	});
+            }
+        })
+        //增加
+        $("#increase").on('click', function () {
+        	var sign = $('.rule-list').length;
+        	html = '';
+        	html += '<tr class="rule-list">';
+        	html += '<td class="col-md-4"><div class="form-group" style="margin:0;"><div class="input-group">';
+        	html += '<div class="input-group-addon">连续签到</div>';
+        	html += '<input type="number" name="days'+sign+'" class="form-control days" min="2" required mustnum="true" value="">';
+        	html += '<div class="input-group-addon">天</div>';
+        	html += '</div></div></td>';
+            html += '<td class="text-left col-md-6"><div class="form-group">';
+            html += '<label class="col-md-4 control-label">送积分</label>';
+            html += '<div class="col-md-7 control-group">';
+            html += '<div class="input-group">';
+            html += '<input type="number" class="form-control point" name="point'+sign+'" min="0" required mustnum="true" value="">';
+            html += '<div class="input-group-addon">个</div></div></div></div>';
+            html += '<div class="form-group">';
+            html += '<label class="col-md-4 control-label">送余额</label>';
+            html += '<div class="col-md-7 control-group"><div class="input-group">';
+            html += '<input type="number" class="form-control money" name="money'+sign+'" min="0" required value="">';
+            html += '<div class="input-group-addon">元</div></div></div></div>';
+            html += '<div class="form-group"><label class="col-md-4 control-label">增加成长值</label><div class="col-md-7 control-group">';
+            html += '<div class="input-group"><input type="number" class="form-control growth_num" name="growth_num'+sign+'" min="0" required value=""><div class="input-group-addon">成长值</div></div>';
+            html += '</div></div>';
+            if(prize.giftvoucher.is_use==1){
+                html += '<div class="form-group">';
+                html += '<label class="col-md-4 control-label">送礼品券</label><div class="col-md-7 control-group">';
+                html += '<select class="form-control gift_voucher_id" name="gift_voucher_id'+sign+'" required="" aria-required="true" aria-describedby="gift_voucher-error1" aria-invalid="false">';
+                html += '<option value="0">请选择礼品券</option>';
+                if(prize.giftvoucher.list.length>0){
+                	var glist = prize.giftvoucher.list;
+    				for (var g=0;g<glist.length;g++){
+    					html += '<option value="'+glist[g].gift_voucher_id+'">'+glist[g].giftvoucher_name+'</option>';
+    				}
+                }
+                html += '</select><span id="gift_voucher-error1" class="help-block-error"></span>';
+                html += '</div></div>';
+            }
+            if(prize.coupontype.is_use==1){
+	            html += '<div class="form-group"><label class="col-md-4 control-label">送优惠券</label>';
+	            html += '<div class="col-md-7 control-group">';
+	            html += '<select class="form-control coupon_type_id" name="coupon_type_id'+sign+'" required="" aria-required="true" aria-describedby="coupon_type-error1" aria-invalid="false">';
+	            html += '<option value="0">请选择优惠券</option>';
+	            if(prize.coupontype.list.length>0){
+	            	var clist = prize.coupontype.list;
+					for (var c=0;c<clist.length;c++){
+						html += '<option value="'+clist[c].coupon_type_id+'">'+clist[c].coupon_name+'</option>';
+					}
+	            }
+	            html += '</select><span id="coupon_type-error1" class="help-block-error"></span>';
+	            html += '</div></div>';
+            }
+            html += '</td>';
+            html += '<td><a href="javacript:void(0);" class="text-red1" onclick="javascript:del(this)">删除</a></td>';
+            html += '<input type="hidden" class="rule_id" name="rule_id" value="0" autocomplete="off">';
+            html += '</tr>';
+            $('#increase-list').before(html);
+        });
+        //提交数据
+        var flag = false;
+        util.validate($('.form-validate'), function (form) {
+            var is_signin = $("input[name='is_signin']").is(':checked')? 1 : 0;
+            var sign_in_id = $("#sign_in_id").val();
+            var state = $("input[name='state']").is(':checked')? 1 : 0;
+            var data = [];
+            if (flag)return;
+            var data_days = [];
+           	$(".rule-list").each(function(){
+           		var rule_id = $(this).find('.rule_id').val();
+           		var days = parseInt($(this).find('.days').val());
+           		var point = parseInt($(this).find('.point').val());
+           		var money = $(this).find('.money').val();
+           		var growth_num = parseInt($(this).find('.growth_num').val());
+           		var gift_voucher_id = $(this).find('.gift_voucher_id').val();
+           		var coupon_type_id = $(this).find('.coupon_type_id').val();
+           		if(prize.giftvoucher.is_use==0)gift_voucher_id = 0;
+           		if(prize.coupontype.is_use==0)coupon_type_id = 0;
+           		var list = {'rule_id':rule_id,'days':days,'point':point,'money':money,'growth_num':growth_num,'gift_voucher_id':gift_voucher_id,'coupon_type_id':coupon_type_id};
+           		data.push(list);
+           		data_days.push(days);
+           		if(state==0 && !rulelist)return false;
+           	});
+    		for(var i = 0; i < data_days.length; i++) {
+	   			if(data_days.indexOf(data_days[i])!=i){
+	            	util.message('设置天数不能相同');
+	        		return false;
+	   			}
+  			}
+            flag = true;
+            $.ajax({
+            	type: "post",
+                dataType:'json',
+                url:'{$saveSettingUrl}',
+                data:{
+                    'is_signin':is_signin,
+                    'sign_in_id':sign_in_id,
+                    'state':state,
+                    'data':data
+                },
+                success:function (data) {
+                    if (data['code'] > 0) {
+                        util.message(data["message"], 'success',function(){
+                            window.location.href="{:__URL('ADDONS_MAINsigninSetting')}";
+                        });
+                    } else {
+                        util.message(data["message"], 'danger');
+                    }
+                }
+            });
+        });
+    })
+    //删除
+    function del(obj){
+    	$(obj).parent().parent().remove();
+    }
+</script>
+{/block}

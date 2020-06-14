@@ -1,0 +1,14 @@
+
+{block name="main"}
+<input type="hidden" id='shop_id' name="shop_id" value="{$shop_id}"/>
+<div class="shopIndex-main">
+{$page}
+</div>
+{/block}
+{block name="javascript"}
+<script>
+    require(['dialog'], function (Dialog) {
+        Dialog.lbt();
+    })
+</script>
+{/block}

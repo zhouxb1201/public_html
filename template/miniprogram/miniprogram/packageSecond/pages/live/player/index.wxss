@@ -1,0 +1,333 @@
+page {
+  height: 100%;
+  font-size: 28rpx;
+  overflow-y: hidden;
+}
+.rem_goods_list_b {
+  margin: 20rpx 0rpx;
+}
+
+.live_bottom .rem_goods_list {
+  width: 1200px;
+  display: flex;
+  align-items: center;
+  white-space: nowrap;
+  overflow: scroll;
+}
+
+.live_bottom .rem_goods_list .rem_item {
+  border-radius: 25rpx;
+  overflow: hidden;
+  margin: 0rpx 10rpx;  
+  width: 300rpx;
+  display: flex;
+}
+
+.rem_goods_list .rem_item .rem_good_img {
+  width: 120rpx;
+  height: 120rpx;
+}
+
+.rem_goods_list .rem_item .group_info {
+  background-color: #fff;
+  flex: 1;
+  padding: 10rpx;
+}
+
+.rem_goods_list .rem_item .group_info .name {
+  margin: 10rpx 0;
+}
+
+.rem_goods_list .rem_item .group_info .price {
+  color: #f44;
+}
+
+.push_home {
+  width: 100%;
+  height: 100%;
+}
+
+.push_home .push_b {
+  width: 100%;
+  height: 100%;
+}
+
+.live_header {
+  position: absolute;
+  padding-left: 5vw;
+  padding-right: 5vw;
+  display: flex;
+  align-items: center;
+  color: #fff;
+}
+
+.live_header .black_img {
+  width: 60rpx;
+  height: 60rpx;
+  overflow: hidden;
+}
+
+.live_header .liver_b {
+  display: flex;
+  align-items: center;
+  background-color: rgb(138, 139, 144, 0.5);
+  padding: 10rpx;
+  border-radius: 50rpx;
+}
+
+.live_header .liver_b .img {
+  width: 50rpx;
+  height: 50rpx;
+  overflow: hidden;
+  border-radius: 50%;
+}
+
+.live_header .liver_b .liver_group {
+  margin: 0 10rpx;
+}
+
+.live_header .liver_b .liver_group .text {
+  font-size: 24rpx;
+}
+
+.live_header .liver_b .liver_group .liver_name {
+  width: 130rpx;
+}
+.live_header .liver_b .follow{
+  background-color: #f44;
+  color: #fff;
+  padding: 10rpx 30rpx;
+  border-radius: 50rpx;
+}
+
+.text-nowrap {
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  overflow: hidden;
+}
+
+.live_bottom {
+  width: 100%;
+  position: absolute;
+  bottom: 0;
+}
+
+.live_bottom .live_chat {
+  width: 70%;
+  padding: 10rpx;
+  max-height: 300rpx;
+  overflow-y: scroll;
+}
+
+.live_bottom .live_chat .live_item {
+  display: flex;
+  background-color: rgb(53, 61, 57, 0.3);
+  border-radius: 25rpx;
+  padding: 10rpx;
+  margin: 5rpx 0;
+}
+
+.live_bottom .live_chat .live_item .label {
+  color: rgb(240, 97, 27);
+}
+
+.live_bottom .live_chat .live_item .value {
+  display: inline;
+  color: #fff;
+  flex: 1;
+  padding: 5rpx;
+}
+
+.live_bottom .live_menu .menu {
+  padding: 20rpx;
+  display: flex;
+  align-items: center;
+}
+.live_bottom .live_menu .menu .live_goods_img{
+  width: 80rpx;
+  height: 100rpx;
+  margin: 0rpx 20rpx;  
+}
+
+.live_bottom .live_menu .menu .more_img {
+  width: 50rpx;
+  height: 20rpx;
+  overflow: hidden;
+}
+.live_bottom .live_menu .menu .discount_img {
+  width: 70rpx;
+  height: 50rpx;
+  overflow: hidden;
+}
+.live_bottom .live_menu .menu .like_normal_img {
+  width: 60rpx;
+  height: 60rpx;
+  overflow: hidden;  
+}
+
+.live_bottom .live_menu .menu .group {
+  display: flex;
+  align-items: center;  
+  padding: 10rpx 20rpx;
+  border-radius: 50rpx;
+  flex: 1;
+  justify-content: space-between; 
+  height: 140rpx; 
+}
+.live_bottom .live_menu .menu .group .group_item{  
+  height: 140rpx;
+}
+.live_bottom .live_menu .menu .group .group_item .num{ 
+  padding: 5rpx 10rpx;
+  background-color: #f44;
+  color: #fff;
+  font-size: 24rpx;
+  text-align: center;
+  border-radius: 25rpx;
+  margin-bottom: 5rpx;
+}
+
+.live_bottom .live_menu .menu .input_icon {
+  width: calc(50% - 80rpx);
+}
+.live_bottom .live_menu .menu .input_icon .input_txt{
+  color: #fff;
+  font-size: 30rpx
+}
+
+.live_bottom .live_menu .menu .group .icon_img {
+  padding: 0 10rpx;
+}
+
+.live_bottom .live_menu .input_b {
+  background-color: #fff;
+  padding: 20rpx;
+}
+
+.live_bottom .live_menu .input_b .input_row {
+  display: flex;
+  align-items: center;
+}
+
+.live_bottom .live_menu .input_b .input_item {
+  background-color: rgb(242, 242, 242);
+  display: flex;
+  align-items: center;
+  padding: 10rpx 20rpx;
+  border-radius: 50rpx;
+  flex: 1;
+  margin: 0rpx 10rpx;
+}
+
+.live_bottom .live_menu .input_b .input_item .txt_img {
+  width: 40rpx;
+  height: 40rpx;
+  overflow: hidden;
+  margin-right: 10rpx;
+}
+
+.text-wrap {
+  white-space: pre-line;
+  word-break: break-all;
+  word-wrap: break-word;
+  overflow: hidden;
+}
+
+.cover-input {
+  width: 100%;
+  height: 60rpx;
+  line-height: 60rpx;
+  position: relative;
+  left: 50%;
+  transform: translateX(-50%);
+  padding-left: 15rpx;
+  padding-right: 15rpx;
+}
+
+.cover-input .text {
+  height: 60rpx;
+  line-height: 60rpx;
+}
+
+.cover-input .input {
+  height: 60rpx;
+  line-height: 60rpx;
+  /* margin-top为text的高度，保持视觉上一致 */
+  margin-top: -60rpx;
+}
+
+.middle {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 9999;
+}
+
+.upper {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 99999;
+}
+
+.live_goods_box {
+  position: absolute;
+  height: 100%;
+  width: 100%;
+}
+
+.live_goods_box .shadow {
+  height: 50%;
+}
+
+.live_goods_box .goods_b {
+  height: 50%;
+  background-color: #fff;
+  position: relative;
+  bottom: 0;
+  width: 100%;
+}
+
+.goods_b .title {
+  padding: 35rpx 30rpx;
+  text-align: center; 
+}
+
+.goods_b .list {
+  max-height: 600rpx;
+  overflow-y: scroll;
+}
+.goods_b .list .item {
+  padding: 20rpx 30rpx;
+  display: flex;
+  border-bottom: 1px solid #ebedf0;
+}
+
+.goods_b .list .item .good_img {
+  width: 150rpx;
+  height: 150rpx;
+  overflow: hidden;
+}
+
+.goods_b .list .item .info {
+  flex: 1;
+  margin-left: 20rpx;
+}
+
+.goods_b .list .item .info .goods_name {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  /* display: -webkit-box; */
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  height: 80rpx;
+}
+.goods_b .list .item .info .price_b{
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}

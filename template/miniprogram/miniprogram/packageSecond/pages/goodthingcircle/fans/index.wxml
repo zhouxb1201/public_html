@@ -1,0 +1,21 @@
+<view class="list" wx:if="{{listData.length > 0}}">
+	<view class="cell" wx:for="{{listData}}" wx:key='index' wx:for-item='item'>
+		<image mode="scaleToFill" src="{{item.user_headimg != '' ? item.user_headimg : '/images/no-avatar.png'}}" class="img"></image>
+		<view class="info">
+			<text>{{item.thing_user_name ? item.thing_user_name : "匿名"}}</text>
+			<text>干货·{{item.thing_count ? item.thing_count : 0}}</text>
+		</view>
+		<view class="btn">
+			<button bindtap='onOthers' data-id="{{item.uid}}" data-index="{{index}}" class="{{item.mutual ? 'gray' : 'red'}}">{{item.mutual ? '互相关注' : '回粉' }}</button>
+		</view>
+
+	</view>
+</view>
+<view class="no_good" wx:else>
+	<view class="box">
+		<view class="img">
+			<image mode="widthFix" src="/images/empty-data.png"></image>
+		</view>
+		<view class="text">木有粉丝~~</view>
+	</view>
+</view>

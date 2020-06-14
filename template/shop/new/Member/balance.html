@@ -1,0 +1,76 @@
+{extend name="shop/new/Member/base" /}
+
+{block name="main"}
+<div class="v-main-right fl">
+                    <div class="v-container">
+                        <!--page-->
+                        <div class="balance-box">
+                            <div class="balance-item">
+                                <p>总{$copystyle['balance_style']}：<span class="total">{$account['balance']+$account['freezing_balance']}</span>&nbsp;元</p>
+                                <p>可用{$copystyle['balance_style']}：<span class="use">{$account['balance']}</span>&nbsp;元 &nbsp;&nbsp;冻结{$copystyle['balance_style']}：<span class="freeze">{$account['freezing_balance']}</span>&nbsp;元</p>
+                            </div>
+                            <div class="balance-item">
+                                <a href="{:__URL('SHOP_MAIN/member/createrechargeorder')}">充值</a>
+                                {if $is_use==1}
+                                <a href="{:__URL('SHOP_MAIN/member/balanceWithdrawals')}">提现</a>
+                                {/if}
+                            </div>
+                        </div>
+                        <div class="t-title">流水记录</div>
+                        <table class="runningTable">
+                            <thead>
+                                <tr>
+                                    <th>变动类型</th>
+                                    <th>金额</th>
+                                    <th>备注</th>
+                                    <th>时间</th>
+                                </tr>
+                            </thead>
+                            <tbody id="list">
+
+                            </tbody>
+                        </table>
+                        <div class="page clearfix" style="display: none">
+                            <div class="M-box3 m-style fr"></div>
+                        </div>
+                        <!--page-->
+                    </div>
+                </div>
+{/block}
+{block name="javascript"}
+<script>
+    require(['common'], function (common) {
+        LoadingInfo(1);
+        //查询余额记录
+        function LoadingInfo(page_index) {
+            $.ajax({
+                type : "post",
+                url : __URL(SHOPMAIN + "/member/balanceList"),
+                async : true,
+                data : {
+                    "page_index" : page_index
+                },
+                success : function(data) {
+                    var html = '';
+                    if (data["data"].length > 0) {
+                        for (var i = 0; i < data["data"].length; i++) {
+                            html += '<tr>';
+                            html += '<td>' + data["data"][i]["type_name"]+'</td>';
+                            html += '<td>' + data["data"][i]["number"]+'</td>';
+                            html += '<td>' + data["data"][i]["text"]+'</td>';
+                            html += '<td>' + data["data"][i]["create_time"] + '</td>';
+                            html += '</tr>';
+                        }
+                        $('.page').css('display','block');
+                    } else {
+                        $('.page').css('display','none');
+                        html += '<tr><th colspan="5">暂无符合条件的数据记录</th></tr>';
+                    }
+                    $("#list").html(html);
+                    common.Pages('.M-box3', data['total_count'], data["page_count"], page_index, LoadingInfo);
+                }
+            });
+        }
+    });
+</script>
+{/block}

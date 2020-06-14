@@ -1,0 +1,139 @@
+{block name="main"}
+<link rel="stylesheet" href="PLATFORM_STATIC/css/wap_iconfont.css">
+<!-- page -->
+<div class="custom-header">
+    <div class="custom-header-box">
+        <div class="custom-header-list flex">
+            <div class="v-logo-padding"><a class="v-logo-img" href="javascript:void(0);" title=""><img src="/public/platform/images/logo2.png" style="height: 27px;max-width: 400px;"></a></div>
+            <div class="custom-header-list-warp flex-center-justify">
+                <i class="icon icon-menu1"></i>
+                <span class="name">{$template_name}</span>
+                <i class="icon icon-down-arrow"></i>
+            </div>
+            <div class="custom-header-list-box">
+                <div class="box-head flex-center-justify">
+                    <span>我的全部页面</span>
+                    <div class="">
+<!--                        todo.... 修改-->
+                        <a href="javascript:void(0);" class="btn btn-default btn-sm addPage">新建页面</a>
+                        <a href="{:__URL('ADDONS_MAINminiProgramCustomList')}" class="btn btn-default btn-sm">管理页面</a>
+                    </div>
+                </div>
+                <div class="box-main">
+                    <div class="box-main-left">
+                        <div class="title">基础页</div>
+                        <ul class="list">
+                            {foreach name='template_list' item='list'}
+                            {if in_array($list['type'],[1,2,3,4,5])}
+                            <li class="item"><a href="{:__URL('ADDONS_MAINminiProgramCustom&id='.$list.id)}">{$list.template_name}</a></li>
+                            {/if}
+                            {/foreach}
+                        </ul>
+                    </div>
+                    <div class="box-main-right bg-f9">
+                        <div class="title">自定义页</div>
+                        <ul class="list">
+                            {foreach name='template_list' item='list'}
+                            {if in_array($list['type'],[6])}
+                            <li class="item"><a href="{:__URL('ADDONS_MAINminiProgramCustom&id='.$list.id)}">{$list.template_name}</a></li>
+                            {/if}
+                            {/foreach}
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="custom-header-operate">
+            <!--<button class="btn btn-save btn-success" data-type="preview">预览</button>-->
+            <button class="btn btn-save btn-info" data-type="recovery">还原</button>
+        </div>
+    </div>
+</div>
+<div class="custom-sidebar">
+    <div class="custom-sidebar-title">组件</div>
+    <div class="custom-component-list" id="navs"></div>
+</div>
+<div class="custom-container flex flex-pack-center">
+    <div class="custom-view">
+        <!--<div class="view-title" id="page">Loading...</div>-->
+        <div class="view-title1"></div>
+        <div id="page" class="navbarbackground">Loading...</div>
+        <div class="view-main" id="view"></div>
+        <div class="view-foot" id="foot">
+            <div class="drag fixed nodelete" data-itemid="copyright" id="copyright"></div>
+            <div class="drag fixed nodelete" data-itemid="tabbar" id="tabbar"></div>
+        </div>
+    </div>
+    <div class="custom-editor">
+        <div class="editor-main" id="editor">
+            <div class="editor-arrow"></div>
+            <div class="editor-inner"></div>
+        </div>
+        <div class="editor-foot flex flex-pack-center">
+            <button class="btn btn-save btn-primary" data-type="save">保存</button>
+        </div>
+    </div>
+</div>
+<!-- page end -->
+{/block}
+{block name="script"}
+{include file='template/common/customEditTemplate'}
+{include file='template/common/customViewTemplate'}
+<script>
+    require(['mp_custom','tpl','util'],function(modal,tpl,util){
+        $('.custom-header-list-warp').click(function(){
+            $('.custom-header-list-box').fadeToggle(150);
+        })
+        $('.v-layout').addClass('mobileCustom')
+        $('.addPage').click(function(){
+            var html = '<form class="form-horizontal padding-15" >';
+            html += '<div class="form-group"><label class="col-md-3 control-label">页面名称</label><div class="col-md-8"><input id="modal_template_name" type="text" class="form-control" /></div></div>';
+            html += '<div class="form-group"><label class="col-md-3 control-label">页面模版</label><div class="col-md-8"><select id="modal_template_type" class="form-control" >' +
+                '<option value="1">商城首页</option>' +
+                '<option value="2">店铺首页</option>' +
+                '<option value="3">商品详情页</option>' +
+                '<option value="4">会员中心</option>' +
+                '<option value="5">分销中心</option>' +
+                '<option value="6">自定义页</option>' +
+                '</select></div></div>';
+            html += '</form>';
+            util.confirm('新增页面', html, function () {
+                var template_type = this.$content.find("#modal_template_type").val();
+                var template_name = this.$content.find("#modal_template_name").val();
+                if(template_name && template_name !== ' '){
+                    $.ajax({
+                        type: 'post',
+                        url: '{$createCustomTemplateUrl}',
+                        data: {
+                            'type': template_type,
+                            'template_name': template_name
+                        },
+                        success: function (res) {
+                            if (res.code > 0) {
+                                util.message(res.message, 'success',__URL('ADDONS_MAINminiProgramCustom&id=' +  res.data.id));
+                            } else {
+                                util.message(res.message, 'error');
+                            }
+                        }
+                    });
+                }else{
+                    util.message('页面名称不能空！')
+                    return false
+                }
+
+            })
+        })
+        modal.init({
+            tpl: tpl,
+            attachurl:'PLATFORM_IMG/custom/default/',
+            type: {$type ?: 1},    //页面类型
+            id: '{$id}',
+            data: {$template_data ?: "''"},
+            tabbar: {$tabbar ?: "''"},
+            copyright:{$copyright ?: "''"},
+            default_version:"{$default_version}",
+            addonsIsUse:{$addonsIsUse ? : "''"}
+        });
+    })
+</script>
+{/block}

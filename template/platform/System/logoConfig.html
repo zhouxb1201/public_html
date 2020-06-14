@@ -1,0 +1,156 @@
+{extend name="platform/new_base" /}
+{block name="main"}
+<form class="form-horizontal form-validate widthFixedForm">
+
+    <div class="form-group">
+        <label class="col-md-2 control-label">平台端登录页logo</label>
+        <div class="col-md-5">
+            <div class="picture-list" id="Platform_Logo">
+                {if $logo_config.platform_logo}
+                <a href="javascript:void(0);" class="close-box"><i class="icon icon-danger" title="删除"></i><img src="{if $logo_config.platform_logo}{:__IMG($logo_config.platform_logo)}{/if}"></a>
+                {else}
+                <a href="javascript:void(0);" class="plus-box" data-toggle="singlePicture"><i class="icon icon-plus"></i></a>
+                {/if}
+            </div>
+            <div class="mb-0 help-block">
+                平台管理员登录页左上角logo，logo尺寸151 * 39 ，支持JPG\GIF\PNG格式
+            </div>
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="col-md-2 control-label">操作台logo</label>
+        <div class="col-md-5">
+            <div class="picture-list" id="Opera_Logo">
+                {if $logo_config.opera_logo}
+                <a href="javascript:void(0);" class="close-box"><i class="icon icon-danger" title="删除"></i><img src="{if $logo_config.opera_logo}{:__IMG($logo_config.opera_logo)}{/if}"></a>
+                {else}
+                <a href="javascript:void(0);" class="plus-box" data-toggle="singlePicture"><i class="icon icon-plus"></i></a>
+                {/if}
+            </div>
+            <div class="mb-0 help-block">
+                登录成功后，后台页面左上角的logo，logo尺寸110*30，支持JPG\GIF\PNG格式
+            </div>
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="col-md-2 control-label">忘记密码logo</label>
+        <div class="col-md-5">
+            <div class="picture-list" id="Forgot_Logo">
+                {if $logo_config.forgot_logo}
+                <a href="javascript:void(0);" class="close-box"><i class="icon icon-danger" title="删除"></i><img src="{if $logo_config.forgot_logo}{:__IMG($logo_config.forgot_logo)}{/if}"></a>
+                {else}
+                <a href="javascript:void(0);" class="plus-box" data-toggle="singlePicture"><i class="icon icon-plus"></i></a>
+                {/if}
+            </div>
+            <div class="mb-0 help-block">
+                忘记密码左上角logo，logo尺寸162*80，支持JPG\GIF\PNG格式
+            </div>
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="col-md-2 control-label">店铺端登录页logo</label>
+        <div class="col-md-5">
+            <div class="picture-list" id="Admin_Logo">
+                {if $logo_config.admin_logo}
+                <a href="javascript:void(0);" class="close-box"><i class="icon icon-danger" title="删除"></i><img src="{if $logo_config.admin_logo}{:__IMG($logo_config.admin_logo)}{/if}"></a>
+                {else}
+                <a href="javascript:void(0);" class="plus-box" data-toggle="singlePicture"><i class="icon icon-plus"></i></a>
+                {/if}
+            </div>
+            <div class="mb-0 help-block">
+                入驻店铺端登录logo，logo尺寸68*70，支持JPG\GIF\PNG格式
+            </div>
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="col-md-2 control-label">登录页商城名称</label>
+        <div class="col-md-6">
+            <input type="text" class="form-control" id="login_mall_name" value="{$logo_config.login_mall_name}" autocomplete="off">
+            <div class="mb-0 help-block">
+                登录页输入框上面的名称，默认为"团大人"
+            </div>
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="col-md-2 control-label">后台全局title标语</label>
+        <div class="col-md-6">
+            <input type="text" class="form-control" id="title_word" value="{$logo_config.title_word}" autocomplete="off">
+            <div class="mb-0 help-block">
+                后台全局title属性，默认为"团大人 - 让更多的人帮你卖货！"
+            </div>
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="col-md-2 control-label">平台端登录页标语</label>
+        <div class="col-md-6">
+            <input type="text" class="form-control" id="platform_word" value="{$logo_config.platform_word}" autocomplete="off">
+            <div class="mb-0 help-block">
+                平台端登录页|左上角标语，默认为"让更多人帮你卖货"
+            </div>
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="col-md-2 control-label">登录页版权信息</label>
+        <div class="col-md-6">
+            <input type="text" class="form-control" id="login_copyright" value="{$logo_config.login_copyright}"  autocomplete="off">
+            <div class="mb-0 help-block">
+            </div>
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="col-md-2 control-label">操作台版权信息</label>
+        <div class="col-md-6">
+            <input type="text" class="form-control" id="opera_copyright" value="{$logo_config.opera_copyright}"  autocomplete="off">
+            <div class="mb-0 help-block">
+             </div>
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="col-md-2 control-label"></label>
+        <div class="col-md-8">
+            <button class="btn btn-primary basic_set" type="submit">保存</button>
+        </div>
+    </div>
+</form>
+{/block}
+{block name="script"}
+<script>
+    require(['util'], function (util) {
+        //基本设置
+        util.validate($('.form-validate'), function (form) {
+            var platform_logo = $("#Platform_Logo").find('img').attr('src');
+            var opera_logo = $("#Opera_Logo").find('img').attr('src');
+            var forgot_logo = $("#Forgot_Logo").find('img').attr('src');
+            var admin_logo = $("#Admin_Logo").find('img').attr('src');
+            var login_mall_name = $("#login_mall_name").val();
+            var title_word = $("#title_word").val();
+            var login_copyright = $("#login_copyright").val();
+            var opera_copyright = $("#opera_copyright").val();
+            var platform_word = $("#platform_word").val();
+            $.ajax({
+                type: "post",
+                url: "{:__URL('PLATFORM_MAIN/versions/logoconfig')}",
+                async: true,
+                data: {
+                    'platform_logo': platform_logo,
+                    'opera_logo': opera_logo,
+                    'forgot_logo': forgot_logo,
+                    'admin_logo': admin_logo,
+                    'login_mall_name': login_mall_name,
+                    'title_word': title_word,
+                    'login_copyright': login_copyright,
+                    'opera_copyright': opera_copyright,
+                    'platform_word': platform_word
+                },
+                success: function (data) {
+                    if (data["code"] > 0) {
+                        util.message(data["message"], 'success', location.reload());
+                    } else {
+                        util.message(data["message"], 'danger');
+                    }
+                }
+            });
+        });
+    });
+</script>
+{/block}

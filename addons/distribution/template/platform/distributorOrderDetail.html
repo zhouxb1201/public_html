@@ -1,0 +1,269 @@
+
+{block name="resource"}
+<style>
+	.label-danger a {
+		padding-top: 5px;
+	}
+</style>
+{/block}
+{block name="main"}
+<!-- page -->
+
+<div class="screen-title">
+	<span class="text">详情信息</span>
+</div>
+<div class="row panel-detail">
+	<div class="col-md-4">
+		<div class="item border-right" style="height: auto;">
+			<h3 class="strong">订单详情</h3>
+
+			<p class="p">订单类型：商品订单</p>
+			<p class="p">订单编号：{$order['order_no']}</p>
+			{if condition='$order["order_status"] eq 0 && $order["presell_id"] eq 0'}<p class="p">订单状态：买家付款</p>{elseif condition="$order['order_status']=='0' && $order['presell_id']>0 && $order['money_type']==0"}
+			<p class="p">订单状态：待付定金</p>
+			{elseif condition="$order['order_status']=='1' && $order['money_type']>0"}<p class="p">订单状态：待付尾款</p>{/if}
+			{if condition='$order["order_status"] eq 1 && $order["presell_id"] eq 0'}<p class="p">订单状态：{if $order['shipping_type']==2}待提货{else}待发货{/if}</p>{/if}
+			{if condition='$order["order_status"] eq 2'}<p class="p">订单状态：待收货</p>{/if}
+			{if condition='$order["order_status"] eq 3'}<p class="p">订单状态：已收获</p>{/if}
+			{if condition='$order["order_status"] eq 4'}<p class="p">订单状态：交易完成</p>{/if}
+			<p class="p">下单时间：{:date('Y-m-d H:i:s',$order['create_time'])}</p>
+			<p class="p">配送方式：{$order['shipping_type_name']}</p>
+			<p class="p">买家留言：{$order['buyer_message']}</p>
+		</div>
+	</div>
+	{if $order['shipping_type']==1}
+	<div class="col-md-4">
+		<div class="item border-right">
+			<h3 class="strong">收货人信息</h3>
+
+			<p class="p">收货人：{$order['receiver_name']}</p>
+			<p class="p">手机号码：{$order['receiver_mobile']}</p>
+			<p class="p">地址：{$order['address']}</p>
+		</div>
+	</div>
+	{else}
+	<div class="col-md-4">
+		<div class="item border-right">
+			<h3 class="strong">提货人信息</h3>
+			<p class="p">手机号码：{$order['order_pickup']['user_tel']}</p>
+			<p class="p">提货地址：{$order['order_pickup']['province_name']}{$order['order_pickup']['city_name']}{$order['order_pickup']['dictrict_name']}{$order['order_pickup']['address']}</p>
+		</div>
+	</div>
+	{/if}
+	<div class="col-md-4">
+		<div class="item">
+			<h3 class="strong">订单详情</h3>
+			<p class="p">支付方式：{$order['payment_type_name']} {if $order['offline_pay']==2}(后台支付){/if}</p>
+			<p class="p">商品总额：{$order['goods_money']}</p>
+			<p class="p">优惠：￥{$order['order_promotion_money']}</p>
+			<p class="p">价格调整：￥{if $order['order_adjust_money'] > 0}+{/if}{$order['order_adjust_money']}</p>
+			<p class="p">运费：￥{$order['shipping_money'] - $order['promotion_free_shipping']}{if $order['promotion_free_shipping'] != 0}(已减{$order['promotion_free_shipping']}){/if}</p>
+			<p class="p">实收金额：{$order['order_money']}</p>
+		</div>
+	</div>
+</div>
+{if $order.commission || $order.point}
+<div class="screen-title">
+	<span class="text">分销商信息</span>
+</div>
+<table class="table v-table table-bordered table-auto-center">
+	<tbody>
+	<tr>
+		{if $order.commission || $order.point}
+		<td>
+			<img src="{if $order.commission_user_headimg}{:__IMG($order.commission_user_headimg)}{else}/public/static/images/headimg.png{/if}" width="50px" height="50px">
+			<span class="block">{$order.commission_name}</span>
+			{if $order.commission}
+			<p class="strong">佣金：{$order.commission}元</p>
+			{/if}
+			{if $order.point}
+			<p class="strong">积分：{$order.point}积分</p>
+			{/if}
+		</td>
+		{/if}
+	</tr>
+	</tbody>
+</table>
+{/if}
+<div class="screen-title">
+	<span class="text">订单商品</span>
+</div>
+<table class="table v-table table-auto-center">
+	<thead>
+	<tr>
+		<th>商品</th>
+		<th>单价</th>
+		<th>数量</th>
+		<th>优惠</th>
+		<th>价格调整</th>
+		<th>合计</th>
+	</tr>
+	</thead>
+	<tbody>
+	{if $order['order_goods_no_delive']}
+	{foreach name="order['order_goods_no_delive']" item="goods"}
+	<tr>
+		<td>
+			<div class="media text-left">
+				<div class="media-left" style="width:60px;height:60px;">
+					<img src="{:__IMG($goods['picture_info']['pic_cover_micro'])}" alt="" width="60" height="60">
+				</div>
+				<div class="media-body max-w-300">
+					<div class="line-2-ellipsis">{$goods['goods_name']}</div>
+					<div class="small-muted line-2-ellipsis">
+						{foreach name="goods['spec']" item="spec_info"}
+						<span>{$spec_info.spec_name . ' : ' . $spec_info.spec_value_name}</span>
+						{/foreach}
+					</div>
+				</div>
+			</div>
+		</td>
+		<td>￥{$goods['price']}</td>
+		<td>{$goods['num']}</td>
+		<td>￥{$goods['order_goods_promotion_money']}</td>
+		<td>￥{if $goods['adjust_money'] > 0}+{/if}{:round($goods['adjust_money'] * $goods['num'],2)}</td>
+		<td>￥{$goods['actual_price'] * $goods['num']}</td>
+	</tr>
+	{/foreach}
+	{/if}
+
+	{if $order['goods_packet_list']}
+	{foreach name="order.goods_packet_list" item="list"}
+	<tr><td colspan="5" class="text-left bg-f9">
+		<span>{$list.packet_name}</span>
+		<span style="padding-right: 30px">{$list.express_name}</span>
+		<span style="padding-right: 30px">单号:{$list.express_code}</span>
+		<span style="padding-right: 30px">
+            <a href="javascript:void(0);" data-express-code="{$list.express_code}" class="text-primary J-logistics-info">物流跟踪</a>
+            </span>
+	</td></tr>
+	{foreach name="list.order_goods_list" item="goods"}
+	<tr>
+		<td class="picword_td">
+			<div class="media text-left">
+				<div class="media-left">
+					<p>
+						<img src="{:__IMG($goods['picture_info']['pic_cover_micro'])}" style="width:60px;height:60px;">
+					</p>
+				</div>
+				<div class="media-body max-w-300">
+					<div class="line-2-ellipsis">
+						<a href="javascript:;" target="_blank">{$goods['goods_name']} </a>
+					</div>
+					<div class="small-muted line-2-ellipsis">
+						{foreach name="goods['spec']" item="spec_info"}
+						<span>{$spec_info.spec_name . ' : ' . $spec_info.spec_value_name}</span>
+						{/foreach}
+					</div>
+				</div>
+			</div>
+		</td>
+		<td>￥{$goods['price']}</td>
+		<td>{$goods['num']}</td>
+		<td>￥{$goods['order_goods_promotion_money']}</td>
+		<td>￥{if $goods['adjust_money'] > 0}+{/if}{:round($goods['adjust_money'] * $goods['num'],2)}</td>
+		<td>￥{$goods['actual_price'] * $goods['num']}</td>
+	</tr>
+	{/foreach}
+	{/foreach}
+	{/if}
+	</tbody>
+</table>
+<div class="screen-title">
+	<span class="text">操作信息</span>
+</div>
+<ul class="nav nav-tabs v-nav-tabs" role="tablist">
+	<li role="presentation" class="active"><a href="#orderNote" aria-controls="orderNote" role="tab"
+											  data-toggle="tab" class="flex-auto-center">订单备注</a></li>
+	<li role="presentation"><a href="#orderLog" aria-controls="orderLog" role="tab" data-toggle="tab"
+							   class="flex-auto-center">订单日志</a></li>
+</ul>
+<div class="tab-content">
+	<div role="tabpanel" class="tab-pane fade in active" id="orderNote">
+		<table class="table v-table table-auto-center">
+			<thead>
+			<tr>
+				<th>备注内容</th>
+				<th>操作人</th>
+				<th>操作时间</th>
+			</tr>
+			</thead>
+			<tbody>
+			{if $order['memo_lists']}
+			{foreach name="order['memo_lists']" item="list"}
+			<tr>
+				<td>{$list['memo']}</td>
+				<td>{$list['user_name']}</td>
+				<td>{$list['create_date']}</td>
+			</tr>
+			{/foreach}
+			{else}
+			<tr>
+				<td class="h-200" colspan="3">暂无符合条件的数据记录</td>
+			</tr>
+			{/if}
+
+			</tbody>
+		</table>
+	</div>
+	<div role="tabpanel" class="tab-pane fade" id="orderLog">
+		<table class="table v-table table-auto-center">
+			<thead>
+			<tr>
+				<th>操作类型</th>
+				<th>操作人</th>
+				<th>操作时间</th>
+			</tr>
+			</thead>
+			<tbody>
+			{foreach name="order['order_action']" item="action"}
+			<tr>
+				<td>{$action['action']}</td>
+				<td>{$action['user_name']}</td>
+				<td>{:date('Y-m-d H:i:s', $action['action_time'])}</td>
+			</tr>
+			{/foreach}
+			</tbody>
+		</table>
+	</div>
+</div>
+<div class="mb-20">
+	<a href="{$pre_url}" class="btn btn-default">返回</a>
+</div>
+
+<!-- page end -->
+{/block}
+{block name="script"}
+<script>
+    require(['util'], function (util) {
+        $(function () {
+            $('.J-logistics-info').on('click', function () {
+                getLogisticsInfo($(this).attr('data-express-code'));
+            })
+
+            // 获取物流信息
+            function getLogisticsInfo(no) {
+                // console.log(no);
+                $.ajax({
+                    url: "{:__URL('PLATFORM_MAIN/order/logisticsInfo')}",
+                    data: {"no": no},
+                    type: "post",
+                    success: function (data) {
+                        if (data["code"] > 0) {
+                            var html = '<div class="modal_logistics_info"><ul>';
+                            $.each(data.data.data, function (k_ex, v_ex) {
+                                html +='<li><p class="line-1-ellipsis logistic_state">'+v_ex.context+'</p><p class="time">'+v_ex.time+'</li>';
+                            });
+                            html +='</ul></div>';
+                            util.confirm('物流跟踪', html, function () {})
+                        } else {
+                            util.message(data["message"], 'danger');
+                        }
+                    }
+                });
+            }
+
+        })
+    })
+</script>
+{/block}

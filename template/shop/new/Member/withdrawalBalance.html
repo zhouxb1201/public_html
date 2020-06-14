@@ -1,0 +1,545 @@
+{extend name="shop/new/Member/base" /}
+{block name="main"}
+<div class="v-main-right fl">
+                    <div class="v-container">
+                        {if $wxpay==1}
+                        <div class="withdrawalsTips">
+                            <span class="bold">如需微信提现：</span>需要先关联绑定微信才能进行提现
+                        </div>
+                        {/if}
+                        <!--page-->
+                        <div class="withdrawalBalance">
+
+                            <div class="clearfix wd-row">
+                                <div class="left fl canWithdrawal">可用提现余额:</div>
+                                <div class="right fl canWithdrawalNum">￥{$account}</div>
+                            </div>
+                            <input type="hidden" id="MaxCash" value="{$account}">
+                            <input type="hidden" id="MinCash" value="{$cash}">
+                            <div class="clearfix wd-row">
+                                <div class="left fl canWithdrawal">提现账号:</div>
+                                <div class="right fl clearfix">
+                                    <div class="withdrawals-box" style="width: 800px" id="list">
+
+
+
+
+                                    </div>
+
+                                </div>
+                            </div>
+
+                            <div class="clearfix wd-row">
+                                <div class="left fl canWithdrawal">提现余额:</div>
+                                <div class="right fl">
+                                            <input type="text" style="display: none;" name="xxx">
+                                            <input type="password" style="display: none;" name="xx">
+                                    <input type="text" class="canWithdrawalMoney money" autocomplete="off">
+                                    <span class="red">提现金额必须大于{$cash}元</span>
+                                </div>
+                            </div>
+                            <div class="clearfix wd-row pr">
+                                <div class="left fl canWithdrawal">支付密码:</div>
+                                <div class="right fl">
+
+                                    <div id="payPassword_container" class="alieditContainer clearfix" data-busy="0">
+                                        <div class="i-block" data-error="i_error">
+                                            <!--<div class="i-block six-password">
+                                                <input onpaste="return false" class="i-text sixDigitPassword" id="payPassword_rsainput" type="text" autocomplete="off" required="required" value=""
+                                                       name="payPassword_rsainput" data-role="sixDigitPassword" tabindex="" maxlength="6" minlength="6" aria-required="true">
+                                                <div tabindex="0" class="sixDigitPassword-box" style="width: 180px;">
+                                                    <i style="width: 29px; border-color: transparent;" class=""><b style="visibility: hidden;"></b></i>
+                                                    <i style="width: 29px;"><b style="visibility: hidden;"></b></i>
+                                                    <i style="width: 29px;"><b style="visibility: hidden;"></b></i>
+                                                    <i style="width: 29px;"><b style="visibility: hidden;"></b></i>
+                                                    <i style="width: 29px;"><b style="visibility: hidden;"></b></i>
+                                                    <i style="width: 29px;"><b style="visibility: hidden;"></b></i>
+                                                    <span style="width: 29px; left: 0px; visibility: hidden;" id="cardwrap" data-role="cardwrap"></span>
+                                                </div>
+                                            </div>-->
+                                            <input type="text" style="display: none;" name="xxx">
+                                            <input type="password" style="display: none;" name="xx">
+                                            <input class="pay_password1" type="text" maxlength="20" autocomplete="new-password" placeholder="请输入密码" onfocus="this.type='password'">
+                                            <span class="blue">没有密码？</span>
+                                            <a href={:__URL('SHOP_MAIN/member/setPayPassword')} class="blue">去设置> </a>
+                                        </div>
+                                    </div>
+
+                                </div>
+                            </div>
+                            <div class="clearfix wd-row">
+                                <div class="left fl canWithdrawal">&nbsp;</div>
+                                <div class="right fl">
+                                    {if $alipay==1 || $wxpay==1}
+                                    <a href="javascript:void(0);" class="withdrawal-a btnSave">提现</a>
+                                    {else}
+                                    <span class="red">商家没有配置提现设置,无法提现!</span>
+                                    {/if}
+                                </div>
+                            </div>
+
+                        </div>
+                        <div class="withTips">
+                            <ul>
+                                {if $is_examine==2}
+                                <li> • 申请提现,需要商家审核</li>
+                                {/if}
+                                <li> • 提现金额必须大于{$cash}元</li>
+                                {if $poundage>0}
+                                <li> • 提现手续费率为{$poundage}%</li>
+                                {/if}
+                                {if $withdrawals_begin>0}
+                                <li> • 提现免手续费区间为{$withdrawals_begin}~{$withdrawals_end}元</li>
+                                {/if}
+                            </ul>
+                        </div>
+                        <!--page-->
+                    </div>
+                </div>
+<!--添加提取账号模态框-->
+<div class="addAccount-dialog" style="display: none">
+    <div class="pop-wrapper">
+        <div class="pop-msg" style="display: none">
+            <p class="error error_Tel">账户名错误</p>
+        </div>
+        <dl class="clearfix">
+            <dt><em>*</em>真实姓名：</dt>
+            <dd>
+                <input id="realname" type="text" class="addr-input l input_focus"  style="color: rgb(51, 51, 51);">
+            </dd>
+        </dl>
+        <dl class="clearfix">
+            <dt><em>*</em>账户类型：</dt>
+            <dd>
+                <select name="" id="type" class="addr-select">
+                    {foreach $withdraw_message as $value}
+                    {if $value==3 && $alipay_tw==1}
+                    <option value="3">支付宝</option>
+                    {/if}
+                    {if $value==1 && $tlpay_tw==1}
+                    <option value="1">银行卡</option>
+                    {/if}
+                    {/foreach}
+                </select>
+            </dd>
+        </dl>
+        {if $tlpay_tw==1}
+        <dl class="clearfix bank_code">
+            <dt>银行列表：</dt>
+            <dd>
+                <select name="" id="bank_code" class="addr-select">
+                    {foreach $bank_list as $value}
+                    <option value="{$value['bank_code']}">{$value['bank_short_name']}</option>
+                    {/foreach}
+                </select>
+            </dd>
+        </dl>
+        <dl class="clearfix bank_type">
+            <dt>银行卡类型：</dt>
+            <dd>
+                <select name="" id="bank_type" class="addr-select">
+                    <option value="00">银行卡</option>
+                    <option value="02">信用卡</option>
+                </select>
+            </dd>
+        </dl>
+        <dl class="clearfix bank_username">
+            <dt>持卡人姓名：</dt>
+            <dd>
+                <input id="bank_username" class="addr-input l input_focus" type="text"  style="color: rgb(51, 51, 51);">
+            </dd>
+        </dl>
+        {/if}
+        <dl class="clearfix">
+            <dt><em>*</em>账号：</dt>
+            <dd>
+                <input id="account_number" class="addr-input l input_focus" type="text"  style="color: rgb(51, 51, 51);">
+                <p id="errorTel" class="ml10 oktip" style="color: red"></p>
+            </dd>
+        </dl>
+
+
+    </div>
+</div>
+<div class="addAccount-dialogs" style="display: none">
+    <div class="pop-wrapper">
+        <div class="pop-msg" style="display: none">
+            <p class="error error_Tel">账户名错误</p>
+        </div>
+        <dl class="clearfix">
+            <dt><em>*</em>真实姓名：</dt>
+            <dd>
+                <input id="realnames" type="text" class="addr-input l input_focus"  style="color: rgb(51, 51, 51);">
+            </dd>
+        </dl>
+        <dl class="clearfix">
+            <dt><em>*</em>账户类型：</dt>
+            <dd>
+                <select name="" id="types" class="addr-select">
+                    <option value="3">支付宝</option>
+                    {if $tlpay_tw==1}
+                    <option value="1">银行卡</option>
+                    {/if}
+                </select>
+            </dd>
+        </dl>
+        {if $tlpay_tw==1}
+        <dl class="clearfix bank_code">
+                <dt>银行列表：</dt>
+                <dd>
+                    <select name="" id="bank_codes" class="addr-select">
+                        {foreach $bank_list as $value}
+                        <option value="{$value['bank_code']}">{$value['bank_short_name']}</option>
+                        {/foreach}
+                    </select>
+                </dd>
+            </dl>
+        <dl class="clearfix bank_type">
+                <dt>银行卡类型：</dt>
+                <dd>
+                    <select name="" id="bank_types" class="addr-select">
+                        <option value=""></option>
+                        <option value="00">银行卡</option>
+                        <option value="02">信用卡</option>
+                    </select>
+                </dd>
+            </dl>
+        <dl class="clearfix bank_username">
+                <dt>持卡人姓名：</dt>
+                <dd>
+                    <input id="bank_usernames" class="addr-input l input_focus" type="text"  style="color: rgb(51, 51, 51);">
+                </dd>
+            </dl>
+        {/if}
+        <dl class="clearfix">
+            <dt><em>*</em>账号：</dt>
+            <dd>
+                <input id="account_numbers" class="addr-input l input_focus" type="text"  style="color: rgb(51, 51, 51);">
+                <p id="errorTels" class="ml10 oktip" style="color: red"></p>
+            </dd>
+        </dl>
+
+
+    </div>
+</div>
+{/block}
+{block name="javascript"}
+<script>
+    require(['common','dialog'], function (common,dialog) {
+        dialog.payPwd();
+        LoadingInfo();
+        function LoadingInfo() {
+            $.ajax({
+                    type: "post",
+                    url:  __URL(SHOPMAIN + "/member/accountList"),
+                    success: function (data) {
+                        var html = '';
+                        if("{$member_info['user_info']['wx_openid']}"!='' && "{$wxpay_tw}"==1){
+                            html+='<div class="withdrawals-item" data-type="2" data-id="{$member_info["user_info"]["wx_openid"]}">';
+                            html+='<div style="text-align: right" class="one">';
+
+                            html+='</div>';
+                            html+='<dl class="clearfix withdrawals-td">';
+                            html+='<dt>昵称：</dt>';
+                            html+='<dd>{$member_info["user_info"]["nick_name"]}</dd>';
+                            html+='</dl>';
+                            html+='<dl class="clearfix withdrawals-td">';
+                            html+='<dt>账号类型：</dt>';
+                            html+='<dd>微信</dd>';
+                            html+='</dl>';
+                            html+='<dl class="clearfix withdrawals-td">';
+                            html+=' <dt>您已关联微信公众号，可以直接使用微信提现</dt>';
+                            html+='<dd></dd>';
+                            html+='</dl></div>';
+                        }
+                        if (data.length > 0) {
+                            for (var i = 0; i < data.length; i++) {
+                            	if(data[i]['type']==3 && "{$alipay}"==1){
+	                                html+='<div class="withdrawals-item" data-type="3" data-id='+data[i]['id']+' >';
+	                                html+='<div style="text-align: right" class="one">';
+	                                html+='<a href="javascript:void(0);" class="withdrawal-update" data-id='+data[i]['id']+'><i class="icon icon-edit"></i></a>';
+	                                html+='<a href="javascript:void(0);" class="delAddress delAccount" data-id='+data[i]['id']+'><i class="icon icon-close"></i></a>';
+	                                html+='</div>';
+	                                html+='<dl class="clearfix withdrawals-td">';
+	                                html+='<dt>名字：</dt>';
+	                                html+='<dd>'+data[i]['realname']+'</dd>';
+	                                html+='</dl>';
+	                                html+='<dl class="clearfix withdrawals-td">';
+	                                html+='<dt>账号类型：</dt>';
+	                                html+='<dd>支付宝</dd>';
+	                                html+='</dl>';
+	                                html+='<dl class="clearfix withdrawals-td">';
+	                                html+='<dt>账号：</dt>';
+	                                html+='<dd>'+data[i]['account_number']+'</dd>';
+	                                html+='</dl></div>';
+                                }
+                                if(data[i]['type']==1 && "{$tlpay_tw}"==1){
+                                    html+='<div class="withdrawals-item">';
+                                    html+='<div style="text-align: right" class="one">';
+                                    html+='<a href="javascript:void(0);" class="withdrawal-update mr-04" data-id='+data[i]['id']+'><i class="icon icon-edit"></i></a>';
+                                    html+='<a href="javascript:void(0);" class="delAddress delAccount" data-id='+data[i]['id']+'><i class="icon icon-close"></i></a>';
+                                    html+='</div>';
+                                    html+='<dl class="clearfix withdrawals-td">';
+                                    html+='<dt>名字：</dt>';
+                                    html+='<dd>'+data[i]['realname']+'</dd>';
+                                    html+='</dl>';
+                                    html+='<dl class="clearfix withdrawals-td">';
+                                    html+='<dt>账号类型：</dt>';
+                                    html+='<dd>银行卡</dd>';
+                                    html+='</dl>';
+                                    html+='<dl class="clearfix withdrawals-td">';
+                                    html+='<dt>账号：</dt>';
+                                    html+='<dd>'+data[i]['account_number']+'</dd>';
+                                    html+='</dl></div>';
+                                }
+                            }
+                        }
+                        if(data.length < 5){
+                            html += ' <div class="withdrawals-item withdrawal-add">';
+                            html += '<a href="javascript:void(0);" class="add_bank">添加账户</a>';
+                            html += '</div>';
+                        }
+                        $("#list").html(html);
+                    }
+                }
+            );
+        }
+        //修改账号
+        $('body').on('click','.withdrawal-update',function(){
+            $(".pop-msg").css("display", "none");
+            var id = $(this).data('id');
+            $.ajax({
+                type:"post",
+                url:"{:__URL('SHOP_MAIN/member/getBankInfo')}",
+                data:{
+                    'id' : id
+                },
+                success : function(data) {
+                    $("#realnames").val(data['realname']);
+                    $("#types").val(data['type']);
+                    $("#bank_codes").val(data['bank_code']);
+                    $("#account_numbers").val(data['account_number']);
+                    $("#bank_usernames").val(data['bank_username']);
+                    $("#bank_types").val(data['bank_type']);
+                    dialog.updateAddress("修改提现账号",".addAccount-dialogs",function(){
+                        var realname = $("#realnames").val();
+                        var account_type = $("#types").val();
+                        var account_number = $("#account_numbers").val();
+                        var bank_type = $("#bank_types").val();
+                        var bank_username = $("#bank_usernames").val();
+                        var bank_code = $("#bank_codes").val();
+                        if(realname==''){
+                            $(".error_Tel").html('真实姓名不能为空');
+                            $(".pop-msg").css("display", "block");
+                            $("#realname").focus();
+                            return false;
+                        }
+                        if(account_type=='' || account_type==null){
+                            $(".error_Tel").html('账户类型不能为空');
+                            $(".pop-msg").css("display", "block");
+                            $("#type").focus();
+                            return false;
+                        }
+                        if(account_number==''){
+                            $(".error_Tel").html('账号不能为空');
+                            $(".pop-msg").css("display", "block");
+                            $("#account_number").focus();
+                            return false;
+                        }
+                        if(account_type==1){
+                            if(bank_code==''){
+                                $(".error_Tel").html('银行不能为空');
+                                $(".pop-msg").css("display", "block");
+                                $("#bank_code").focus();
+                                return false;
+                            }
+                            if(bank_type==''){
+                                $(".error_Tel").html('银行卡类型不能为空');
+                                $(".pop-msg").css("display", "block");
+                                $("#bank_type").focus();
+                                return false;
+                            }
+                            if(bank_username==''){
+                                $(".error_Tel").html('持卡人姓名不能为空');
+                                $(".pop-msg").css("display", "block");
+                                $("#bank_username").focus();
+                                return false;
+                            }
+                        }
+                        $.ajax({
+                            type : "post",
+                            url : "{:__URL('SHOP_MAIN/member/updateBankAccount')}",
+                            dataType : "json",
+                            data : {
+                                "realname":realname,
+                                "type":account_type,
+                                "bank_type":bank_type,
+                                "bank_code":bank_code,
+                                "bank_username":bank_username,
+                                "account_number":account_number,
+                                "id" : id
+                            },
+                            success : function(data) {
+                                if(data['code']>0){
+                                    layer.msg('修改成功',{icon: 1, time: 2000}, LoadingInfo());
+                                }else{
+                                    layer.msg('修改失败');
+                                }
+                            }
+                        });
+                    });
+                },
+            });
+        });
+        //添加账号
+        $('body').on('click',".withdrawal-add",function(){
+            $(".pop-msg").css("display", "none");
+            $("input[ type='text' ]").val('');
+            dialog.updateAddress("添加提现账号",".addAccount-dialog",function(){
+                var realname = $("#realname").val();
+                var account_type = $("#type").val();
+                var account_number = $("#account_number").val();
+                var bank_type = $("#bank_type").val();
+                var bank_username = $("#bank_username").val();
+                var bank_code = $("#bank_code").val();
+                if(realname==''){
+                    $(".error_Tel").html('真实姓名不能为空');
+                    $(".pop-msg").css("display", "block");
+                    $("#realname").focus();
+                    return false;
+                }
+                if(account_type=='' || account_type==null){
+                    $(".error_Tel").html('账户类型不能为空');
+                    $(".pop-msg").css("display", "block");
+                    $("#type").focus();
+                    return false;
+                }
+                if(account_number==''){
+                    $(".error_Tel").html('账号不能为空');
+                    $(".pop-msg").css("display", "block");
+                    $("#account_number").focus();
+                    return false;
+                }
+                if(account_type==1){
+                    if(bank_code==''){
+                        $(".error_Tel").html('银行不能为空');
+                        $(".pop-msg").css("display", "block");
+                        $("#bank_code").focus();
+                        return false;
+                    }
+                    if(bank_type==''){
+                        $(".error_Tel").html('银行卡类型不能为空');
+                        $(".pop-msg").css("display", "block");
+                        $("#bank_type").focus();
+                        return false;
+                    }
+                    if(bank_username==''){
+                        $(".error_Tel").html('持卡人姓名不能为空');
+                        $(".pop-msg").css("display", "block");
+                        $("#bank_username").focus();
+                        return false;
+                    }
+                }
+                $.ajax({
+                    type : "post",
+                    url : "{:__URL('SHOP_MAIN/member/addAccount')}",
+                    dataType : "json",
+                    data : {
+                        "realname":realname,
+                        "type":account_type,
+                        "bank_type":bank_type,
+                        "bank_code":bank_code,
+                        "bank_username":bank_username,
+                        "account_number":account_number
+                    },
+                    success : function(data) {
+                        if(data['code']>0){
+                            layer.msg('添加成功',{icon: 1, time: 2000}, LoadingInfo());
+                        }else{
+                            layer.msg('添加失败');
+                        }
+                    }
+                });
+            });
+        });
+        //删除账号
+        $('body').on('click','.delAccount',function(){
+            var id = $(this).data('id');
+            layer.confirm('你确定删除该账号？', {
+                btn: ['确定', '取消']//按钮
+            }, function (index) {
+                layer.close(index);
+                $.ajax({
+                    type:"post",
+                    url:"{:__URL('SHOP_MAIN/member/delAccount')}",
+                    data:{
+                        'id' : id
+                    },
+                    success : function(data) {
+                        if (data["code"] > 0) {
+                            layer.msg('删除成功',{icon: 1, time: 2000}, LoadingInfo());
+                        }else{
+                            layer.msg('删除失败');
+                        }
+                    }
+                });
+            });
+
+        });
+        dialog.withAccount(".withdrawals-box",".withdrawals-item","selected");
+        $('.btnSave').on('click',function(){
+            var bank_id = $(".selected").data('id');
+            var type = $(".selected").data('type');
+            var payment_password = $.trim($(".pay_password1").val());
+            if(payment_password==''){
+                layer.msg('请输入支付密码');
+                return false;
+            }
+            var cash = $.trim($(".money").val());
+            var MaxCashAmount = $.trim($("#MaxCash").val());
+            var MinaAmountCash = $.trim($("#MinCash").val());
+            if(bank_id == null || bank_id == ""){
+                layer.msg('请选择提现账号');
+                return false;
+            }
+            var reg = /^\d+((.{0,1})\d{0,2})$/;
+            if (reg.test(cash)) {
+                cash = Number(cash);
+                MaxCashAmount = Number(MaxCashAmount);
+                MinaAmountCash = Number(MinaAmountCash);
+                if (cash > 0) {
+                    if (cash <= MaxCashAmount) {
+                        if (cash >= MinaAmountCash) {
+                                $.ajax({
+                                    type:"post",
+                                    url: "{:__URL('SHOP_MAIN/member/balancewithdrawals')}",
+                                    data: { "bank_id": bank_id, "cash": cash,'type':type,'payment_password':payment_password},
+                                    success: function (res) {
+                                        if (res['code'] >0) {
+                                            layer.msg(res['message']);
+                                            function load(){
+                                                window.location.href = "{:__URL('SHOP_MAIN/member/balanceList')}";
+                                            }
+                                            setTimeout(load(),1500);
+                                        } else {
+                                            layer.msg(res['message']);
+                                        }
+                                    }
+                                })
+                        } else {
+                            layer.msg("提现金额必须大于" + MinaAmountCash);
+                            return false;
+                        }
+                    } else {
+                        layer.msg("可提现金额最大为" + MaxCashAmount);
+                        return false;
+                    }
+                }
+            } else {
+                layer.msg("输入金额不合法");
+                return false;
+            }
+        })
+    });
+</script>
+{/block}

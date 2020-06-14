@@ -1,0 +1,14 @@
+<form class="form-horizontal padding-15" id="">
+    <div class="form-group">
+        <label class="col-md-3 control-label">
+        相册名称
+        </label>
+        <div class="col-md-8">
+            <select class="form-control" name="album_list" id="album_list">
+                {volist name="$album" id="v"}
+                <option value="{$v.album_id}">{$v.album_name}</option>
+                {/volist}
+            </select>
+        </div>
+    </div>
+</form>

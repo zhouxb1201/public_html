@@ -1,0 +1,3 @@
+<view class='line'>
+  <view style='background:{{temDataitem.style.background}};border:{{temDataitem.style.height}}px {{temDataitem.style.linestyle}} {{temDataitem.style.border}};padding:{{temDataitem.style.padding}};'></view>
+</view>

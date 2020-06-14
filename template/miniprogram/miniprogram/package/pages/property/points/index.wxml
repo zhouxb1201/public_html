@@ -1,0 +1,17 @@
+<view class='points'>
+  <view class='points_group'>
+    <view class='points_title'>积分</view>
+    <view class='points_value'>{{point}}</view>
+  </view>
+  <view class='points_list'>
+    <view class='points_list_title'>积分明细</view>
+    <view class='points_item' wx:for="{{pointDetail}}" wx:key="">
+      <view class='points_cell'>
+        <view class="{{item.number>0?'points_num_green':'points_num_red'}}">{{item.number}}</view>
+        <view class='points_time'>{{item.create_time}}</view>
+      </view>
+      <view>{{item.type_name}}</view>
+    </view>    
+  </view>
+  <view class='points_nomore'>没有更多了</view>
+</view>

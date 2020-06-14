@@ -1,0 +1,172 @@
+{extend name="platform/new_base" /}
+{block name="resources"/}
+{/block}
+{block name="main"}
+		<form action="" class="form-horizontal form-validate pt-15 widthFixedForm">
+			<div class="form-group">
+				<label class="col-md-2 control-label"><span class="text-bright">*</span>手机号码</label>
+				<div class="col-md-5">
+                    <input type="number" class="form-control" id="mobile" name="mobile" required>
+                    <div class="mb-0 help-block">如首次在微信环境访问商城，则需要把该手机号码与微信号绑定</div>
+				</div>
+			</div>
+			<div class="form-group">
+				<label class="col-md-2 control-label"><span class="text-bright">*</span>密码</label>
+				<div class="col-md-5">
+					<input type="password" class="form-control" id="password" name="password" required >
+                    <div class="mb-0 help-block">由6-26个字母、数字、下划线组成</div>
+				</div>
+			</div>
+			<div class="form-group">
+                <label class="col-md-2 control-label">会员等级</label>
+                <div class="col-md-8">
+                    <select class="form-control" name="level_id" id="level_id" name="level_id">
+                        {foreach name="level_list['data']" item="vo"}
+                            <option value="{$vo.level_id}">{$vo.level_name}</option>
+                        {/foreach}
+                    </select>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-md-2 control-label">会员上级</label>
+                <div class="col-md-8">
+                    <p class="form-control-static "><a href="javascript:void(0);" class="btn btn-primary updateDis" data-id ='0' data-name='总店'>选择上级</a></p>
+                    <input type="hidden"  class="form-control" id="referee_ids" name="referee_ids" value="">
+                    <div class="showUser media text-left hide ">
+                        <div class="media-left"><img id="actar" src="/public/static/images/headimg.png" style="max-width:none;width:60px;height:60px;"></div>
+                        <div class="media-body break-word">
+                            <div class="line-2-ellipsis nick_name"></div>
+                            <div class="line-1-ellipsis text-danger mobile"></div>
+                            <div class="line-1-ellipsis text-danger mobiletxt"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-md-2 control-label">会员头像</label>
+                <div class="col-md-8">
+                    <div class="">
+                        <div class="">
+                            <div class="picture-list" id="J-goodspic">
+                                <a href="javascript:void(0);" class="plus-box" data-toggle="singlePicture"><i class="icon icon-plus"></i></a>
+                            </div>
+                        </div>
+                    </div>
+                    <input type="text" class="visibility" id="visibility1" name="picture" data-visi-type="singlePicture">
+                </div>
+            </div>
+            <div class="form-group">
+				<label class="col-md-2 control-label">会员昵称</label>
+				<div class="col-md-5">
+					<input type="text" class="form-control" id="nickname" name="nickname" >
+				</div>
+			</div>
+			<div class="form-group">
+				<label class="col-md-2 control-label"></label>
+				<div class="col-md-8">
+					<button class="btn btn-primary addLevel" type="submit">提交</button>
+					<a href="javascript:history.go(-1);" class="btn btn-default">返回</a>
+				</div>
+			</div>
+		</form>
+{/block}
+{block name="script"}
+<script>
+    require(['util'],function(util){
+        // 修改推荐人
+        $('body').on('click','.updateDis',function(){
+            var uid = $(this).data('id');
+            var name = $(this).data('name');
+            if(name ==null){
+                name = '总店';
+            }
+            var url= __URL(PLATFORMMAIN + '/system/updateReferee');
+            util.confirm('修改所属上级','url:'+url,function(){
+                var referee_id = this.$content.find('#referee_id').val();
+                var new_referee = this.$content.find('#referee_name').val();
+                var urls = __URL(PLATFORMMAIN + '/member/getUser');
+                $('#referee_ids').attr("value",referee_id);
+                if(referee_id){
+                    $.ajax({
+                        type : "post",
+                        url : urls,
+                        data : {
+                            'uid':referee_id,
+                        },
+                        success : function(data) {
+                            if(data.data.user.user_headimg){
+                                $('#actar').attr("src",data.data.user.user_headimg);
+                            }else{
+                                $('#actar').attr("src","/public/static/images/headimg.png");
+                            }
+                            if(data.data.user.user_name){
+                                $('.nick_name').html(data.data.user.user_name);
+                            }else if(data.data.user.nick_name){
+                                $('.nick_name').html(data.data.user.nick_name);
+                            }else{
+                                $('.nick_name').html("");
+                            }
+                            $('.mobile').html(data.data.user.user_tel);
+                            $('.showUser').removeClass('hide');
+                            
+                        }
+                    });
+                }else{
+                    $('#actar').attr("src","/public/static/images/headimg.png");
+                    $('.nick_name').html("总店");
+                    $('.mobile').html("");
+                    $('.showUser').removeClass('hide');
+                }
+            },'large')
+        })
+        util.validate($('.form-validate'),function(form){
+            var mobile = $("#mobile").val(); //手机号
+            var password = $("#password").val(); //密码
+            var level_id = $("#level_id").val(); //会员等级
+            var referee_id = $("#referee_ids").val(); //推荐人
+            var pic = $("#J-goodspic").find('img').attr('src'); //会员头像
+            var nickname = $("#nickname").val(); //昵称
+            //校验参数
+            if(mobile == '' || password == ''){
+                util.message('手机号或密码不能为空','danger');
+                return false;
+            }
+            var myreg = /^[1][3,4,5,6,7,8,9][0-9]{9}$/;
+            if (!myreg.test(mobile)) {
+                util.message('请输入正确的手机号码','danger');
+                return false;
+            }
+            var patrn=/^(\w){6,20}$/; 
+            if (!patrn.exec(password)){
+                util.message('密码只能由6-20个字母、数字、下划线组成','danger');
+                return false;
+            }
+            $('.addLevel').attr({disabled: "disabled"}).html('提交中...');
+			$.ajax({
+                    type : "post",
+                    url : "{:__URL('PLATFORM_MAIN/Member/register')}",
+                    async : true,
+                    data : {
+                        'mobile' : mobile,
+                        'password' : password,
+                        'level_id' : level_id,
+                        'referee_id' : referee_id,
+                        'pic':pic,
+                        'nickname':nickname
+                    },
+                    success : function(data) {
+                        if (data["code"] == 1) {
+                            util.message(data["message"],'success',"{:__URL('PLATFORM_MAIN/member/memberlist')}");
+                        }else if (data["code"] == 0) {
+                            util.message(data["message"],'danger');
+                            $('.addLevel').removeAttr('disabled').html('修改');
+                        }else{
+                            util.message("未知错误，请刷新重试",'danger');
+                            $('.addLevel').removeAttr('disabled').html('修改');
+                        }
+                    }
+                });
+        })
+    })
+</script>
+{/block}

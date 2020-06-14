@@ -1,0 +1,361 @@
+page{
+  font-size: 28rpx;
+  background-color: #f8f8f8;
+}
+
+.has_cart{
+  padding-bottom: 150rpx;
+}
+.cartShop{
+  background-color: #fff;
+  margin: 20rpx;
+  border-radius: 20rpx;
+  overflow: hidden;
+  box-shadow: 0 0 10px 0 rgba(0,0,0,.05);
+}
+
+.cartShop .shopName{
+  padding: 20rpx 30rpx;
+  border-bottom: 1px solid #ebedf0;
+  display: flex;
+  align-items: center;
+}
+.cartShop .shopName icon{
+  vertical-align: text-top;
+}
+.cartShop .shopName .coupon{
+  text-align: right;
+  color: red;
+  flex: 1;
+}
+.cartShop .shopName .name{
+  margin-left: 20rpx;
+}
+.cartShop .shopName .van_shop_title{
+  width: 50%;
+}
+.cartShop .shopName .delivery_type{
+  display: flex;
+  align-items: center;
+}
+
+.discount_group{
+  padding: 20rpx 30rpx;
+}
+.discount_group .mansong{
+  color: #909399;
+  font-size: 24rpx;
+}
+.discount_group .mansong .item{
+  display: flex;
+  align-items: center;  
+  margin: 8rpx 0;
+}
+.discount_group .mansong .item .tag{
+  margin-right: 20rpx;  
+}
+.discount_group .mansong .item .tag_text{
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  flex: 1;
+}
+
+.goodslist{
+  display: flex;
+  padding: 30rpx;
+  font-size: 26rpx;
+  border-bottom: 1px solid #ebedf08f;
+}
+
+.goodslist .goodImg{
+  margin: 0 20rpx;
+  width: 180rpx;
+  height: 180rpx; 
+  overflow: hidden;
+  background-color: #f9f9f9;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+
+.goods_box{
+  display: flex;
+  flex-direction: row;  
+}
+.goods_box .goodIcon{
+  display:flex;
+  align-items:center;/*垂直居中*/
+  justify-content: center;/*水平居中*/
+}
+.goodinfo{
+  position: relative;
+  width: 380rpx;     
+}
+.good_l{
+  float: left;
+  /* margin-right: 20rpx; */
+ 
+}
+.good_r{
+  float: right;
+  color: #f44;
+  font-weight: 700;
+}
+
+.stepper{
+  position: absolute;
+  bottom: 0;
+  left: 0;
+}
+
+.del_icon{
+  position: absolute;
+  bottom: 0;
+  right: 0;
+}
+
+.overhi{
+  width: 300rpx;
+  height: 75rpx;
+  display: -webkit-box; 
+  -webkit-box-orient: vertical; 
+  -webkit-line-clamp: 2; 
+  overflow: hidden;
+}
+
+.footer_count{
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  z-index: 99;
+  background-color: #fff;
+  width: 100%;
+  display: flex;
+  height: 100rpx;
+  line-height: 100rpx;
+}
+
+.footer_count .count_box icon{
+  vertical-align: sub;
+}
+.count_box{
+  padding: 0 30rpx;
+  width: 100%;
+}
+.count_box .allSelect{
+  margin-left:20rpx;
+  
+}
+.count_box .countNum{
+  margin-left: 100rpx;
+}
+.count_box .countNum .totalPrice{
+  font-weight: 700;
+  color: #f44;
+  font-size: 34rpx;
+}
+.count_btn{
+  width: 300rpx;
+  background-color: #f44;
+  color: #fff;
+  font-size: 32rpx;
+  float: right;
+ line-height: 100rpx;
+ border-radius: 0;
+}
+.count_btn::after{
+   border:none;
+}
+
+/* 优惠券弹出框 */
+.couponPup{
+  padding: 30rpx;
+  font-size: 14px;  
+}
+.couponList{
+  padding: 10px 0;
+  border-bottom: 1px solid #eee;
+  
+}
+.couponItem{
+  display: inline-block;
+}
+
+.couponPup .couponTitle{
+  color: #ff454e;
+  font-weight:600; 
+}
+.couponPup .couponName{
+  margin-right: 30rpx;
+}
+.couponPup .useDate{
+  font-size: 12px;
+  color: #999;
+}
+.couponPup .getBtn{  
+  background-color: #ff454e;
+  color: #fff;
+  border-radius: 0;
+  width: 120rpx;
+  height: 60rpx;
+  font-size: 24rpx;
+  float: right;
+  margin-top: 10rpx;
+}
+.closebtn{
+  background-color: #ff454e;
+  color: #fff;
+  font-size: 16px;
+  border-radius: 0;
+}
+.no_more{
+  padding: 30rpx;
+  text-align: center;
+  color:#86858596;
+}
+/* 没有数据 */
+.no_cart{
+  margin-top: 40%;
+  padding: 30rpx;
+  text-align: center;
+}
+.no_cart image{
+  max-width: 65%;
+  display: block;
+  margin: 0 auto;
+}
+.no_cart .text_noData{
+  margin: 30rpx 0;
+  display: block;
+}
+.no_cart button{
+  border-radius: none;
+  width: 200rpx;
+  height: 60rpx;
+  font-size: 24rpx;
+  background-color: #f44;
+  color: #fff;
+}
+.no_cart button::after{
+  border: 1px solid #f44;
+}
+
+.binding_phone{
+  width: 678rpx;
+}
+.binding_phone .top{
+  font-size: 32rpx;
+  padding: 20rpx 30rpx;
+  text-align: center;
+}
+.info_group .cell{
+  padding: 20rpx 30rpx;
+  display: flex;
+  align-items: center;
+  border-bottom: 1rpx solid rgba(221, 221, 221, 0.747);
+}
+.info_group .cell .title{
+  width: 160rpx;
+}
+.info_group .cell .value{
+  flex: 1;
+}
+.phone_code{
+  position: relative;
+}
+.v_code{
+  position: absolute;
+  right: 0;
+  top: 0;
+  font-size: 22rpx;
+  border-radius: 50rpx;
+  color: red;
+  border: 1px solid red;
+  background-color: #fff;
+  z-index: 99;
+}
+.d_code{
+  border: 1px solid rgba(182, 179, 179, 0.171);
+}
+.tips{
+  padding: 20rpx 30rpx;
+  color: #ccc;
+}
+.binding_phone .foot{
+  padding: 20rpx 30rpx;
+  margin: 20rpx 0;
+}
+.binding_phone .foot .foot_btn{
+  height: 80rpx;
+  line-height: 80rpx;
+  text-align: center;
+  background-color: #f44;
+  color: #fff;  
+}
+
+.store_box .store_head{
+  position: relative;
+  text-align: center;
+  padding: 10rpx 0;
+  border-bottom: 1rpx solid #ebedf0;
+}
+.store_box .store_head .title_text{
+  line-height: 48rpx;
+  font-size: 30rpx;
+}
+.store_box .store_head .title_tip{
+  line-height: 40rpx;
+  font-size: 24rpx;
+  color: #909399;
+}
+.store_box .store_head .icon_close{
+  position: absolute;
+  right: 15rpx;
+  top: 35rpx;
+  font-size: 35rpx;
+   color: #909399;
+}
+.store_box .store_list .express{
+  margin-bottom: 20rpx;
+  border-bottom: 20rpx solid #f8f8f8;
+}
+.store_box .store_list .group_title{
+  color: #909399;
+  padding: 30rpx 30rpx 10rpx;
+  line-height: 32rpx;
+}
+.store_box .store_list .group_box{
+  box-sizing: border-box;
+  padding: 20rpx 30rpx;
+  line-height: 48rpx;
+}
+.store_list .group_box .group_item{
+  display: flex;
+  align-items: center;
+}
+.store_list .group_box .group_item .radio_select{
+  line-height: 0rpx;
+}
+.store_list .group_box .group_item .radio_label{
+  margin-left: 10rpx;
+  flex: 1;
+}
+.store_list .group_box .group_item .radio_label .info .name{
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.store_list .group_box .group_item .radio_label .info .name .distance{
+  color: #f44;
+  font-size: 24rpx;
+}
+.store_list .group_box .group_item .radio_label .info .detail{
+  color: #909399;
+  padding: 0;
+  font-size: 24rpx;
+}
+.store_list .group_box .store_list_item{
+  padding: 10rpx 0;
+}

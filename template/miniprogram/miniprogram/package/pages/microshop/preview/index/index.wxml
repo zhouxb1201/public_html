@@ -1,0 +1,80 @@
+<view class="preview-head">
+  <view class="preview-info">
+    <view class="van-row">
+      <view class="fl-none van-col">
+        <view class="van-row van-row--flex">
+          <view class="van-col van-col--5">
+            <view class="logo">
+              <image mode="widthFix" src="{{mic_logo ? mic_logo : '/images/no-avatar.png'}}"></image>
+            </view>
+          </view>
+          <view class="van-col van-col--18">
+            <view class="name">
+              <view class="text">{{mic_name ? mic_name : ''}}</view>
+              <view class="fans">{{mic_introduce ? mic_introduce : ''}}</view>
+            </view>
+          </view>
+        </view>
+      </view>
+    </view>
+  </view>
+</view>
+
+<view class="preview-nav">
+  <view class="van-row van-row--flex van-row--justify-center">
+    <view class="van-col van-col--12" bindtap="toGoodsList">
+      全部商品
+    </view>
+    <view class="van-col van-col--12" bindtap="toCategory">
+      商品分类
+    </view>
+  </view>
+</view>
+
+<view class="vui-icon-group">
+  <view class="vui-icon-col e-handle" wx:for-items="{{items}}" wx:for-item="child" wx:key="">
+    <block wx:for-items="{{child.second_category}}" wx:for-item="second" wx:key="">
+      <block wx:for-items="{{second.third_category}}" wx:for-item="third" wx:key="">
+        <view bindtap="toList" data-id='{{third.category_id}}' data-text='{{third.short_name}}'>
+          <view class="icon">
+            <image mode="widthFix" src="{{third.category_pic != '' ? third.category_pic : '/images/no-goods.png' }}"></image>
+          </view>
+          <view class="text bg-fff">{{third.short_name ? third.short_name : third.category_name}}</view>
+        </view>
+      </block>
+    </block>
+  </view>
+</view>
+
+<view class="divider preview-divider">
+  <view class="divider-head">
+    <text>店铺精选</text>
+  </view>
+  <view class="ofh bg-fff">
+
+    <view class="item e-handle" wx:for="{{goodslist}}" wx:key="" bindtap='toGoodsDetail' data-goodsid="{{item.goods_id}}">
+      <view class="image">
+        <image mode="widthFix" src="{{item.logo != '' ? item.logo : '/images/no-goods.png' }}"></image>
+      </view>
+      <view class="info">
+        <view class="name">{{item.goods_name}}</view>
+        <view class="price">
+          <view class="sale">¥ {{item.price}}</view>
+          <view class="market">
+            <text>¥ {{item.market_price}}</text>
+          </view>
+        </view>
+        <view class="bottom-group">
+          <view class="sales-volume">
+            <text>销量 {{item.sales}}</text>
+          </view>
+        </view>
+      </view>
+    </view>
+  </view>
+</view>
+
+<topnav-component></topnav-component>
+
+<!-- 登录组件 -->
+<login-component loginShow='{{loginShow}}' bind:request='requestLogin'></login-component>

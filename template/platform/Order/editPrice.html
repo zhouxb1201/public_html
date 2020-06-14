@@ -1,0 +1,152 @@
+<form class="form padding-15" id="adjust_price_modal">
+    <table class="table v-table table-auto-center">
+        <thead>
+        <tr>
+            <th>商品</th>
+            <th>单价</th>
+            <th>数量</th>
+            <th>涨/降价</th>
+        </tr>
+        </thead>
+        <tbody>
+        {foreach name='order_goods_list' item='goods' key='k' }
+        <tr data-sku-id={$goods.sku_id}>
+            <td>
+                <div class="media text-left">
+                    <div class="media-left">
+                        <img src="{:__IMG($goods['picture_info']['pic_cover_mid'])}" alt="" width="60" height="60">
+                    </div>
+                    <div class="media-body max-w-300">
+                        <div class="line-2-ellipsis">{$goods.goods_name}</div>
+                        <div class="small-muted line-2-ellipsis">
+                            {foreach name='goods.spec' item='spec' key='k_spec'}
+                                {$spec.spec_name . ':' . $spec.spec_value_name . ' '}
+                            {/foreach}
+                        </div>
+                    </div>
+                </div>
+            </td>
+            <td>
+                {$goods.actual_price}
+            </td>
+            <td>
+                {$goods.num}
+            </td>
+            <td>
+                <input type="number" id="{$goods.order_goods_id}" data-actual-price="{$goods.actual_price}" class="form-control number-form-control J-edit-price"
+                       min="0" step="0.1">
+            </td>
+        </tr>
+        {/foreach}
+        </tbody>
+    </table>
+    <div class="form-group">
+        <p class="form-control-static">运费
+            <input type="number" class="form-control number-form-control ml-15 mr-15 J-edit-freight"
+                   id="adjust_shipping_fee_modal" min="0" step="0.1" value="{$order_info.shipping_money - $order_info.promotion_free_shipping}">
+            <span class="text-muted" id="free_shipping_fee">免运费</span>
+        </p>
+        <p class="form-control-static" id="adjust_order_amount"></p>
+        <p class="help-block">订单实收 = 单价 + 运费 + 涨/降价</p>
+        <textarea name="" id="modal_memo" rows="5" class="form-control" placeholder="备注"></textarea>
+    </div>
+</form>
+<script>
+    window.order_equation_data = {};
+    var order_info = {:json_encode($order_info, JSON_UNESCAPED_UNICODE)};
+    var order_goods_list = {:json_encode($order_goods_list, JSON_UNESCAPED_UNICODE)};
+
+    order_equation_data['shipping_money'] = order_info.shipping_money - order_info.promotion_free_shipping;
+    order_equation_data['total_amount'] = parseFloat(order_info.pay_money) + parseFloat(order_info.user_platform_money);
+    order_equation_data['goods'] = {};
+    $.each(order_goods_list, function (k, goods) {
+        order_equation_data['goods'][goods.sku_id] = [];
+        order_equation_data['goods'][goods.sku_id]['actual_price'] = goods.actual_price;
+        order_equation_data['goods'][goods.sku_id]['num'] = goods.num;
+        order_equation_data['goods'][goods.sku_id]['sign'] = '+'
+        order_equation_data['goods'][goods.sku_id]['adjust_price'] = 0;
+    });
+    showAdjustPrice();
+    $(function () {
+        if (order_info.shipping_type == 2) {
+            // 自提不允许修改运费
+            $('#free_shipping_fee').prop('disabled', true)
+            $('#adjust_shipping_fee_modal').prop('disabled', true)
+        } else {
+            $('#free_shipping_fee').removeAttr('disabled')
+            $('#adjust_shipping_fee_modal').removeAttr('disabled')
+        }
+        //输入价格调整
+        $('#adjust_price_modal').on('change', '.J-edit-price, .J-edit-freight', function () {
+            buildAdjustPriceData($(this));
+            showAdjustPrice();
+        })
+
+        //点击免运费
+        $('#adjust_price_modal').on('click', '.text-muted', function () {
+            setFreeShippingFee();
+        })
+    })
+
+    //更新价格数据
+    function buildAdjustPriceData(obj) {
+        if (obj.hasClass('J-edit-price')) {
+            var sku_id = obj.parent().parent().attr('data-sku-id');
+            var actual_price = obj.data('actual-price');
+            var obj_adjust_price = obj.val();
+            if (obj_adjust_price >= 0) {
+                order_equation_data['goods'][sku_id]['sign'] = '+';
+                order_equation_data['goods'][sku_id]['adjust_price'] = Math.abs(obj_adjust_price);
+                //order_equation_data['total_amount'] += (order_equation_data['goods'][sku_id]['adjust_price'] * order_equation_data['goods'][sku_id]['num']);
+            } else if (obj_adjust_price < 0) {
+                if (Math.abs(obj_adjust_price) > actual_price){
+                    obj.val(-actual_price);
+                    obj_adjust_price = actual_price
+                }
+                order_equation_data['goods'][sku_id]['sign'] = '-';
+                order_equation_data['goods'][sku_id]['adjust_price'] = Math.abs(obj_adjust_price);
+                //order_equation_data['total_amount'] -= (order_equation_data['goods'][sku_id]['adjust_price'] * order_equation_data['goods'][sku_id]['num']);
+            }
+        } else if (obj.hasClass('J-edit-freight')) {
+            var old_shipping_money = order_equation_data['shipping_money'];
+            if (obj.val() < 0) {
+                obj.val(0);
+            }
+            if (old_shipping_money >= 0) {
+                order_equation_data['shipping_money'] = obj.val();
+                order_equation_data['total_amount'] += order_equation_data['shipping_money'] - old_shipping_money;
+            }
+        }
+        order_equation_data['total_amount'] = order_equation_data['shipping_money'] * 1;
+        $.each(order_equation_data['goods'], function (sku_id, sku) {
+            if (sku.sign == '+') {
+                order_equation_data['total_amount'] += sku.actual_price * sku.num + sku.adjust_price * sku.num;
+            } else if (sku.sign == '-') {
+                order_equation_data['total_amount'] += sku.actual_price * sku.num - sku.adjust_price * sku.num;
+            }
+        });
+    }
+
+    //免运费
+    function setFreeShippingFee() {
+        $(".J-edit-freight").val(0);
+        buildAdjustPriceData($(".J-edit-freight"));
+        showAdjustPrice();
+    }
+
+    //显示式子
+    function showAdjustPrice() {
+        var span_str = '';
+        $.each(order_equation_data['goods'], function (sku_id, sku) {
+            span_str += "(" + sku.actual_price + "";
+            span_str += "" + sku.sign + "";
+            span_str += "" + sku.adjust_price + ")";
+            span_str += " * " + sku.num;
+            span_str += " + ";
+        })
+        span_str += order_equation_data['shipping_money'];
+        span_str += " = " + "<span class='text-bright'>" + order_equation_data['total_amount'].toFixed(2) + "</span>";
+        $("#adjust_order_amount").html(span_str);
+    }
+
+</script>

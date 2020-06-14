@@ -1,0 +1,91 @@
+<div class="goods-dialog">
+    <div class="dialog-box">
+        <table class="table v-table table-auto-center">
+            <thead>
+            <tr>
+                <th>标签列表</th>
+                <th>操作</th>
+            </tr>
+            </thead>
+            <tbody id="group_lists">
+
+            </tbody>
+        </table>
+    </div>
+    <div>
+        <span class="user_name_span J-user_name">选中的标签：</span>
+        <input type="text" class="form-control goods_val J-admin_name" value="{$default_group_name}" name="goods_val" disabled>
+    </div>
+    <input type="hidden" id="group_id">
+    <input type="hidden" id="default_uid" value="{$default_uid}">
+    <input type="hidden" id="default_group_id" value="{$default_group_id}">
+</div>
+<script>
+    require(['util'],function(util){
+        $(document).ready(function(){
+            var width = $(".J-user_name").innerWidth();
+            $('.J-admin_name').css('padding-left',width);
+            var default_group_id = $("#default_group_id").val();
+            if(default_group_id){
+                $('#group_id').val(default_group_id);
+            }
+        });
+        getList();
+
+        function getList(){
+            $.ajax({
+                type : "POST",
+                url : "{:__URL('PLATFORM_MAIN/member/memberGroupLists')}",
+                data : {
+                    "default_uid" : $("#default_uid").val(),
+                    "page_index" : 1,
+                    "page_size" : 0
+                },
+                success : function(data) {
+                    var html="";
+                    if (data["data"].length>0){
+                        for (var i = 0; i < data["data"].length; i++) {
+                            html += '<tr>';
+                            html += '<td>' + data['data'][i]["group_name"] + '</td>';
+                            if(data['data'][i]["is_select"]){
+                                html += '<td><a href="javascript:;" class="text-primary select_groups" data-id="' + data['data'][i]['group_id'] +'" data-name="' + data["data"][i]['group_name'] + '" data-status="2">取消选中</a></td>';
+                            }else{
+                                html += '<td><a href="javascript:;" class="text-primary select_groups" data-id="' + data['data'][i]['group_id'] +'" data-name="' + data["data"][i]['group_name'] + '" data-status="1">选择标签</a></td>';
+                            }
+
+                            html += '</tr>';
+                        }
+                    }else{
+                        html += '<tr><th colspan="5">暂无符合条件的分组</th></tr>';
+                    }
+                    $("#group_lists").html(html);
+                }
+            });
+        }
+        $('#group_lists').on('click','.select_groups',function(){
+            var status = $(this).attr('data-status');
+            var group_id = $(this).attr('data-id');
+            var group_name= $(this).attr('data-name');
+            var default_group_id =  $("#group_id").val();
+            var default_group_name =  $(".goods_val").val();
+              if(status==1){
+                  $(this).html('取消选中');
+                  $(this).attr('data-status',2);
+                  if(default_group_id){
+                      $("#group_id").val(default_group_id+group_id+',');
+                      $(".goods_val").val(default_group_name+group_name+',');
+                  }else{
+                      $("#group_id").val(group_id+',');
+                      $(".goods_val").val(group_name+',');
+                  }
+              } else if(status==2){
+                  $(this).attr('data-status',1);
+                  group_name = default_group_name.replace(group_name+',',"");
+                  group_id = default_group_id.replace(group_id+',',"");
+                  $("#group_id").val(group_id);
+                  $(".goods_val").val(group_name);
+                  $(this).html('选择标签');
+              }
+            });
+    })
+</script>

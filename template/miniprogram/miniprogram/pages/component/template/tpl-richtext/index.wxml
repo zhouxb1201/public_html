@@ -1,0 +1,4 @@
+<import src="/common/wxParse/wxParse.wxml"/>
+<view class='richtext' style='padding:{{temDataitem.style.padding}}px;'>
+  <template is="wxParse" data="{{wxParseData:richtext.nodes}}" />
+</view>

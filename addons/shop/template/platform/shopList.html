@@ -1,0 +1,215 @@
+{block name="resources"}
+
+{/block}
+
+{block name="main"}
+        <!-- page -->
+
+                <form class="v-filter-container">
+                    <div class="filter-fields-wrap">
+                        <div class="filter-item clearfix">
+                            <div class="filter-item__field">
+                                <div class="v__control-group">
+                                    <label class="v__control-label">店铺名称</label>
+                                    <div class="v__controls">
+                                        <input type="text" id="search_text" class="v__control_input" placeholder="请输入店铺名称" autocomplete="off" onkeydown="if(event.keyCode==13){event.keyCode=0;event.returnValue=false;}">
+                                    </div>
+                                </div>
+
+                                <div class="v__control-group">
+                                    <label class="v__control-label">店铺版本</label>
+                                    <div class="v__controls">
+                                        <select class="v__control_input" id="shop_type" >
+                                            <option value="0">请选择所属版本...</option>
+                                            {foreach name="shop_type_list" item="vs"}
+                                            <option value="{$vs['instance_typeid']}">{$vs['type_name']}</option>
+                                            {/foreach}
+                                        </select>
+                                    </div>
+                                </div>
+
+                                <div class="v__control-group">
+                                    <label class="v__control-label">店铺状态</label>
+                                    <div class="v__controls">
+                                        <select class="v__control_input" id="status" >
+                                            <option value="">请选择店铺状态</option>
+                                            <option value="0">已关闭</option>
+                                            <option value="1">已开启</option>
+                                            <option value="2">审核中</option>
+                                        </select>
+                                    </div>
+                                </div>
+
+                            </div>
+                        </div>
+                        <div class="filter-item clearfix">
+                            <div class="filter-item__field">
+                                <div class="v__control-group">
+                                    <label class="v__control-label"></label>
+                                    <div class="v__controls">
+                                        <a class="btn btn-primary search" id="search"><i class="icon icon-search"></i> 搜索</a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+
+
+        <div class="screen-title"><span class="text">店铺列表</span></div>
+
+<div class="mb-20 bg-info border-info padding-15">店铺端登录地址：<a href="{:__URL('ADMIN_MAIN/login','website_id='.$website_id)}" target="_blank">{:__URL('ADMIN_MAIN/login','website_id='.$website_id)}</a></div>
+
+        <div class="mb-10">
+            <a class="btn btn-primary" href="{:__URL('ADDONS_MAINaddPlatformShop')}"><i class="icon icon-add1"></i> 添加店铺</a>
+        </div>
+        <table class="table v-table table-auto-center">
+            <thead>
+                <tr>
+                    <th>店铺名称</th>
+                    <th>账户名</th>
+                    <th>排序</th>
+                    <th>平台抽成</th>
+                    <th>店铺版本</th>
+                    <th>状态</th>
+                    <th class="col-md-2 pr-14 operationLeft">操作</th>
+                </tr>
+            </thead>
+            <tbody id="list">
+            </tbody>
+        </table>
+        <input type="hidden" id="page_index">
+        <nav aria-label="Page navigation" class="clearfix">
+            <ul id="page" class="pagination pull-right"></ul>
+        </nav>
+        <!-- page end -->
+{/block}
+{block name="script"}
+
+<script>
+    require(['util'], function (util) {
+        util.initPage(LoadingInfo);
+        function LoadingInfo(page_index) {
+            $("#page_index").val(page_index);
+            var shop_type = $("#shop_type").val();
+            var search_text = $("#search_text").val();
+            var status = $("#status").val();
+            var url = '{$shopListUrl}';
+            $.ajax({
+                type: "post",
+                url: url,
+                async: true,
+                data: {
+                    "page_index": page_index, "search_text": search_text, "shop_type": shop_type, "status": status, "website_id": '{$website_id}'
+                },
+                success: function (data) {
+                    var html = '';
+                    if (data["data"].length > 0) {
+                        for (var i = 0; i < data["data"].length; i++) {
+                            html += '<tr>';
+                            html += '<td>' + data["data"][i]["shop_name"] + '</td>';
+                            if (data["data"][i]["user_tel"]) {
+                                html += '<td>' + data["data"][i]["user_tel"] + '</td>';
+                            } else {
+                                html += '<td>--</td>';
+                            }
+                            html += '<td><input type="number" class="form-control sort-form-control J-sort" min="0"  data-id="' + data["data"][i]["shop_id"] + '" data-index="' + i + '" id="shop_sort' + i + '" value="' + data["data"][i]["shop_sort"] + '"></td>';
+                            if(data["data"][i]["shop_id"]==0){
+                                html += '<td>--</td>';
+                                html += '<td>--</td>';
+                                html += '<td>--</td>';
+                            }else{
+                                html += '<td>' + data["data"][i]["shop_platform_commission_rate"] + '%</td>';
+                                html += '<td>' + data["data"][i]["shop_type_name"] + '</td>';
+                                if (data["data"][i]['shop_state'] === 1) {
+                                    html += '<td><span class="text-success">已开启</span></td>';
+                                } else if (data["data"][i]['shop_state'] === 2) {
+                                    html += '<td><span class="text-danger">审核中</span></td>';
+                                } else if (data["data"][i]['shop_state'] === 0) {
+                                    html += '<td><span class="text-muted">已关闭</span></td>';
+                                }
+                            }
+                            
+                            html += '<td class="fs-0 operationLeft">';
+                            html += '<a class="btn-operation" href="' + __URL('ADDONS_MAINupdateShop&shop_id=' + data['data'][i]['shop_id']) + '">编辑</a>';
+                            if(data["data"][i]["shop_id"]>0){
+                                if (data["data"][i]['shop_state'] === 1) {
+                                    html += '<a class="btn-operation J-status" href="javascript:void(0);" data-id="' + data["data"][i]["shop_id"] + '" data-type="0">关闭</a>';
+                                } else {
+                                    html += '<a class="btn-operation J-status" href="javascript:void(0);" data-id="' + data["data"][i]["shop_id"] + '" data-type="1">开启</a>';
+                                }
+                            }
+                            html += '</td>';
+                            html += '</tr>';
+                        }
+                    } else {
+                        html += '<tr><td class="h-200" colspan="7">暂无符合条件的数据记录</td></tr>';
+                    }
+                    $('#page').paginator('option', {
+                        totalCounts: data['total_count']  // 动态修改总数
+                    });
+                    $("#list").html(html);
+                    util.tips();
+                }
+            });
+        }
+        $('#list').on('click','.J-recomment',function(){
+            var shop_id = $(this).data('id');
+            var recommend = $(this).data('recommend');
+            $.ajax({
+                    type:"post",
+                    url:"{$setRecommentUrl}",
+                    data:{'shop_id':shop_id,'shop_recommend':recommend},
+                    async:false,
+                    success : function(data) {
+                        if(data["code"] > 0 || data["code"] === 0){
+                            util.message('操作成功','success',LoadingInfo($('#page_index').val()));
+                        }else{
+                            util.message(data["message"],'danger');
+                        }
+                    }
+            });
+        });
+        $('#list').on('click','.J-status',function(){
+            $(".tooltip.fade.top.in").remove();
+            var shop_id = $(this).data('id');
+            var type = $(this).data('type');
+            $.ajax({
+                    type:"post",
+                    url:"{$setStatusUrl}",
+                    data:{'shop_id':shop_id,'type':type},
+                    async:false,
+                    success : function(data) {
+                            if(data["code"] > 0 || data["code"] === 0){
+                                util.message('操作成功','success',LoadingInfo($('#page_index').val()));
+                            }else{
+                                util.message(data["message"],'danger');
+                            }
+
+                    }
+            });
+        });
+        $('#list').on('change','.J-sort',function(){
+            var shop_id = $(this).data('id');
+            var index = $(this).data('index');
+            var shop_sort = $("#shop_sort"+index).val();
+            $.ajax({
+                type:"post",
+                url:"{$updateShopListUrl}",
+                data:{'shop_id':shop_id,'shop_sort':shop_sort},
+                async:true,
+                success: function (data) {
+                    if(data['code'] <= 0){
+                        util.message(data["message"],'danger');
+                    }else{
+                        LoadingInfo(1);
+                    }
+                }
+            });
+        });
+        $('#search').on('click', function () {
+            LoadingInfo(1);
+        });
+    });
+</script>
+{/block}

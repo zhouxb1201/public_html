@@ -1,0 +1,19 @@
+@import "/css/iconfont.wxss";
+.floater .box{
+  position: fixed;
+  right: 15px;
+  bottom: 75px;
+  background-color: #fff;
+  color: #606266;
+  box-shadow: 0 0 6px rgba(0,0,0,.12);
+  z-index: 999;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.floater .box .icon_up{
+  font-size: 12px;
+}

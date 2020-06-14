@@ -1,0 +1,25 @@
+<view class='share_good'>
+  <view class='post_box' id='canvas-container'>
+     <canvas canvas-id="myCanvas" style="width:100%;height:{{imgHeight}}px;" />
+  </view>
+  <view class='good_box'>
+    <view class='good_name'>{{detailData.goods_name}}</view>
+    <view class='price'>{{detailData.price}} <text class='market'>{{detailData.market_price}}</text></view>
+  </view>
+  <view class='tips'>
+    <view>分销小提示:</view>
+    <view>
+      <view>1、当用户通过你分享的链接或图片生成交易时，则该用户会成为你的客户，同时你也会获得相应佣金分成。</view>
+      <view>2、佣金可在会员中心 --> 分销中心进行提现。</view>
+    </view>
+  </view>
+  <view class='foot'>
+    <view class='foot_box'>        
+      <view bindtap='saveCanvasShareImg'>图片分享</view>
+      <button type='primary' class='openSetting' open-type="openSetting"
+bindopensetting='handleSetting' hidden='{{openSettingBtnHidden}}'>前往授权</button>
+      <button class='share' open-type="share" hover-class="other-button-hover">链接分享</button>
+      
+    </view>
+  </view>
+</view>

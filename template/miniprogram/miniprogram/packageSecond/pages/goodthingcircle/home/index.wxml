@@ -1,0 +1,124 @@
+<view class='goods_thing' wx:if='{{isOpen == 1}}'>
+	<!--首页-->
+	<view class="ting_cricle_box" >
+		<view class="head_box">
+			<view class="head_tab">
+				<view class="head_list">
+					<van-tabs active="{{ active }}" border='false' bind:change="onTopTabChange">
+						<van-tab title="关注"></van-tab>
+						<van-tab title="发现"></van-tab>
+						<van-tab title="附近"></van-tab>
+					</van-tabs>
+				</view>
+			</view>
+			<view class="head_search">
+				<view class="search_box">
+					<view class="iconfont v-icon-search"></view>
+					<input class="search_input" placeholder="大家都在搜" bindconfirm="searchGoodsThing"></input>
+				</view>
+			</view>
+		</view>
+		<view class="content_box" wx:if='{{noGoodShow == false}}'>
+			<!--两列信息流格式-->
+			<view class="list_style" wx:if="{{display_model == '1'}}">
+				<view class="item" wx:for='{{thingData}}' wx:key='' wx:for-item='thingItem'>
+					<view class="item_box" bindtap="toDetail" data-thing_type="{{thingItem.thing_type}}" data-thing_id="{{thingItem.id}}">
+						<view class="thing_img" wx:if='{{thingItem.thing_type == 1}}'>
+							<image mode="widthFix" src="{{thingItem.img_temp_array[0].pic_cover ? thingItem.img_temp_array[0].pic_cover:'/images/no-goods.png'}}"></image>
+						</view>
+						<view class="thing_img" wx:else>
+							<image mode="widthFix" src="{{thingItem.video_img.pic_cover ? thingItem.video_img.pic_cover:'/images/no-goods.png'}}"></image>
+						</view>
+						<view class="thing_name">{{thingItem.title}}</view>
+						<view class="userinfo">
+							<view class="user_name">
+								<view class="user_img">
+									<image src="{{thingItem.user_headimg != ''?thingItem.user_headimg:'/images/no-avatar.png'}}"></image>
+								</view>
+								<view class="name">{{thingItem.thing_user_name}}</view>
+							</view>
+							<view class='collect_box' data-thingid="{{thingItem.id}}" catchtap="likesThingcircle">
+								<van-icon class='icon_like' name="{{thingItem.is_like == 1? 'like' :'like-o'}}" color="{{thingItem.is_like == 1? '#f44' :''}}" size='24rpx' />
+								<view class="num">{{util.praise(thingItem.likes)}}</view>
+							</view>
+						</view>
+					</view>
+
+				</view>
+			</view>
+			<!--一列信息流格式-->
+			<view class="chat_style" wx:if="{{display_model == '0'}}">
+				<view class="item-modbox" wx:for='{{thingData}}' wx:key='' wx:for-item='thingItem'>
+					<view class="avatar">
+						<image src="{{thingItem.user_headimg != '' ? thingItem.user_headimg:'/images/no-avatar.png'}}" mode="widthFix"></image>
+					</view>
+					<view class="comments">
+						<view>
+							<view bindtap="toDetail" data-thing_type="{{thingItem.thing_type}}" data-thing_id="{{thingItem.id}}">
+								<view class="name">{{thingItem.thing_user_name}}</view>
+								<view class="title"><text wx:if="{{thingItem.topic_title}}">#{{thingItem.topic_title}}#</text>{{thingItem.title}}</view>
+								<view class="content">{{thingItem.content}}</view>
+								<view class="img-group" wx:if="{{thingItem.thing_type == 1}}">
+									<view class="item" wx:for='{{thingItem.img_temp_array}}' wx:key='' wx:for-item='imgItem'>
+										<view class="box e-handle">
+											<image src="{{imgItem.pic_cover != '' ? imgItem.pic_cover :'/images/no-goods.png'}}" mode="widthFix"></image>
+										</view>
+									</view>
+								</view>
+								<view class="img-group" wx:else>
+									<view class="item">
+										<view class="box e-handle">
+											<image src="{{thingItem.video_img.pic_cover != '' ? thingItem.video_img.pic_cover :'/images/no-goods.png'}}" mode="widthFix"></image>
+										</view>
+									</view>
+								</view>
+								<view class="location" wx:if="{{thingItem.location != ''}}">{{thingItem.location}}</view>
+							</view>
+							<view class="btm">
+								<view class="time">{{filter.getTimer(thingItem.create_time)}}</view>
+								<view class="right">
+									<view class="fabulous" data-thingid="{{thingItem.id}}" bindtap="likesThingcircle">
+										<van-icon class="icon_like" size='24rpx' name="{{thingItem.is_like == 1? 'like' :'like-o'}}" color="{{thingItem.is_like == 1? '#f44' :''}}" />
+										<view class="num">{{util.praise(thingItem.likes)}}</view>
+									</view>
+									<view class="fabulous">
+										<view class="iconfont v-icon-reply-02 icon_reply"></view>
+										<view class="num">{{util.praise(thingItem.comment.data.length)}}</view>
+									</view>
+								</view>
+							</view>
+							<view class="discuss" wx:if="{{thingItem.comment.total_count > 0}}">
+								<view class="text" wx:for='{{thingItem.comment.data}}' wx:key='cindex' wx:for-item='child'><text>{{child.thing_user_name}}：</text>{{child.content}}</view>
+							</view>
+						</view>
+					</view>
+				</view>
+			</view>
+			<view class="no_more">
+				<view class="text">没有更多了</view>
+			</view>
+		</view>
+		<view class="no_good" wx:else>
+			<view class="box">
+				<view class="img">
+					<image mode="widthFix" src="/images/empty-data.png"></image>
+				</view>
+				<view class="text">暂无干货</view>
+			</view>
+		</view>
+	</view>
+
+	<!--底部导航栏-->
+	<bottom-menu bind:onTabbar="getTabbar" active="0"></bottom-menu>
+</view>
+<view class="no_open" wx:else>
+	<view class="box">
+		<view class="img">
+			<image mode="widthFix" src="/images/error-fail.png"></image>
+		</view>
+		<view class="text">未开启好物圈应用</view>
+	</view>
+</view>
+
+<wxs src='../../../../utils/addmul.wxs' module='filter' />
+<wxs src="../mine/util.wxs" module="util" />

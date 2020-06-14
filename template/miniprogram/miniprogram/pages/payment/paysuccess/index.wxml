@@ -1,0 +1,83 @@
+<view class='pay_success'>
+  <view class='success_box'>
+    <view class='success_top'>
+      <view class='success_img'>
+        <image mode='widthFix' src='/images/result-pay-success.png'></image>
+      </view>
+      <view wx:if="{{pay_success_type == 3}}">兑换成功</view>
+      <view wx:else>支付成功</view>
+    </view>
+    <view class='btn_group' wx:if="{{pay_success_type == 3}}">
+      <text bindtap='onintegralPage'>继续购物</text>
+      <text bindtap='onOrderDetail' data-orderid='{{resultData.order_id}}'>查看订单</text>
+    </view>
+    <view class='btn_group' wx:elif="{{pay_success_type == 4}}">
+      <text bindtap='onchannelPage'>微商中心</text>
+      <text bindtap='onOrderDetail' data-channeltype="{{resultData.is_channel}}" data-orderid='{{resultData.order_id}}'>查看订单</text>
+    </view>
+    <view class='btn_group' wx:elif="{{pay_success_type == 5}}">
+      <text bindtap='onMicroshop'>前往微店</text>
+    </view>
+    <view class='btn_group' wx:else>
+      <text bindtap='onIndexPage'>继续购物</text>
+      <text bindtap='onOrderDetail' data-orderid='{{resultData.order_id}}'>查看订单</text>
+    </view>
+  </view>
+
+  <!-- 拼团情况 -->
+  <view class='join_group' wx:if="{{pay_success_type == 1}}">
+    <view class='title' bindtap='onGroupDetailPage'>
+      <view class='title_l'>
+        <view class='icon iconfont v-icon-team'></view>
+        <view>拼团情况
+          <text>{{groupData.now_num}}/{{groupData.group_num}}</text>
+        </view>
+      </view>
+      <view class='title_r'>
+        <text class=''>拼团详情</text>
+        <van-icon name="arrow" />
+      </view>
+    </view>
+    <view class='group_info'>
+      <view class='img' wx:for='{{groupData.buyer_list}}' wx:for-item='groupItem'>
+        <image src="{{groupItem.user_headimg !=''?groupItem.user_headimg:'/images/no-avatar.png'}}"></image>
+        <view class='leader' wx:if='{{groupItem.is_head == 1}}'>团长</view>
+      </view>
+      <view class='help'>?</view>
+    </view>
+  </view>
+
+  <view class='cell_group' wx:if="{{pay_success_type == 2 && resultData.wx_card_state == 0}}">
+    <view class='wechat_card' bindtap='onCardPage'>
+      <view class='icon iconfont v-icon-card'></view>
+      <view class='text'>领取到微信卡包，通过卡包快速核销。前往领取>></view>
+    </view>
+  </view>
+
+  <view class='cell_group' wx:if="{{pay_success_type == 6 }}">
+    <view class='wechat_card' bindtap='onGiftPage'>
+      <view class='icon iconfont v-icon-gift'></view>
+      <view class='text'>支付有礼。前往领取>></view>
+    </view>
+  </view>
+
+  <view class='cell_group' wx:if="{{pay_success_type == 2}}">
+    <view class='cell_item'>
+      <view class='icon iconfont v-icon-location'></view>
+      <view class='text'>使用门店</view>
+    </view>
+    <view class='address_buy'>
+      <view class='buy_info'>
+        <view class='name'>{{resultData.card_store.shop_name}}({{resultData.card_store.store_name}})</view>
+        <view class='phone'>{{resultData.card_store.store_tel}}</view>
+      </view>
+      <view class='address_info'>{{resultData.card_store.address}}</view>
+    </view>
+  </view>
+
+  <view class='cell_group' wx:if='{{resultData.shipping_type == 2}}'>
+    <view class='cell_item'>
+      <view class='text'>O2O订单请前往“订单列表”或“订单详情”查看核销码到对应门店进行核销。</view>
+    </view>
+  </view>
+</view>

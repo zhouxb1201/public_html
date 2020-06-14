@@ -1,0 +1,6 @@
+{
+  "navigationBarTitleText": "购物车",
+  "usingComponents": {
+    "phone-compoent": "/pages/component/phone/phonecom"
+  }
+}

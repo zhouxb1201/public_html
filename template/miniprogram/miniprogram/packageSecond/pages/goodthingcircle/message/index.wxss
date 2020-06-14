@@ -1,0 +1,118 @@
+.panel-item {
+  display: flex;
+}
+
+.cell {
+  position: relative;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  width: 100%;
+  overflow: hidden;
+  -webkit-box-sizing: border-box;
+  box-sizing: border-box;
+  color: #323233;
+  font-size: 14px;
+  line-height: 24px;
+  background-color: #fff;
+  padding: 10px 15px;
+}
+
+.item-left {
+  flex: 0.2;
+  margin-right: 10px;
+  position: relative;
+}
+
+.item-left.dot::after {
+  content: "";
+  display: block;
+  position: absolute;
+  right: 0;
+  top: 0px;
+  width: 8px;
+  height: 8px;
+  z-index: 10;
+  background: red;
+  border-radius: 100%;
+}
+
+.cell .img {
+  width: 48px;
+  height: 48px;
+  display: block;
+  border-radius: 8px;
+  background: #f8f8f8;
+}
+
+.item-right {
+  flex: 1.8;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.cell .title {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.left-text {
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  color: #909399;
+  font-size: 12px;
+}
+
+.right-text {
+  font-size: 12px;
+}
+
+/* .cell.text {
+  display: flex;
+  align-items: center;
+} */
+
+.item-edge {
+  width: 50px;
+  position: relative;
+}
+
+.item-edge image {
+  display: block;
+  width: 50px;
+  height: 70px;
+}
+
+
+.no_good {
+  background-color: #ffff;
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.no_good .box {
+  text-align: center;
+  width: 100%;
+
+}
+
+.no_good .box .img {
+  max-width: 65%;
+  display: block;
+  margin: 40rpx auto;
+  height: auto;
+}
+
+.no_good .box .text {
+  line-height: 16px;
+  color: #999;
+  font-size: 12px;
+}

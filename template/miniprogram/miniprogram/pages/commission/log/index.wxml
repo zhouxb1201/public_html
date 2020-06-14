@@ -1,0 +1,15 @@
+<view class='log'>
+  <view class='log_list'>
+    <view class='log_cell' wx:for='{{commissionlist}}' wx:key=''>
+      <view class='order'>
+        <view class="{{item.commission > 0 ? 'order_money_green' : 'order_money_red'}}">{{item.commission}}</view>        
+        <view class='order_time'>{{item.create_time}}</view>
+      </view>
+      <view class='log_type'>{{item.text}}</view>
+    </view>
+  </view>
+  <view class='noMore' hidden='{{noMore}}'>没有更多了</view>
+</view>
+
+<!-- 登录组件 -->
+<login-component loginShow='{{loginShow}}' bind:request='requestLogin'></login-component>

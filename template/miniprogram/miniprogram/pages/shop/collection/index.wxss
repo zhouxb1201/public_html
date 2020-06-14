@@ -1,0 +1,42 @@
+page{
+  font-size: 28rpx;
+  background-color: #f8f8f8;
+}
+
+.list{
+  background-color: #fff;
+}
+.item{
+  display: flex;
+  padding: 20rpx 30rpx;
+  border-bottom: 1px solid #ebedf0;
+}
+.shop_logo{
+  margin-right: 20rpx;
+  width: 220rpx;
+  height: 128rpx;
+}
+.shop_logo image{
+  width: 100%;
+  height: 100%;
+}
+.shop_info{
+  position: relative;
+  width: 100%;
+}
+.shop_info .like{
+  position: absolute;
+  bottom: 0;
+  width: 100%;
+}
+.shop_info .like .icon{
+  float: right;
+}
+
+.noMore{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 30rpx 60rpx;
+  color: #969799;
+}

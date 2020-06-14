@@ -1,0 +1,89 @@
+{extend name="platform/new_base" /}
+{block name="resources"/}
+<style>
+    .message{
+        border: 1px solid #ccc;
+        border-radius: 5px;
+        float: left;
+        width: 20%;
+        height: 100px;
+        text-align: center;
+        margin-right: 20px;
+        padding-top: 25px;
+        display: inline-block;
+    }
+    .num{
+        font-size: 18px;
+        font-weight: 600;
+    }
+    .unit{
+        font-size: 12px;
+        color:#ccc;
+    }
+    .selected{
+        border-color: #2c9cf0;
+    }
+</style>
+{/block}
+{block name="main"}
+<!--订购应用列表页面-->
+<div class="padding-15">
+    <ul>
+        {foreach name="$message_price" item="mp"}
+        <li class="message" data-num="{$mp['num']}" data-price="{$mp['price']}">
+            <span class="num">{$mp['num']}次</span>
+            </br>
+            <span class="unit">≈ {$mp['unit_price']}元 / 次</span>
+        </li>
+        {/foreach}
+        <div class="clearfix"></div>
+    </ul>
+</div>
+<div class="agree-checkbox">
+    <input type="checkbox" style="vertical-align: top;" class="agree-xieyi" checked>
+    我已阅读并同意 <a href="javascript:;" class="text-primary">《团大人商城订购服务协议》</a>
+</div>
+<div class="application_pay">
+    <div class="clearfix mb-10"><div class="pull-right">总计：<span class="application_pay_num text-red">0.00 元</span></div></div>
+    <div class="clearfix"><div class="pull-right"><a href="javascript:;" class="btn btn-primary pay_now">立即支付</a></div></div>
+</div>
+
+{/block}
+
+{block name="script"}
+<script>
+    require(['util'], function (util) {
+        $('body').on('click', '.message', function () {
+            $(this).addClass('selected').siblings().removeClass('selected');
+            $('.application_pay_num').html($(this).data('price') + ' 元');
+        });
+        $('body').on('click', '.pay_now', function () {
+            if (!$(".agree-xieyi").is(':checked')) {
+                util.message('请同意服务协议才能支付', 'danger');
+                return false;
+            }
+            var num = $('body').find('li.selected').data('num');
+            if(!num){
+                util.message('请选择短信套餐', 'danger');
+                return false;
+            }
+            $.ajax({
+                type: "post",
+                url: "{:__URL('PLATFORM_MAIN/addonslist/createorderforsms')}",
+                data: {
+                    'num': num
+                },
+                async: false,
+                success: function (data) {
+                    if (data['code'] > 0) {
+                        location.href = __URL(PLATFORMMAIN + '/pay/getPayValue&order_id=' + data['data']['order_id']);
+                    } else {
+                        util.message('操作失败', 'danger');
+                    }
+                }
+            });
+
+        });
+    });
+</script>
+{/block}

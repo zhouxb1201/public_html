@@ -1,0 +1,166 @@
+{extend name="platform/new_base" /}
+{block name="main"}
+<!-- page -->
+<!--内容-->
+<div class="content">
+    <form class="form-horizontal form-validate pt-15">
+        <!--模块名-->
+        <div class="form-group">
+            <label for="module_name" class="col-md-2 control-label">模块名</label>
+            <div class="col-md-3">
+                <input type="text" class="form-control" id="module_name" name="module_name" value="{$module_info.module_name}">
+            </div>
+        </div>
+        <!--上级菜单-->
+        <div class="form-group">
+            <label for="firstname" class="col-md-2 control-label">上级菜单</label>
+            <div class="col-md-3">
+                <select id="pid" name="account" class="form-control">
+                    <option value="0">顶级菜单</option>
+                    {foreach name="list" item="v1"}
+                    <option value="{$v1['data']['module_id']}" >&nbsp;&nbsp;&nbsp;{$v1['data']['module_name']}</option>
+                    {foreach name="v1['sub_menu']" item="v2"}
+                    <option value="{$v2['module_id']}" >&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{$v2['module_name']}</option>
+                    {/foreach}
+                    {/foreach}
+                </select>
+            </div>
+        </div>
+        <!--控制器-->
+        <div class="form-group">
+            <label for="controller" class="col-md-2 control-label">控制器</label>
+            <div class="col-md-3">
+                <input type="text" class="form-control" id="controller" value="" name="controller">
+            </div>
+        </div>
+        <!--方法名-->
+        <div class="form-group">
+            <label for="method" class="col-md-2 control-label">方法名</label>
+            <div class="col-md-3">
+                <input type="text" class="form-control" id="method" value="" name="method">
+            </div>
+        </div>
+        <!--URL-->
+        <div class="form-group">
+            <label for="url" class="col-md-2 control-label">URL</label>
+            <div class="col-md-3">
+                <input type="text" class="form-control" id="url" value="" name="url">
+            </div>
+        </div>
+        <!--是否菜单-->
+        <div class="form-group">
+            <label for="is_menu" class="col-md-2 control-label">是否菜单</label>
+            <div class="col-md-3" style="margin-top: 6px">
+                <input type="checkbox" id="is_menu"  name="is_menu">
+                <label for="is_menu">是</label>
+            </div>
+        </div>
+        <!--是否控制权限-->
+        <div class="form-group">
+            <label for="is_control_auth" class="col-md-2 control-label">是否控制权限</label>
+            <div class="col-md-3" style="margin-top: 6px">
+                <input type="checkbox" id="is_control_auth"  name="is_control_auth"  >
+                <label for="is_control_auth">是</label>
+            </div>
+        </div>
+        <!--排序-->
+        <div class="form-group">
+            <label for="sort" class="col-md-2 control-label">排序</label>
+            <div class="col-md-3">
+                <input type="text" class="form-control" id="sort" value="" name="sort">
+            </div>
+        </div>
+        <!--矢量图class-->
+        <div class="form-group">
+            <label for="icon_class" class="col-md-2 control-label">矢量图class</label>
+            <div class="col-md-3">
+                <input type="text" class="form-control" id="icon_class" value="" name="icon_class">
+            </div>
+        </div>
+        <!--模板简述-->
+        <div class="form-group">
+            <label for="editor" class="col-md-2 control-label">模板简述</label>
+            <div class="col-md-3">
+                <input type="text" class="form-control" id="editor" name="editor" value="">
+            </div>
+        </div>
+        <!--模板说明跳转-->
+        <div class="form-group">
+            <label for="jump" class="col-md-2 control-label">模板说明跳转</label>
+            <div class="col-md-3">
+                <input type="text" class="form-control" id="jump" name="jump" value="">
+            </div>
+        </div>
+
+        <!--添加返回-->
+        <div class="form-group"></div>
+        <div class="form-group">
+            <label class="col-md-2 control-label"></label>
+            <div class="col-md-8">
+                <button class="btn btn-primary addModuleAjax" type="submit">添加</button>
+                <a href="javascript:history.go(-1);" class="btn btn-default">返回</a>
+            </div>
+        </div>
+    </form>
+</div>
+<!-- page end -->
+{/block}
+{block name="script"}
+<script>
+    /**
+     *添加模块
+     */
+    require(['util'],function(util) {
+        util.validate($('.form-validate'),function(form){
+            var pid = $("#pid").val();
+            var module_name = $("#module_name").val();
+            var controller = $("#controller").val();
+            var method = $("#method").val();
+            var url = $("#url").val();
+            var is_menu = $("#is_menu").val();
+            var is_control_auth = 1;//是否控制权限
+            var sort = $("#sort").val();
+            var desc = $("#editor").val();
+            var module = '{$module}';
+            var jump = $("#jump").val();
+            var view_url = "{:__URL('PLATFORM_MAIN/System/addShopModule')}";
+            if ($("#is_menu").prop("checked")) {
+                var is_menu = 1;
+            } else {
+                var is_menu = 0;
+            }
+            if (!$("#is_control_auth").prop("checked")) {
+                is_control_auth = 0;
+            }
+            var icon_class = $('#icon_class').val();
+            $.ajax({
+                type: "post",
+                url: view_url,
+                data: {
+                    'pid': pid,
+                    'module_name': module_name,
+                    'controller': controller,
+                    'method': method,
+                    'url': url,
+                    'is_menu': is_menu,
+                    'is_control_auth': is_control_auth,
+                    'sort': sort,
+                    'desc': desc,
+                    'icon_class': icon_class,
+                    'module': module,
+                    'jump': jump
+                },
+                async: true,
+                success: function (data) {
+                    if (data["code"] > 0) {
+                        util.message('添加成功！', 'success', "{:__URL('PLATFORM_MAIN/System/shopModule')}");
+                    } else {
+                        util.message('添加失败！', 'danger');
+                        return false;
+                    }
+                }
+            });
+        })
+    })
+</script>
+{/block}

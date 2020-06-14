@@ -1,0 +1,130 @@
+{extend name="shop/new/Member/base" /}
+{block name="main"}
+    <div class="v-main-right fl">
+                    <div class="v-container">
+                        <!--page-->
+
+                        <div class="eGoods">
+                            <div class="eGoods-title"><span class="text">商品追评</span><span class="fr sells">卖家：<a href="javascript:void(0);">{if $shop_name}{$shop_name}{else}官方旗舰店{/if}</a></span></div>
+                            <input type="hidden" id="order_id" value="{$order_id}">
+                            <input type="hidden" id="order_no" value="{$order_no}">
+                            <input type="hidden" id="shop_id" value="{$shop_id}">
+                            {foreach $list as $k=>$vo}
+                            <div class="goodsEvaluations clearfix evaluate imgUpload{$k}" ogid="{$vo.order_goods_id}" oid="{$vo.order_id}">
+
+                                <div class="goodsEvaluations-left fl">
+                                    <div class="goodsEvaluations-img">
+                                        <img src="{:__IMG($vo['picture_info']['pic_cover_small'])}" alt="">
+                                    </div>
+                                    <div class="goodsEvaluations-title">
+                                        <a href="javascript:void(0);">{$vo.goods_name}</a>
+                                    </div>
+                                </div>
+
+                                <div class="goodsEvaluations-right fl">
+                                    <div class="textarea">
+                                        <textarea name="" id="" cols="70" rows="10" placeholder="请输入评价内容，不超过150个字符"></textarea>
+                                        <div class="imgUpload">
+                                            <!--图片选择对话框-->
+                                              <div class="div_imgfile">晒图片</div>
+                                            <!--图片预览容器-->
+                                            <div class="evaluate_right_imgs div_imglook">
+                                                <div style="clear: both;"></div>
+                                            </div>
+                                        </div>
+                                        
+                                    </div>
+                                </div>
+
+                            </div>
+                            {/foreach}
+
+                            <!--提交-->
+                            <div class="submit">
+                                <a href="javascript:void(0);" id="btn_ImgUpStart">提交</a>
+                            </div>
+                        </div>
+
+                        <!--page-->
+                    </div>
+                </div>
+<input type="hidden" id="list_num" value="{$list_num}">
+{/block}
+{block name="javascript"}
+    <script>
+        require(['dialog','imgUp'], function (Dialog,imgUp) {
+            function filterHTMLTag(msg) {
+                var msg = msg.replace(/<\/?[^>]*>/g, '');
+                msg = msg.replace(/[|]*\n/, '');
+                msg = msg.replace(/&npsp;/ig, '');
+                return msg;
+            };
+            Dialog.scores();
+            var num = $("#list_num").val();
+            for(var i=0;i<num;i++){
+                imgUp.imgUpload(".imgUpload"+i,'5');
+            }
+            var flag = false;
+            $('#btn_ImgUpStart').on('click', function () {
+                // var ajaxUrl=__URL(SHOPMAIN+"/order/addgoodsevaluateagain");
+                var goodsEvaluateArr = new Array();
+                $(".evaluate").each(function () {
+                    var order_id = $(this).attr("oid");
+                    var order_goods_id = $(this).attr("ogid");
+
+                    var content_arr = new Array();
+                    $(this).find('textarea').each(function () {
+                        var content = filterHTMLTag($(this).val());
+                        content_arr.push(content);
+                        if(content==''){
+                            flag=true;
+                            layer.msg('追评内容不能为空');
+                            return false;
+                        }
+                    });
+                    var imgs_arr = new Array();
+                    $(this).find('.evaluate_right_imgs').find('img').each(function () {
+                        var imgsrc = $(this).attr("src");
+                        imgs_arr.push(imgsrc);
+                    });
+                    var evaluateArr = new Object();
+                    evaluateArr.content = content_arr.toString();
+                    evaluateArr.order_id = order_id;
+                    evaluateArr.order_goods_id = order_goods_id;
+                    evaluateArr.imgs = imgs_arr;
+                    goodsEvaluateArr.push(evaluateArr);
+                });
+                var order_id = $("#order_id").val();
+                var shop_id = $("#shop_id").val();
+                var order_no = $("#order_no").val();
+                if(flag){
+                    layer.msg('请勿重复提交');
+                    return false;
+                }
+                flag = true;
+                $.ajax({
+                    url: __URL(SHOPMAIN+"/order/addGoodSEvaluateAgain"),
+                    type: 'post',
+                    data: {
+                        "goodsEvaluate": goodsEvaluateArr,
+                        "order_id": order_id,
+                        "order_no": order_no,
+                        'shop_id': shop_id,
+                    },
+                    dataType: 'json',
+                    success: function (data) {
+
+                        if (data == 1) {
+                            layer.msg('评价成功');
+                            setTimeout(function () {
+                                location.href = __URL(SHOPMAIN + "/member/orderList")
+                            }, 1000);
+                        }else{
+                            flag = false;
+                        }
+                    }
+                })
+            })
+        })
+    </script>
+{/block}

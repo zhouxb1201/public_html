@@ -1,0 +1,440 @@
+{extend name="platform/new_base" /}
+{block name="resources"/}
+{/block}
+{block name="main"}
+        <!-- page -->
+        <div class="mb-20">
+            <a href="javascript:void(0);" class="btn btn-primary btn-addProvince"><i class="icon icon-add1"></i> 添加一级地区</a>
+        </div>
+        
+        <div class="areaTable">
+            <div class="areaThead">
+                <div class="areaTh"></div>
+                <div class="areaTh">排序</div>
+                <div class="areaTh">名称</div>
+                <div class="areaTh">操作</div>
+            </div>
+            {foreach name="list" item="v1"}
+            <div class="areaTr pid_0" id="province_id_{$v1['province_id']}" isClick="false">
+                <div class="areaTd">
+                    {if condition="$v1['issetLowerLevel'] eq 1"}
+                    <a href="javascript:void(0);" data-province_id="{$v1['province_id']}" class="tab_jia_{$v1['province_id']} btn-province" style="display: inline;"><i class="icon icon-add"></i></a>
+                    <a href="javascript:void(0);" data-province_id="{$v1['province_id']}" class="tab_jian_{$v1['province_id']} btn-province" style="display: none;"><i class="icon icon-minus"></i></a>
+                    {/if}
+                </div>
+                <div class="areaTd">
+                    <input type="number" class="form-control sort-form-control sort" min="0" fieldid="{$v1['province_id']}" data-region_type="1" data-up_type="1" fieldname="sort" value="{$v1['sort']}" />
+                </div>
+                <div class="areaTd province_{$v1['province_id']}">
+                    <input type="text" class="form-control areaName" fieldid="{$v1['province_id']}" data-region_type="1" data-up_type="2" value="{$v1['province_name']}" />
+                </div>
+                <div class="areaTd fs-0">
+                    <a href="javascript:void(0);" class="btn-operation btn-addCity" data-province_id="{$v1['province_id']}" data-toggle="tooltip" data-trigger="hover" title="添加子地区" ><i class="icon icon-add-l"></i></a>
+                    <a href="javascript:void(0);" class="btn-operation btn-editProvince" data-province_id="{$v1['province_id']}" data-area_id="{$v1['area_id']}" data-toggle="tooltip" data-trigger="hover" title="修改"><i class="icon icon-edit-l"></i></a>
+                    <a href="javascript:void(0);" class="btn-operation btn-delRegion" data-region_id="{$v1['province_id']}" data-region_type="1" data-toggle="tooltip" data-trigger="hover" title="删除"><i class="icon icon-clean-l"></i></a>
+                </div>
+            </div>
+            {/foreach}
+
+            <input type="hidden" id="type" />
+            <input type="hidden" id="event" />
+            
+        </div>
+
+        <!-- page end -->
+{/block}
+{block name="script"}
+<script>
+require(['util'],function(util){
+    
+$('.btn-province').on('click',function(){
+    var province_id = $(this).data('province_id')
+    province_tab_switch(province_id)
+})
+$('.areaTable').delegate('.btn-city','click',function(){
+    var province_id = $(this).data('province_id');
+    var city_id = $(this).data('city_id');
+    city_tab_switch(province_id,city_id)
+})
+
+function province_tab_switch(module_id){
+    if($("#province_id_"+module_id).attr("isClick") == 'false'){
+        selectCityListAjax(module_id);
+    }
+    if($(".city_pid_"+module_id).attr('isShow')== 'true'){
+        $(".tab_jian_"+module_id).hide();
+        $(".tab_jia_"+module_id).show();
+        $(".city_pid_"+module_id).fadeOut();
+        $(".js-district_pic_"+module_id).hide();
+        $(".city_pid_"+module_id).attr('isShow','false');
+    }else{
+        $(".tab_jian_"+module_id).show();
+        $(".tab_jia_"+module_id).hide();
+        $(".city_pid_"+module_id).fadeIn();
+        $(".city_pid_"+module_id).attr('isShow','true');
+        closeCity(module_id);
+    }
+}
+function city_tab_switch(province_id,module_id){
+    if($("#city_id_"+module_id).attr("isClick") == 'false'){
+        if(province_id == undefined){
+            province_id = 0;
+        }
+        selectDistrictListAjax(province_id,module_id);
+    }
+    if($(".tab_jia_"+module_id).css('display') != 'inline'){
+        $(".tab_jian_"+module_id).hide();
+        $(".tab_jia_"+module_id).show();
+        $(".district_pid_"+module_id).fadeOut();
+    }else{
+        $(".tab_jian_"+module_id).show();
+        $(".tab_jia_"+module_id).hide();
+        $(".district_pid_"+module_id).fadeIn();
+    }
+}
+//添加省级区域
+$('.btn-addProvince').on('click',function(){
+    var html = '<form class="form-horizontal form-validate padding-15">';
+        html += '<div class="form-group"><label class="col-md-3 control-label"><span class="text-bright">*</span>地区名称</label><div class="col-md-8"><input type="text" name="regionName" class="form-control area_name" required></div></div>';
+        html += '<div class="form-group"><label class="col-md-3 control-label">排序</label><div class="col-md-8"><input type="number" min="0" class="form-control area_sort" ></div></div>';
+        html += '</form>';
+
+    util.confirm('添加地区',html,function(){
+        var regionName = this.$content.find('.area_name').val();
+        var regionSort = this.$content.find('.area_sort').val();
+        var json = {
+            "eventId" : '',                 
+            "superiorRegionId" : '',     
+            "regionName" : regionName,
+            "regionSort" : regionSort
+        }
+        if(json.regionName == ''){
+            util.message('地区名称不能空')
+            return false;
+        }
+        updateAjax(6,json);
+        
+    })
+    
+})
+//添加市级区域
+$('.btn-addCity').on('click',function(){
+    var province_id = $(this).data('province_id');
+    var superiorRegion = $(".areaName[fieldid='"+province_id+"']").val();
+    var html = '<form class="form-horizontal form-validate padding-15">';
+        html += '<div class="form-group"><label class="col-md-3 control-label">上级名称</label><div class="col-md-8"><input type="text" class="form-control" readonly value="'+superiorRegion+'"></div></div>';
+        html += '<div class="form-group"><label class="col-md-3 control-label">地区名称</label><div class="col-md-8"><input type="text" name="regionName" class="form-control area_name" superiorRegionId="'+province_id+'" required></div></div>';
+        html += '<div class="form-group"><label class="col-md-3 control-label">排序</label><div class="col-md-8"><input type="number" min="0" class="form-control area_sort" ></div></div>';
+        html += '</form>';
+
+    util.confirm('添加子地区',html,function(){
+        var regionName = this.$content.find('.area_name').val();
+        var regionSort = this.$content.find('.area_sort').val();
+        var json = {
+            "eventId" : '',                 
+            "superiorRegionId" : province_id,     
+            "regionName" : regionName,
+            "regionSort" : regionSort
+        }
+        if(json.regionName == ''){
+            util.message('地区名称不能空')
+            return false;
+        }
+        updateAjax(1,json);
+        
+    })
+})
+//添加县级区域
+$('.areaTable').delegate('.btn-addDistrict','click',function(){
+    var city_id = $(this).data('city_id');
+    var superiorRegion = $(".areaName[fieldid='"+city_id+"']").val();
+    var html = '<form class="form-horizontal padding-15">';
+        html += '<div class="form-group"><label class="col-md-3 control-label">上级名称</label><div class="col-md-8"><input type="text" class="form-control" readonly value="'+superiorRegion+'"></div></div>';
+        html += '<div class="form-group"><label class="col-md-3 control-label">地区名称</label><div class="col-md-8"><input type="text" class="form-control area_name" superiorRegionId="'+city_id+'"></div></div>';
+        html += '<div class="form-group"><label class="col-md-3 control-label">排序</label><div class="col-md-8"><input type="number" min="0" class="form-control area_sort" ></div></div>';
+        html += '</form>';
+    util.confirm('添加子地区',html,function(){
+        var regionName = this.$content.find('.area_name').val();
+        var regionSort = this.$content.find('.area_sort').val();
+        var json = {
+            "eventId" : '',                 
+            "superiorRegionId" : city_id,     
+            "regionName" : regionName,
+            "regionSort" : regionSort
+        }
+        if(json.regionName == ''){
+            util.message('地区名称不能空')
+            return false;
+        }
+        updateAjax(2,json);
+    })
+})
+//修改省级区域
+$('.btn-editProvince').on('click',function(){
+    var province_id = $(this).data('province_id');                              //省级id
+    var province_name = $(".areaName[fieldid='"+province_id+"']").val();        //省级名称
+    var province_sort = $(".sort[fieldid='"+province_id+"']").val();            //省级排序
+    var html = '<form class="form-horizontal padding-15">';
+        html += '<div class="form-group"><label class="col-md-3 control-label">地区名称</label><div class="col-md-8"><input type="text" class="form-control area_name" superiorRegionId="'+province_id+'" value="'+ province_name +'"></div></div>';
+        html += '<div class="form-group"><label class="col-md-3 control-label">排序</label><div class="col-md-8"><input type="number" min="0" class="form-control area_sort" value="'+province_sort+'"></div></div>';
+        html += '</form>';
+    util.confirm('地区编辑',html,function(){
+        var regionName = this.$content.find('.area_name').val();
+        var regionSort = this.$content.find('.area_sort').val();
+        var json = {
+            "eventId" : province_id,                 
+            "superiorRegionId" : '',     
+            "regionName" : regionName,
+            "regionSort" : regionSort
+        }
+        if(json.regionName == ''){
+            util.message('地区名称不能空')
+            return false;
+        }
+        updateAjax(3,json);
+    })
+})
+//修改市级区域
+$('.areaTable').delegate('.btn-editCity','click',function(){
+    var province_id = $(this).data('province_id');                                  //省级id
+    var province_name = $(".areaName[fieldid='"+province_id+"']").val();            //省级名称
+    var city_id = $(this).data('city_id');                                          //市级id
+    var city_name = $(".areaName[fieldid='"+city_id+"']").val();                    //市级名称
+    var city_sort = $(".sort[fieldid='"+city_id+"']").val();                        //市级排序   
+    var html = '<form class="form-horizontal padding-15">';
+        html += '<div class="form-group"><label class="col-md-3 control-label">上级名称</label><div class="col-md-8"><input type="text" class="form-control" readonly value="'+province_name+'"></div></div>';
+        html += '<div class="form-group"><label class="col-md-3 control-label">地区名称</label><div class="col-md-8"><input type="text" class="form-control area_name" superiorRegionId="'+city_id+'" value="'+ city_name +'"></div></div>';
+        html += '<div class="form-group"><label class="col-md-3 control-label">排序</label><div class="col-md-8"><input type="number" min="0" class="form-control area_sort" value="'+city_sort+'"></div></div>';
+        html += '</form>';
+    util.confirm('地区编辑',html,function(){
+        var regionName = this.$content.find('.area_name').val();
+        var regionSort = this.$content.find('.area_sort').val();
+        var json = {
+            "eventId" : city_id,                 
+            "superiorRegionId" : province_id,     
+            "regionName" : regionName,
+            "regionSort" : regionSort
+        }
+        if(json.regionName == ''){
+            util.message('地区名称不能空')
+            return false;
+        }
+        updateAjax(4,json);
+    })
+})
+//修改县级区域
+$('.areaTable').delegate('.btn-editDistrict','click',function(){
+    var city_id = $(this).data('city_id');                                          //市级id
+    var city_name = $(".areaName[fieldid='"+city_id+"']").val();                    //市级名称
+    var district_id = $(this).data('district_id');                                //县级id
+    var district_name = $(".areaName[fieldid='"+district_id+"']").val();           //县级名称  
+    var district_sort = $(".sort[fieldid='"+district_id+"']").val();               //县级排序   
+    var html = '<form class="form-horizontal padding-15">';
+        html += '<div class="form-group"><label class="col-md-3 control-label">上级名称</label><div class="col-md-8"><input type="text" class="form-control" readonly value="'+city_name+'"></div></div>';
+        html += '<div class="form-group"><label class="col-md-3 control-label">地区名称</label><div class="col-md-8"><input type="text" class="form-control area_name" superiorRegionId="'+district_id+'" value="'+ district_name +'"></div></div>';
+        html += '<div class="form-group"><label class="col-md-3 control-label">排序</label><div class="col-md-8"><input type="number" min="0" class="form-control area_sort" value="'+district_sort+'"></div></div>';
+        html += '</form>';
+    util.confirm('地区编辑',html,function(){
+        var regionName = this.$content.find('.area_name').val();
+        var regionSort = this.$content.find('.area_sort').val();
+        var json = {
+            "eventId" : district_id,                 
+            "superiorRegionId" : city_id,     
+            "regionName" : regionName,
+            "regionSort" : regionSort
+        }
+        if(json.regionName == ''){
+            util.message('地区名称不能空')
+            return false;
+        }
+        updateAjax(5,json);
+    })
+})
+//更新区域
+$('.areaTable').delegate('input.sort,input.areaName','change',function(){
+    
+    $.ajax({
+        type : "post",
+        url : "{:__URL('PLATFORM_MAIN/config/updateregionajax')}",
+        data : {
+            "regionType" : $(this).data("region_type"),
+            "upType" : $(this).data("up_type"),
+            "regionSort" : $(this).data("up_type") == '1' ? $(this).val() : '',
+            "regionName" : $(this).data("up_type") == '2' ? $(this).val() : '',
+            "regionId" : $(this).attr("fieldid")
+        },
+        success : function(data){
+            if(data.code>0){
+                util.message('更新成功','success')
+            }else{
+                util.message('更新失败','danger')
+            }
+        }
+    })
+})
+//删除地区
+$('.areaTable').delegate('.btn-delRegion','click',function(){
+    var regionId = $(this).data('region_id');
+    var type = $(this).data('region_type');
+    var tipinfo = '确认删除所选地区？删除选择地区，其所有下属地区也将会同步删除且不可恢复。';
+    if(type == '3'){
+        tipinfo = "确认删除所选地区？";
+    }
+    util.alert(tipinfo,function(){
+        $.ajax({
+            type:"post",
+            url:"{:__URL('PLATFORM_MAIN/config/deleteregion')}",
+            data:{
+                'regionId':regionId,
+                'type' : type
+            },
+            dataType: 'json',
+            success:function (data) {
+                if(data['code'] > 0){
+                    util.message("删除成功","success","{:__URL('PLATFORM_MAIN/config/areamanagement')}");
+                }else{
+                    util.message("删除失败","danger");
+                }
+            }
+        });
+    })
+})
+
+//查找市级区域
+function selectCityListAjax(province_id){
+    $.ajax({
+        type : "post",
+        url : "{:__URL('PLATFORM_MAIN/config/selectcitylistajax')}",
+        data : {"province_id" : province_id},
+        success : function(data){
+            if(data.length > 0){
+                var addInfo = '';
+                for (var i = 0; i < data.length; i++) {
+                    addInfo += '<div class="areaTr city_pid_'+ province_id +'" id="city_id_'+data[i]['city_id']+'" isClick="false" isShow="true">';
+                    addInfo += '<div class="areaTd">';
+                    if(data[i]['issetLowerLevel'] == 1){
+                        addInfo += '<a href="javascript:void(0);" data-province_id="'+province_id+'" data-city_id="'+data[i]['city_id']+'" class="btn-city tab_jia_'+data[i]['city_id']+'" style="display: ;"><i class="icon icon-add"></i></a>';
+                        addInfo += '<a href="javascript:void(0);" data-province_id="'+province_id+'" data-city_id="'+data[i]['city_id']+'" class="btn-city tab_jian_'+data[i]['city_id']+'" style="display: none;"><i class="icon icon-minus"></i></a>';
+                    }
+                    addInfo += '</div>';
+                    addInfo += '<div class="areaTd">';
+                    addInfo += '<input type="number" class="form-control sort-form-control sort" min="0" fieldid="'+data[i]['city_id']+'" fieldname="sort" value="'+data[i]['sort']+'"  size="1" data-region_type="2" data-up_type="1">';
+                    addInfo += '</div>';
+                    addInfo += '<div class="areaTd city_'+data[i]['city_id']+'" ><div class="input-group">';
+                    addInfo += '<span class="input-group-addon">|——</span><input type="text" class="form-control areaName" fieldid="'+data[i]['city_id']+'" value="'+data[i]['city_name']+'"  data-region_type="2" data-up_type="2"></div>';
+                    addInfo += '</div>';
+                    addInfo += '<div class="areaTd fs-0">';
+                    addInfo += '<a href="javascript:void(0);" class="btn-operation btn-addDistrict" data-city_id="'+data[i]['city_id']+'" data-toggle="tooltip" data-trigger="hover" title="添加子地区"> <i class="icon icon-add-l"></i> </a>';
+                    addInfo += '<a href="javascript:void(0);" class="btn-operation btn-editCity" data-province_id="'+province_id+'" data-city_id="'+data[i]['city_id']+'" data-toggle="tooltip" data-trigger="hover" title="修改"> <i class="icon icon-edit-l"></i> </a>';
+                    addInfo += '<a href="javascript:void(0);" class="btn-operation btn-delRegion" data-region_id="'+data[i]['city_id']+'" data-region_type="2" data-toggle="tooltip" data-trigger="hover" title="删除"> <i class="icon icon-clean-l"></i> </a>';
+                    addInfo += '</div>';
+                    addInfo += '</div>';
+                }
+            }
+            $("#province_id_"+province_id).after(addInfo);
+            util.tips();
+            $("#province_id_"+province_id).attr("isClick", 'true');
+        }
+    });
+}
+//查找县级区域
+function selectDistrictListAjax(province_id,city_id){
+    $.ajax({
+        type : "post",
+        url : "{:__URL('PLATFORM_MAIN/config/selectdistrictlistajax')}",
+        data : {"city_id" : city_id},
+        success : function(data){
+            console.log(data[0]);
+            if(data[0].length > 0){
+                var addInfo = '';
+                for (var i = 0; i < data[0].length; i++) {
+                    addInfo += '<div class="areaTr js-district_pic_'+province_id+' district_pid_'+ city_id +'" id="district_id_'+data[0][i]['district_id']+'" isClick="false">';
+                    addInfo += '<div class="areaTd"></div>';
+                    addInfo += '<div class="areaTd">';
+                    addInfo += '<input type="number" class="form-control sort-form-control sort" min="0" fieldid="'+data[0][i]['district_id']+'" fieldname="sort" value="'+data[0][i]['sort']+'"  size="1" data-region_type="3" data-up_type="1">';
+                    addInfo += '</div>';
+                    addInfo += '<div class="areaTd district_'+data[0][i]['district_id']+'"><div class="input-group">';
+                    addInfo += '<span class="input-group-addon">|—————</span><input type="text" class="form-control areaName" fieldid="'+data[0][i]['district_id']+'" value="'+data[0][i]['district_name']+'" data-region_type="3" data-up_type="2"></div>';
+                    addInfo += '</div>';
+                    addInfo += '<div class="areaTd fs-0">';
+                    addInfo += '<a href="javascript:void(0);" class="btn-operation btn-editDistrict" data-district_id="'+data[0][i]['district_id']+'" data-city_id="'+city_id+'" data-toggle="tooltip" data-trigger="hover" title="修改"><i class="icon icon-edit-l"></i></a> ';
+                    addInfo += '<a href="javascript:void(0);" class="btn-operation btn-delRegion" data-region_id="'+data[0][i]['district_id']+'" data-region_type="3" data-toggle="tooltip" data-trigger="hover" title="删除"><i class="icon icon-clean-l"></i></a>';
+                    addInfo += '</div>';
+                    addInfo += '</div>';
+                }
+            }
+            $("#city_id_"+city_id).after(addInfo);
+            util.tips();
+            $("#city_id_"+city_id).attr("isClick", 'true');
+        }
+    });
+}
+// 添加及修改
+function updateAjax(type,json){
+    // 1 == 添加市级区域      {:__URL('PLATFORM_MAIN/config/addcityajax')}
+    // 2 == 添加县级区域      {:__URL('PLATFORM_MAIN/config/adddistrictajax')}
+    // 3 == 修改省级区域      {:__URL('PLATFORM_MAIN/config/updateprovinceajax')}
+    // 4 == 修改市级区域      {:__URL('PLATFORM_MAIN/config/updatecityajax')}
+    // 5 == 修改县级区域      {:__URL('PLATFORM_MAIN/config/updatedistrictajax')}
+    // 6 == 添加省级区域      {:__URL('PLATFORM_MAIN/config/addprovinceajax')}
+    
+    var ajaxUrl = '';
+    if(type==1){
+        ajaxUrl = "{:__URL('PLATFORM_MAIN/config/addcityajax')}";
+    }
+    if(type==2){
+        ajaxUrl = "{:__URL('PLATFORM_MAIN/config/adddistrictajax')}";
+    }
+    if(type==3){
+        ajaxUrl = "{:__URL('PLATFORM_MAIN/config/updateprovinceajax')}";
+    }
+    if(type==4){
+        ajaxUrl = "{:__URL('PLATFORM_MAIN/config/updatecityajax')}";
+    }
+    if(type==5){
+        ajaxUrl = "{:__URL('PLATFORM_MAIN/config/updatedistrictajax')}";
+    }
+    if(type==6){
+        ajaxUrl = "{:__URL('PLATFORM_MAIN/config/addprovinceajax')}";
+    }
+
+    $.ajax({
+        type : "post",
+        url : ajaxUrl,
+        data : {
+            "eventId" : json.eventId,                        //当前id
+            "superiorRegionId" : json.superiorRegionId,      //上级id
+            "regionName" : json.regionName,
+            "regionSort" : json.regionSort
+        },
+        success : function(data){
+            if(data['code']>0){
+                util.message('更新成功','success',"{:__URL('PLATFORM_MAIN/config/areamanagement')}");
+            }else{
+                util.message(data['message'],"danger");
+            }
+        }
+    });
+}
+
+function closeCity(province_id){
+    $.ajax({
+        type : "post",
+        url : "{:__URL('PLATFORM_MAIN/config/selectcitylistajax')}",
+        data : {"province_id" : province_id},
+        success : function(data){
+            if(data.length > 0){
+                for (var i = 0; i < data.length; i++) {
+                    $(".tab_jian_"+data[i]['city_id']).hide();
+                    $(".tab_jia_"+data[i]['city_id']).show();
+                }
+            }
+        }
+    });
+}
+util.tips();
+})
+</script>
+{/block}
+
+

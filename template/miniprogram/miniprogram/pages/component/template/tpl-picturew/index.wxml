@@ -1,0 +1,62 @@
+<view class='picturew'>
+  <view wx:if="{{temDataitem.params.row != 1}}">
+    <view class="row-{{temDataitem.params.row == 1 ? cue : temDataitem.params.row}}" wx:for="{{temDataitem.data}}" wx:key="">
+      <view class="item" style="background:{{temDataitem.style.background}};padding:{{temDataitem.style.paddingtop}}px {{temDataitem.style.paddingleft}}px">       
+        <image class='image' mode='widthFix' src="{{item.imgurl}}" data-linkurl='{{item.linkurl}}' bindtap='linkurlPage'></image>
+      </view>      
+    </view>
+  </view>
+  <view wx:else>
+    <!-- 橱窗样式 -->
+    <view class='vui-cube'>
+      <view class='vui-cube-left'>
+        <nav-components type='1' url='{{img_list[0].linkurl}}' param=''>
+          <image class='image' mode='widthFix' src="{{img_list[0].imgurl}}" data-linkurl='{{img_list[0].linkurl}}'></image>
+        </nav-components>        
+      </view>
+      <!-- 有且只有两张图 -->
+      <view class='vui-cube-left' wx:if="{{img_list.length == 2}}">
+        <nav-components type='1' url='{{img_list[1].linkurl}}' param=''>
+          <image class='image' mode='widthFix' src="{{img_list[1].imgurl}}" data-linkurl='{{img_list[1].linkurl}}'></image>
+        </nav-components>        
+      </view>
+      <view class='vui-cube-right' wx:else>
+
+        <!-- 有且只有四张图 -->
+        <view class='vui-cube-right4' wx:if="{{img_list.length >= 4}}">
+          <image class='image1' src="{{img_list[1].imgurl}}" 
+          data-linkurl='{{img_list[1].linkurl}}' bindtap='linkurlPage'>
+          </image>
+          <view class='vui-cube-right2' >
+            <view class='vui-cube-right2-item'>
+              <nav-components type='1' url='{{img_list[2].linkurl}}' param=''>
+                <image class='image' mode='widthFix' src="{{img_list[2].imgurl}}"
+                data-linkurl='{{img_list[2].linkurl}}'>
+                </image>
+                </nav-components>              
+              </view>
+              <view class='vui-cube-right2-item'>
+                <nav-components type='1' url='{{img_list[3].linkurl}}' param=''>
+                  <image class='image' mode='widthFix' src="{{img_list[3].imgurl}}" 
+                    data-linkurl='{{img_list[3].linkurl}}'>
+                  </image>
+                </nav-components>              
+              </view>            
+          </view>
+        </view>
+        
+
+        <!-- 有且只有三张图 -->
+        <view class='vui-cube-right3' wx:if="{{img_list.length == 3}}">
+          <image class='image' src="{{img_list[1].imgurl}}" 
+          data-linkurl='{{img_list[1].linkurl}}' bindtap='linkurlPage'>
+          </image>
+          <image class='image' src="{{img_list[2].imgurl}}" 
+          data-linkurl='{{img_list[2].linkurl}}' bindtap='linkurlPage'>
+          </image>
+        </view>        
+
+      </view>
+    </view>
+  </view>  
+</view> 

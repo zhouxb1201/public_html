@@ -1,0 +1,7 @@
+{
+  "usingComponents": {
+    "bottom-menu":"../component/bottom_menu/index",
+    "mine":"../component/mine/index"
+  },
+  "navigationBarTitleText": "好物圈"
+}

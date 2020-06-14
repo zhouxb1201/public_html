@@ -1,0 +1,109 @@
+{extend name="admin/base" /}
+{block name="main"}
+<!--添加按钮和搜索框-->
+<div class="mb-20 flex flex-pack-justify">
+    <div class="">
+        <a href="{:__URL('ADMIN_MAIN/Financial/addShopAccount')}" class="btn btn-primary J-add"><i class="icon icon-add1"></i> 添加账户</a>
+    </div>
+</div>
+<!--表格-->
+<table class="table v-table">
+    <thead>
+        <tr align="center">
+            <th>账户类型</th>
+            <th>真实姓名</th>
+            <th>账号</th>
+            <th>备注</th>
+            <th class="col-md-2 pr-14 operationLeft">操作</th>
+        </tr>
+    </thead>
+    <tbody class="trs" id='list'>
+    </tbody>
+</table>
+<div class="page clearfix">
+    <div class="M-box3 m-style fr">
+    </div>
+</div>
+<!-- page end -->
+{/block}
+{block name="script"}
+<script type="text/javascript">
+require(['util','utilAdmin'], function (util,utilAdmin) {
+    $(function () {
+        LoadingInfo(1);
+    })
+//查询用户列表
+    function LoadingInfo(page_index) {
+        $('#page_index').val(page_index ? page_index : '1');
+        $.ajax({
+            type: "post",
+            url: "{:__URL('ADMIN_MAIN/Financial/shopAccountList')}",
+            async: true,
+            data: {
+                "pageIndex": page_index
+            },
+            success: function (data) {
+                var html = '';
+                if (data["data"].length > 0) {
+                    for (var i = 0; i < data["data"].length; i++) {
+                        if (data["data"][i]["type"] == 1) {
+                            data["data"][i]["type"] = '银行卡';
+                        } else if (data["data"][i]["type"] == 2) {
+                            data["data"][i]["type"] = '微信';
+                        } else if (data["data"][i]["type"] == 3) {
+                            data["data"][i]["type"] = '支付宝';
+                        }
+                        html += '<tr align="center">';
+                        html += '<td>' + data["data"][i]["type"] + '</td>';
+                        html += '<td>' + data["data"][i]["realname"] + '</td>';
+                        html += '<td>' + data["data"][i]["account_number"] + '</td>';
+                        html += '<td>' + data["data"][i]["remark"] + '</td>';
+                        html += '<td class="fs-0 operationLeft"><a href="' + __URL('ADMIN_MAIN/financial/updateshopaccount?id=' + data["data"][i]["id"]) + '" class="btn-operation">编辑</a>';
+                        html += '<a href="javascript:void(0);" class="btn-operation text-red1 del" data-id="' + data["data"][i]["id"] + '">删除</a>';
+                        html += '</tr>';
+                    }
+                } else {
+                    html += '<tr align="center"><td class="h-200" colspan="5">暂无符合条件的数据记录</td></tr>';
+                }
+                $("#list").html(html);
+                 utilAdmin.tips();
+                utilAdmin.page(".M-box3", data['total_count'], data["page_count"], page_index, LoadingInfo);
+            }
+        });
+    }
+    function Delete_bank(id,th) {
+        $.ajax({
+            type: "post",
+            url: "{:__URL('ADMIN_MAIN/financial/deleteaccount')}",
+            dataType: "json",
+            data: {
+                "id": id
+            },
+            success: function (data) {
+                if (data["code"] > 0) {
+                    utilAdmin.message(data["message"],'success',function(){
+                        LoadingInfo($('#page_index').val());
+                    });
+                } else {
+                    utilAdmin.message(data["message"],'danger');
+                    th.removeAttr('disabled');
+                }
+            }
+        });
+    }
+    function searchData() {
+        LoadingInfo(1);
+    }
+
+    $('body').on('click','.del',function(){
+        var th = $(this);
+        var id=th.attr('data-id');
+        if(th.attr('disabled')==='disabled'){
+            return false;
+        }
+        th.attr({disabled: "disabled"});
+        Delete_bank(id,th);
+    });
+})
+</script>
+{/block}

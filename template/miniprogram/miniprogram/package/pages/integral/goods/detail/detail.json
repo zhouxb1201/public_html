@@ -1,0 +1,9 @@
+{
+  "navigationBarTitleText": "商品详情",
+  "usingComponents": {
+    "phone-compoent": "/pages/component/phone/phonecom",
+    "login-component": "/pages/component/login/login",
+    "tem-component": "/pages/component/tem/index",
+    "my-poster": "/pages/component/poster/index"
+  }
+}

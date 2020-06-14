@@ -1,0 +1,84 @@
+{extend name="platform/new_base" /} 
+{block name="resources"}
+
+{/block}
+
+{block name="main"}
+<!-- page -->
+<!--内容-->
+<table class="table v-table table-auto-center">
+    <thead>
+    <tr>
+        <th>应用</th>
+        <th>操作</th>
+    </tr>
+    </thead>
+    <tbody id="list">
+
+    </tbody>
+</table>
+<div class="modal fade" id="install" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog" style="width: 500px">
+        <div class="modal-content">
+
+        </div>
+        <!-- /.modal-content -->
+    </div>
+    <!-- /.modal -->
+</div>
+<!-- page end -->
+{/block}
+{block name="script"}
+<script type="text/javascript">
+$(function () {
+    LoadingInfo();
+});
+function LoadingInfo() {
+    var search_text = $('#search_text').val();
+    var type = $('#type').val();
+    var version = $('#version').val();
+    var p_install = "{:per('extend','install')}";
+    $.ajax({
+        type: "post",
+        url: __URL("PLATFORM_MAIN/versions/addonslist"),
+        data: {"search_text": search_text, "type": type, "version": version},
+        success: function (data) {
+            var html = '';
+            if (data.length > 0) {
+                for (var i = 0; i < data.length; i++) {
+                    var addonslist = data[i]['addonlist'];
+                    if (addonslist.length > 0) {
+                        for (var j = 0; j < addonslist.length; j++) {
+                            var operation = '';
+                            var logo = 'http://iph.href.lu/48x48';
+                            var type = '';
+                            if (addonslist[j]['status'] == -1) {
+                                operation = '';
+                            } else if (addonslist[j]['status'] == 1) {
+    
+                                operation += '<a href="' + __URL('PLATFORM_MAIN/versions/uninstall?id=' + addonslist[j]['id']) + '" >卸载</a>';
+                                
+                            }else if (addonslist[j]['status'] == undefined && p_install === '1') {
+                                operation = '<a class="blue" href="' + __URL('PLATFORM_MAIN/versions/install?addon_name=' + addonslist[j]['name']) + '"  data-toggle="modal" data-target="#install">安装</a>';
+                            }
+                            if (addonslist[j]['logo']) {
+                                logo = addonslist[j]['logo'];
+                            }
+                            html += '<tr align="center">';
+                            html += '<td class="picword_td show_goodsname editChange" ><div class="media text-left "><div class="media-left"><p><img class="addonsLogo" id="imgLogo' + addonslist[j]['id'] + '"  src="' + logo + '" style="width:60px; height:60px;"></p></div><div class="media-body text-left"><div class="line-1-ellipsis">' + addonslist[j]['title'] + '</div>' + type + '</div></div></td>';
+                            html += '<td>' + operation + '</td>';
+                            html += '</tr>';
+                        }
+                    }
+
+                }
+            } else {
+                html += '<tr><th colspan="8" style="text-align:center;">暂无符合条件的数据记录</th></tr>';
+            }
+            $("#list").html(html);
+        }
+    });
+}
+
+</script>
+{/block}

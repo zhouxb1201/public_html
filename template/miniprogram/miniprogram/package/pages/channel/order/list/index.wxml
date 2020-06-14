@@ -1,0 +1,140 @@
+<view class='order_list'>
+  <view class='header'>
+    <view class='order_search'>
+      <view class='search_box'>
+        <icon type='search' size='16'></icon>
+        <input type='text' placeholder='订单号/店铺名称/商品名称' bindconfirm='searchChannelOrderFun'></input>
+      </view>
+      <!-- <view class='search_btn' bindtap='searchChannelOrderFun'>搜索</view> -->
+    </view>    
+  </view>
+
+  <!-- 采购订单导航 -->
+  <view wx:if='{{order_type == 1}}'>
+    <van-tabs active="{{ active }}" bind:change='changeStateFun'>
+      <van-tab title="全部"></van-tab>
+      <van-tab title="待付款"></van-tab>
+      <van-tab title="已完成"></van-tab>
+    </van-tabs>
+  </view>
+
+  <!-- 提货、零售订单导航 -->
+  <view wx:if='{{order_type == 2 || order_type == 4}}'>
+    <van-tabs active="{{ active }}" bind:change='changeStateFun'>
+      <van-tab title="全部"></van-tab>
+      <van-tab title="待付款"></van-tab>
+      <van-tab title="待发货"></van-tab>
+      <van-tab title="已发货"></van-tab>
+      <van-tab title="已收货"></van-tab>
+      <van-tab title="已完成"></van-tab>
+      <van-tab title="售后"></van-tab>
+    </van-tabs>
+  </view>
+
+  <!-- 出货订单导航 -->
+  <view wx:if='{{order_type == 3}}'>
+    <van-tabs active="{{ active }}" bind:change='changeStateFun'>
+      <van-tab title="全部"></van-tab>
+      <van-tab title="待付款"></van-tab>
+      <van-tab title="已发货"></van-tab>
+    </van-tabs>
+  </view>
+
+  <view class='list'>
+    <view class='order_item' wx:for='{{orderList}}' wx:key=''>
+      <view class='cell jc_sb'>
+        <view class='item_title'>
+          <view class='icon iconfont v-icon-shop1'></view>
+          <view wx:if='{{order_type == 3}}'>采购代理：{{item.who_purchase}}({{item.who_purchase_grade}})</view>
+          <view wx:else>{{item.shop_name}}</view>
+          <view class='iconfont v-icon-arrow-right'></view>
+        </view>
+        <view class='item_value font_color'>
+          <view wx:if='{{item.order_status == 0}}'>待付款</view>
+          <view wx:if='{{item.order_status == 1}}'>待发货</view>
+          <view wx:if='{{item.order_status == 2}}'>已发货</view>
+          <view wx:if='{{item.order_status == 3}}'>已收货</view>
+          <view wx:if='{{item.order_status == 4}}'>已完成</view>
+          <view wx:if='{{item.order_status == 5}}'>已关闭</view>
+          <view wx:if='{{item.order_status == -1}}'>售后中</view>
+        </view>
+      </view>
+      <view class='cell' wx:for="{{item.goods_list}}" wx:key='' wx:for-index="idx" wx:for-item="gooditem">
+        <view class='good_image' data-goodsid='{{gooditem.goods_id}}' data-ordertype="{{item.order_type}}" >
+          <image mode='aspectFit' src="{{gooditem.pic_cover != '' ? gooditem.pic_cover:'/images/rectangle-error.png'}}"></image>
+        </view>
+        <view class='good_info'>
+          <view class='good_name'>{{gooditem.goods_name}}</view>
+          <view class='purchase_user' wx:if="{{order_type == 1}}">采购于：{{gooditem.purchase_to}}</view>
+          <view class='price_num'>
+            <view class='money font_color'>              
+              <text>¥ {{gooditem.price}}</text>
+              <view class='num'>X {{gooditem.num}}</view>
+            </view>
+          </view>
+        </view>
+
+      </view>
+      <view class='cell'>
+        <view class='pay'>
+          <text class='pay_type_text' wx:if="{{item.pay_status == 0}}">待付款</text>
+          <text class='pay_type_text' wx:else>
+            <text wx:if="{{item.payment_type == 0}}">在线支付</text>
+            <text wx:if="{{item.payment_type == 1}}">微信</text>
+            <text wx:if="{{item.payment_type == 2}}">支付宝</text>
+            <text wx:if="{{item.payment_type == 3}}">银联卡</text>
+            <text wx:if="{{item.payment_type == 4}}">货到付款</text>
+            <text wx:if="{{item.payment_type == 5}}">余额支付</text>
+            <text wx:if="{{item.payment_type == 6}}">到店支付</text>
+            <text wx:if="{{item.payment_type == 10}}">线下支付</text>
+          </text>
+          <text>实付：</text>         
+          <text class='pay_money'>¥ {{item.pay_money}}</text>
+        </view>
+      </view>
+      <view class='cell fun_btn'>
+        <block>
+          <!-- 待付款 -->
+          <view class='fun_btn_box' wx:if='{{item.order_status == 0}}'>
+            <view class='btn pay_now'               
+              data-orderid='{{item.order_id}}' 
+              bindtap='payOrderNowFun'>
+              立即付款
+            </view>
+            <view class='btn close_order_btn'
+              data-orderid='{{item.order_id}}' 
+              bindtap='channelOrderClose'>
+              关闭订单
+            </view>
+          </view>
+
+          <!-- 已发货 -->
+          <view class='fun_btn_box' wx:if="{{item.order_status == 2}}">
+            <view class='btn' data-orderid='{{item.order_id}}' bindtap='orderTakeDelivery'>确认收货</view>
+            <navigator class='btn'  url='/pages/order/logistics/index?orderId={{item.order_id}}'>
+              <view>查看物流</view>
+            </navigator>
+          </view>
+
+           
+
+          <navigator class='btn' url='../detail/index?orderId={{item.order_id}}&orderType={{buy_type}}'>
+            <view>订单详情</view>
+          </navigator>
+
+        </block>
+      </view>
+    </view>
+  </view>
+  <view class='noMore' wx:if="{{no_more}}">没有更多了</view>
+
+  <view class='no_data' wx:if='{{orderList.length == 0 && page_index == 1}}'>
+    <view class='no_data_box'>
+      <view class='img'>
+        <image src='/images/empty-order.png' mode='widthFix'></image>
+      </view>
+      <view class='no_data_text'>没有相关数据</view>
+    </view>
+  </view>
+
+</view>

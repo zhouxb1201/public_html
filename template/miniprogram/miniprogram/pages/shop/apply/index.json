@@ -1,0 +1,6 @@
+{
+  "usingComponents": {
+    "form-com": "/pages/component/form-com/index"
+  },
+  "navigationBarTitleText": "店铺入驻"
+}

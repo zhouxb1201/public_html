@@ -1,0 +1,72 @@
+<view class='consumer_card_detail'>
+  
+  <view class='cell_group' wx:if='{{cardDetail.wx_card_state == 0 && cardDetail.card_type == 2}}'>
+    <view class='wechat_card' bindtap='getWeChatCard'>
+      <view class='icon iconfont v-icon-card'></view>
+      <view class='text'>领取到微信卡包，通过卡包快速核销。前往领取>></view>
+    </view>
+  </view>
+
+
+  <view class='cell_group'>
+    <view class='cell_goods'>
+      <view class='card_logo'>
+        <image src='{{cardDetail.goods_picture}}'></image>
+      </view>
+      <view class='card_name'>
+        <view class='card_title'>{{cardDetail.goods_name}}</view>
+        <view class='card_desc'>{{cardDetail.card_title}}</view>
+      </view>
+    </view>
+  </view>
+
+  <view class='cell_group'>
+    <view class='box'>
+      <view class='img'>
+        <image src='{{cardDetail.card_codeImg}}'></image>
+      </view>
+      <view class='card_code'>{{cardDetail.card_code}}</view>
+    </view>
+  </view>
+
+  <view class='cell_group'>
+    <view class='cell_item'>
+      <view class='icon iconfont v-icon-location'></view>
+      <view class='text'>使用门店</view>
+    </view>
+    <view class='address_buy'>
+      <view class='buy_info'>
+        <view class='name'>{{cardDetail.shop_name}}({{cardDetail.store_name}})</view>
+        <view class='phone'>{{cardDetail.store_tel}}</view>
+      </view>
+      <view class='address_info'>{{cardDetail.address}}</view>
+    </view>
+  </view>
+
+  <view class='cell_group'>
+    <view class='cell_item'>
+      <view class='text'>核销情况</view>
+    </view>
+    <view class='address_buy'>
+      <view class='cell_row'>
+        <view class='cell_text'>核销数</view>
+        <view class='cell_value' wx:if='{{cardDetail.type == 2}}'>剩余 <text>{{cardDetail.surplus_num}}</text> 次， 总数 <text>{{cardDetail.count_num}}</text> 次</view>
+        <view class='cell_value' wx:if='{{cardDetail.type == 1}}'>剩余 <text>{{cardDetail.surplus_num}}</text> 天</view>
+      </view>
+      <view class='cell_row'>
+        <view class='cell_text'>有效期</view>
+        <view class='cell_value'>{{cardDetail.invalid_time}} 前有效</view>
+      </view>
+    </view>
+  </view>
+
+  <view class='cell_group'>
+    <view class='cell_item'>
+      <view class='text'>核销记录</view>
+    </view>
+    <view class='address_buy'>
+      
+    </view>
+  </view>
+
+</view>

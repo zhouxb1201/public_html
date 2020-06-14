@@ -1,0 +1,45 @@
+<view>
+  <van-tabs active="{{ active }}" bind:change="onTabsChange">
+    <van-tab title="未领奖"></van-tab>
+    <van-tab title="已领奖"></van-tab>
+    <van-tab title="已过期"></van-tab>
+  </van-tabs>
+</view>
+<view class='card' wx:for="{{listData}}" wx:for-index="index" wx:for-item="item" wx:key="">
+  <view class='card__header'>
+    <view class='card__head__left'>
+      <view class='card__img'>
+        <image mode='widthFix' src="{{item.pic != '' ? item.pic : defaultImg[index]}}"></image>
+      </view>
+      <view class='card__goods__info'>
+        <view>{{item.prize_name}}</view>
+        <view>{{item.activity_name}}</view>
+      </view>
+    </view>
+    <view class='card__head__right'>【{{item.term_name}}】</view>
+  </view>
+  <view class='card__content'>
+    <view class='w50 time'>{{filter.formatDate(item.expire_time,'s')}}过期</view>
+    <view class='w50 btn-wrap' wx:if="{{item.state == 1}}">
+      <view class="btn danger" bindtap='onConfirm' data-memberprizeid="{{item.member_prize_id}}">领奖</view>
+    </view>
+    <view class='w50 btn-wrap' wx:if="{{item.state == 2}}">
+      <view class="btn back">已领奖</view>
+      <view class="btn primary" bindtap='onLogistics' wx:if="{{item.type == 5 || item.type == 6}}" data-orderid="{{item.receive_id}}">物流</view>
+    </view>
+    <view class='w50 btn-wrap' wx:if="{{item.state == 3}}">
+      <view class="btn back">已过期</view>
+    </view>
+  </view>
+</view>
+
+<view class='no_data' wx:if='{{listData.length == 0 && page_index == 1}}'>
+  <view class='no_data_box'>
+    <view class='img'>
+      <image src='/images/empty-order.png' mode='widthFix'></image>
+    </view>
+    <view class='no_data_text'>没有相关数据</view>
+  </view>
+</view>
+
+<wxs src='../../../../utils/addmul.wxs' module='filter' />

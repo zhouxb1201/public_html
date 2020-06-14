@@ -1,0 +1,11 @@
+<view class='menu'>
+  <view class="list">
+    <view class="items text {{active == 0 ? 'active' : '' }}" data-index="0" bindtap="switchTo">首页</view>
+    <view class="items" data-index="1" bindtap="switchTo">
+      <view class="add_btn">
+        <view class="icon iconfont v-icon-add-04"></view>
+      </view>
+    </view>
+    <view class="items text {{active == 2 ? 'active' : '' }}" data-index="2" bindtap="switchTo">我的</view>
+  </view>
+</view>

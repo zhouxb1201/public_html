@@ -1,0 +1,701 @@
+{extend name="platform/new_base" /}
+{block name="resources"/}
+{/block}
+{block name="main"}
+
+                <!-- page -->
+
+                <ul class="nav nav-tabs v-nav-tabs" role="tablist">
+                    <li role="presentation" class="active"><a href="#follow" aria-controls="follow" role="tab" data-toggle="tab" class="flex-auto-center">关注时回复</a></li>
+                    <li role="presentation"><a href="#keyword" data-id='2' aria-controls="keyword" role="tab" data-toggle="tab" class="flex-auto-center">关键字回复</a></li>
+                    <li role="presentation" ><a href="#default" aria-controls="default" role="tab" data-toggle="tab" class="flex-auto-center">默认回复</a></li>
+                </ul>
+                <div class="tab-content">
+                    <div role="tabpanel" class="tab-pane fade in active FollowReply" id="follow">
+                        {notempty name="info"}
+                        {eq name="info['media_info']['type']" value="text"}
+                               <div class="textNew1" id="textNew">
+                                    <textarea name="" id="newArea" class="form-control resize_none" cols="60" rows="5">{$info['media_info']['attachment']}</textarea>
+                                    <div class="text_border1">
+                                        <a href="javascript:void(0);" class="text_select_emoji"><i class="icon icon-emoji"></i></a>
+                                        <a href="javascript:void(0);" class="link_dia"><i class="icon icon-link-l"></i></a>
+                                    </div>
+                                    <div class="mt-10 text-left">
+                                         <a href="javascript:void(0);" class="flex-1 btn btn-default delFollow" data-id="1">删除</a>
+                                    </div>
+                                </div>
+                        {/eq}
+                        {eq name="info['media_info']['type']" value="image"}
+                        <div class="w-300 border-default">
+                            <div class="padding-15">
+                                <div class="item-head">
+                                    <img src="{$info['media_info']['attachment']}" class="max-w-auto" />
+                                    <p class="line-1-ellipsis">{$info['media_info']['filename']}</p>
+                                </div>
+                            </div>
+                            <div class="border-top flex-auto-center text-center">
+                                <!--<a href="javascript:void(0);" class="flex-1 btn text-primary border-right updateFollow" data-id="{$info['id']}" >修改</a>-->
+                                <a href="javascript:void(0);" class="flex-1 btn delFollow" data-id="1">删除</a>
+                            </div>
+                        </div>
+                        {/eq}
+
+                        {eq name="info['media_info']['type']" value="voice"}
+                        <div class="w-300 border-default">
+                            <div class="padding-15 imageText">
+                                <div class="item-head">
+                                    <div class="icon audio-player-play" data-attach="{$info['media_info']['filename']}"><span><i class="fa fa-play"></i></span></div>
+                                    <p class="line-1-ellipsis">{$info['media_info']['filename']}</p>
+                                    <p class="line-1-ellipsis">创建时间：{$info['media_info']['createtime']}</p>
+                                </div>
+                            </div>
+                            <div class="border-top flex-auto-center text-center">
+                                <!--<a href="javascript:void(0);" class="flex-1 btn text-primary border-right updateFollow" data-id="{$info['id']}">修改</a>-->
+                                <a href="javascript:void(0);" class="flex-1 btn btn-default delFollow" data-id="1" >删除</a>
+                            </div>
+                        </div>
+                        {/eq}
+                        {eq name="info['media_info']['type']" value="video"}
+                        <div class="w-300 border-default">
+                            <div class="padding-15 imageText">
+                                <div class="item-head">
+                                    <img src="PLATFORM_STATIC//images/banner-bg.png" class="max-w-auto" />
+                                    <p class="line-1-ellipsis">标题：{$info['media_info']['tag']['title']}</p>
+                                    <p class="line-1-ellipsis">描述：{$info['media_info']['tag']['description']}</p>
+                                    <p class="line-1-ellipsis">创建时间：{$info['media_info']['createtime']}</p>
+                                </div>
+                            </div>
+                            <div class="border-top flex-auto-center text-center">
+                                <!--<a href="javascript:void(0);" class="flex-1 btn text-primary border-right updateFollow" data-id="{$info['id']}">修改</a>-->
+                                <a href="javascript:void(0);" class="flex-1 btn btn-default delFollow" data-id="1" >删除</a>
+                            </div>
+                        </div>
+                        {/eq}
+                        {eq name="info['media_info']['type']" value="news"}
+                        <div class="w-300 border-default ">
+                            {foreach name="info['media_info']['items']['data']" item="v" key="k"}
+                            <div class="padding-15 imagesTexts">
+                                {eq name="k" value="0"}
+                                <div class="item-head">
+                                    <img src="{$v['thumb_url']}" class="max-w-auto" />
+                                    <p class="line-1-ellipsis">{$v['title']}</p>
+                                </div>
+                                {/eq}
+                                {gt name="k" value="0"}
+                                <div class="item">
+                                    <p class="line-2-ellipsis">{$v['title']}</p>
+                                    <img src="{$v['thumb_url']}" >
+                                </div>
+                                {/gt}
+                            </div>
+                            {/foreach}
+                            <div class="border-top flex-auto-center text-center">
+                                <!--<a href="javascript:void(0);" class="flex-1 btn text-primary border-right updateFollow" data-id="{$info['id']}"  >修改</a>-->
+                                <a href="javascript:void(0);" class="flex-1 btn delFollow" data-id="1" >删除</a>
+                            </div>
+
+                        </div>
+                        {/eq}
+                        {/notempty}
+                        {if $info==''}
+                        <div class="flex-auto-center h-300 empty-box">
+                                <div class="media_cover1 selectMedia materialEvent">
+                                        <span class="create_access">
+                                        <a class="add_gray_wrp jsMsgSenderPopBt" href="javascript:void(0);">
+                                            <i class="icon icon-add"></i>
+                                            <strong>从素材库中选择</strong>
+                                        </a>
+                                        </span>
+                                </div>
+                                <div class="media_cover1 selectText">
+                                        <span class="create_access">
+                                        <a class="add_gray_wrp jsMsgSenderPopBt" href="javascript:void(0);">
+                                            <i class="icon icon-add"></i>
+                                            <strong>文本消息</strong>
+                                        </a>
+                                        </span>
+                                </div>
+
+                                <div class="textNew1" id="textNew" style="display: none">
+                                    <textarea name="" id="follow_content_text" class="form-control resize_none" cols="60" rows="5"></textarea>
+                                    <div class="text_border1">
+                                        <a href="javascript:void(0);" class="text_select_emoji" data-areaid="follow_content_text"><i class="icon icon-emoji"></i></a>
+                                        <a href="javascript:void(0);" class="link_dia" data-areaId="follow_content_text"><i class="icon icon-link-l"></i></a>
+                                    </div>
+                                    <div class="mt-10 text-left">
+                                            <a class="btn btn-primary materialEvent1" href="javascript:void(0);">保存</a>
+                                            <a class="btn btn-default" href="{:__URL('PLATFORM_MAIN/wchat/replayConfig')}">返回</a>
+                                    </div>
+                                </div>
+
+                        </div>
+
+
+
+                        {/if}
+                    </div>
+                    <div role="tabpanel" class="tab-pane fade " id="keyword">
+                        <div class="mb-10">
+                            <a class="btn btn-primary addKeyReply"><i class="icon icon-add1"></i> 添加关键字回复</a>
+                        </div>
+                        <table class="table v-table table-auto-center">
+                            <thead>
+                                <tr>
+                                    <th>规则名称</th>
+                                    <th>匹配类型</th>
+                                    <th>关键字</th>
+                                    <th class="col-md-2 pr-14 operationLeft">操作</th>
+                                </tr>
+                            </thead>
+                            <tbody id="list">
+
+                            </tbody>
+
+                        </table>
+                        <input type="hidden" id="page_index">
+                        <nav aria-label="Page navigation" class="clearfix">
+                            <ul id="page" class="pagination pull-right"></ul>
+                        </nav>
+                    </div>
+                    <div role="tabpanel" class="tab-pane fade " id="default">
+                        {notempty name="default_info"}
+                           {eq name="default_info['media_info']['type']" value="text"}
+                               <div class="textNew1" id="textNew">
+                                    <textarea name="" id="newArea" class="form-control resize_none" cols="60" rows="5">{$default_info['media_info']['attachment']}</textarea>
+                                    <div class="text_border1">
+                                        <a href="javascript:void(0);" class="text_select_emoji"><i class="icon icon-emoji"></i></a>
+                                        <a href="javascript:void(0);" class="link_dia"><i class="icon icon-link-l"></i></a>
+                                    </div>
+                                    <div class="mt-10 text-left">
+                                         <a href="javascript:void(0);" class="flex-1 btn btn-default delDefault" data-id="3">删除</a>
+                                    </div>
+                                </div>
+                        {/eq}
+                        {eq name="default_info['media_info']['type']" value="image"}
+                        <div class="w-300 border-default">
+                            <div class="padding-15">
+                                <div class="item-head">
+                                    <img src="{$default_info['media_info']['attachment']}" class="max-w-auto" />
+                                    <p class="line-1-ellipsis">{$default_info['media_info']['filename']}</p>
+                                </div>
+                            </div>
+                            <div class="border-top flex-auto-center text-center">
+                                <!--<a href="javascript:void(0);" class="flex-1 btn text-primary border-right updateDefault" data-id="{$default_info['id']}" >修改</a>-->
+                                <a href="javascript:void(0);" class="flex-1 btn btn-default delDefault" data-id="3">删除</a>
+                            </div>
+                        </div>
+                        {/eq}
+                        {eq name="default_info['media_info']['type']" value="voice"}
+                        <div class="w-300 border-default">
+                            <div class="padding-15 imageText">
+                                <div class="item-head">
+                                    <div class="icon audio-player-play" data-attach="{$info['media_info']['filename']}"><span><i class="fa fa-play"></i></span></div>
+                                    <p class="line-1-ellipsis">{$default_info['media_info']['filename']}</p>
+                                    <p class="line-1-ellipsis">创建时间：{$default_info['media_info']['createtime']}</p>
+                                </div>
+                            </div>
+                            <div class="border-top flex-auto-center text-center">
+                                <!--<a href="javascript:void(0);" class="flex-1 btn text-primary border-right updateDefault" data-id="{$default_info['id']}">修改</a>-->
+                                <a href="javascript:void(0);" class="flex-1 btn btn-default delDefault" data-id="3" >删除</a>
+                            </div>
+                        </div>
+                        {/eq}
+                        {eq name="default_info['media_info']['type']" value="video"}
+                        <div class="w-300 border-default">
+                            <div class="padding-15 imageText">
+                                <div class="item-head">
+                                    <img src="PLATFORM_STATIC//images/banner-bg.png" class="max-w-auto" />
+                                    <p class="line-1-ellipsis">标题：{$default_info['media_info']['tag']['title']}</p>
+                                    <p class="line-1-ellipsis">描述：{$default_info['media_info']['tag']['description']}</p>
+                                    <p class="line-1-ellipsis">创建时间：{$default_info['media_info']['createtime']}</p>
+                                </div>
+                            </div>
+                            <div class="border-top flex-auto-center text-center">
+                                <!--<a href="javascript:void(0);" class="flex-1 btn text-primary border-right updateDefault" data-id="{$default_info['id']}">修改</a>-->
+                                <a href="javascript:void(0);" class="flex-1 btn btn-default delDefault" data-id="3" >删除</a>
+                            </div>
+                        </div>
+                        {/eq}
+                        {eq name="default_info['media_info']['type']" value="news"}
+                        <div class="w-300 border-default ">
+                            {foreach name="default_info['media_info']['items']['data']" item="v" key="k"}
+                            <div class="padding-15 imagesTexts">
+                                {eq name="k" value="0"}
+                                <div class="item-head">
+                                    <img src="{$v['thumb_url']}" class="max-w-auto" />
+                                    <p class="line-1-ellipsis">{$v['title']}</p>
+                                </div>
+                                {/eq}
+                                {gt name="k" value="0"}
+                                <div class="item">
+                                    <p class="line-2-ellipsis">{$v['title']}</p>
+                                    <img src="{$v['thumb_url']}" >
+                                </div>
+                                {/gt}
+                            </div>
+                            {/foreach}
+                            <div class="border-top flex-auto-center text-center">
+                                <!--<a href="javascript:void(0);" class="flex-1 btn text-primary border-right updateDefault" data-id="{$default_info['id']}"  >修改</a>-->
+                                <a href="javascript:void(0);" class="flex-1 btn btn-default delDefault" data-id="3" >删除</a>
+                            </div>
+
+                        </div>
+                        {/eq}
+                        {/notempty}
+                        {if $default_info==''}
+                        <div class="flex-auto-center h-300 empty-box"><div class="media_cover1 selectMedia updateFollow">
+                                        <span class="create_access">
+                                        <a class="add_gray_wrp jsMsgSenderPopBt" href="javascript:void(0);">
+                                            <i class="icon icon-add"></i>
+                                            <strong>从素材库中选择</strong>
+                                        </a>
+                                        </span>
+                                </div>
+                                <div class="media_cover1 selectText">
+                                        <span class="create_access">
+                                        <a class="add_gray_wrp jsMsgSenderPopBt" href="javascript:void(0);">
+                                            <i class="icon icon-add"></i>
+                                            <strong>文本消息</strong>
+                                        </a>
+                                        </span>
+                                </div>
+
+                                <div class="textNew1" id="textNew" style="display: none">
+                                    <textarea name="" id="default_content_text" class="form-control resize_none" cols="60" rows="5"></textarea>
+                                    <div class="text_border1">
+                                        <a href="javascript:void(0);" class="text_select_emoji" data-areaid="default_content_text"><i class="icon icon-emoji"></i></a>
+                                        <a href="javascript:void(0);" class="link_dia" data-areaId="default_content_text"><i class="icon icon-link-l"></i></a>
+                                    </div>
+                                    <div class="mt-10 text-left">
+                                            <a class="btn btn-primary updateFollow1" href="javascript:void(0);">保存</a>
+                                            <a class="btn btn-default" href="{:__URL('PLATFORM_MAIN/wchat/replayConfig')}">返回</a>
+                                    </div>
+                                </div></div>
+                        {/if}
+                    </div>
+                </div>
+                <!-- page end -->
+        {/block}
+        {block name="script"}
+<script>
+require(['util'],function(util){
+
+    $('.nav-tabs a').on('click',function(){
+        var type = $(this).data('id');
+        if(type==2){
+            util.initPage(getList);
+        }
+    });
+    function getList(page_index){
+        $("#page_index").val(page_index);
+        $.ajax({
+            type : "post",
+            url : "{:__URL('PLATFORM_MAIN/wchat/keyReplayList')}",
+            async : true,
+            data : {
+                "page_index" : page_index
+            },
+            success : function(data) {
+                var html = '';
+                if (data["data"].length > 0) {
+                    for (var i = 0; i < data["data"].length; i++) {
+                        html += '<tr>';
+                        html += '<td>' + data["data"][i]["rule_name"] + '</td>';
+                        if(data["data"][i]["match_type"] == 1){
+                            html += '<td>模糊匹配</td>';
+                        }else{
+                            html += '<td>全部匹配</td>';
+                        }
+                        html += '<td>' + data["data"][i]["key"] + '</td>';
+                        if(data['data'][i]['replay_type'] == 0){
+                            html += '<td class="fs-0 operationLeft"><a href="javascript:void(0);" class="btn-operation updateKeyReply" data-id="' + data["data"][i]["id"] +'">编辑</a>';
+                            html += '<a href="javascript:void(0);" class="btn-operation text-red1 delKeyReply" data-id="' + data["data"][i]["id"] + '">删除</a></td>';
+                        }else{
+                            html += '<td><span class="btn-operation text-red1">超级海报关键字不能操作</span></td>';
+                        }
+
+                        html += '</tr>';
+                    }
+                } else {
+                    html += '<tr><td class="h-200" colspan="4">暂无符合条件的数据记录</td></tr>';
+                }
+                $('#page').paginator('option', {
+                    totalCounts: data['total_count']  // 动态修改总数
+                });
+                $("#list").html(html);delKeyReply();updateKeyReply();
+                util.tips();
+            }
+        });
+    }
+    /**
+     * 修改关键字回复
+     */
+    function updateKeyReply() {
+        $('.updateKeyReply').on('click', function () {
+            var id = $(this).data('id');
+            var url = __URL('PLATFORM_MAIN/wchat/addOrUpdateKeyReplay') + '&id=' + id;
+            util.confirm('修改关键字回复', 'url:' + url, function () {
+                var replay_id = this.$content.find('#replay_id').val();
+                var last_media_id = this.$content.find('#last_media_id').val();
+                var id = this.$content.find('#id').val();
+                var key = this.$content.find('#key').val();
+                var rule_name = this.$content.find('#rule_name').val();
+                var content_text = this.$content.find('#replay_content_text').val();
+                if (replay_id) {
+                    var media_id = replay_id;
+                } else {
+                    media_id = last_media_id;
+                }
+                var match_type = this.$content.find('input[name="match_type"]:checked').val();
+                $.ajax({
+                    url: __URL(PLATFORMMAIN + "/Wchat/addOrUpdateKeyReplay"),
+                    type: "post",
+                    data: {
+                        "id": id,
+                        "media_id": media_id,
+                        "content_text": content_text,
+                        "rule_name": rule_name,
+                        "key": key,
+                        "match_type": match_type
+                    },
+                    success: function (data) {
+                        if (data["code"] > 0) {
+                            util.message(data["message"], 'success', getList($("page_index").val()));
+                        } else if(data["code"] ==-2){
+                            util.message('修改失败，相关关键字已存在', 'danger');
+                        } else {
+                            util.message(data["message"], 'danger');
+                        }
+                    }
+                })
+            },'xlarge')
+        })
+    }
+
+    /**
+     * 添加关键字回复
+     */
+    $('.addKeyReply').on('click',function(){
+            var url = __URL('PLATFORM_MAIN/wchat/addOrUpdateKeyReplay');
+            util.confirm('添加关键字回复', 'url:'+url,function(){
+                var  replay_id = this.$content.find('#replay_id').val();
+                var  key = this.$content.find('#key').val();
+                var  rule_name = this.$content.find('#rule_name ').val();
+                var  match_type = this.$content.find('input[name="match_type"]:checked').val();
+                var content_text = this.$content.find('#replay_content_text').val();
+                $.ajax({
+                    url: __URL(PLATFORMMAIN + "/Wchat/addOrUpdateKeyReplay"),
+                    type: "post",
+                    data: { "media_id": replay_id,"id":0,"content_text": content_text,"rule_name": rule_name, "key": key,"match_type": match_type },
+                    success: function (data) {
+                        if (data["code"]  > 0) {
+                            util.message(data["message"],'success',getList($("page_index").val()));
+                        }else if(data["code"] ==-2){
+                            util.message('添加失败，相关关键字已存在', 'danger');
+                        } else {
+                            util.message(data["message"],'danger');
+                        }
+                    }
+                })
+            },'xlarge')
+        })
+    /**
+     * 修改关键字回复
+     */
+    // function updateKeyReply(){
+    //     $('.updateKeyReply').on('click',function(){
+    //         var id = $(this).data('id');
+    //         var url = __URL('PLATFORM_MAIN/wchat/addOrUpdateKeyReplay')+'&id='+id;
+    //         util.confirm('修改关键字回复', 'url:'+url,function(){
+    //             var  replay_id = this.$content.find('#replay_id').val();
+    //             var  last_media_id = this.$content.find('#last_media_id').val();
+    //             var  id = this.$content.find('#id').val();
+    //             var  key = this.$content.find('#key').val();
+    //             if(replay_id){
+    //                 var media_id = replay_id;
+    //             }else{
+    //                 media_id = last_media_id;
+    //             }
+    //             var  match_type = this.$content.find('input[name="match_type"]:checked').val();
+    //             $.ajax({
+    //                 url: __URL(PLATFORMMAIN + "/Wchat/addOrUpdateKeyReplay"),
+    //                 type: "post",
+    //                 data: {"id": id, "media_id": media_id, "key": key,"match_type": match_type },
+    //                 success: function (data) {
+    //                     if (data["code"]  > 0) {
+    //                         util.message(data["message"],'success',getList($("page_index").val()));
+    //                     } else {
+    //                         util.message(data["message"],'danger');
+    //                     }
+    //                 }
+    //             })
+    //         })
+    //     })
+    // }
+    // 删除关键字回复
+    function delKeyReply(){
+        $('.delKeyReply').on('click',function(){
+            var id = $(this).data('id');
+            util.alert('是否删除？',function(){
+                $.ajax({
+                    type : "post",
+                    url : "{:__URL('PLATFORM_MAIN/wchat/delKeyReply')}",
+                    async : true,
+                    data : {
+                        "id" : id
+                    },
+                    success : function(data) {
+                        if (data["code"] > 0) {
+                            util.message(data["message"],'success',getList($("page_index").val()));
+                        }else{
+                            util.message(data["message"],'danger');
+                        }
+                    }
+                });
+            })
+        })
+    }
+    //关注时回复设置（选择素材）
+    $('.materialEvent').click(function(){
+        var url = __URL('PLATFORM_MAIN/wchat/onLoadMaterial');
+        util.confirm('选取素材', 'url:'+url,function(){
+            var  media_id = this.$content.find('#replay_key_id').val();
+            $.ajax({
+                type: "post",
+                url: "{:__URL('PLATFORM_MAIN/wchat/addOrUpdateFollowReply')}",
+                async: true,
+                data: {
+                    "media_id":media_id,"id":0
+                },
+                success: function (data) {
+                    if (data["code"] > 0) {
+                        util.message(data["message"],'success',__URL('PLATFORM_MAIN/wchat/replayConfig'));
+                    }else{
+                        util.message(data["message"],'danger');
+                    }
+                }
+            });
+        },'large')
+    });
+    //关注时回复设置（选择文本）
+    $('.materialEvent1').click(function(){
+        var content_text = $('#follow_content_text').val();
+        $.ajax({
+            type: "post",
+            url: "{:__URL('PLATFORM_MAIN/wchat/addOrUpdateFollowReply')}",
+            async: true,
+            data: {
+                "id":0,"content_text":content_text
+            },
+            success: function (data) {
+                if (data["code"] > 0) {
+                    util.message(data["message"],'success',__URL('PLATFORM_MAIN/wchat/replayConfig'));
+                }else{
+                    util.message(data["message"],'danger');
+                }
+            }
+        });
+    });
+    //默认时回复设置(选择素材)
+    $('.updateFollow').on('click',function(){
+        var url = __URL('PLATFORM_MAIN/wchat/onLoadMaterial');
+        util.confirm('选取素材', 'url:'+url,function(){
+            var  media_id = this.$content.find('#replay_key_id').val();
+            $.ajax({
+                type: "post",
+                url: "{:__URL('PLATFORM_MAIN/wchat/addOrUpdateDefaultReply')}",
+                async: true,
+                data: {
+                    "media_id":media_id,"id":0
+                },
+                success: function (data) {
+                    if (data["code"] > 0) {
+                        util.message(data["message"],'success',__URL('PLATFORM_MAIN/wchat/replayConfig'));
+                    }else{
+                        util.message(data["message"],'danger');
+                    }
+                }
+            });
+        },'large')
+    })
+    //默认时回复设置(选择文本)
+    $('.updateFollow1').click(function(){
+        var url = __URL('PLATFORM_MAIN/wchat/onLoadText');
+            var  content_text = $('#default_content_text').val();
+            $.ajax({
+                type: "post",
+                url: "{:__URL('PLATFORM_MAIN/wchat/addOrUpdateDefaultReply')}",
+                async: true,
+                data: {
+                    "content_text":content_text,"id":0
+                },
+                success: function (data) {
+                    if (data["code"] > 0) {
+                        util.message(data["message"],'success',__URL('PLATFORM_MAIN/wchat/replayConfig'));
+                    }else{
+                        util.message(data["message"],'danger');
+                    }
+                }
+            });
+    });
+    // //修改关注时回复
+    // $('.updateFollow').on('click',function(){
+    //     var url = __URL('PLATFORM_MAIN/wchat/onLoadMaterial');
+    //     var id = $(this).data('id');
+    //     util.confirm('选取素材', 'url:'+url,function(){
+    //         var  media_id = this.$content.find('#replay_key_id').val();
+    //         $.ajax({
+    //             type: "post",
+    //             url: "{:__URL('PLATFORM_MAIN/wchat/addOrUpdateFollowReply')}",
+    //             async: true,
+    //             data: {
+    //                 "media_id":media_id,"id":id
+    //             },
+    //             success: function (data) {
+    //                 if (data["code"] > 0) {
+    //                     util.message(data["message"],'success',__URL('PLATFORM_MAIN/wchat/replayConfig'));
+    //                 }else{
+    //                     util.message(data["message"],'danger');
+    //                 }
+    //             }
+    //         });
+    //     },'large')
+    // });
+    //修改默认时回复
+    // $('.updateDefault').on('click',function(){
+    //     var url = __URL('PLATFORM_MAIN/wchat/onLoadMaterial');
+    //     var id = $(this).data('id');
+    //     util.confirm('选取素材', 'url:'+url,function(){
+    //         var  media_id = this.$content.find('#replay_key_id').val();
+    //         $.ajax({
+    //             type: "post",
+    //             url: "{:__URL('PLATFORM_MAIN/wchat/addOrUpdateDefaultReply')}",
+    //             async: true,
+    //             data: {
+    //                 "media_id":media_id,"id":id
+    //             },
+    //             success: function (data) {
+    //                 if (data["code"] > 0) {
+    //                     util.message(data["message"],'success',__URL('PLATFORM_MAIN/wchat/replayConfig'));
+    //                 }else{
+    //                     util.message(data["message"],'danger');
+    //                 }
+    //             }
+    //         });
+    //     },'large')
+    // });
+    //删除关注时回复
+    $('.delFollow').on('click',function(){
+        var  type = $(this).data('id');
+        util.alert('是否删除？',function() {
+            $.ajax({
+                type: "post",
+                url: __URL(PLATFORMMAIN + "/wchat/delReply"),
+                async: true,
+                data: {
+                    "type": type
+                },
+                success: function (data) {
+                    if (data["code"] > 0) {
+                        util.message(data["message"], 'success', __URL('PLATFORM_MAIN/wchat/replayConfig'));
+                    } else {
+                        util.message(data["message"], 'danger');
+                    }
+                }
+            })
+        })
+    });
+    //删除默认时回复
+    $('.delDefault').on('click',function(){
+        var  type = $(this).data('id');
+        util.alert('是否删除？',function() {
+            $.ajax({
+                type: "post",
+                url: __URL(PLATFORMMAIN + "/wchat/delReply"),
+                async: true,
+                data: {
+                    "type": type
+                },
+                success: function (data) {
+                    if (data["code"] > 0) {
+                        util.message(data["message"], 'success', __URL('PLATFORM_MAIN/wchat/replayConfig'));
+                    } else {
+                        util.message(data["message"], 'danger');
+                    }
+                }
+            })
+        });
+    });
+
+    // 点击文本消息
+    $('.selectText').on('click',function(){
+        $(this).hide();
+        $(this).siblings('.selectMedia').hide();
+        $(this).siblings('#textNew').show();
+    });
+
+    //点解链接带文案
+    $('.tab-content').on('click','.link_dia',function(){
+        var id=$(this).attr('data-areaId');
+        var areaVal=$(this).parents('.textNew1').find('#'+id);
+        var em=areaVal.val();
+        var html='';
+        html +='<form class="form-horizontal padding-15 linktext" id="">';
+        html +='<div class="form-group"><label class="col-md-2 control-label">链接文案</label><div class="col-md-8"><input type="text" class="form-control" id="linkCopy" value=""></div></div>';
+        html +='<div class="form-group"><label class="col-md-2 control-label">跳转链接</label><div class="col-md-8">'
+        html +='<div class="input-group item"><input type="text" class="form-control item" id="wap_jump"><span class="input-group-btn"><a href="javascript:void(0);" class="btn btn-default link_set">选择链接</a></span>';
+		html +='</div></div></div>';
+        html +='</form>';
+        util.confirm('链接地址',html,function(){
+            var copy=this.$content.find('#linkCopy').val();
+            var link=this.$content.find('#wap_jump').val();
+                if(!copy){
+                    util.message('文案不能为空','danger')
+                    return false;
+                }
+                if(!link){
+                    util.message('链接不能为空','danger')
+                    return false;
+                }
+
+            var href='<a href="'+link+'">'+copy+'</a>';
+            areaVal.val(em+href);
+
+        },'large');
+    });
+
+    // 文本信息跳转链接
+    $('body').on('click','.linktext .link_set',function(){
+        var url = __URL(PLATFORMMAIN + "/config/selectWapUrl");
+        util.confirm('选择链接','url:'+url, function () {
+            var data = this.$content.find('#selectedData').val();
+            $("#wap_jump").val(data);
+            // var obj = getCurrentMenu();
+            // updateWeixinMenuUrl(obj.attr("data-menuid"),data);
+        },'large');
+    });
+
+    // 点击表情添加到文本域
+    $('.tab-content').on('click','.text_select_emoji',function(){
+        var id=$(this).attr('data-areaId');
+        var areaVal=$(this).parents('.textNew1').find('#'+id);
+        var em=areaVal.val();
+        util.emojiDialog(function(data){
+            areaVal.val(em+data.emoji);
+        })
+    })
+
+    $('body').on('click','.linktext2 .link_set',function(){
+        // console.log("linktext2");
+        var url = __URL(PLATFORMMAIN + "/config/selectWapUrl");
+        util.confirm('选择链接','url:'+url, function () {
+            var data = this.$content.find('#selectedData').val();
+            $("#wap_jump2").val(data);
+            // var obj = getCurrentMenu();
+            // updateWeixinMenuUrl(obj.attr("data-menuid"),data);
+        },'large');
+    });
+
+})
+</script>
+        {/block}

@@ -1,0 +1,234 @@
+{block name="resource"}
+
+{/block}
+{block name="main"}
+                <!-- page -->
+                <div class="mb-10 flex flex-pack-justify">
+                    <div class="">
+                        <!--<button class="btn btn-default">
+                            <label class="checkbox-inline">
+                                <input type="checkbox" value="option1" class="checkAll">全选
+                            </label>
+                        </button>-->
+                        <button class="btn btn-default restore_more">批量恢复</button>
+                        <button class="btn btn-default delete_more">批量删除</button>
+                    </div>
+                    <div class="flex">
+                        <!--<select class="form-control select-form-control ">-->
+                            <!--<option>全部分类</option>-->
+                        <!--</select>-->
+                        <div class="input-group search-input-group ml-10">
+                            <input type="text" class="form-control" placeholder="商品名称" id="goods_name">
+                            <span class="input-group-btn">
+                                <a href="javascript:void(0)" class="btn search btn-primary" type="button">搜索</a>
+                            </span>
+                        </div>
+                    </div>
+                </div>
+                <table class="table table-hover v-table table-auto-center" id="list">
+                    <thead>
+                        <tr>
+                            <th><input type="checkbox" value="option1" class="checkAll"></th>
+                            <th class="col-md-4">商品</th>
+                            <th>售价</th>
+                            <th>原价</th>
+                            <th>库存</th>
+                            <th>销量</th>
+                            <th class="col-md-2 pr-14 operationLeft">操作</th>
+                        </tr>
+                    </thead>
+                    <tbody id="table_list">
+
+                    </tbody>
+                </table>
+                <!-- page end  -->
+                <input type="hidden" id="pageIndex">
+                <nav aria-label="Page navigation" class="clearfix">
+                    <ul id="page" class="pagination pull-right"></ul>
+                </nav>
+{/block}
+
+{block name="script"}
+<script>
+require(['util'],function(util){
+
+    $(function(){
+        // 恢复
+        util.initPage(LoadingInfo);
+
+        //加载信息
+        function LoadingInfo(pageIndex) {
+            var goods_name = $("#goods_name").val();
+            $.ajax({
+                type: "post",
+                url: "{$integralGoodsRecycle}",
+                async: true,
+                data: {
+                    "page_index": pageIndex,
+                    "goods_name": goods_name
+                },
+                success: function (data) {
+                    var html = '';
+                    $("#total_count_num").text(data["total_count"]);
+                    $("#page_count_num").text(data["page_count"]);
+                    $("#page_count").val(data["page_count"]);
+                    $("#pageNumber a").remove();
+                    if (data["data"].length > 0) {
+
+                        for (var i = 0; i < data["data"].length; i++) {
+                            html +='<tr>';
+                            html +='<td>';
+                            html +='<input type="checkbox" value="'+data["data"][i]["goods_id"]+'" name="sub" data-state="' + data["data"][i]["state"] + '">';
+                            html +='</td>';
+                            html +='<td>';
+                            html +='<div class="media text-left">';
+                            html +='<div class="media-left" style="height:60px;width:60px;">';
+                            html +='<img src="'+ __IMG(data["data"][i]["pic_cover_micro"]) +'" alt="" width="60" height="60">';
+                            html +='</div>';
+                            html +='<div class="media-body break-word">'
+                            html +='<div class="line-2-ellipsis">'+data["data"][i]["goods_name"]+'</div>';
+                            html +='</div>';
+                            html +='</div>';
+                            html +='</td>';
+                            html +='<td>';
+                            html +='<div class="">￥'+data["data"][i]["promotion_price"]+'</div>';
+                            html +='</td>';
+                            html +='<td>';
+                            html +='<div class="">￥'+data["data"][i]["price"]+'</div>';
+                            html +='</td>';
+                            html +='<td>';
+                            html += data["data"][i]["stock"];
+                            html +='</td>';
+                            html +='<td>';
+                            html += data["data"][i]["sales"];
+                            html +='</td>';
+                            html +='<td class="fs-0 operationLeft">';
+                            html +='<input type="hidden" name="goods_id" value="'+data["data"][i]["goods_id"]+'">';
+                            html +='<a class="btn-operation restore" href="javascript:void(0);" data-id="'+data["data"][i]["goods_id"]+'">恢复</a>';
+                            html +='<a class="btn-operation delete" href="javascript:void(0);" data-id="'+data["data"][i]["goods_id"]+'">删除</a>';
+                            
+                            html +='</td>';
+                            html +='</tr>';
+                        }
+                        $('#page').paginator('option', {
+                            totalCounts: data['total_count']  // 动态修改总数
+                        });
+                    } else {
+                        html += '<tr align="center"><td class="h-200" colspan="7">暂无符合条件的数据记录</td></tr>';
+                    }
+                    $("#table_list").html(html);
+                    util.tips();
+                }
+            });
+        }
+
+
+            //恢复
+            $('body').on('click', '.restore',function () {
+                var goodsId = $(this).siblings('input').val();
+                util.alert('确认要恢复此商品吗 ？', function () {
+                    $.ajax({
+                        type: "post",
+                        url: "{$regainIntegralgoodsdeleted}",
+                        data: {
+                            'goodsId': goodsId
+                        },
+                        success: function (data) {
+                            if (data["code"] > 0) {
+                                util.message(data["message"], 'success', "{:__URL('platform/Menu/addonmenu?addons=integralGoodsRecycle')}");
+                            } else {
+                                util.message(data["message"], 'danger');
+                            }
+                        }
+                    })
+                })
+            })
+
+            $('body').on('click','.search',function(){
+                util.initPage(LoadingInfo);
+            });
+
+            //删除
+            $('body').on('click', '.delete', function () {
+                var goodsId = $(this).siblings("input[name='goods_id']").val();
+                util.alert('确认删除此商品吗 ？', function () {
+                    $.ajax({
+                        type: "post",
+                        url: "{$emptyDeleteIntegralGoods}",
+                        data: {
+                            'goodsId': goodsId
+                        },
+                        success: function (data) {
+                            if (data["code"] > 0) {
+                                util.message(data["message"], 'success', "{:__URL('platform/Menu/addonmenu?addons=integralGoodsRecycle')}");
+                            } else {
+                                util.message(data["message"], 'danger');
+                            }
+                        }
+                    })
+                })
+            })
+
+            //批量删除
+            $('body').on('click', '.delete_more',function () {
+
+                var id = [];
+                $("#list input[type ='checkbox']").each(function(){
+                    if($(this).prop("checked") && $(this).val() != 'option1'){
+                        id.push($(this).val())
+                    }
+                })
+
+                util.alert('确认删除此商品吗 ？', function () {
+                    $.ajax({
+                        type: "post",
+                        url: "{$emptyDeleteIntegralGoods}",
+                        data: {
+                            'goodsId': id
+                        },
+                        success: function (data) {
+                            if (data["code"] > 0) {
+                                util.message(data["message"], 'success', "{:__URL('platform/Menu/addonmenu?addons=integralGoodsRecycle')}");
+                            } else {
+                                util.message(data["message"], 'danger');
+                            }
+                        }
+                    })
+                })
+            })
+
+            //批量恢复
+            $('body').on('click', '.restore_more',function () {
+                var id = [];
+                $("#list input[type ='checkbox']").each(function(){
+                    if($(this).prop("checked") && $(this).val() != 'option1'){
+                        id.push($(this).val())
+                    }
+                })
+                util.alert('确认要恢复此商品吗 ？', function () {
+                    $.ajax({
+                        type: "post",
+                        url: "{$regainIntegralgoodsdeleted}",
+                        data: {
+                            'goodsId': id
+                        },
+                        success: function (data) {
+                            if (data["code"] > 0) {
+                                util.message(data["message"], 'success', "{:__URL('platform/Menu/addonmenu?addons=integralGoodsRecycle')}");
+                            } else {
+                                util.message(data["message"], 'danger');
+                            }
+                        }
+                    })
+                })
+            })
+
+            // 全选
+            $('body').on('click','.checkAll',function () {
+                $("#list input[type = 'checkbox']").prop("checked", this.checked);
+            })
+
+    })
+})
+</script>
+{/block}

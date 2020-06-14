@@ -1,0 +1,14 @@
+<view class='phone group' style="background:{{items.styleColor.background}}">
+  <view class='icon-phone'>
+    <view class='icon iconfont v-icon-bind-phone' style="color:{{items.styleColor.iconcolor}}"></view>
+  </view>
+  <view class='phone-info'>
+    <view style="color:{items.styleColor.titlecolor}">{{items.params.title}}</view>
+    <view class='phone-text'>
+      <view style="color:{items.styleColor.desccolor}">{{items.params.desc}}</view>
+    </view>
+  </view>
+  <view class='icon_phone_right'>
+    <van-icon name="arrow" class='r_icon' size="14px" />
+  </view>
+</view>

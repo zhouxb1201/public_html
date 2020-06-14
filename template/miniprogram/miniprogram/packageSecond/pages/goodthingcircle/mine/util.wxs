@@ -1,0 +1,21 @@
+module.exports = {
+	getformate: function (timeStamp, index) {
+		if (!timeStamp) return timeStamp;
+		var time_list = timeStamp.split("-");
+		return time_list[index];
+	},
+	isToday: function (date) {
+		if (getDate(date).toDateString() == getDate().toDateString()) {
+			return "今天";
+		}
+	},
+	praise: function (value) {
+		var num = 0;
+		if (value > 10000) {
+			num = (value - (value % 1000)) / 10000 + "w";
+		} else {
+			num = value;
+		}
+		return num;
+	},
+}

@@ -1,0 +1,491 @@
+{extend name="shop/new/Member/base" /}
+
+{block name="main"}
+<div class="v-main-right fl">
+    <div class="v-container">
+        {if $type==2}
+        <div class="withdrawals wxdetail">
+            <div class="withdrawals-title">账户详情</div>
+            <div class="withdrawals-main1">
+                <div class="withdrawals-box1 flex">
+                    <div class="withdrawals-item1">
+                        <div class="wi-card">
+                            <img src="__TEMP__/shop/new/public/image/account/weixin.png" alt="" class="wi-card-img">
+                            微信
+                        </div>
+                        <div class="flex flex-pack-justify wi-info">
+                            <div class="wi-accounts"><span class="mr-10">{$member_info['user_info']['wx_openid']}</span><span class="showAccount"><i class="icon-accountclose icon"></i></span></div>
+                        </div>
+                    </div>
+                    <div class="withdrawals-tips">
+                        <div class="wt-title">账号提示</div>
+                        <div class="wt-detail">微信授权登录后自动生成，该账号可用于微信提现，上述字符串为所授权的微信号提现的唯一标识，所以该账号无法编辑。</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        {/if}
+        {if $type==3}
+        <div class="withdrawals">
+            <div class="withdrawals-title">账户详情</div>
+            <div class="withdrawals-main1">
+                <div class="withdrawals-box1 flex">
+                    <div class="withdrawals-item1">
+                        <div class="wi-card">
+                            <img src="__TEMP__/shop/new/public/image/account/Ali.png" alt="" class="wi-card-img">
+                            支付宝
+                        </div>
+                        <div class="flex flex-pack-justify wi-info">
+                            <div class="wi-accounts"><span class="mr-10">*好  138 **** 8888</span> <span class="showAccount"><i class="icon-accountopen icon"></i></span></div>
+                        </div>
+                    </div>
+                    <div class="withdrawals-tips">
+                        <div class="wt-title">账号提示</div>
+                        <div class="wt-detail">该用户可用于支付宝提现。</div>
+                    </div>
+                </div>
+            </div>
+            <div class="withdrawals-operation">
+                <a href="javascript:void(0);" class="btn-diy btn-primary-diy updateAccount" data-id="{$account_list['id']}">编辑</a>
+                <a href="javascript:void(0);" class="btn-diy btn-default-diy delAccount" data-id="{$account_list['id']}">删除</a>
+            </div>
+        </div>
+        {/if}
+        {if $type==1}
+        <div class="withdrawals">
+            <div class="withdrawals-title">账户详情</div>
+            <div class="withdrawals-main1">
+                <div class="withdrawals-box1 flex">
+                    <div class="withdrawals-item1">
+                        <div class="wi-card">
+                            <img src="__TEMP__/shop/new/public/image/account/yinlian.png" alt="" class="wi-card-img">
+                            银联
+                        </div>
+                        <div class="flex flex-pack-justify wi-info">
+                            <div class="wi-accounts"><span class="mr-10">**** 8888</span><i class="icon-accountopen icon"></i></div>
+                        </div>
+                    </div>
+                    <div class="withdrawals-tips">
+                        <div class="mb-10">
+                            <div class="wt-title">银行支付限额</div>
+                            <div class="wt-detail">
+                                <div class="flex flex-pack-justify mb-10">
+                                    <div>单笔限额</div>
+                                    <div>￥50000</div>
+                                </div>
+                                <div class="flex flex-pack-justify">
+                                    <div>单日限额</div>
+                                    <div>￥50000</div>
+                                </div>
+                            </div>
+                        </div>
+                        <div>
+                            <div class="wt-title">账号提示</div>
+                            <div class="wt-detail">该用户可用于支付宝提现。</div>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+            {if $type==1 && in_array(1,$$withdraw_message)}
+            <div class="withdrawals-operation">
+                <a href="javascript:void(0);" class="btn-diy btn-primary-diy unbind" data-id="{$account_list['id']}">解绑</a>
+            </div>
+            {/if}
+        </div>
+        {/if}
+        {if $type==4}
+        <div class="withdrawals">
+            <div class="withdrawals-title">账户详情</div>
+            <div class="withdrawals-main1">
+                <div class="withdrawals-box1 flex">
+                    <div class="withdrawals-item1">
+                        <div class="wi-card">
+                            <img src="__TEMP__/shop/new/public/image/account/yinlian.png" alt="" class="wi-card-img">
+                            银联
+                        </div>
+                        <div class="flex flex-pack-justify wi-info">
+                            <div class="wi-accounts"><span class="mr-10">**** 8888</span><i class="icon-accountopen icon"></i></div>
+                        </div>
+                    </div>
+                    <div class="withdrawals-tips">
+                        <div>
+                            <div class="wt-title">账号提示</div>
+                            <div class="wt-detail">该用户可用于银行卡提现。</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="withdrawals-operation">
+                {if in_array(1,$$withdraw_message)}
+                <a href="javascript:void(0);" class="btn-diy btn-primary-diy pay-addCard" data-id="{$account_list['id']}">编辑</a>
+                {else}
+                <a href="javascript:void(0);" class="btn-diy btn-primary-diy updateAccount" data-id="{$account_list['id']}">编辑</a>
+                {/if}
+                <a href="javascript:void(0);" class="btn-diy btn-default-diy delAccount" data-id="{$account_list['id']}">删除</a>
+            </div>
+        </div>
+        {/if}
+    </div>
+</div>
+<!--添加银行卡模态框-->
+<div class="addAccount-dialogs" style="display: none">
+    <div class="pop-wrapper">
+        <div class="pop-msg" style="display: none">
+            <p class="error error_Tel">账户名错误</p>
+        </div>
+        <dl class="clearfix">
+            <dt><em>*</em>卡类型：</dt>
+            <dd class="controls">
+                <label class="sex-label">
+                    <input type="radio" name="bank_type" value="">
+                    <span>储蓄卡</span>
+                </label>
+                <label class="sex-label">
+                    <input type="radio" name="bank_type" value="">
+                    <span>信用卡</span>
+                </label>
+            </dd>
+
+        </dl>
+        <div class="with_bank" style="">
+            <dl class="clearfix bank_code">
+                <dt><em>*</em>银行：</dt>
+                <dd>
+                    <select name="bank_code"  class="addr-select" id="bank_code">
+                        {foreach $bank_list as $value}
+                        <option value="{$value['bank_code']}">{$value['bank_short_name']}</option>
+                        {/foreach}
+                    </select>
+                </dd>
+            </dl>
+            <dl class="clearfix">
+                <dt><em>*</em>银行卡号：</dt>
+                <dd>
+                    <input id="account_number" class="addr-input l input_focus" type="text" autocomplete="off" placeholder="请输入银行卡号" value="{$account_list['account_number']}">
+                </dd>
+            </dl>
+            <dl class="clearfix bank_username">
+                <dt><em>*</em>持卡人：</dt>
+                <dd>
+                    <input id="realname" class="addr-input l input_focus" type="text" autocomplete="off" placeholder="请输入持卡人姓名" value="{$account_list['realname']}">
+                </dd>
+            </dl>
+            <dl class="clearfix bank_card">
+                <dt><em>*</em>身份证号：</dt>
+                <dd>
+                    <input id="bank_card" class="addr-input l input_focus" type="text" autocomplete="off" placeholder="请输入身份证号码">
+                </dd>
+            </dl>
+        </div>
+        <dl class="clearfix">
+            <dt><em>*</em>有效期：</dt>
+            <dd>
+                <input id="valid_date" class="addr-input l input_focus" type="text" autocomplete="off" placeholder="示例：01/20，输入0120">
+            </dd>
+        </dl>
+        <dl class="clearfix ">
+            <dt><em>*</em>安全码：</dt>
+            <dd>
+                <input id="cvv2" class="addr-input l input_focus" type="text" autocomplete="off" placeholder="卡背后三位数">
+            </dd>
+        </dl>
+        <dl class="clearfix ">
+            <dt><em>*</em>手机号码：</dt>
+            <dd>
+                <input id="bank_mobile" class="addr-input l input_focus" type="text" autocomplete="off" placeholder="银行预留手机号码">
+            </dd>
+        </dl>
+        <dl class="clearfix">
+            <dt><em>*</em>短信验证码：</dt>
+            <dd class="pr">
+                <input id="sms_code" class="addr-input l input_focus" type="text" autocomplete="off" placeholder="银行预留手机号码">
+                <button type="button" class="obtain-code2 withdrawal-add1">发送验证码</button>
+            </dd>
+        </dl>
+
+
+
+    </div>
+</div>
+<input type="hidden"  id="thpinfo">
+<input type="hidden"  id="account_id" value="{$account_list['id']}">
+{/block}
+{block name="javascript"}
+<script>
+    require(['common','dialog'], function (common,dialog) {
+        $('body').on('click','.delAccount',function(){
+            var id = $(this).data('id');
+            layer.confirm('你确定删除该账号？', {
+                btn: ['确定', '取消']//按钮
+            }, function (index) {
+                layer.close(index);
+                $.ajax({
+                    type:"post",
+                    url:"{:__URL('SHOP_MAIN/member/delAccount')}",
+                    data:{
+                        'id' : id
+                    },
+                    success : function(data) {
+                        if (data["code"] > 0) {
+                            layer.msg('删除成功',{icon: 1, time: 2000}, LoadingInfo());
+                        }else{
+                            layer.msg('删除失败');
+                        }
+                    }
+                });
+            });
+
+        });
+        $('.pay-addCard').on('click',function(){
+            var id = $('#account_id').val();
+            dialog.updateAddress("添加银行卡",".addAccount-dialogs",function(){
+                var realname = $("#realname").val();
+                var account_number = $("#account_number").val();
+                var bank_type = $('input[name=bank_type]:checked').val();
+                var bank_code = $("#bank_code").val();
+                var bank_card = $("#bank_card").val();
+                var valid_date = $("#valid_date").val();
+                var bank_mobile = $("#bank_mobile").val();
+                var cvv2 = $("#cvv2").val();
+                var sms_code = $("#sms_code").val();
+                var thpinfo = $("#thpinfo").val();
+                if(sms_code==''){
+                    layer.msg('验证码不能为空');
+                    $("#sms_code").focus();
+                    return false;
+                }
+                if(thpinfo==''){
+                    layer.msg('请先获取验证码');
+                    $("#sms_code").focus();
+                    return false;
+                }
+                if(sms_code && thpinfo){
+                    if(realname==''){
+                        layer.msg('持卡人姓名不能为空');
+                        $("#realname").focus();
+                        return false;
+                    }
+                    if(bank_mobile==''){
+                        layer.msg('手机号不能为空');
+                        $("#bank_mobile").focus();
+                        return false;
+                    }
+                    if(account_number==''){
+                        layer.msg('银行卡号不能为空');
+                        $("#account_number").focus();
+                        return false;
+                    }
+                    if(bank_type == '02'){
+                        if(valid_date==''){
+                            layer.msg('有效期不能为空');
+                            $("#valid_date").focus();
+                            return false;
+                        }
+                        if(cvv2==''){
+                            layer.msg('安全码不能为空');
+                            $("#cvv2").focus();
+                            return false;
+                        }
+                    }
+                    if(bank_mobile==''){
+                        layer.msg('手机号不能为空');
+                        $("#bank_mobile").focus();
+                        return false;
+                    }
+                    if(bank_code==''){
+                        layer.msg('银行不能为空');
+                        $("#bank_code").focus();
+                        return false;
+                    }
+                    if(bank_type==''){
+                        layer.msg('银行卡类型不能为空');
+                        $("#bank_type").focus();
+                        return false;
+                    }
+                    if(bank_card==''){
+                        layer.msg('持卡人身份证号不能为空');
+                        $("#bank_card").focus();
+                        return false;
+                    }
+                    $.ajax({
+                        type : "post",
+                        url : "{:__URL('SHOP_MAIN/member/tlAgreeSigning')}",
+                        async:false,
+                        data : {
+                            "account_id":id,
+                            "realname":realname,
+                            "thpinfo":thpinfo,
+                            "bank_type":bank_type,
+                            "bank_code":bank_code,
+                            "bank_card":bank_card,
+                            "sms_code":sms_code,
+                            "mobile":bank_mobile,
+                            "valid_date":valid_date,
+                            "cvv2":cvv2,
+                            "account_number":account_number
+                        },
+                        success : function(data) {
+                            if(data['code']>0){
+                                layer.msg('添加成功',{icon: 1, time: 2000});
+                                location.href = __URL(SHOPMAIN + "/member/accountList");
+                            }else{
+                                layer.msg('添加失败');
+                            }
+                        }
+                    });
+                }
+            })
+        })
+        $('body').on('click',".withdrawal-add1",function(){
+            var id = $('#account_id').val();
+            var realname = $("#realname").val();
+            var account_number = $("#account_number").val();
+            var bank_type = $('input[name=bank_type]:checked').val();
+            var bank_code = $("#bank_code").val();
+            var bank_card = $("#bank_card").val();
+            var valid_date = $("#valid_date").val();
+            var bank_mobile = $("#bank_mobile").val();
+            var cvv2 = $("#cvv2").val();
+            var thpinfo = $("#thpinfo").val();
+            if(realname==''){
+                layer.msg('持卡人姓名不能为空');
+                $("#realname").focus();
+                return false;
+            }
+            if(account_number==''){
+                layer.msg('银行卡号不能为空');
+                $("#account_number").focus();
+                return false;
+            }
+            if(bank_type == '02'){
+                if(valid_date==''){
+                    layer.msg('有效期不能为空');
+                    $("#valid_date").focus();
+                    return false;
+                }
+                if(cvv2==''){
+                    layer.msg('安全码不能为空');
+                    $("#cvv2").focus();
+                    return false;
+                }
+            }
+            if(bank_mobile==''){
+                layer.msg('手机号不能为空');
+                $("#bank_mobile").focus();
+                return false;
+            }
+            if(bank_code==''){
+                layer.msg('银行不能为空');
+                $("#bank_code").focus();
+                return false;
+            }
+            if(bank_type==''){
+                layer.msg('银行卡类型不能为空');
+                $("#bank_type").focus();
+                return false;
+            }
+            if(bank_card==''){
+                layer.msg('持卡人身份证号不能为空');
+                $("#bank_card").focus();
+                return false;
+            }
+            if(thpinfo){
+                $.ajax({
+                    type : "post",
+                    url : "{:__URL('SHOP_MAIN/member/tlAgreeSms')}",
+                    async:false,
+                    data : {
+                        "realname":realname,
+                        "type":account_type,
+                        "bank_type":bank_type,
+                        "bank_code":bank_code,
+                        "bank_card":bank_card,
+                        "valid_date":valid_date,
+                        "mobile":bank_mobile,
+                        "cvv2":cvv2,
+                        "thpinfo":thpinfo,
+                        "account_number":account_number
+                    },
+                    success : function(data) {
+                        if(data['code']>0){
+                            layer.msg(data['message'],{icon: 1, time: 2000});
+                        }else{
+                            layer.msg(data['message']);
+                        }
+                    }
+                });
+            }else{
+                if(realname==''){
+                    layer.msg('持卡人姓名不能为空');
+                    $("#realname").focus();
+                    return false;
+                }
+                if(account_number==''){
+                    layer.msg('银行卡号不能为空');
+                    $("#account_number").focus();
+                    return false;
+                }
+                if(bank_type == '02'){
+                    if(valid_date==''){
+                        layer.msg('有效期不能为空');
+                        $("#valid_date").focus();
+                        return false;
+                    }
+                    if(cvv2==''){
+                        layer.msg('安全码不能为空');
+                        $("#cvv2").focus();
+                        return false;
+                    }
+                }
+                if(bank_mobile==''){
+                    layer.msg('手机号不能为空');
+                    $("#bank_mobile").focus();
+                    return false;
+                }
+                if(bank_code==''){
+                    layer.msg('银行不能为空');
+                    $("#withdraw1").find("#bank_code").focus();
+                    return false;
+                }
+                if(bank_type==''){
+                    layer.msg('银行卡类型不能为空');
+                    $("#bank_type").focus();
+                    return false;
+                }
+                if(bank_card==''){
+                    layer.msg('持卡人身份证号不能为空');
+                    $("#bank_card").focus();
+                    return false;
+                }
+                $.ajax({
+                    type : "post",
+                    url : "{:__URL('SHOP_MAIN/member/updateBankAccount')}",
+                    async:false,
+                    data : {
+                        "account_id":id,
+                        "realname":realname,
+                        "type":1,
+                        "bank_type":bank_type,
+                        "bank_code":bank_code,
+                        "bank_card":bank_card,
+                        "valid_date":valid_date,
+                        "mobile":bank_mobile,
+                        "cvv2":cvv2,
+                        "account_number":account_number
+                    },
+                    success : function(data) {
+                        if(data['code']>0){
+                            layer.msg(data['message']);
+                            $("#thpinfo").val(data['thpinfo']);
+                        }else{
+                            layer.msg(data['message']);
+                        }
+                    }
+                });
+            }
+
+        });
+    });
+</script>
+{/block}

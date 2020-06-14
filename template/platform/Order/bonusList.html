@@ -1,0 +1,69 @@
+<div class="goods-dialog">
+    <ul class="nav nav-tabs v-nav-tabs pt-15" role="tablist">
+        <li role="presentation" class="active"><a href="#list" aria-controls="list" role="tab" data-toggle="tab" class="flex-auto-center">分红明细</a></li>
+    </ul>
+    <div class="dialog-box">
+        <table class="table v-table table-auto-center">
+            <thead>
+            <tr>
+                <th>{$info['type_name']}</th>
+                <th>{$info['level_name']}</th>
+                <th>分红佣金</th>
+                <th>分红类型</th>
+            </tr>
+            </thead>
+            <tbody id="list">
+
+            </tbody>
+        </table>
+    </div>
+</div>
+<script>
+    require(['util'],function(util) {
+        util.initPage(getList);
+        function getList() {
+            $.ajax({
+                type: "post",
+                url: "{:__URL('PLATFORM_MAIN/order/bonusMember')}",
+                async: true,
+                data: {
+                    "type": {$info['type']},
+                    "order_id": {$info['order_id']}
+                },
+                success: function (data) {
+                    var html = '';
+                    if (data.length > 0) {
+                        for (var i = 0; i < data.length; i++) {
+                            html += '<tr>';
+                            html += '<td>';
+                            html += '<div class="media text-left">';
+                            if(data[i]['user_headimg']){
+                                html += '<div class="media-left"><img src="' + __IMG(data[i]['user_headimg']) + '" style="max-width:none;width:60px;height:60px;"></div>';
+                            }else{
+                                html += '<div class="media-left"><img src="/public/static/images/headimg.png" style="max-width:none;width:60px;height:60px;"></div>';
+                            }
+                            html += '<div class="media-body break-word">';
+                            html += '<div class="line-2-ellipsis">' + data[i]['user_name'] + '</div>';
+                            html += '<div class="line-1-ellipsis text-danger">' + data[i]['user_tel'] + '</div>';
+                            html += '</div>';
+                            html += '</div>';
+                            html += '</td>';
+                            html += '<td>' + data[i]['level_name'] + '</td>';
+                            html += '<td>' + data[i]['bonus'] + '</td>';
+                            if(data[i]['level_award']){
+                                html += '<td>平' + data[i]['level_award'] + '奖</td>';
+                            }else{
+                                html += '<td>普通分红</td>';
+                            }
+                            html += '</tr>';
+                        }
+
+                    } else {
+                        html += '<tr align="center"><th colspan="2">暂无符合条件的数据记录</th></tr>';
+                    }
+                    $("#list").html(html);
+                }
+            });
+        }
+    })
+</script>

@@ -1,0 +1,29 @@
+<view class='my_team'>
+  <view class='list'>
+    <view class='item' wx:for='{{teamData}}' wx:key=''>
+      <view class='name'>{{item.name}}</view>
+      <view class='cell'>
+        <view class='cell_text'>上级：{{item.up_channel_name}}</view>
+        <view class='cell_text'>推荐人：{{item.referee_name}}</view>
+      </view>
+      <view class='cell'>
+        <view class='cell_text'>等级：{{item.grade_name}}</view>
+        <view class='cell_text'>下级：{{item.down_channel_num}}人</view>
+      </view>
+    </view>
+  </view>
+  
+
+  <view class='no_data' wx:if='{{teamData.length == 0 && page_index == 1}}'>
+    <view class='no_data_box'>
+      <view class='img'>
+        <image src='/images/empty-order.png' mode='widthFix'></image>
+      </view>
+      <view class='no_data_text'>没有相关数据</view>
+    </view>
+  </view>
+  <view class='no_more' wx:else>
+    <view>没有更多</view>
+  </view>
+
+</view>

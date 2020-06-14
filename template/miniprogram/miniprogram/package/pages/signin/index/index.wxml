@@ -1,0 +1,69 @@
+<view wx:if='{{isOpen == 1}}'>
+  <view class="head card-group-box">
+    <image mode="widthFix" src="{{publicUrl}}/wap/static/images/signin-head-bg.png"></image>
+    <view class="box">
+      <view class="info">
+        <view class="img">
+          <image mode="widthFix" src="{{info.user_headimg ? info.user_headimg : '/images/no-avatar.png'}}"></image>
+        </view>
+        <view class="text">
+          <view class="name">{{info.nick_name}}</view>
+          <view class="name">
+            连续签到
+            <text class="strong">{{info.continuous}}</text>
+          </view>
+          <view class="strong fs-12" bindtap="onLog">签到明细 ></view>
+        </view>
+      </view>
+      <view class="btn-group flex-auto-center">
+        <button class="btn {{info.is_signin ? 'disabeld' : ''}}" disabled="{{info.is_signin ? true : false}}" bindtap="onSignin">{{info.is_signin ? "已签" : "签到"}}</button>
+      </view>
+    </view>
+  </view>
+
+  <!--日历-->
+  <view class='calendar_box'>
+    <view class="canlendarBgView">
+      <view class="canlendarView">
+        <view class="canlendarTopView">
+          <view class="leftBgView" bindtap="handleCalendar" data-handle="prev">
+            <view class="leftView"></view>
+          </view>
+          <view class="centerView">{{cur_year || "--"}} 年 {{cur_month || "--"}} 月</view>
+          <view class="rightBgView" bindtap="handleCalendar" data-handle="next">
+            <view class="rightView"></view>
+          </view>
+        </view>
+        <view class="weekBgView">
+          <view class="weekView" wx:for="{{week}}" wx:key="{{index}}" data-idx="{{index}}">{{item}}</view>
+        </view>
+        <view class="dateBgView">
+          <view class="dateView" wx:for="{{upperDays}}" wx:key="">
+            <view class="datesView deteDisabeld">{{item}}</view>
+          </view>
+          <view class="dateView" wx:for="{{days}}" wx:key="{{index}}" data-idx="{{index}}">
+            <view class="datesView {{ item.item ==  getDate && judge==1 ? 'dateOn' : ''}}">{{item.item}}</view>
+            <view class="calendar-small" data-year="{{cur_year}}" data-mouth="{{cur_month}}" wx:if="{{ item.sign ==  1}}">
+              <text class="icon iconfont v-icon-success3"></text>已签</view>
+          </view>
+          <view class="dateView" wx:for="{{nextDays}}" wx:key="">
+            <view class="datesView deteDisabeld">{{item}}</view>
+          </view>
+        </view>
+      </view>
+    </view>
+  </view>
+</view>
+
+
+<view class="no_open" wx:else>
+  <view class="box">
+    <view class="img">
+      <image mode="widthFix" src="/images/error-fail.png"></image>
+    </view>
+    <view class="text">未开启签到应用</view>
+  </view>
+</view>
+
+<!-- 关联手机 -->
+<phone-compoent phoneShow='{{phoneShow}}' bind:phoneEven='phonereResult'></phone-compoent>

@@ -1,0 +1,8 @@
+<!--miniprogram/pages/component/areaCode/areaCode.wxml-->
+  <view class="section">
+      <picker bindchange="bindPickerChange" value="{{index}}" range="{{array}}" >
+        <view class="picker">
+          {{array[index]}} <text class="icon iconfont v-icon-sort2"></text>
+        </view>
+      </picker>
+    </view>

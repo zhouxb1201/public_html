@@ -1,0 +1,1334 @@
+{block name="main"}
+<!-- page -->
+<style>
+    .form_time{margin-left:15px !important;}
+    .red_font{color:#ff0000}
+</style>
+<ul class="nav nav-tabs v-nav-tabs add_tab1" role="tablist">
+    <li role="presentation" class="active"><a href="#basic_setting" aria-controls="" role="tab" data-toggle="tab" class="flex-auto-center">基本设置</a></li>
+    <li role="presentation" class="goods_spec"><a href="#task_rule" aria-controls="" role="tab" data-toggle="tab" class="flex-auto-center">任务规则</a></li>
+    <li role="presentation" class="goods_spec"><a href="#poster_design" aria-controls="" role="tab" data-toggle="tab" class="flex-auto-center">海报设计</a></li>
+    <li role="presentation" class="goods_spec"><a href="#reward_setting" id="reward_setting_tab" aria-controls="" role="tab" data-toggle="tab" class="flex-auto-center">奖励设置</a></li>
+    <li role="presentation" class="goods_spec"><a href="#push_setting" aria-controls="" role="tab" data-toggle="tab" class="flex-auto-center">推送设置</a></li>
+    <li role="presentation" class="goods_spec"><a href="#distribute_setting" aria-controls="" role="tab" data-toggle="tab" class="flex-auto-center">分销设置</a></li>
+</ul>
+<form class="form-horizontal pt-15 form-validate widthFixedForm">
+    <div id="myTabContent" class="tab-content">
+        <div class="tab-pane fade tab-1 active in" id="basic_setting">
+            <div class="form-group">
+                <label class="col-md-2 control-label"><span class="red_font">*</span>任务名称</label>
+                <div class="col-md-5">
+                    <input type="text" name="task_name" id="task_name" value="{$task_info['task_name']}" required maxlength="4" class="form-control">
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-md-2 control-label"><span class="text-bright">*</span>任务图标</label>
+                <div class="col-md-5">
+
+                    {if $task_info['task_img_src']}
+                        <div class="picture-list" id="wap_register_adv">
+                            <a href="javascript:;" class="close-box">
+                                <i class="icon icon-danger" data-id="{$task_info['task_img']}" style="margin-right:10px;" title="删除"></i>
+                                <img src="{$task_info['task_img_src']}">
+                            </a>
+                        </div>
+                    {else}
+                        <div class="picture-list" id="wap_register_adv">
+                            <a href="javascript:void(0);" class="plus-box" data-toggle="singlePicture"><i class="icon icon-plus"></i></a>
+                        </div>
+                    {/if}
+                    <p class="help-block">建议700 * 394，支持JPG\GIF\PNG格式</p>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-md-2 control-label"><span class="red_font">*</span>回复关键词</label>
+                <div class="col-md-5">
+                    <input type="text" name="back_keywords" id="back_keywords" value="{$task_info['back_keywords']}" required class="form-control">
+                    <p class="help-block mb-0">公众号生成海报关键词</p>
+                </div>
+            </div>
+            <div class="form-group ">
+                <label class="col-md-2 control-label"><span class="red_font">*</span>开启时间</label>
+                <div class="col-md-8">
+                    <div class="v-datetime-input-control">
+                        <label for="effect_time">
+                            <input type="text" class="form-control" id="effect_time" placeholder="请选择时间"  autocomplete="off" name="effect_time" required>
+                            <i class="icon icon-calendar"></i>
+                            <input type="hidden" id="start_task_time" name="start_task_time">
+                            <input type="hidden" id="end_task_time" name="end_task_time">
+                        </label>
+                    </div>
+                    <div class="help-block mb-0">开始时间点为选中日期的0:00:00，结束时间点为选中日期的23:59:59</div>
+                </div>
+
+            </div>
+            <div class="form-group">
+                <label class="col-md-2 control-label"><span class="red_font">*</span>任务限时</label>
+                <div class="col-md-5">
+                    <div class="input-group w-200">
+                        <input class="form-control" type="number" name="task_limit_time" id="task_limit_time" value="{$task_info['task_limit_time']}" required>
+                        <div class="input-group-addon">小时</div>
+                    </div>
+                    <span class="help-block mb-0">领取任务后必须在限定时间完成，0为不限时</span>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="col-md-2 control-label">任务未开始提示</label>
+                <div class="col-md-5">
+                    <textarea rows="6" class="form-control" name="task_unstart_warning" id="task_unstart_warning"></textarea>
+                    <p class="help-block mb-0">变量：[任务开始时间] [任务结束时间]</p>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="col-md-2 control-label">任务结束提示</label>
+                <div class="col-md-5">
+                    <textarea rows="6" class="form-control" name="task_ended_warning" id="task_ended_warning"></textarea>
+                    <p class="help-block mb-0">变量：[任务开始时间] [任务结束时间]</p>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="col-md-2 control-label">生成时等待文字</label>
+                <div class="col-md-5">
+                    <textarea rows="6" class="form-control" name="poster_waiting_text" id="poster_waiting_text"></textarea>
+                    <p class="help-block mb-0">例：您的专属海报正在玩命生成中，请等待片刻...</p>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="col-md-2 control-label">关注后自动接任务</label>
+                <div class="col-md-5">
+                    <!--<label class="radio-inline">
+                        <input type="radio" name="is_auto_take_task" checked value="1" {if $task_info['task_status']==1}checked{/if}> 开启
+                    </label>
+                    <label class="radio-inline">
+                        <input type="radio" name="is_auto_take_task" value="0" {if $task_info['task_status']==2}checked{/if}> 关闭
+                    </label>-->
+                    <div class="switch-inline" >
+                        <input type="checkbox" name="is_auto_take_task" id="is_auto_take_task" checked>
+                        <label for="is_auto_take_task" class=""></label>
+                    </div>
+                    <p class="help-block mb-0">关注别人的任务海报后，自动生成自己的海报</p>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="col-md-2 control-label">是否可重复领取</label>
+                <div class="col-md-5">
+                    <!--<label class="radio-inline">
+                        <input type="radio" name="is_repeat_take_task" checked value="1" {if $task_info['task_status']==1}checked{/if}> 开启
+                    </label>
+                    <label class="radio-inline">
+                        <input type="radio" name="is_repeat_take_task" value="0" {if $task_info['task_status']==2}checked{/if}> 关闭
+                    </label>-->
+                    <div class="switch-inline">
+                        <input type="checkbox" name="is_repeat_take_task" id="is_repeat_take_task" checked>
+                        <label for="is_repeat_take_task" class=""></label>
+                    </div>
+                    <p class="help-block">任务完成、任务失败后是否可重复领取任务</p>
+                </div>
+            </div>
+
+            <!--<div class="form-group">-->
+                <!--<label class="col-md-2 control-label">任务状态</label>-->
+                <!--<div class="col-md-5">-->
+                    <!--&lt;!&ndash;<label class="radio-inline">-->
+                        <!--<input type="radio" name="task_status" checked value="1" {if $task_info['task_status']==1}checked{/if}> 开启-->
+                    <!--</label>-->
+                    <!--<label class="radio-inline">-->
+                        <!--<input type="radio" name="task_status" value="0" {if $task_info['task_status']==2}checked{/if}> 关闭-->
+                    <!--</label>&ndash;&gt;-->
+                    <!--<div class="switch-inline">-->
+                        <!--<input type="checkbox" name="task_status" id="task_status" checked>-->
+                        <!--<label for="task_status" class=""></label>-->
+                    <!--</div>-->
+
+                <!--</div>-->
+            <!--</div>-->
+        </div>
+        <div class="tab-pane fade tab-2" id="task_rule">
+            <div class="screen-title2" data-id="t2">
+                <span class="text">规则设置</span>
+            </div>
+            <table class="table table-hover">
+                <thead>
+                <tr>
+                    <th>任务类型</th>
+                    <th>任务规则</th>
+                    <th>操作</th>
+                </tr>
+                </thead>
+                <tbody id="general_task_list">
+                <tr class="J-referrals">
+                    <td>
+                        <span class="label label-warning">推荐人数</span>
+                    </td>
+                    <td>
+                        <div class="input-group w-400">
+                            <div class="input-group-addon">推荐</div>
+                            <input type="number" name="referrals" id="referrals" class="form-control" min="0" value="{$task_info['referrals']}" required="" aria-required="true">
+                            <div class="input-group-addon">人</div>
+                        </div>
+                    </td>
+                    <td></td>
+                </tr>
+                <tr id="insert_tag">
+                    <td>
+                        <div class="input-group w-200">
+                            <select class="form-control col-md-2" name="select_task_rule" id="select_task_rule">
+                                <option value="referrals">推荐人数</option>
+                            </select>
+                            <div class="input-group-addon search-color btn" id="add_task_rule">增加规则</div>
+                        </div>
+                    </td>
+                    <td></td>
+                    <td></td>
+                </tr>
+                </tbody>
+            </table>
+            <div class="screen-title2" data-id="t2">
+                <span class="text">任务说明</span>
+            </div>
+            <div class="form-group">
+                <div class="col-md-12">
+                    <div id="UE-protocol" data-content='{if $task_info.task_explain}{$task_info.task_explain}{/if}'></div>
+                </div>
+            </div>
+        </div>
+        <!--海报设计-->
+        <div class="tab-pane fade" id="poster_design">
+            <ul class="template-list-ul clearfix">
+                <table style='width:100%;'>
+                    <tr>
+                        <td style='width:320px;' valign='top'>
+                            <div id='poster'>
+                                <img src="" class='bg'/>
+                            </div>
+                        </td>
+                        <td valign='top'>
+                            <div class='panel panel-default' style="min-height: 504px">
+                                <div class='panel-body'>
+                                    <div class="form-group" id="bgset">
+                                        <label class="col-sm-2 control-label">背景图片</label>
+                                        <div class="col-sm-8">
+                                            <div class="input-group ">
+                                                <input type="text" name="bg" value="" class="form-control goods-pic"
+                                                       autocomplete="off" readonly>
+                                                <span class="input-group-btn">
+                                                        <a href="javascript:void(0);" id=""
+                                                           class="btn btn-primary mr-04"
+                                                           data-toggle="editPosterPicture">选择图片</a>
+                                                        <a href="javascript:void(0);" class="btn btn-primary clearPic">清除图片</a>
+			                                        </span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="col-sm-2 control-label">海报元素</label>
+                                        <div class="col-sm-8">
+                                            <button class='btn btn-default btn-com mb-04' type='button' data-type='head'>头像</button>
+                                            <button class='btn btn-default btn-com mb-04' type='button' data-type='nickname'>昵称</button>
+                                            <button class='btn btn-default btn-com mb-04' type='button' data-type='qr'>二维码</button>
+                                            <button class='btn btn-default btn-com mb-04' type='button' data-type='img'>图片</button>
+                                            <!--<span id="goodsparams">-->
+                                            <!--<button class='btn btn-default btn-com' type='button'-->
+                                            <!--data-type='title'>商品名称</button>-->
+                                            <!--<button class='btn btn-default btn-com' type='button'-->
+                                            <!--data-type='thumb'>商品图片</button>-->
+                                            <!--<button class='btn btn-default btn-com' type='button'-->
+                                            <!--data-type='marketprice'>商品现价</button>-->
+                                            <!--<button class='btn btn-default btn-com' type='button'-->
+                                            <!--data-type='productprice'>商品原价</button>-->
+                                            <!--</span>-->
+                                            <button class='btn btn-default btn-com mb-04' type='button' data-type='ptime'>过期时间(Y-m-d H:i:s)</button>
+                                        </div>
+                                    </div>
+
+                                    <div id='nameset' style='display:none'>
+                                        <div class="form-group">
+                                            <label class="col-sm-2 control-label">文本颜色</label>
+                                            <div class="col-sm-8 wid100">
+                                                <div class="input-group">
+                                                    <input class="form-control" type="text" name="color"
+                                                           placeholder="请选择颜色" value="">
+                                                    <span class="input-group-addon"
+                                                          style="width:35px;border-left:none;background-color:"></span>
+                                                    <span class="input-group-btn">
+										                    <button class="btn btn-default colorpicker" type="button">选择颜色 ▼</button>
+                                                        </span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <label class="col-sm-2 control-label">文本大小</label>
+                                            <div class="col-sm-8">
+                                                <div class='input-group wid100'>
+                                                    <input type="number" id="namesize" class="form-control namesize" placeholder="例如: 14,16"/>
+                                                    <div class='input-group-addon'>px</div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="form-group" id="imgset" style="display:none">
+                                        <label class="col-sm-2 control-label">图片设置</label>
+                                        <div class="col-sm-8">
+                                            <div class="input-group ">
+                                                <input type="text" name="img" value="" class="form-control goods-pic" autocomplete="off" readonly>
+                                                <span class="input-group-btn">
+                                                    <a class="btn btn-primary mr-04" data-toggle="editPosterPicture1">选择图片</a>
+                                                </span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </td>
+                    </tr>
+                </table>
+            </ul>
+        </div>
+        <!--奖励设置-->
+        <div class="tab-pane fade" id="reward_setting">
+
+        </div>
+        <!--推送设置-->
+        <div class="tab-pane fade tab-3" id="push_setting">
+            <ul class="template-list-ul clearfix">
+                <div class="form-group">
+                    <label class="col-md-2 control-label">推送类型</label>
+                    <div class="col-md-5">
+                        <label class="radio-inline">
+                            <input type="radio" name="push_type" id="push_type_1" value="1" checked> 图文消息
+                        </label>
+                        <label class="radio-inline">
+                            <input type="radio" name="push_type" id="push_type_2" value="2"> 文本消息
+                        </label>
+                    </div>
+                </div>
+                <div class="form-group J-push-type-2 hide">
+                    <label class="col-md-2 control-label">推送文本</label>
+                    <div class="col-md-5">
+                        <textarea class="form-control" name="push_text" id="push_text" rows="4"></textarea>
+                        <p class="help-block">如果内容为空，则不推送消息</p>
+                    </div>
+                </div>
+                <div class="form-group J-push-type-1">
+                    <label class="col-md-2 control-label">推送标题</label>
+                    <div class="col-md-5">
+                        <input type="text"
+                               class="form-control" id="push_title" name="push_title">
+                    </div>
+                </div>
+                <div class="form-group J-push-type-1">
+                    <label class="col-md-2 control-label">推送封面</label>
+                    <div class="col-md-8">
+                        <div class="mb-20">
+                            <div class="picture-list" id="push_cover_id">
+                                <a href="javascript:void(0);" class="plus-box" data-toggle="singlePicture">
+                                    <i class="icon icon-plus"></i>
+                                </a>
+                            </div>
+                        </div>
+                        <p class="help-block">图片建议尺寸：850像素*350像素，大小不超过2M。</p>
+                    </div>
+                </div>
+                <div class="form-group J-push-type-1">
+                    <label class="col-md-2 control-label">推送描述</label>
+                    <div class="col-md-5">
+                        <input type="text" id="push_desc" name="push_desc" class="form-control">
+                    </div>
+                </div>
+                <div class="form-group J-push-type-1">
+                    <label class="col-md-2 control-label">推送链接</label>
+                    <div class="col-md-5">
+                        <input type="text" id="push_link" name="push_link" class="form-control">
+                    </div>
+                </div>
+            </ul>
+        </div>
+        <!--分销设置-->
+        <div class="tab-pane fade tab-3" id="distribute_setting">
+            <ul class="template-list-ul clearfix">
+                <div class="form-group">
+                    <label class="col-md-2 control-label">权限设置</label>
+                    <div class="col-md-5">
+                        <!--<label class="radio-inline">
+                            <input type="radio" name="perm" id="perm_1" value="1" checked> 开启
+                        </label>
+                        <label class="radio-inline">
+                            <input type="radio" name="perm" id="perm_0" value="0"> 关闭
+                        </label>-->
+                        <div class="switch-inline">
+                            <input type="checkbox" name="perm" id="perm_setting" checked>
+                            <label for="perm_setting" class=""></label>
+                        </div>
+                        <p class="help-block mb-0">是否允许非分销商生成自己的海报</p>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-md-2 control-label">未开放时客服消息</label>
+                    <div class="col-md-5">
+                        <input type="text" id="customer_service_message" name="customer_service_message"
+                               class="form-control">
+                        <p class="help-block">例：您还不是分销商，去努力成为分销商，拥有你的专属海报吧！</p>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-md-2 control-label">未开放时说明链接</label>
+                    <div class="col-md-5">
+                        <input type="text" id="explanation_link" name="explanation_link" class="form-control">
+                    </div>
+                </div>
+                <div class="form-group"  id="sub_to_down_btn">
+                    <label class="col-md-2 control-label">扫码关注成为下线</label>
+                    <div class="col-md-5">
+                        <!--<label class="radio-inline">
+                            <input type="radio" name="is_become_offline" id="follow_1" value="1" checked> 开启
+                        </label>
+                        <label class="radio-inline">
+                            <input type="radio" name="is_become_offline" id="follow_0" value="0"> 关闭
+                        </label>-->
+                        <div class="switch-inline">
+                            <input type="checkbox" name="is_become_offline" id="is_become_offline">
+                            <label for="is_become_offline" class=""></label>
+                        </div>
+
+                        <p class="help-block mb-0">扫码关注直接成为推荐人的下线</p>
+                    </div>
+                </div>
+                <div class="form-group" id="sub_to_distribution_btn">
+                    <label class="col-md-2 control-label">扫码关注成为分销商</label>
+                    <div class="col-md-5">
+                        <!--<label class="radio-inline">
+                            <input type="radio" name="is_become_distribution" id="distribution_1" value="1" checked> 开启
+                        </label>
+                        <label class="radio-inline">
+                            <input type="radio" name="is_become_distribution" id="distribution_0" value="0"> 关闭
+                        </label>-->
+                        <div class="switch-inline">
+                            <input type="checkbox" name="is_become_distribution" id="is_become_distribution">
+                            <label for="is_become_distribution" class=""></label>
+                        </div>
+                        <p class="help-block mb-0">扫码关注直接成为推荐人的下线并成为分销商</p>
+                    </div>
+                </div>
+            </ul>
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="col-md-2 control-label"></label>
+        <div class="col-md-8">
+            <button class="btn btn-primary add" type="submit">添加</button>
+            <a href="javascript:history.go(-1);" class="btn btn-default">返回</a>
+        </div>
+    </div>
+</form>
+
+<!-- page end -->
+{/block}
+{block name="script"}
+<script id="tpl_task_rule" type="text/html">
+    <%each data as item index%>
+    <%if item.referral_num%>
+        <tr class="J-referrals">
+            <td>
+                <span class="label label-warning">推荐人数</span></td><td><div class="input-group w-400"><div class="input-group-addon">推荐</div><input type="number" name="referrals" id="" class="form-control" min="0" required="" aria-required="true" value="<%item.referral_num%>"><div class="input-group-addon">人</div></div>
+            </td>
+        </tr>
+    <%/if%>
+    <%/each%>
+    <tr id="insert_tag">
+        <td>
+            <div class="input-group w-200">
+                <select class="form-control col-md-2" name="select_task_rule" id="select_task_rule">
+                    <option value="referrals">推荐人数</option>
+                </select>
+                <div class="input-group-addon search-color btn" id="add_task_rule">增加规则</div>
+            </div>
+        </td>
+        <td></td>
+        <td></td>
+    </tr>
+</script>
+<script id="tpl_reco" type="text/html">
+    <div class="form-group referral-reward" id="reco_<%referral_num%>" data-referral_num="<%referral_num%>">
+        <label class="col-md-2 control-label"><%if is_show_tag == 1%>推荐人<%/if%></label>
+        <div class="col-md-8">
+            <div class="poster_reward_alert">推荐<%referral_num%>人</div>
+            <div class="form-additional"><div class="form-group">
+                <label class="col-md-2 control-label">送积分</label>
+                <div class="input-group w-200">
+                    <input type="number" name="point" class="form-control" min="0" required value="<%reward_obj[referral_num]['point']%>">
+                    <div class="input-group-addon">个</div>
+                </div>
+            </div>
+                <div class="form-group">
+                    <label class="col-md-2 control-label">送余额</label>
+                    <div>
+                        <div class="input-group w-200">
+                            <input type="number" name="balance" class="form-control" min="0" value="<%reward_obj[referral_num]['balance']%>">
+                            <div class="input-group-addon">个</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-md-2 control-label">送微信红包</label>
+                    <div>
+                        <div class="input-group w-200">
+                            <input type="number" name="wchat_red_packet" class="form-control" min="0" value="<%reward_obj[referral_num]['wchat_red_packet']%>">
+                            <div class="input-group-addon">元</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-md-2 control-label">增加成长值</label>
+                    <div>
+                        <div class="input-group w-200">
+                            <input type="number" name="growth" class="form-control" min="0"
+                                   value="<%reward_obj[referral_num]['growth']%>">
+                            <div class="input-group-addon">个</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group"><label class="col-md-2 control-label">送礼品券</label>
+                    <div>
+                        <div class="input-group w-200">
+                            <select class="form-control" name="gift_voucher_id" id="gift_voucher_id">
+                            <option value="0">请选择</option>
+                                <%each gift_voucher_obj as item index%>
+                                <option value="<%item.gift_voucher_id%>"
+                                <%if item.gift_voucher_id == gift_voucher_id%>selected<%/if%>><%item.giftvoucher_name%></option>
+                                <%/each%>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group"><label class="col-md-2 control-label">送优惠券</label>
+                    <div>
+                        <div class="input-group w-200"><select class="form-control" name="coupon_type_id" id="coupon_type_id">
+                            <option value="0">请选择</option>
+                            <%each coupon_type_obj as item index%>
+                            <option value="<%item.coupon_type_id%>"
+                            <%if item.coupon_type_id == coupon_type_id%>selected<%/if%>><%item.coupon_name%></option>
+                            <%/each%>
+                        </select></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</script>
+<script id="tpl_be_reco" type="text/html">
+    <div class="form-group" id="be_reco">
+        <label class="col-md-2 control-label">被推荐人</label>
+        <div class="col-md-8">
+            <div class="form-additional">
+                <div class="form-group">
+                    <label class="col-md-2 control-label">送积分</label>
+                    <div class="input-group w-200"><input type="number" name="point" class="form-control" min="0"
+                                                          required value="<%reward_obj.send_points%>">
+                        <div class="input-group-addon">个</div>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-md-2 control-label">送余额</label>
+                    <div>
+                        <div class="input-group w-200">
+                            <input type="number" name="balance" class="form-control" min="0"
+                                   value="<%reward_obj.send_balance%>">
+                            <div class="input-group-addon">个</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-md-2 control-label">送微信红包</label>
+                    <div>
+                        <div class="input-group w-200">
+                            <input type="number" name="wchat_red_packet" class="form-control" min="0"
+                                   value="<%reward_obj.send_wchat_packet%>">
+                            <div class="input-group-addon">元</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-md-2 control-label">增加成长值</label>
+                    <div>
+                        <div class="input-group w-200">
+                            <input type="number" name="growth" class="form-control" min="0"
+                                   value="<%reward_obj.send_member_growth%>">
+                            <div class="input-group-addon">元</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-md-2 control-label">送礼品券</label>
+                    <div>
+                        <div class="input-group w-200">
+                            <select class="form-control" name="gift_voucher_id" id="gift_voucher_id">
+                                <option value="0">请选择</option>
+                                <%each gift_voucher_obj as item index%>
+                                <option value="<%item.gift_voucher_id%>"
+                                <%if item.gift_voucher_id ==
+                                reward_obj.gift_voucher_id%>selected<%/if%>><%item.giftvoucher_name%></option>
+                                <%/each%>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-md-2 control-label">送优惠券</label>
+                    <div>
+                        <div class="input-group w-200">
+                            <select class="form-control" name="coupon_type_id" id="coupon_type_id">
+                                <option value="0">请选择</option>
+                                <%each coupon_type_obj as item index%>
+                                <option value="<%item.coupon_type_id%>"
+                                <%if item.coupon_type_id ==
+                                reward_obj.coupon_type_id%>selected<%/if%>><%item.coupon_name%></option>
+                                <%/each%>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</script>
+<script id="tpl_edit_reco" type="text/html">
+    <%each data as item index%>
+    <%if item.referral_num != 0%>
+    <div class="form-group referral-reward" id="reco_<%item.referral_num%>" data-referral_num="<%item.referral_num%>">
+        <label class="col-md-2 control-label"><%if index == 0%>推荐人<%/if%></label>
+        <div class="col-md-8">
+            <div class="poster_reward_alert">推荐<%item.referral_num%>人</div>
+            <div class="form-additional"><div class="form-group">
+                <label class="col-md-2 control-label">送积分</label>
+                <div class="input-group w-200">
+                    <input type="number" name="point" class="form-control" min="0" required value="<%item.point%>">
+                    <div class="input-group-addon">个</div>
+                </div>
+            </div>
+                <div class="form-group">
+                    <label class="col-md-2 control-label">送余额</label>
+                    <div>
+                        <div class="input-group w-200">
+                            <input type="number" name="balance" class="form-control" min="0" value="<%item.balance%>">
+                            <div class="input-group-addon">个</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-md-2 control-label">送微信红包</label>
+                    <div>
+                        <div class="input-group w-200">
+                            <input type="number" name="wchat_red_packet" class="form-control" min="0" value="<%item.wchat_red_packet%>">
+                            <div class="input-group-addon">元</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-md-2 control-label">增加成长值</label>
+                    <div>
+                        <div class="input-group w-200">
+                            <input type="number" name="growth" class="form-control" min="0"
+                                   value="<%item.growth%>">
+                            <div class="input-group-addon">个</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group"><label class="col-md-2 control-label">送礼品券</label>
+                    <div>
+                        <div class="input-group w-200">
+                            <select class="form-control" name="gift_voucher_id" id="gift_voucher_id">
+                                <option value="0">请选择</option>
+                                <%each gift_voucher_obj as item2 index%>
+                                <option value="<%item.gift_voucher_id%>"
+                                <%if item2.gift_voucher_id == item.gift_voucher_id%>selected<%/if%>><%item2.giftvoucher_name%></option>
+                                <%/each%>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group"><label class="col-md-2 control-label">送优惠券</label>
+                    <div>
+                        <div class="input-group w-200"><select class="form-control" name="coupon_type_id" id="coupon_type_id">
+                            <option value="0">请选择</option>
+                            <%each coupon_type_obj as item2 index%>
+                            <option value="<%item.coupon_type_id%>"
+                            <%if item2.coupon_type_id == item.coupon_type_id%>selected<%/if%>><%item2.coupon_name%></option>
+                            <%/each%>
+                        </select></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <%/if%>
+    <%if item.referral_num == 0%>
+    <div class="form-group" id="be_reco">
+        <label class="col-md-2 control-label">被推荐人</label>
+        <div class="col-md-8">
+            <div class="form-additional">
+                <div class="form-group">
+                    <label class="col-md-2 control-label">送积分</label>
+                    <div class="input-group w-200"><input type="number" name="point" class="form-control" min="0"
+                                                          required value="<%item.point%>">
+                        <div class="input-group-addon">个</div>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-md-2 control-label">送余额</label>
+                    <div>
+                        <div class="input-group w-200">
+                            <input type="number" name="balance" class="form-control" min="0"
+                                   value="<%item.balance%>">
+                            <div class="input-group-addon">个</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-md-2 control-label">送微信红包</label>
+                    <div>
+                        <div class="input-group w-200">
+                            <input type="number" name="wchat_red_packet" class="form-control" min="0"
+                                   value="<%item.wchat_red_packet%>">
+                            <div class="input-group-addon">元</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-md-2 control-label">增加成长值</label>
+                    <div>
+                        <div class="input-group w-200">
+                            <input type="number" name="growth" class="form-control" min="0"
+                                   value="<%item.growth%>">
+                            <div class="input-group-addon">元</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-md-2 control-label">送礼品券</label>
+                    <div>
+                        <div class="input-group w-200">
+                            <select class="form-control" name="gift_voucher_id" id="gift_voucher_id" required>
+                                <option value="0">请选择</option>
+                                <%each gift_voucher_obj as item index%>
+                                <option value="<%item.gift_voucher_id%>"
+                                <%if item.gift_voucher_id ==
+                                item.gift_voucher_id%>selected<%/if%>><%item.giftvoucher_name%></option>
+                                <%/each%>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-md-2 control-label">送优惠券</label>
+                    <div>
+                        <div class="input-group w-200">
+                            <select class="form-control" name="coupon_type_id" id="coupon_type_id" required="required">
+                                <option value="0">请选择</option>
+                                <%each coupon_type_obj as item index%>
+                                <option value="<%item.coupon_type_id%>"
+                                <%if item.coupon_type_id ==
+                                item.coupon_type_id%>selected<%/if%>><%item.coupon_name%></option>
+                                <%/each%>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <%/if%>
+    <%/each%>
+</script>
+<script id="tpl_edit_be_reco" type="text/html">
+    <div class="form-group" id="be_reco">
+        <label class="col-md-2 control-label">被推荐人</label>
+        <div class="col-md-8">
+            <div class="form-additional">
+                <div class="form-group">
+                    <label class="col-md-2 control-label">送积分</label>
+                    <div class="input-group w-200"><input type="number" name="point" class="form-control" min="0"
+                                                          required value="<%reward_obj.send_points%>">
+                        <div class="input-group-addon">个</div>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-md-2 control-label">送余额</label>
+                    <div>
+                        <div class="input-group w-200">
+                            <input type="number" name="balance" class="form-control" min="0"
+                                   value="<%reward_obj.send_balance%>">
+                            <div class="input-group-addon">个</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-md-2 control-label">送微信红包</label>
+                    <div>
+                        <div class="input-group w-200">
+                            <input type="number" name="wchat_red_packet" class="form-control" min="0"
+                                   value="<%reward_obj.send_wchat_packet%>">
+                            <div class="input-group-addon">元</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-md-2 control-label">增加成长值</label>
+                    <div>
+                        <div class="input-group w-200">
+                            <input type="number" name="growth" class="form-control" min="0"
+                                   value="<%reward_obj.send_member_growth%>">
+                            <div class="input-group-addon">元</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-md-2 control-label">送礼品券</label>
+                    <div>
+                        <div class="input-group w-200">
+                            <select class="form-control" name="gift_voucher_id" id="gift_voucher_id" required>
+                                <option value="0">请选择</option>
+                                <%each gift_voucher_obj as item index%>
+                                <option value="<%item.gift_voucher_id%>"
+                                <%if item.gift_voucher_id ==
+                                reward_obj.gift_voucher_id%>selected<%/if%>><%item.giftvoucher_name%></option>
+                                <%/each%>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-md-2 control-label">送优惠券</label>
+                    <div>
+                        <div class="input-group w-200">
+                            <select class="form-control" name="coupon_type_id" id="coupon_type_id" required="required">
+                                <option value="0">请选择</option>
+                                <%each coupon_type_obj as item index%>
+                                <option value="<%item.coupon_type_id%>"
+                                <%if item.coupon_type_id ==
+                                reward_obj.coupon_type_id%>selected<%/if%>><%item.coupon_name%></option>
+                                <%/each%>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</script>
+<script>
+    require(['util','poster','tpl'], function (util,poster,tpl) {
+        // util.layDate("#start_task_time");
+        // util.layDate("#end_task_time");
+
+        util.layDate('#effect_time',true,function(value, date, endDate){
+            var date1=date.year+'-'+date.month+'-'+date.date;
+            var date2=endDate.year+'-'+endDate.month+'-'+endDate.date;
+            if(value){
+                $('#start_task_time').val(date1);
+                $('#end_task_time').val(date2);
+                $('#effect_time').parents('.form-group').removeClass('has-error');
+            }
+            else{
+                $('#start_task_time').val('');
+                $('#end_task_time').val('');
+            }
+        });
+
+        $(function(){
+            init('{$general_poster_id}');
+        })
+        //点击增加对应的规则tr
+        $('body').on('click','#add_task_rule',function(){
+            var tr_html = '<tr class="J-referrals">\n' +
+                '                    <td>\n' +
+                '                        <span class="label label-warning">推荐人数</span>\n' +
+                '                    </td>\n' +
+                '                    <td>\n' +
+                '                        <div class="input-group w-400">\n' +
+                '                            <div class="input-group-addon">推荐</div>\n' +
+                '                            <input type="number" name="referrals" id="referrals" class="form-control" min="0" value="" required="" aria-required="true">\n' +
+                '                            <div class="input-group-addon">人</div>\n' +
+                '                        </div>\n' +
+                '                    </td>\n' +
+                '<td><a href="javascript:;" class="btn-operation text-red1 refeeral_tr_delete">删除</a></td>' +
+                '                </tr>';
+            $('#insert_tag').before(tr_html);
+        })
+        $('body').on('click', '.refeeral_tr_delete', function(){
+            $(this).parent().parent().remove();
+        })
+        //保存上一次填写的值
+        $('body').on('mouseout','.referral-reward',function(){
+            getReferrals();
+        })
+
+        //得到保存的referrals值
+        function getReferrals(){
+            //获取当前的input框值
+            var reward_length = $('.referral-reward').length;
+            var reward_obj = {};
+            for(var i=0;i<reward_length;i++){
+                referral_num = $('.referral-reward').eq(i).data('referral_num');
+                reward_obj[referral_num] = {};
+                reward_obj[referral_num]['referral_num'] = referral_num;
+                reward_obj[referral_num]['task_type'] = 2;
+                //送积分
+                var point = $('.referral-reward').eq(i).find('input[name=point]').val();
+                reward_obj[referral_num]['point'] = point;
+                //送余额
+                var balance = $('.referral-reward').eq(i).find('input[name=balance]').val();
+                reward_obj[referral_num]['balance'] = balance;
+                //送微信红包
+                var wchat_red_packet = $('.referral-reward').eq(i).find('input[name=wchat_red_packet]').val();
+                reward_obj[referral_num]['wchat_red_packet'] = wchat_red_packet;
+                //送成长值
+                var growth = $('.referral-reward').eq(i).find('input[name=growth]').val();
+                reward_obj[referral_num]['growth'] = growth;
+                //礼品券id
+                var gift_voucher_id = $('.referral-reward').eq(i).find('select[name=gift_voucher_id]').val();
+                reward_obj[referral_num]['gift_voucher_id'] = gift_voucher_id;
+                //优惠券id
+                var coupon_type_id = $('.referral-reward').eq(i).find('select[name=coupon_type_id]').val();
+                reward_obj[referral_num]['coupon_type_id'] = coupon_type_id;
+            }
+            //被推荐人  送积分
+            reward_obj['be_reco'] = {};
+            var send_points = $('#be_reco input[name=point]').val();
+            reward_obj['be_reco']['send_points'] = send_points;
+            reward_obj['be_reco']['task_type'] = 2;
+            //送余额
+            var send_balance = $('#be_reco input[name=balance]').val();
+            reward_obj['be_reco']['send_balance'] = send_balance;
+            //送微信红包
+            var send_wchat_packet = $('#be_reco input[name=wchat_red_packet]').val();
+            reward_obj['be_reco']['send_wchat_packet'] = send_wchat_packet;
+            //加会员成长值
+            var send_member_growth = $('#be_reco input[name=growth]').val();
+            reward_obj['be_reco']['send_member_growth'] = send_member_growth;
+            //送礼品券
+            var gift_voucher_id = $('#be_reco select[name=gift_voucher_id]').val();
+            reward_obj['be_reco']['gift_voucher_id'] = gift_voucher_id;
+            //送优惠券
+            var coupon_type_id = $('#be_reco select[name=coupon_type_id]').val();
+            reward_obj['be_reco']['coupon_type_id'] = coupon_type_id;
+            var reward_obj_str = JSON.stringify(reward_obj);
+            $('body').attr('reward_obj_str',reward_obj_str);
+        }
+        //点击奖励变换奖励内容
+        // if('{$general_poster_id}' == ''){
+            //找到任务规则中填写的数字，并排序
+            $('#reward_setting_tab').click(function(){
+                var reward_obj_str = $('body').attr('reward_obj_str');
+                if(reward_obj_str){
+                    var reward_obj = JSON.parse(reward_obj_str);
+                }else{
+                    reward_obj = {};
+                    reward_obj['be_reco'] = {};
+                }
+
+                //获取referrals 中的值
+                var length = $('input[name=referrals]').length;
+                var reward_arr = new Array();
+                var reward_referrals_obj = {};
+                for(var i=0;i<length;i++){
+                    if($('input[name=referrals]').eq(i).val() != ''){
+                        reward_referrals_obj[$('input[name=referrals]').eq(i).val()] = {};
+                        reward_referrals_obj[$('input[name=referrals]').eq(i).val()] = $('input[name=referrals]').eq(i).val();
+                    }
+                }
+                for(var k in reward_referrals_obj){
+                    reward_arr.push(reward_referrals_obj[k]);
+                }
+                // replaceEmptyItem(reward_arr);
+                // reward_arr.sort(function(a,b){
+                //     return a-b;
+                // });
+                var gift_voucher_info = '{$gift_voucher_info}';
+                if(gift_voucher_info){
+                    var gift_voucher_obj = JSON.parse(gift_voucher_info);
+                }else{
+                    gift_voucher_obj = {};
+                }
+                var coupon_type_info = '{$coupon_type_info}';
+                if(coupon_type_info){
+                    var coupon_type_obj = JSON.parse(coupon_type_info);
+                }else{
+                    coupon_type_obj = {};
+                }
+                var reward_str = '<ul class="template-list-ul clearfix">';
+                var tpl_be_reco = tpl('tpl_be_reco', {'gift_voucher_obj': gift_voucher_obj,'coupon_type_obj':coupon_type_obj, 'reward_obj':reward_obj['be_reco']});
+                if(reward_arr.length == 0){
+                    reward_str += '<div class="form-group referral-reward" id="reco_'+ referral_num +'" data-referral_num="'+ referral_num +'">' +
+                        '<label class="col-md-2 control-label">推荐人</label>' +
+                        '<div class="col-md-8">' +
+                        '<div class="poster_reward_alert_border">请先设置“任务规则”！</div>' +
+                        '</div>' +
+                        '</div>'+ tpl_be_reco +'</ul>';
+                }else{
+                    for(var j=0;j<reward_arr.length;j++){
+                        var referral_num = reward_arr[j];
+                        if(!reward_obj[referral_num]){
+                            reward_obj[referral_num] = {};
+                        }
+                        if(j == 0){
+                            var gift_voucher_select= tpl('tpl_reco', {'gift_voucher_obj': gift_voucher_obj,'coupon_type_obj':coupon_type_obj, 'gift_voucher_id':reward_obj[referral_num]['gift_voucher_id'],'coupon_type_id':reward_obj[referral_num]['coupon_type_id'],'referral_num':referral_num,'reward_obj':reward_obj,'is_show_tag':1});
+                            reward_str += gift_voucher_select;
+                        }else{
+                            var gift_voucher_select= tpl('tpl_reco', {'gift_voucher_obj': gift_voucher_obj,'coupon_type_obj':coupon_type_obj, 'gift_voucher_id':reward_obj[referral_num]['gift_voucher_id'],'coupon_type_id':reward_obj[referral_num]['coupon_type_id'],'referral_num':referral_num,'reward_obj':reward_obj,'is_show_tag':0});
+                            reward_str += gift_voucher_select;
+                        }
+                    }
+                    reward_str += tpl_be_reco+'</ul>';
+                }
+
+                $('#reward_setting').html(reward_str);
+            })
+        // }
+
+        //添加任务
+        util.validate($('.form-validate'),function(form){
+            var data = {};
+            //任务id
+            if('{$general_poster_id}'){
+                data.general_poster_id = '{$general_poster_id}';
+            }
+            //任务名称
+            var task_name = $('#task_name').val();
+            data.task_name = task_name;
+            data.task_type = 2;
+            var push_cover_num = $("#wap_register_adv img").length;
+            if (push_cover_num == 0) {
+                util.message("任务图标不能为空");
+                return false;
+            }
+            //任务图片
+            var task_img = $('#wap_register_adv i').data('id');
+            data.task_img = task_img;
+            // console.log(task_img);
+            //开启时间
+            var start_task_time = $('#start_task_time').val();
+            data.start_task_time = start_task_time;
+            //结束时间
+            var end_task_time = $('#end_task_time').val();
+            data.end_task_time = end_task_time;
+            // 开启时间不能大于结束时间
+            if (util.DateTurnTime(start_task_time) > util.DateTurnTime(end_task_time)) {
+                $("#effect_time").focus();
+                util.message("开始时间大于结束时间","danger");
+                return;
+            }
+
+            //回复关键词
+            var back_keywords = $('#back_keywords').val();
+            data.back_keywords = back_keywords;
+            //任务限时
+            var task_limit_time = $('#task_limit_time').val();
+            data.task_limit_time = task_limit_time;
+            //任务状态
+            // var task_status = $('input[name="task_status"]').is(':checked')?1:0;
+            // data.task_status = task_status;
+            //任务未开始提示
+            var task_unstart_warning = $('#task_unstart_warning').val();
+            data.task_unstart_warning = task_unstart_warning;
+            //任务结束提示
+            var task_ended_warning = $('#task_ended_warning').val();
+            data.task_ended_warning = task_ended_warning;
+            //生成时等待文字
+            var poster_waiting_text = $('#poster_waiting_text').val();
+            data.poster_waiting_text = poster_waiting_text;
+            //关注后自动接任务
+            var is_auto_take_task = $('input[name=is_auto_take_task]').is(':checked')?1:0;
+            data.is_auto_take_task = is_auto_take_task;
+            //是否可重复领取
+            var is_repeat_take_task = $('input[name=is_repeat_take_task]').is(':checked')?1:0;
+            data.is_repeat_take_task = is_repeat_take_task;
+            //任务说明
+            var task_explain = $('#UE-protocol').data('content');
+            data.task_explain = task_explain;
+            /*****************************海报设计*******************************/
+            var poster_design = poster.posterData();
+            data.poster_design = poster_design;
+            /***************************奖励设置*********************************/
+            //循环获取奖励设置
+            var reward_length = $('.referral-reward').length;
+            var reward_obj = {};
+            var referral_reward = {};
+            for(var i=0;i<reward_length;i++){
+                reward_obj[i] = {};
+                referral_num = $('.referral-reward').eq(i).data('referral_num');
+                reward_obj[i]['referral_num'] = referral_num;
+                reward_obj[i]['task_type'] = 2;
+                //送积分
+                var point = $('.referral-reward').eq(i).find('input[name=point]').val();
+                reward_obj[i]['point'] = point;
+                //送余额
+                var balance = $('.referral-reward').eq(i).find('input[name=balance]').val();
+                reward_obj[i]['balance'] = balance;
+                //送微信红包
+                var wchat_red_packet = $('.referral-reward').eq(i).find('input[name=wchat_red_packet]').val();
+                reward_obj[i]['wchat_red_packet'] = wchat_red_packet;
+                //送成长值
+                var growth = $('.referral-reward').eq(i).find('input[name=growth]').val();
+                reward_obj[i]['growth'] = growth;
+                //礼品券id
+                var gift_voucher_id = $('.referral-reward').eq(i).find('select[name=gift_voucher_id]').val();
+                reward_obj[i]['gift_voucher_id'] = gift_voucher_id;
+                //优惠券id
+                var coupon_type_id = $('.referral-reward').eq(i).find('select[name=coupon_type_id]').val();
+                reward_obj[i]['coupon_type_id'] = coupon_type_id;
+            }
+            referral_reward['referral_reward'] =  reward_obj;
+
+            //被推荐人  送积分
+            referral_reward['be_reco'] = {};
+            var send_points = $('#be_reco input[name=point]').val();
+            referral_reward['be_reco']['send_points'] = send_points;
+            referral_reward['be_reco']['task_type'] = 2;
+            //送余额
+            var send_balance = $('#be_reco input[name=balance]').val();
+            referral_reward['be_reco']['send_balance'] = send_balance;
+            //送微信红包
+            var send_wchat_packet = $('#be_reco input[name=wchat_red_packet]').val();
+            referral_reward['be_reco']['send_wchat_packet'] = send_wchat_packet;
+            //加会员成长值
+            var send_member_growth = $('#be_reco input[name=growth]').val();
+            referral_reward['be_reco']['send_member_growth'] = send_member_growth;
+            //送礼品券
+            var gift_voucher_id = $('#be_reco select[name=gift_voucher_id]').val();
+            referral_reward['be_reco']['gift_voucher_id'] = gift_voucher_id;
+            //送优惠券
+            var coupon_type_id = $('#be_reco select[name=coupon_type_id]').val();
+            referral_reward['be_reco']['coupon_type_id'] = coupon_type_id;
+            // referral_reward_str = JSON.stringify( referral_reward );
+            data.referral_reward = referral_reward;
+            /***********************推送设置**************************/
+            //推送标题
+            var push_type = $('input[name=push_type]:checked').val();
+            var push_text = $('#push_text').val();
+            data.push_type = push_type;
+            data.push_text = push_text;
+            var push_title = $('#push_title').val();
+            data.push_title = push_title;
+            var push_cover = $('#push_cover_id i').data('id');
+            data.push_cover = push_cover;
+            var push_desc = $('#push_desc').val();
+            data.push_desc = push_desc;
+            var push_link = $('#push_link').val();
+            data.push_link = push_link;
+
+            /*********************分销设置****************************/
+            //权限设置
+            var perm_setting = $('input[name=perm]').is(':checked')?1:0;
+            data.perm_setting = perm_setting;
+            //未开放时客服消息
+            var customer_service_message = $('#customer_service_message').val();
+            data.customer_service_message = customer_service_message;
+            //未开放时说明链接
+            var explanation_link = $('#explanation_link').val();
+            data.explanation_link = explanation_link;
+            //扫码关注成为下线
+            var is_become_offline = $('input[name="is_become_offline"]').is(':checked')?1:0;
+            data.is_become_offline = is_become_offline;
+            //扫码关注成为分销商
+            var is_become_distribution = $('input[name=is_become_distribution]').is(':checked')?1:0;
+            data.is_become_distribution = is_become_distribution;
+            $('.add').attr({disabled: "disabled"}).html('提交中...');
+            // console.log(data);return;
+            $.post('{$addPosterTask}',
+                data,
+                function(res){
+                    if (res["code"] > 0) {
+                        util.message('添加成功', 'success', "{:__URL('platform/Menu/addonmenu?addons=posterTaskList')}");
+                        // util.message('添加成功', 'success', "");
+                    } else {
+                        util.message(res["message"], 'danger');
+                    }
+                }
+            );
+        })
+        // 初始化编辑的数据
+        function init(general_poster_id) {
+            if(general_poster_id == ''){
+                return;
+            }
+            // 海报数据
+            $.ajax({
+                type: "post",
+                url: '{$getGeneralPosterInfo}',
+                data: {
+                    'general_poster_id': general_poster_id
+                },
+                success: function (data) {
+                    // console.log(data);return;
+                    $('#task_name').val(data.task_name)
+                    $('#key').val(data.key)
+                    // $('input[name=task_status][value='+ data.task_status +']').prop('checked', true)
+                    if(data.task_status==1){
+                       $('input[name="task_status"]').prop('checked', true) 
+                    }
+                    else{
+                       $('input[name="task_status"]').prop('checked', false) 
+                    }
+
+                    $('#wap_register_adv').find('i').attr('data-id', data.task_img)
+                    if (data.task_img) {
+                        $('#wap_register_adv').html('<a href="javascript:void(0);" class="close-box"><i class="icon icon-danger" title="删除"></i><img src="' + data.get_task_img.pic_cover + '"></a>');
+                    }
+                    poster.initPoster(JSON.parse(data.poster_design));
+                    $('#back_keywords').val(data.back_keywords);
+                    $('input[name=start_task_time]').val(data.start_task_time);
+                    $('input[name=end_task_time]').val(data.end_task_time);
+                    $("#effect_time").val(data.start_task_time+' - '+data.end_task_time);
+
+                    $('#task_limit_time').val(data.task_limit_time);
+                    // poster.initPoster($.parseJSON(data.poster_data))
+                    $("#waiting_reply").val(data.waiting_reply)
+                    $('#task_unstart_warning').val(data.task_unstart_warning);
+                    $('#poster_waiting_text').val(data.poster_waiting_text);
+                    $('#task_ended_warning').val(data.task_ended_warning);
+                    $('#push_text').val(data.push_text);
+                    // $('input[name=is_auto_take_task][value='+ data.is_auto_take_task +']').prop('checked',true);
+                    if(data.is_auto_take_task==1){
+                        $('input[name="is_auto_take_task"]').prop('checked',true);
+                    }
+                    else{
+                        $('input[name="is_auto_take_task"]').prop('checked',false);
+                    }
+
+                    // $('input[name=is_repeat_take_task][value='+ data.is_repeat_take_task +']').prop('checked',true);
+                    if(data.is_repeat_take_task==1){
+                        $('input[name="is_repeat_take_task"]').prop('checked',true);
+                    }
+                    else{
+                        $('input[name="is_repeat_take_task"]').prop('checked',false);
+                    }
+
+                    var tpl_task_rule = tpl('tpl_task_rule',{data:data['poster_reward']});
+                    $('#general_task_list').html(tpl_task_rule);
+                    // console.log(tpl_task_rule);return;
+                    // $('#referrals').val(data['poster_reward'][0]['referral_num']);
+                    $('#UE-protocol').data('content',data.task_explain);
+                    var gift_voucher_info = '{$gift_voucher_info}';
+                    if(gift_voucher_info){
+                        var gift_voucher_obj = JSON.parse(gift_voucher_info);
+                    }else{
+                        var gift_voucher_obj = {};
+                    }
+                    var coupon_type_info = '{$coupon_type_info}';
+                    if(coupon_type_info){
+                        var coupon_type_obj = JSON.parse(coupon_type_info);
+                    }else{
+                        var coupon_type_obj = {};
+                    }
+                    var tpl_edit_reco = tpl('tpl_edit_reco',{data:data['poster_reward'],gift_voucher_obj:gift_voucher_obj,coupon_type_obj:coupon_type_obj});
+                    $('#reward_setting').html(tpl_edit_reco);
+                    //保存设置的值
+                    getReferrals();
+                    switchPushType(data.push_type);
+                    $('#push_cover_id').find('i').attr('data-id', data.push_cover)
+                    if (data.push_cover) {
+                        $('#push_cover_id').html('<a href="javascript:void(0);" class="close-box"><i class="icon icon-danger" title="删除"></i><img src="' + data.get_push_cover.pic_cover + '"></a>');
+                    }
+                    $('#push_desc').val(data.push_desc);
+                    $('#push_link').val(data.push_link);
+
+                    $('#customer_service_message').val(data.customer_service_message);
+                    $('#explanation_link').val(data.explanation_link);
+                    // $('input[name=perm][value='+ data.perm_setting +']').prop('checked',true);
+                    if(data.perm_setting==1){
+                        $('#sub_to_distribution_btn').hide();
+                        $('#sub_to_down_btn').hide();
+                        $('input[name="perm"]').prop('checked',true);
+                    }
+                    else{
+                        $('#sub_to_distribution_btn').show();
+                        $('#sub_to_down_btn').show();
+                        $('input[name="perm"]').prop('checked',false);
+                    }
+
+                    // $('input[name=is_become_offline][value='+ data.is_become_offline +']').prop('checked',true);
+                    if(data.is_become_offline==1){
+                        $('input[name="is_become_offline"]').prop('checked',true);
+                    }
+                    else{
+                        $('input[name="is_become_offline"]').prop('checked',false);
+                    }
+
+                    // $('input[name=is_become_distribution][value='+ data.is_become_distribution +']').prop('checked',true);
+                    if(data.is_become_distribution==1){
+                        $('input[name="is_become_distribution"]').prop('checked',true);
+                    }
+                    else{
+                        $('input[name="is_become_distribution"]').prop('checked',false);
+                    }
+
+                    $('#push_title').val(data.push_title);
+                }
+            });
+        }
+        // 切换
+        $('input[name=push_type]').on('change', function () {
+            switchPushType();
+        })
+        // 切换通知类型
+        function switchPushType(push_type) {
+            var push_type = push_type ? push_type : $('input[name=push_type]:checked').val()
+            if (push_type == 1) {
+                $('#push_type_1').attr('checked', 'checked');
+                $('.J-push-type-2').addClass('hide')
+                $('.J-push-type-2').removeClass('show')
+                $('.J-push-type-1').removeClass('hide')
+                $('.J-push-type-1').addClass('show')
+            } else {
+                $('#push_type_2').attr('checked', 'checked');
+                $('.J-push-type-1').addClass('hide')
+                $('.J-push-type-1').removeClass('show')
+                $('.J-push-type-2').removeClass('hide')
+                $('.J-push-type-2').addClass('show')
+            }
+        }
+        //关键词查询看是否以重复
+        $('#back_keywords').blur(function(){
+            var key_words = $(this).val();
+            var general_poster_id = '{$general_poster_id}';
+            if(key_words == ''){
+                return;
+            }
+            var obj = $(this);
+            $.ajax({
+                url:'{$isRepeatKeyword}',
+                type:'post',
+                data:{keyword:key_words,general_poster_id:general_poster_id},
+                success:function(res){
+                    if(res['code'] < 0){
+                        obj.val('');
+                        util.message(res['message'], 'danger', "");
+                    }
+
+                }
+            })
+        })
+        //分销设置当设置了非分销商设置自己的海报隐藏掉扫码关注成为下线、成为分销商
+        $('#perm_setting:checked').change(function(){
+            ctrPermBtn();
+        })
+        function ctrPermBtn(){
+            if($('#perm_setting:checked').val() == 'on'){
+                //sub_to_down
+                //sub_to_distribution
+                $('#sub_to_down_btn').hide();
+                $('#sub_to_distribution_btn').hide();
+            }else{
+                $('#sub_to_down_btn').show();
+                $('#sub_to_distribution_btn').show();
+            }
+        }
+        ctrPermBtn();
+    });
+</script>
+{/block}

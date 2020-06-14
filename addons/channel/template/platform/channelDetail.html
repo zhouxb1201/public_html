@@ -1,0 +1,96 @@
+{block name="main"}
+			<!-- page -->
+			<div class="screen-title">
+				<span class="text">基本信息</span>
+			</div>
+			<div class="row panel-detail">
+				<div class="col-md-6">
+					<div class="item h-auto">
+						<div class="media">
+							<div class="media-left">
+								<img src="{$channel_info['user_headimg']}" width="160px" height="160px" >
+							</div>
+							<input type="hidden" id="channel_id" value="{$channel_info['channel_id']}">
+							<div class="media-body">
+								<p class="p"><span class="text-label">ID：</span>{$channel_info['channel_id']}</p>
+								<p class="p"><span class="text-label">昵称：</span>{if $channel_info['nick_name']}{$channel_info['nick_name']}{else}{$channel_info['user_name']}{/if}</p>
+								<!--<div class="p">-->
+									<!--<span class="text-label">真实姓名：</span>-->
+									<!--<input type="text" class="form-control text-form-control" disabled id="real_name" value="{$channel_info['channel_real_name']}">-->
+								<!--</div>-->
+								<div class="p">
+									<span class="text-label">手机号码：</span>
+									{$channel_info['channel_phone']}
+									<!--<input type="text" class="form-control text-form-control" disabled id="mobile" value="{$channel_info['channel_phone']}">-->
+								</div>
+								<div class="p">
+									<span class="text-label">当前状态：</span>
+									<select id="status" class="form-control select-form-control inline-block">
+										<option value="1" {if $channel_info['status']==1}selected{/if}>已审核</option>
+										<option value="0" {if $channel_info['status']==0}selected{/if}>待审核</option>
+									</select>
+								</div>
+								<div class="p">
+									<span class="text-label">渠道商等级：</span>
+									<select name="level" id="level" class="form-control select-form-control inline-block">
+										{foreach name="grade_list" item="value" key="key"}
+										<option value="{$value.channel_grade_id}" {if $channel_info['channel_grade_id']==$value.channel_grade_id}selected{/if}>{$value.channel_grade_name}</option>
+										{/foreach}
+
+									</select>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="col-md-6">
+					<div class="item h-auto">
+						<div class="media-body">
+							<p class="p">推荐人：{if $channel_info['referee_name']}{$channel_info['referee_name']}{else}总店{/if} </p>
+							<p class="p">采购订单：{if $channel_info['purchase_num']}{$channel_info['purchase_num']}{else}0{/if} </p>
+							<p class="p">累计采购金额：{if $channel_info['my_purchase_money']}{$channel_info['my_purchase_money']}{else}0.00{/if}</p>
+							<p class="p">累计利润：{if $channel_info['my_profit']}{$channel_info['my_profit']}{else}0.00{/if}</p>
+							<p class="p">累计奖金：{if $channel_info['my_bonus']}{$channel_info['my_bonus']}{else}0.00{/if}</p>
+							<p class="p">成为渠道商时间：{$channel_info['to_channel_time']}</p>
+						</div>
+					</div>
+				</div>
+			</div>
+
+				<div class="v-form-inline">
+					<div class="form-group">
+						<label class="control-label"></label>
+						<a href="javascript:; " class="btn btn-primary add">保存</a>
+					</div>
+				</div>
+			<!-- page end -->
+{/block}
+{block name="script"}
+<script>
+    require(['util'],function(util){
+        $('.add').click(function (e) {
+            var mobile = $("#mobile").val();
+            var real_name = $("#real_name").val();
+            var status = $("#status").val();
+            var level = $("#level").val();
+            var channel_id = $("#channel_id").val();
+            $.ajax({
+                type: "post",
+                url : "{$updateChannelInfo}",
+                data : {
+                    "channel_id":channel_id,"mobile":mobile,"status":status,"real_name":real_name,"level":level
+                },
+                async: true,
+                success: function (data) {
+                    if (data['code'] > 0) {
+                        util.message(data["message"], 'success', "{:__URL('ADDONS_MAINchannelDetail')}&channel_id="+channel_id);
+                    } else {
+                        util.message(data["message"], 'danger');
+                    }
+                }
+            });
+
+        })
+    })
+</script>
+{/block}

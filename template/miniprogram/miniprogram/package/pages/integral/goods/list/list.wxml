@@ -1,0 +1,44 @@
+<view class="goodlist">
+  <view class='sort'>
+    <view class="item {{orderActive == '' ? 'on' : ''}}" data-order='' bindtap='changeSort'>
+      <text>默认</text>
+    </view>
+    <view class="item {{orderActive == 'sales' ? 'on' : ''}}" data-order='sales' data-sort='{{saleSort}}' bindtap='changeSort'>
+      <text>兑换量</text>
+      <view class="icon iconfont v-icon-sort2 {{saleSort}}"></view>
+    </view>
+    <view class="item {{orderActive == 'point_exchange' ? 'on' : ''}}" data-order='point_exchange' data-sort='{{pointSort}}' bindtap='changeSort'>
+      <text>积分</text>
+      <view class="icon iconfont v-icon-sort2 {{pointSort}}"></view>
+    </view>
+  </view>
+
+  <view class='goodsRank'>
+    <view class='goodbox'>
+      <view class='gooditem' wx:for="{{goodlist}}" wx:key='' data-id="{{item.goods_id}}">
+        <navigator url='../detail/detail?goodsId={{item.goods_id}}'>
+          <view class='goodimg'>
+            <image mode='widthFix' src="{{item.logo}}"></image>
+          </view>
+          <view class='gooddetail'>
+            <view class='goodname'>
+              <text class='tag'>{{item.type}}</text>{{item.goods_name}}</view>
+            <view class='tags'>
+              <view class='info' wx:if="{{item.point_exchange > 0}}">
+                <text class='strong'>{{item.point_exchange}}</text>
+                <text class='txt'>积分</text>
+              </view>
+              <view class='info' wx:if="{{item.price > 0}}">
+                <text class='symbol' wx:if="{{item.point_exchange > 0}}">+</text>
+                <text class='strong'>￥{{item.price}}</text>
+              </view>
+            </view>
+          </view>
+        </navigator>
+      </view>
+    </view>
+    <view class='no_gooddata' wx:if="{{noMore == 'true'}}">
+      <text>没有更多了</text> 
+    </view>
+  </view>
+</view>

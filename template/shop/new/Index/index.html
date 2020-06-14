@@ -1,0 +1,63 @@
+{extend name="shop/new/base" /}
+
+{block name="main"}
+{$page}
+{if $pc_info['pc_pop_adv']}
+<div class="Popup_banner" style="display: none">
+    <div class="Popup_banner_dia">
+        <!--<img src="http://iph.href.lu/500x500" alt="">-->
+        <i class="icon icon-danger" title="删除"></i>
+        <a href="{if $pc_info['pc_pop_jump']}{$pc_info['pc_pop_jump']}{else}javascript:void(0){/if}" class="popup_jump">
+            <img src="{$pc_info['pc_pop_adv']}" alt="">
+        </a>
+        
+    </div>
+</div>
+{/if}
+
+
+{/block}
+{block name="javascript"}
+<script>
+    
+    require(['dialog'], function (Dialog) {
+        {$pc_info['pc_pop_rule']}
+
+       $('.icon-danger').on('click',function(){
+           $('.Popup_banner').remove();
+       })
+
+    // 如果要设置过期时间以秒为单位
+    function setCookie(c_name,value,expireseconds){
+        var exdate=new Date();
+        exdate.setTime(exdate.getTime()+expireseconds * 1000);
+        document.cookie=c_name+ "=" +escape(value)+
+        ((expireseconds==null) ? "" : ";expires="+exdate.toGMTString())
+    }
+
+    function getCookie(key) {
+        var cookieArr = document.cookie.split('; ');
+        for(var i = 0; i < cookieArr.length; i++) {
+            var arr = cookieArr[i].split('=');
+            
+            if(arr[0] === key) {
+                return arr[1];
+            }
+        }
+        return false;
+    }
+    if(!getCookie('topupBanner')){
+        $('.Popup_banner').show();
+    }else{
+        $('.Popup_banner').hide();
+    }
+
+    setCookie('topupBanner',1,"{$pc_info['pc_pop_rule']}");
+
+
+
+
+
+    })
+</script>
+{/block}

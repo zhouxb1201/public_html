@@ -1,0 +1,121 @@
+<div class="popup-dialog" id="popupAdv">
+    <div class="popup-view">
+        <div class="view-main">
+            
+        </div>
+    </div>
+    <div class="popup-edit">
+        <div class="editor-inner">
+            
+        </div>
+    </div>
+    <input type="hidden" id="advData">
+</div>
+
+<script type="text/html" id="tpl_show_popupAdv">
+    <div class="box">
+        <div class="img"><img src="<%advimg%>"></div>
+        <div class="">
+            <i class="icon icon-close-l"></i>
+        </div>
+    </div>
+</script>
+<script type="text/html" id="tpl_edit_popupAdv">
+    <div class="alert alert-info alert-sm" role="alert">确定后需保存才生效</div>
+    <div class="form-group">
+        <div class="col-sm-2 control-label">是否开启</div>
+        <div class="col-sm-10">
+            <label class="radio-inline"><input type="radio" name="advshow" value="1" class="diy-bind" data-bind-child="params" data-bind="advshow" data-bind-init="true" <%if advshow=='1'%>checked="checked"<%/if%>> 开启</label>
+            <label class="radio-inline"><input type="radio" name="advshow" value="0" class="diy-bind" data-bind-child="params" data-bind="advshow" data-bind-init="true" <%if advshow=='0'%>checked="checked"<%/if%>> 关闭</label>
+        </div>
+    </div>
+    <div class="form-group">
+        <div class="col-sm-2 control-label">广告图</div>
+        <div class="col-sm-10">
+            <div class="input-group item" id="advimgEdit">
+                <input class="form-control input-sm diy-bind" data-bind="advimg" data-bind-child="params" placeholder="" value="<%advimg%>" id="advimg"/>
+                <span data-input="#advimg" data-toggle="selectImg" class="input-group-addon btn btn-default">选择图片</span>
+            </div>
+            <div class="help-block">建议尺寸700 * 394</div>
+        </div>
+    </div>
+    <div class="form-group">
+        <div class="col-sm-2 control-label">跳转链接</div>
+        <div class="col-sm-10">
+            <div class="input-group">
+                <input type="text" class="form-control input-sm diy-bind" data-bind-child="params" data-bind="advlink" id="curl-advlink" placeholder="请选择链接或输入链接地址(可不填)" value="<%advlink%>" />
+                <span class="input-group-addon btn btn-default" data-toggle="selectUrl" data-input="#curl-advlink">选择链接</span>
+            </div>
+        </div>
+    </div>
+    <div class="form-group">
+        <div class="col-sm-2 control-label">显示规则</div>
+        <div class="col-sm-10">
+            <select class="form-control input-sm diy-bind" data-bind="advrule" data-bind-child="params" >
+                <option name="goodssort" value="0" <%if advrule=='0'%>selected="selected"<%/if%>>每次打开弹窗</option>
+                <option name="goodssort" value="1" <%if advrule=='1'%>selected="selected"<%/if%>>每天弹窗一次</option>
+                <option name="goodssort" value="2" <%if advrule=='2'%>selected="selected"<%/if%>>每三天弹窗一次</option>
+                <option name="goodssort" value="3" <%if advrule=='3'%>selected="selected"<%/if%>>每五天弹窗一次</option>
+                <option name="goodssort" value="4" <%if advrule=='4'%>selected="selected"<%/if%>>每月弹窗一次</option>
+            </select>
+            <div class="help-block">会员访问首页弹窗广告的规则频率</div>
+        </div>
+    </div>
+</script>
+
+<script>
+    require(['util','tpl'],function(util,tpl) {
+        var advData = $('#advData').data('set')
+        var showHtml = tpl("tpl_show_popupAdv", advData)
+        var editHtml = tpl("tpl_edit_popupAdv", advData)
+        $(".popup-view .view-main").html(showHtml)
+        $(".popup-edit .editor-inner").html(editHtml)
+
+        // 双向绑定数据
+        $(".popup-edit .editor-inner").find(".diy-bind").bind('input propertychange change', function () {
+            var _this = $(this);
+            var bind = _this.data("bind");
+            var value = '';
+            var tag = this.tagName;
+            if (tag == 'INPUT') {
+                value = _this.val();
+            } else if (tag == 'SELECT') {
+                value = _this.find('option:selected').val()
+            }
+            value = $.trim(value);
+            advData[bind] = value
+            if(bind=='advimg'){
+                $(".popup-view .view-main").html(tpl("tpl_show_popupAdv", advData))
+            }
+            $('#advData').data('set',advData)
+        })
+
+        // 选择图片
+        $('[data-toggle="selectImg"]').unbind('click').click(function () {
+            var _this = $(this);
+            if(_this.data('disabled') == 'disabled'){
+                return false
+            }
+            var cimg = _this.parents('.item').find('input' + _this.data('input'));
+            var pimg = _this.parents('.item').find('img' + _this.data('img'));
+            util.pictureDialog(_this, false, function (data) {
+                var path = data.path[0];
+                cimg.val(path).change();
+                pimg.attr('src', path);
+            })
+        })
+
+        // 选择链接
+        $('[data-toggle="selectUrl"]').unbind('click').click(function () {
+            var _this = $(this);
+            if(_this.data('disabled') == 'disabled'){
+                return false
+            }
+            var curlId = _this.data('input');
+            var elm = _this.parent().find('input' + curlId);
+            util.linksDialog(function (data) {
+                elm.val(data.params).change();
+            },'wap&template_type=1')
+        })
+    })
+</script>

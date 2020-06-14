@@ -1,0 +1,49 @@
+page{
+  background-color: #f8f8f8;
+  font-size: 28rpx;
+}
+.distribution{
+  background-color: #fff;
+  margin: 20rpx;
+  border-radius: 20rpx;
+  overflow: hidden;
+  box-shadow: 0 0 10px 0 rgba(0,0,0,.05);
+}
+.distribution .top{
+  padding: 20rpx 30rpx;
+  display: flex;
+  justify-content: space-between;
+  border-bottom: 1rpx solid #ebedf0;
+}
+.distribution .top .btn_group{
+  display: flex;
+}
+.distribution .top .btn_group .btn{
+  background-color: #f44;
+  color: #fff;
+  margin-left: 12rpx;
+  padding: 5rpx 20rpx;
+  font-size: 24rpx;
+  border-radius: 5rpx;
+}
+
+.cell_card{
+  display: flex;
+  padding: 20rpx 0;
+  margin-bottom: 20rpx;
+}
+.cell_card .card_item{  
+  text-align: center;  
+}
+.cell_card .item_cel_3{
+  width: 33%;
+}
+.cell_card .item_cel_5{
+  width: 20%;
+}
+.cell_card .card_item .card_text{
+  color: #f44;
+}
+.item_line_r{ 
+  border-right: 1rpx solid #ebedf0;
+}

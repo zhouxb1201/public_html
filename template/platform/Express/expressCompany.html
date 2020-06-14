@@ -1,0 +1,186 @@
+{extend name="platform/new_base" /}
+{block name="resources"/}
+{/block}
+{block name="main"}
+		<!-- page -->
+		<div class="mb-20 flex flex-pack-justify">
+			<div class="">
+				<a href="addFreightTemplate.html" class="btn btn-primary"><i class="icon icon-add1"></i> 添加模板</a>
+			</div>
+			<div class="input-group search-input-group">
+				<input type="text" class="form-control" placeholder="模板名称" id="search_text">
+				<span class="input-group-btn"><a class="btn btn-primary search">搜索</a></span>
+			</div>
+		</div>
+		<table class="table v-table table-auto-center">
+			<thead>
+			<tr>
+				<th>模版名称</th>
+				<th>计费方式</th>
+				<th>首（重/件/体积）费</th>
+				<th>续（重/件/体积）费</th>
+				<th>状态</th>
+				<th>是否默认</th>
+				<th>操作</th>
+			</tr>
+			</thead>
+			<tbody id="list">
+			<tr>
+				<td>顺丰快递</td>
+				<td>按重计费</td>
+				<td>20.00</td>
+				<td>20.00</td>
+				<td><span class="label label-success">生效</span></td>
+				<td>是</td>
+				<td>
+					<a href="javascript:void(0);" class="text-primary"> 编辑 </a>
+					<a href="javascript:void(0);" class="text-danger"> 删除 </a>
+				</td>
+			</tr>
+			<tr>
+				<td>顺丰快递</td>
+				<td>按重计费</td>
+				<td>20.00</td>
+				<td>20.00</td>
+				<td><span class="label label-danger">失效</span></td>
+				<td>否</td>
+				<td>
+					<a href="javascript:void(0);" class="text-primary"> 默认 </a>
+					<a href="javascript:void(0);" class="text-primary"> 编辑 </a>
+					<a href="javascript:void(0);" class="text-danger"> 删除 </a>
+				</td>
+			</tr>
+			</tbody>
+		</table>
+		<input type="hidden" id="pageIndex">
+		<nav aria-label="Page navigation" class="clearfix">
+			<ul id="page" class="pagination pull-right"></ul>
+		</nav>
+		<!-- page end -->
+{/block}
+{block name="script"}
+<script>
+    require(['util'],function(util){
+        util.initPage(getList);
+        function getList(pageIndex){
+            $("#pageIndex").val(pageIndex);
+            var search_text = $("#search_text").val();
+            $.ajax({
+                type : "post",
+                url : "{:__URL('PLATFORM_MAIN/Express/expressCompany')}",
+                async : true,
+                data : {
+                    "pageIndex" : pageIndex, "search_text" : search_text
+                },
+                success : function(data) {
+                    var html = '';
+                    $("#pageNumber a").remove();
+                    if (data["data"].length > 0) {
+                        for (var i = 0; i < data["data"].length; i++) {
+                            html += '<tr>';
+                            html += '<td>' + data["data"][i]["company_name"]+ '</td>';
+                            html += '<td>' + data["data"][i]["express_no"] + '</td>';
+                            html += '<td>' + data["data"][i]["phone"]+ '</td>';
+                            html += data["data"][i]["is_enabled"] == 0 ? '<td><span class="label label-danger">失效</span></td>'
+                                : '<td><span class="label label-success">生效</span></td>';
+                            if(data["data"][i]["id_default"]==1){
+
+                            }
+                            html += '<td><a class="text-primary" href="PLATFORM_MAIN/Express/updateExpressCompany?co_id=' + data["data"][i]["co_id"] + '">修改</a><a href="javascript:void(0);" class="text-danger del" data-id="'+data["data"][i]["co_id"]+'">删除</a></td> ';
+                            html += '</tr>';
+                        }
+                    } else {
+                        html += '<tr><th colspan="6" >暂无文章</th></tr>';
+                    }
+                    $('#page').paginator('option', {
+                        totalCounts: data['total_count']  // 动态修改总数
+                    });
+                    $("#list").html(html);change();del();
+                }
+            });
+        }
+        $('.search').on('click',function(){
+            util.initPage(getList);
+        });
+        function change(){
+            $("table input").change(function(){
+                var fieldid = $(this).attr('fieldid');
+                var sort = $(this).val();
+                $.ajax({
+                    type:"post",
+                    url:"{:__URL('PLATFORM_MAIN/Cms/modifyArticleField')}",
+                    data:{'fieldid':fieldid,'sort':sort},
+                    async:true,
+                    success: function (data) {
+                        if(data['code'] > 0){
+                            util.message(data["message"],'success',getList($("#pageIndex").val()));
+                        }else{
+                            util.message(data["message"],'danger');
+                        }
+                    }
+                });
+            });
+        }
+        function del(){
+            $('.del').click(function(e){
+                var id = $(this).data('id');
+                util.alert('是否确定删除此栏目吗？',function(){
+                    $.ajax({
+                        type : "post",
+                        url : "{:__URL('PLATFORM_MAIN/Cms/deleteArticle')}",
+                        async : true,
+                        data : {
+                            "article_id" : id
+                        },
+                        success : function(data) {
+                            if (data["code"] > 0) {
+                                util.message(data["message"],'success',getList($("#pageIndex").val()));
+                            }else{
+                                util.message(data["message"],'danger');
+                            }
+                        }
+                    });
+                })
+            })
+        }
+        $('.add').on('click',function() {
+            var order_delivery_complete_time = $('#order_delivery_complete_time').val();//订单自动完成时间
+            var order_buy_close_time = $('#order_buy_close_time').val();//订单自动关闭时间
+            var order_auto_delivery = $("#order_auto_delivery").val();//自动收货时间
+            var convert_rate = $("#convert_rate").val();//N个积分抵一元
+            var shopping_back_points = $("#shopping_back_points").val();//购物返积分节点
+            var point_invoice_tax = $("#point_invoice_tax").val();//购物返积分比率
+            var integral_calculation = $("#integral_calculation").val();//积分计算方式
+            if($("#pointDeduct").is(":checked")){
+                var  is_pointDeduct =1;//开启积分抵扣
+            }
+            if($("#point").is(":checked")){
+                var  is_point =1;//开启购物返积分
+            }
+            $.ajax({
+                type: "post",
+                url: "{:__URL('PLATFORM_MAIN/config/shopSet')}",
+                data: {
+                    "order_delivery_complete_time": order_delivery_complete_time,
+                    "order_buy_close_time": order_buy_close_time,
+                    "order_auto_delivery": order_auto_delivery,
+                    "is_pointDeduct": is_pointDeduct,
+                    "convert_rate": convert_rate,
+                    "shopping_back_points": shopping_back_points,
+                    "is_point": is_point,
+                    "integral_calculation": integral_calculation,
+                    "point_invoice_tax": point_invoice_tax
+                },
+                async: true,
+                success: function (data) {
+                    if (data["code"] > 0) {
+                        util.message(data["message"],'success', "{:__URL('PLATFORM_MAIN/config/shopSet')}");
+                    } else {
+                        util.message(data["message"],'danger')
+                    }
+                }
+            });
+        });
+    })
+</script>
+{/block}

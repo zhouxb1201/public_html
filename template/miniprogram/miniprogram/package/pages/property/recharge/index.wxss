@@ -1,0 +1,30 @@
+page{
+  font-size: 28rpx;
+  background-color: #f8f8f8;
+}
+.recharge_group{
+  background-color: #fff;
+  display: flex;
+  width: 100%;
+  box-sizing: border-box;
+  padding: 20rpx 30rpx;
+}
+.recharge_group .recharge_title{
+  line-height: 50rpx;
+  margin-right: 20rpx;
+}
+.recharge_group .recharge_text{
+  width: 70%;
+}
+.recharge_foot{  
+  margin-top: 80rpx;
+  padding: 0 40rpx; 
+}
+.recharge_btn{  
+  font-size: 24rpx;
+  line-height: 84rpx;
+  height: 88rpx;
+  background-color: #f44;
+  color: #fff;
+  border-radius: 50rpx;
+}

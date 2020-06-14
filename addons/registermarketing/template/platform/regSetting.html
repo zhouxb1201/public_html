@@ -1,0 +1,54 @@
+{block name="resources"}
+
+{/block}
+
+{block name="main"}
+        <!-- page -->
+        <form class="form-horizontal pt-15" onsubmit="return false;" >
+            <div class="form-group">
+                <label class="col-md-2 control-label">是否启用</label>
+                <div class="col-md-5">
+                    <label class="radio-inline">
+                        <input type="radio" name="is_use" value="1" {if condition="$is_use eq 1"} checked {/if}> 开启
+                    </label>
+                    <label class="radio-inline">
+                        <input type="radio" name="is_use" value="0" {if condition="$is_use eq 0"} checked {/if}> 关闭
+                    </label>
+                </div>
+            </div>
+            <div class="form-group"></div>
+            <div class="form-group">
+                <label class="col-md-2 control-label"></label>
+                <div class="col-md-8">
+                    <button class="btn btn-primary J-add" type="button">保存</button>
+                    <a href="javascript:history.go(-1);" class="btn btn-default">返回</a>
+                </div>
+            </div>
+        </form>
+        <!-- page end -->
+{/block}
+{block name="script"}
+<script>
+    require(['util'], function (util) {
+        $('.J-add').on('click', function () {
+            var is_use = $("input[name='is_use']:checked").val();
+            $.ajax({
+                type: "post",
+                url: "{$setRegSettingUrl}",
+                data: {
+                    'is_use':is_use,
+                    'website_id': '{$website_id}'
+                },
+                async: true,
+                success: function (data) {
+                    if (data["code"] > 0) {
+                        util.message('操作成功', 'success', "{:__URL('ADDONS_MAINregisterMarketingSet')}");
+                    } else {
+                        util.message("操作失败", 'danger');
+                    }
+                }
+            });
+        });
+    });
+</script>
+{/block}

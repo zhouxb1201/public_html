@@ -1,0 +1,6 @@
+<view class='head_img'>
+  <view class='img'>
+    <image mode='widthFix' src='{{user_img}}'></image>
+  </view>
+  <view class='upload_img_btn' bindtap='chooseImage'>上传头像</view>
+</view>

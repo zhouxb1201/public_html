@@ -1,0 +1,221 @@
+<form class="form-horizontal">
+    <!--规格-->
+    <div class="form-group" style="margin-right: auto;margin-left: auto;">
+        <div style="width: 720px">
+            <div class="transfer-box ml-20">
+                <div class="item">
+                    <div class="transfer-title">
+                        <div class="checkbox line-1-ellipsis">
+                            <label><input type="checkbox" name="specificationAllCheck" value="">未选规格</label>
+                        </div>
+                    </div>
+                    <div class="transfer-search">
+                        <div class="transfer-search-div padding-10" style="padding-bottom: 0">
+                            <input type="text" class="form-control" placeholder="请输入规格名称" id="spec_txt">
+                            <i class="icon icon-custom-search search_button" id="search_button"></i>
+                        </div>
+                    </div>
+                    <div id="unspec_id" class="heights">
+                       {foreach name="goodsguige['data']" item="v"}
+                        {if !in_array($v['spec_id'],$spec_array)}
+                        <div class="checkbox line-1-ellipsis"><label><input type="checkbox" name="un_specid" value="{$v.spec_id}" data_name="{$v.spec_name}">{$v.spec_name}</label></div>
+                        {/if}
+                        {/foreach}
+                    </div>
+                </div>
+                <div class="item">
+                    <div class="transfer-title">
+                        <div class="checkbox line-1-ellipsis">已选规格</div>
+                    </div>
+                    <div class="transfer-search">
+                        <div class="transfer-search-div padding-10" style="padding-bottom: 0">
+                            <input type="text" class="form-control" placeholder="请输入规格名称" id="spec_txt2">
+                            <i class="icon icon-custom-search"></i>
+                        </div>
+                    </div>
+                    <div id="spec_id" class="heights">
+                       {foreach name="goodsguige['data']" item="v"}
+                        {if in_array($v['spec_id'],$spec_array)}
+                        <div class="checkbox line-1-ellipsis"><label><input type="checkbox" name="select_specid[]" value="{$v.spec_id}" data_name="{$v.spec_name}" checked>{$v.spec_name}</label></div>
+                        {/if}
+                        {/foreach}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</form>
+<input type="hidden" id="selectedData">
+<script type="text/javascript">
+    require(['util'], function (util) {
+        var specSelected = []; //已选规格的集合
+        var specSelect = []; //未选规格的集合
+        //保存已选id
+        function setSelected(){
+            var spec_id_arr = [];
+            for(var i=0;i<specSelected.length;i++){
+                spec_id_arr.push(specSelected[i].value);
+            }
+            var spec_id=spec_id_arr.join(",");
+            $('#selectedData').val(spec_id);
+        }
+        //获取已选规格数组
+        $("input[name='select_specid[]']").each(function () {
+            var val = $(this).val();
+            var name = $(this).attr('data_name');
+            var obj = {};
+            obj.value = val;
+            obj.name = name;
+            specSelected.push(obj);
+            setSelected();
+        });
+        $("input[name='un_specid']").each(function () {
+            var val = $(this).val();
+            var name = $(this).attr('data_name');
+            var obj = {};
+            obj.value = val;
+            obj.name = name;
+            specSelect.push(obj);
+        });
+
+        //规格添加移除效果
+        //选择
+        $(".heights").on("click","input[name='un_specid']",function () {
+            $(this).parent().parent().remove(); //移动左边
+            var val = $(this).val();
+            var name = $(this).attr('data_name');
+            var html =
+                '<div class="checkbox line-1-ellipsis"><label><input type="checkbox" name="select_specid[]" value="' +
+                val + '" data_name="' + name + '" checked>' + name + '</label></div>';
+            $("#spec_id").append(html); //添加到右边
+            // 已选规格数组增加
+            var obj = {};
+            obj.value = val;
+            obj.name = name;
+            specSelected.push(obj);
+            setSelected();
+            //未选规格数组减少
+            for (var i = 0; i < specSelect.length; i++) {
+                if (val == specSelect[i].value) {
+                    specSelect.splice(i, 1);
+                }
+            }
+        });
+        //取消
+        $(".heights").on("click","input[name='select_specid[]']",function () {
+            $(this).parent().parent().remove(); //移动左边
+            var val = $(this).val();
+            var name = $(this).attr('data_name');
+            var html =
+                '<div class="checkbox line-1-ellipsis"><label><input type="checkbox" name="un_specid" value="' +
+                val + '" data_name="' + name + '">' + name + '</label></div>';
+            $("#unspec_id").append(html); //添加到右边
+            //已选规格数组减少
+            for (var i = 0; i < specSelected.length; i++) {
+                if (val == specSelected[i].value) {
+                    specSelected.splice(i, 1);
+                }
+            }
+            setSelected();
+            // 未选规格数组增加
+            var obj = {};
+            obj.value = val;
+            obj.name = name;
+            specSelect.push(obj);
+        });
+        // 规格全选
+        $('input[name="specificationAllCheck"]').on('change', function () {
+            if ($(this).is(':checked')) {
+                $('input[name="un_specid"]').each(function () {
+                    $(this).parent().parent().remove(); //移动左边
+                    var val = $(this).val();
+                    var name = $(this).attr('data_name');
+                    var html =
+                        '<div class="checkbox line-1-ellipsis"><label><input type="checkbox" name="select_specid[]" value="' +
+                        val + '" data_name="' + name + '" checked>' + name + '</label></div>';
+                    $("#spec_id").append(html); //添加到右边
+                    // 已选规格数组增加
+                    var obj = {};
+                    obj.value = val;
+                    obj.name = name;
+                    specSelected.push(obj);
+                    setSelected();
+                    //未选规格数组减少
+                    for (var i = 0; i < specSelect.length; i++) {
+                        if (val == specSelect[i].value) {
+                            specSelect.splice(i, 1);
+                        }
+                    }
+
+                })
+            } else {
+                $('input[name="select_specid[]"]').each(function () {
+                    $(this).parent().parent().remove(); //移动左边
+                    var val = $(this).val();
+                    var name = $(this).attr('data_name');
+                    var html =
+                        '<div class="checkbox line-1-ellipsis"><label><input type="checkbox" name="un_specid" value="' +
+                        val + '" data_name="' + name + '">' + name + '</label></div>';
+                    $("#unspec_id").append(html); //添加到右边
+                    //已选规格数组减少
+                    for (var i = 0; i < specSelected.length; i++) {
+                        if (val == specSelected[i].value) {
+                            specSelected.splice(i, 1);
+                        }
+                    }
+                    setSelected();
+                    // 未选规格数组增加
+                    var obj = {};
+                    obj.value = val;
+                    obj.name = name;
+                    specSelect.push(obj);
+                })
+            }
+        })
+        //  已选规格搜索
+        $("#spec_txt2").on('keyup', function () {
+            var val = $(this).val();
+            var html = '';
+            for (var i = 0; i < specSelected.length; i++) {
+                var names = specSelected[i].name;
+                if (names.indexOf(val) != -1) {
+                    html +=
+                        '<div class="checkbox line-1-ellipsis"><label><input type="checkbox" name="select_specid[]" value="' +
+                        specSelected[i].value + '" data_name="' + specSelected[i].name + '" checked>' +
+                        specSelected[i].name + '</label></div>';
+                }
+            }
+            //  if(html==''){
+            //      html='搜索不到规格值';
+            //  }
+            $("#spec_id").html(html);
+        });
+        
+        //  未选规格搜索
+        $("#spec_txt").on('keyup', function () {
+            var val = $(this).val();
+            var html = '';
+            for (var i = 0; i < specSelect.length; i++) {
+                var names = specSelect[i].name;
+                if (names.indexOf(val) != -1) {
+                    html +=
+                        '<div class="checkbox line-1-ellipsis"><label><input type="checkbox" name="un_specid" value="' +
+                        specSelect[i].value + '" data_name="' + specSelect[i].name + '">' + specSelect[
+                            i].name + '</label></div>';
+                }
+            }
+            //  if(html==''){
+            //      html='搜索不到规格值';
+            //  }
+            $("#unspec_id").html(html);
+            if (specSelect.length > 0) {
+                $("input[name='specificationAllCheck']").attr('checked', false);
+            } else {
+                $("input[name='specificationAllCheck']").attr('checked', true);
+            }
+        })
+
+        
+
+    });
+</script>

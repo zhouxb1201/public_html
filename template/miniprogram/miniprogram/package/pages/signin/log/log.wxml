@@ -1,0 +1,16 @@
+<view class="van-list">
+  <view class="van-cell" wx:for="{{list}}" wx:key="">
+    <view class="van-cell__title">
+      <view class="text">
+        <view class="positive">{{item.name}}</view>
+        <view class="fs-12 text-regular">签到成功</view>
+      </view>
+    </view>
+    <view class="van-cell__value">
+      <text>{{item.sign_in_time}}</text>
+    </view>
+  </view>
+</view>
+<view class='no_gooddata' wx:if="{{noMore == 'true'}}">
+  <text>没有更多了</text>
+</view>

@@ -1,0 +1,28 @@
+<view class='log_box'>
+  <view class='log_list'>
+    <view class='cell' wx:for='{{channel_goods_info}}' wx:key=''>
+      <view class='item'>
+        <view class='text_title'>
+          <view>
+            <text wx:if='{{item.buy_type == 1}}'>采购：</text>
+            <text wx:if='{{item.buy_type == 2}}'>提货：</text>
+            <text wx:if='{{item.buy_type == 3}}'>出货：</text>
+          </view>
+          <view>{{item.goods_name}}</view>
+        </view>
+        <view class='num'> 
+          <text wx:if='{{item.buy_type == 1}}'>+</text>
+          <text wx:else>-</text> 
+          {{item.num}}
+        </view>
+      </view>
+      <view class='item'>
+        <view class='order_no'>关联单号：{{item.order_no}}</view>
+        <view class='time'>{{item.create_time_date}}</view>
+      </view>
+    </view>
+  </view>
+  <view class='no_more'>
+    <view>没有更多</view>
+  </view>
+</view>

@@ -1,0 +1,6 @@
+<van-notice-bar
+  backgroundColor="{{temDataitem.style.background}}"
+  color="{{temDataitem.style.color}}"
+  left-icon="{{leftIcon}}"
+  text="{{announcementText}}"
+/>

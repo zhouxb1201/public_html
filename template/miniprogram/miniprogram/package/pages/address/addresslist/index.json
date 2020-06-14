@@ -1,0 +1,6 @@
+{
+  "usingComponents": {    
+    "phone-compoent": "/pages/component/phone/phonecom"
+  },
+  "navigationBarTitleText": "地址列表"
+}

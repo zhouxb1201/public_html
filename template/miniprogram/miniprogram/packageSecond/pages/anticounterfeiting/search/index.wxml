@@ -1,0 +1,45 @@
+<view class='search_credential'>
+  <view class="banner" bindtap="onlinkpage">
+    <image mode="widthFix" src="{{banner_img?banner_img:bannerImg}}"></image>
+  </view>
+  <view class="content">
+    <view class="head">
+      <!-- <view class="logo">
+        <image mode="widthFix" src="{{logo?logo:'/images/no-goods.png'}}"></image>
+      </view> -->
+      <view class="title">防伪溯源商品查询</view>
+    </view>
+
+    <view class="group_box">
+      <view class="van input_box">
+        <input placeholder="请输入防伪码" bindinput="antiCode"></input>
+        <view class="iconfont v-icon-qr" bindtap="sweepCode"></view>
+      </view>
+      <view class="van">
+        <button class="search_btn" bindtap="searchPage">查询</button>
+      </view>
+    </view>
+
+    <view class="foot">
+      <view class="foot_box">
+        <view class="title">防卫溯源查询方法</view>
+        <view class="list">
+          <view class="item">1.输入商品防伪标签中的防伪溯源码，点击查询；</view>
+          <view class="item">2.点击输入框右侧的扫一扫图标，扫描防伪二维码；</view>
+        </view>
+      </view>
+      <view class="foot_box">
+        <view class="title">查询结果说明</view>
+        <view class="list">
+          <view class="item">1.如果该防伪码首次被查询，则说明是正品。</view>
+          <view class="item">2.如果该二维码被查询过，若非本人所为，则说明可能是伪劣假冒商品。</view>
+          <view class="item">3.如果防伪码错误，则说明该商品未经官方验证。</view>
+        </view>
+      </view>
+    </view>
+
+  </view>
+</view>
+
+<!-- 登录组件 -->
+<login-component loginShow='{{loginShow}}' bind:request='requestLogin'></login-component>

@@ -1,0 +1,53 @@
+<form class="form-horizontal padding-15">
+    <div class="form-group">
+        <label class="control-label col-md-3">功能页面</label>
+        <div class="col-md-7">
+            <select class="form-control" name="address[]">
+                {volist name='page_list' id='vo'}
+                <option value="{$vo}">{$vo}</option>
+                {/volist}
+            </select>
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="control-label col-md-3">标题</label>
+        <div class="col-md-7">
+            <input class="form-control" name="title[]">
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="control-label col-md-3">分类</label>
+        <div class="col-md-2">
+            <select class="form-control" name="first_class[]">
+                {volist name='category_list' id='ca'}
+                <option value="{$ca.first_id}">{$ca.first_class}</option>
+                {/volist}
+            </select>
+        </div>
+        <div class="col-md-2">
+            <select class="form-control" name="second_class[]">
+                {volist name='category_list' id='ca'}
+                <option value="{$ca.second_id}">{$ca.second_class}</option>
+                {/volist}
+            </select>
+        </div>
+        <div class="col-md-2">
+            <select class="form-control" name="third_class[]">
+                {volist name='category_list' id='ca'}
+                <option value="{$ca.third_id}">{$ca.third_class}</option>
+                {/volist}
+            </select>
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="control-label col-md-3">标签</label>
+        <div class="col-md-7">
+            <input class="form-control" name="tag[]">
+        </div>
+    </div>
+</form>
+<script>
+    require(['utilAdmin'], function (util) {
+
+    })
+</script>

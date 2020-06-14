@@ -1,0 +1,28 @@
+<view class='myorder group' style="background-color:{{items.styleColor.background}};">
+  <view bindtap="onOrderListPage">
+    <view class='hair_top'>
+      <view class='hair_left'>
+        <van-icon name="records" class='l_icon' size="16px" />
+        <view class='l_text' style="color:{{items.styleColor.titlecolor}}">{{items.params.title}}</view>
+      </view>
+      <view class='hair_right'>
+        <view class='r_text' style="color:{{items.styleColor.titleremarkcolor}}">{{items.params.remark}}</view>
+        <van-icon name="arrow" class='r_icon' size="14px" />
+      </view>
+    </view>
+  </view>
+  <view class='cell_card'>
+    <view class='card_item' wx:for="{{items.data}}" wx:key="">
+      <view data-status="{{item.status}}" bindtap="onOrderListPage">
+        <view class='card_icon iconfont {{item.icon}}'>
+          <view class="{{memberData.unpaidOrder >= 0 ? 'tipNum':''}}" wx:if="{{item.status == 0 && memberData.unpaidOrder != 0}}">{{memberData.unpaidOrder}}</view>
+          <view class="{{memberData.shipmentPendingOrder >= 0 ? 'tipNum':''}}" wx:if="{{ item.status == 1 && memberData.shipmentPendingOrder != 0}}">{{memberData.shipmentPendingOrder}}</view>
+          <view class="{{memberData.goodsNotReceivedOrder >= 0 ? 'tipNum':''}}" wx:if="{{ item.status == 2 && memberData.goodsNotReceivedOrder !=0 }}">{{memberData.goodsNotReceivedOrder}}</view>
+          <view class="{{memberData.un_evaluate_num ? 'tipNum':''}}" wx:if="{{ item.status == -2 && memberData.un_evaluate_num}}">{{memberData.un_evaluate_num}}</view>
+          <view class="{{memberData.refundOrder >= 0 ? 'tipNum':''}}" wx:if="{{ item.status == -1 && memberData.refundOrder != 0}}">{{memberData.refundOrder}}</view>
+        </view>
+        <view style="color:{{items.styleColor.textcolor}}">{{item.text}}</view>
+      </view>
+    </view>
+  </view>
+</view>

@@ -1,0 +1,265 @@
+{block name="main"}
+<style>
+.max-w-400 {
+    max-width: 400px;
+}
+</style>
+        <!-- page -->
+        <form class="form-horizontal form-validate widthFixedForm">
+            <div class="screen-title">
+                <span class="text">规则设置</span>
+            </div>
+            <div class="form-group">
+                <label class="col-md-2 control-label"><span class="text-bright">*</span>礼品券名称</label>
+                <div class="col-md-5">
+                    <input type="text" id="giftvoucher_name" class="form-control" name="giftvoucher_name" required value="{$giftvoucher_info['giftvoucher_name']}">
+                </div>
+            </div>
+   
+            <div class="form-group" id="sele_gift">
+                <label class="col-md-2 control-label"><span class="text-bright">*</span>选择赠品</label>
+                <div class="col-md-5">
+                    <div id="gift" class="btn btn-primary-diy">点击选择</div>
+                </div>
+            </div>
+            
+            <div id="gift_info_box" class="form-group {if($giftvoucher_info['gift'])}show{else}hidden{/if}">
+                <label class="col-md-2 control-label"></label>
+                <div class="col-md-5">
+                    <div class="media text-left">
+                        <div class="media-left gift-img">
+                            <img src="{if($giftvoucher_info['gift']['pic_cover_mid'])}{$giftvoucher_info['gift']['pic_cover_mid']}{else}http://iph.href.lu/60x60{/if}" onerror="this.src='http://iph.href.lu/60x60';" width="60" height="60">
+                        </div>
+                        <div class="media-body max-w-400">
+                            <div class="line-2-ellipsis gift-text">{$giftvoucher_info['gift']['gift_name']}</div>
+                            <div class="line-1-ellipsis text-danger strong gift-price">{$giftvoucher_info['gift']['price']}</div>
+                            <div class="line-1-ellipsis">剩余库存：<span class="gift-stock">{$giftvoucher_info['gift']['stock']}</span><span style="color: #a6a6a6;">（领券成功后减少库存，每款赠品尽量只参与一档活动）</span></div>
+                        </div>
+                    </div>
+                    <input type="hidden" name="promotion_gift_id" id="promotion_gift_id" value="{$giftvoucher_info['gift']['promotion_gift_id']}">
+                </div>
+            </div>
+            
+            <div class="form-group">
+                <label class="col-md-2 control-label"><span class="text-bright">*</span>发放数量</label>
+                <div class="col-md-5">
+                    <div class="input-group w-200">
+                        <input type="number" id="count" name="count" class="form-control" required min="0" value="{$giftvoucher_info['count']}">
+                        <div class="input-group-addon">张</div>
+                    </div>
+                    <div class="mb-0 help-block">请确保赠品剩余库存与发放数量一致，否则可能导致领券失败，0代表不限制</div>
+                </div>
+                
+            </div>
+   
+            <div class="form-group">
+                <label class="col-md-2 control-label"><span class="text-bright">*</span>每人限领</label>
+                <div class="col-md-5">
+                    <div class="input-group w-200">
+                        <input type="number" class="form-control" name="max_fetch" id="max_fetch" required min="0" value="{$giftvoucher_info['max_fetch']}">
+                        <div class="input-group-addon">张</div>
+                    </div>
+                    <div class="mb-0 help-block">0代表不限制</div>
+                </div>
+                
+            </div>
+          	
+            <div class="form-group">
+                <label class="col-md-2 control-label"><span class="text-bright">*</span>领券时间</label>
+                <div class="col-md-8">
+                    <div class="v-datetime-input-control">
+                        <label for="start_time1">
+                            <input type="text" class="form-control" id="start_time1" placeholder="请选择时间" value="{php}if($giftvoucher_info['start_receive_time']){ echo date('Y-m-d',$giftvoucher_info['start_receive_time']).' - '; echo date('Y-m-d',$giftvoucher_info['end_receive_time']);}{/php}" autocomplete="off" name="start_time1" required>
+                            <i class="icon icon-calendar"></i>
+                            <input type="hidden" id="start_receive_time" name="start_receive_time" value="{php}if($giftvoucher_info['start_receive_time']) echo date('Y-m-d',$giftvoucher_info['start_receive_time']){/php}">
+                            <input type="hidden" id="end_receive_time" name="end_receive_time" value="{php}if($giftvoucher_info['end_receive_time'])echo date('Y-m-d',$giftvoucher_info['end_receive_time']){/php}">
+                        </label>
+                    </div>
+                    <div class="help-block mb-0">开始时间点为选中日期的0:00:00，结束时间点为选中日期的23:59:59</div>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-md-2 control-label"><span class="text-bright">*</span>生效时间</label>
+                <div class="col-md-8">
+                    <div class="v-datetime-input-control">
+                        <label for="end_time1">
+                            <input type="text" class="form-control" id="end_time1" placeholder="请选择时间" value="{php}if($giftvoucher_info['start_time']){ echo date('Y-m-d',$giftvoucher_info['start_time']).' - '; echo date('Y-m-d',$giftvoucher_info['end_time']);}{/php}" autocomplete="off" name="end_time1" required>
+                            <i class="icon icon-calendar"></i>
+                            <input type="hidden" id="start_time" name="start_time" value="{php}if($giftvoucher_info['start_time'])echo date('Y-m-d',$giftvoucher_info['start_time']){/php}">
+                            <input type="hidden" id="end_time" name="end_time" value="{php}if($giftvoucher_info['end_time'])echo date('Y-m-d',$giftvoucher_info['end_time']){/php}">
+                        </label>
+                    </div>
+                    <div class="help-block mb-0">开始时间点为选中日期的0:00:00，结束时间点为选中日期的23:59:59</div>
+                </div>
+
+            </div>
+            <div class="form-group">
+                <label class="col-md-2 control-label">礼品券说明</label>
+                <div class="col-md-5">
+                    <textarea class="form-control resize_none" name="desc" id="desc" rows="4">{$giftvoucher_info['desc']}</textarea>
+                </div>
+            </div>
+
+            <div class="form-group"></div>
+            <div class="form-group">
+                <label class="col-md-2 control-label"></label>
+                <div class="col-md-8">
+                    <button class="btn btn-primary" type="submit">{if($giftvoucher_info['gift_voucher_id']>0)}修改{else}添加{/if}</button>
+                    <a href="javascript:history.go(-1);" class="btn btn-default">返回</a>
+                </div>
+            </div>
+            <input type="hidden" id="gift_voucher_id" name="gift_voucher_id" value="{$giftvoucher_info['gift_voucher_id']}"/>
+        </form>
+
+        <!-- page end -->
+{/block}
+{block name="script"}
+<script>
+    require(['util'], function (util) {
+        util.layDate('#start_time1',true,function(value, date, endDate){
+            date.month=date.month<10?'0'+date.month:date.month;
+            date.date=date.date<10?'0'+date.date:date.date;
+            endDate.month=endDate.month<10?'0'+endDate.month:endDate.month;
+            endDate.date=endDate.date<10?'0'+endDate.date:endDate.date;
+            var date1=date.year+'-'+date.month+'-'+date.date;
+            var date2=endDate.year+'-'+endDate.month+'-'+endDate.date;
+            if(value){
+                $('#start_receive_time').val(date1);
+                $('#end_receive_time').val(date2);
+                $('#start_time1').parents('.form-group').removeClass('has-error');
+            }
+            else{
+                $('#start_receive_time').val('');
+                $('#end_receive_time').val('');
+            }
+        });
+        util.layDate('#end_time1',true,function(value, date, endDate){
+            date.month=date.month<10?'0'+date.month:date.month;
+            date.date=date.date<10?'0'+date.date:date.date;
+            endDate.month=endDate.month<10?'0'+endDate.month:endDate.month;
+            endDate.date=endDate.date<10?'0'+endDate.date:endDate.date;
+            var date1=date.year+'-'+date.month+'-'+date.date;
+            var date2=endDate.year+'-'+endDate.month+'-'+endDate.date;
+            if(value){
+                $('#start_time').val(date1);
+                $('#end_time').val(date2);
+                $('#end_time1').parents('.form-group').removeClass('has-error');
+            }
+            else{
+                $('#start_time').val('');
+                $('#end_time').val('');
+            }
+        });
+        $('#gift').click(function () {
+            $.confirm({
+                title: '选择赠品',
+                content: 'url:'+'{$modalGiftListUrl}',
+                animation: 'top',
+                columnClass: 'large',
+                closeAnimation: 'bottom',
+                backgroundDismiss: true,
+                animateFromElement: false,
+                closeIcon: true,
+                buttons: {
+                    confirm: {
+                        text:'确定',
+                        btnClass:'btn-primary',
+                        action:function(){
+                            var content = this.$content.find('#selectedData').data();
+                            if(util.isEmpty(content)){
+                                util.message('请选择赠品')
+                                return false;
+                            }
+                            if(callback && callback !== undefined && typeof(callback) === 'function'){
+                                callback(content);
+                            }
+                        }
+                    },
+                    cancel: {
+                        text:'取消',
+                        btnClass:'btn-default',
+                        action:function(){
+                            console.log('取消了')
+                        }
+                    }
+                }
+
+            });
+        });
+
+        //提交数据
+        var flag = false;
+        util.validate($('.form-validate'), function (form) {
+            var gift_voucher_id = $("#gift_voucher_id").val();
+            var giftvoucher_name = $("#giftvoucher_name").val();
+            var promotion_gift_id = $("#promotion_gift_id").val();
+            var count = parseInt($("#count").val());
+            var max_fetch = parseInt($("#max_fetch").val());
+            var start_receive_time = $("#start_receive_time").val();
+            var end_receive_time = $("#end_receive_time").val();
+            var start_time = $("#start_time").val();
+            var end_time = $("#end_time").val();
+            var desc = $("#desc").val();
+            var url = "{$addGiftvoucherUrl}";
+            if (flag)return;
+            if(!promotion_gift_id || promotion_gift_id<0){
+                util.message("请选择赠品");
+                return;
+            }
+            if (count < max_fetch && count!=0){
+                util.message('每人最大领取数目必须小于发放数量！', 'info', function () {
+                    $('#max_fetch').focus();
+                });
+                return false;
+            }
+            if (util.DateTurnTime(start_receive_time) > util.DateTurnTime(end_receive_time)){
+                $("#start_time1").focus();
+                util.message("领券开始时间必须大于领券结束时间",'danger');
+                return;
+            }
+            if (util.DateTurnTime(start_time) > util.DateTurnTime(end_time)){
+                $("#end_time1").focus();
+                util.message("生效开始时间必须大于生效结束时间",'danger');
+                return;
+            }
+            if (util.DateTurnTime(start_receive_time) > util.DateTurnTime(start_time)){
+                util.message("领券开始时间必须小于或等于生效开始时间",'danger');
+                return;
+            }
+            if (util.DateTurnTime(end_receive_time) > util.DateTurnTime(end_time)){
+                util.message("领券结束时间必须小于或等于生效结束时间",'danger');
+                return;
+            }
+            flag = true;
+            if(gift_voucher_id>0){
+            	url = "{$updateGiftvoucherUrl}";
+            }
+            $.ajax({
+                type: "post",
+                url: url,
+                data: {
+                    'gift_voucher_id': gift_voucher_id,
+                    'giftvoucher_name': giftvoucher_name,
+                    'promotion_gift_id': promotion_gift_id,
+                    'count': count,
+                    'max_fetch': max_fetch,
+                    'start_receive_time': start_receive_time,
+                    'end_receive_time': end_receive_time,
+                    'start_time': start_time,
+                    'end_time': end_time,
+                    'desc': desc
+                },
+                success: function (data) {
+                    if (data["code"] > 0) {
+                        util.message(data["message"], 'success',function(){
+                            window.location.href="{:__URL('ADDONS_MAINgiftvoucherList')}";
+                        });
+                    } else {
+                        util.message(data["message"], 'danger');
+                    }
+                }
+            });
+        });
+    })
+</script>
+{/block}

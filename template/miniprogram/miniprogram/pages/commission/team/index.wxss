@@ -1,0 +1,42 @@
+page{
+  background-color: #f8f8f8;
+  font-size: 28rpx;
+}
+.list{
+  margin-top: 20rpx;
+}
+.list .item{
+  margin-bottom: 20rpx;
+  padding: 20rpx 30rpx;
+  background-color: #fff;
+  display: flex;
+  align-items: center;
+}
+.list .item .img{
+  width: 120rpx;
+  height: 120rpx;
+}
+.list .item .img image{
+  width: 100%;
+  height: 100%;
+}
+.list .item .customer_info{
+  flex: 1;
+  margin-left: 20rpx;
+}
+.list .item .customer_info .level{
+  padding-left: 20rpx;
+}
+.list .item .customer_info .order_num{
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.foot{
+  padding: 40rpx 30rpx;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: rgb(182, 182, 182);
+}

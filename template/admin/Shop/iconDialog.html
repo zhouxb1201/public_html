@@ -1,0 +1,81 @@
+<div class="icon-selection mb-20"></div>
+<input type="hidden" id="selectedData">
+<script>
+$(function(){
+	var icon = [
+		'danger',
+		'warning',
+		'info',
+		'success',
+		'order-success',
+		'shop1',
+		'achieve',
+		'add-user',
+		'plus',
+		'reduce',
+		'full-cut',
+		'region',
+		'global',
+		'commission',
+		'add1',
+		'limit',
+		'weapp',
+		'user',
+		'coupon',
+		'market',
+		'shops',
+		'7day',
+		'finance',
+		'list',
+		'qr-code',
+		'notice',
+		'wechat',
+		'crown',
+		'delete',
+		'add',
+		'minus',
+		'save',
+		'free',
+		'clear',
+		'calendar',
+		'shop',
+		'business',
+		'goods',
+		'time',
+		'home',
+		'data',
+		'search',
+		'pic',
+		'finish',
+		'article',
+		'help',
+		'feedback',
+		'set',
+		'drop-down',
+		'up-arrow',
+		'down-arrow',
+		'right-arrow',
+		'left-arrow',
+		'message',
+		'edit',
+		'application',
+		'mail',
+		'correct',
+		'account',
+		'sale',
+		'money',
+		'order1',
+		'goods1'
+	];
+	var iconHtml = ''
+	for (var i = 0; i < icon.length; i++) {
+		iconHtml += '<a href="javascript:void(0);" data-toggle="tooltip" data-placement="bottom" class="item" title="icon-'+icon[i]+'"><i class="icon icon-'+icon[i]+'"></i><span class="icons-name">'+icon[i]+'</span></a>';
+	}
+	$('.icon-selection').append(iconHtml)
+	$('[data-toggle="tooltip"]').tooltip();
+	$('.icon-selection .item').on('click',function(){
+		$(this).addClass('active').siblings().removeClass('active')
+		$('#selectedData').data('icon',$(this).text())
+	})
+})
+</script>

@@ -1,0 +1,628 @@
+{block name="main"}
+<ul class="nav nav-tabs v-nav-tabs" role="tablist">
+    <li role="presentation" class="active"><a href="#basic" aria-controls="basic"  data-type="basic" role="tab" data-toggle="tab" class="flex-auto-center">基本设置</a></li>
+    <li role="presentation"><a href="#seo" aria-controls="seo" data-type="seo" role="tab" data-toggle="tab" class="flex-auto-center">SEO设置</a></li>
+    <li role="presentation"><a href="#thirdParty" aria-controls="thirdParty" data-type="thirdParty" role="tab" data-toggle="tab" class="flex-auto-center">第三方登录</a></li>
+</ul>
+<div class="tab-content pt-15">
+<div role="tabpanel" class="tab-pane fade in active" id="basic" >
+<form class="form-horizontal pt-15 form-validate widthFixedForm">
+    <div class="form-group">
+        <label class="col-md-2 control-label">PC商城</label>
+        <div class="col-md-5">
+            <div class="switch-inline">
+                <input type="checkbox" id="is_use"  name="is_use">
+                <label for="is_use" class=""></label>
+            </div>
+            <p class="help-block mb-0">关闭后PC端商城均无法正常访问</p>
+        </div>
+    </div>
+    <div class="form-group J-close" style='display:none;'>
+        <label class="col-md-2 control-label">网站关闭原因</label>
+        <div class="col-md-5">
+            <textarea class='form-control' rows="4" id="close_reason" name='close_reason' required></textarea>
+        </div>
+    </div>
+    <div class='J-open' style='display:none;'>
+        <div class="form-group">
+            <label class="col-md-2 control-label"><span class="text-bright">*</span>网站LOGO</label>
+            <div class="col-md-5">
+                <div class="picture-list" id="Logo" required></div>
+                <p class="help-block mb-0">建议200 * 80，支持JPG\GIF\PNG格式，显示在PC商城首页左上角。</p>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-md-2 control-label"><span class="text-bright">*</span>网站小图标</label>
+            <div class="col-md-5">
+                <div class="picture-list" id="icon" required>
+
+                </div>
+                <p class="help-block mb-0">建议16 * 16，ico格式，在浏览器左上角显示的图标。</p>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-md-2 control-label">注册页广告图</label>
+            <div class="col-md-5">
+                <div class="picture-list" id="pc_register_adv">
+
+                </div>
+                <p class="help-block mb-0">建议1920 * 485，支持JPG\GIF\PNG格式</p>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-md-2 control-label">注册页广告图链接</label>
+            <div class="col-md-5">
+                <div class="input-group">
+                    <input type="text" class="form-control" id="pc_register_jump" value="" name="pc_register_jump">
+                    <span class="input-group-btn"><a href="javascript:void(0);" class="btn btn-info" data-toggle="selectUrlPc" data-id="pc_register_jump">选择链接</a></span>     
+                </div>
+                
+            </div>
+            <!--<div class="input-group"><span class="input-group-btn"><a href="javascript:void(0);" class="btn btn-default" data-toggle="selectUrlPc" data-id="pc_register_jump">选择链接</a></span></div>-->
+        </div>
+        <div class="form-group">
+            <label class="col-md-2 control-label">登录页广告图</label>
+            <div class="col-md-5">
+                <div class="picture-list" id="pc_login_adv">
+
+                </div>
+                <p class="help-block mb-0">建议1920 * 485，支持JPG\GIF\PNG格式</p>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-md-2 control-label">登录页广告图链接</label>
+            <div class="col-md-5">
+                <div class="input-group">
+                    <input type="text" class="form-control" id="pc_login_jump" value="" name="pc_login_jump">
+                    <span class="input-group-btn"><a href="javascript:void(0);" class="btn btn-info" data-toggle="selectUrlPc" data-id="pc_login_jump">选择链接</a></span>
+                </div>  
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-md-2 control-label">首页弹窗广告</label>
+            <div class="col-md-5">
+                <div class="switch-inline">
+                    <input type="checkbox" id="pc_pop"  name="pc_pop">
+                    <label for="pc_pop" class=""></label>
+                </div>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-md-2 control-label">弹窗广告图</label>
+            <div class="col-md-5">
+                <div class="picture-list" id="pc_pop_adv">
+
+                </div>
+                <p class="help-block mb-0">建议500 * 500，支持JPG\GIF\PNG格式，会在PC商城首页弹出。</p>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-md-2 control-label">弹窗广告链接</label>
+            <div class="col-md-5">
+                <div class="input-group">
+                    <input type="text" class="form-control" id="pc_pop_jump" value="" name="pc_pop_jump">
+                    <span class="input-group-btn"><a href="javascript:void(0);" class="btn btn-info" data-toggle="selectUrlPc" data-id="pc_pop_jump">选择链接</a></span>
+                </div>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-md-2 control-label">弹窗规则</label>
+            <div class="col-md-5">
+                <select id="pc_pop_rule" name="pc_pop_rule" class="form-control m-b">
+                    <option value="0"  >每次打开弹窗</option>
+                    <option value="1"  >每天弹窗一次</option>
+                    <option value="2"  >每三天弹窗一次</option>
+                    <option value="3" >每五天弹窗一次</option>
+                    <option value="4" >每月弹窗一次</option>
+                </select>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-md-2 control-label">公众号二维码</label>
+            <div class="col-md-5">
+                <div class="picture-list" id="web_qrcode">
+
+                </div>
+                <p class="help-block mb-0">在pc商城右上角显示。</p>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-md-2 control-label">客服QQ</label>
+            <div class="col-md-5">
+                <input type="text" class="form-control" id="web_qq" value="" name="web_qq">
+                <p class="help-block mb-0">在PC商城首页底部显示。</p>
+            </div>
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="col-md-2 control-label"></label>
+        <div class="col-md-8">
+            <button class="btn btn-primary save" id="save" type="submit">保存</button>
+            <a href="javascript:history.go(-1);" class="btn btn-default">返回</a>
+        </div>
+    </div>
+</form>
+</div>
+<div role="tabpanel" class="tab-pane fade" id="seo" >
+    <form class="form-horizontal form-validate2 widthFixedForm">
+        <div class="form-group">
+            <label class="col-md-2 control-label"><span class="text-bright">*</span>网页标题</label>
+            <div class="col-md-5">
+                <input type="text" class="form-control" id="title" value="" required autocomplete="off">
+                <p class="help-block">网页标题通常是搜索引擎关注的重点，本附加字设置出现在标题中商城名称后</p>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-md-2 control-label">商城关键字</label>
+            <div class="col-md-5">
+                <input type="text" class="form-control" id="meta" value="" >
+                <p class="help-block">Keywords项出现在页面头部的标签中，用于记录本页面的关键字</p>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-md-2 control-label">页面描述</label>
+            <div class="col-md-5">
+                <textarea class="form-control" rows="4" id="desc" ></textarea>
+                <p class="help-block">Description出现在页面头部的Meta标签中，用于记录本页面的摘要与描述，建议不超过80个字</p>
+            </div>
+        </div>
+
+        <div class="form-group"></div>
+        <div class="form-group">
+            <label class="col-md-2 control-label"></label>
+            <div class="col-md-8">
+                <button class="btn btn-primary seo_set" type="submit">保存</button>
+            </div>
+        </div>
+    </form>
+</div>
+<div role="tabpanel" class="tab-pane fade" id="thirdParty" >
+    <table class="table v-table table-auto-center">
+        <thead>
+        <tr>
+            <th>第三方登录</th>
+            <th>状态</th>
+            <th>操作</th>
+        </tr>
+        </thead>
+        <tbody id="login_list">
+
+        </tbody>
+    </table>
+</div>
+</div>
+{/block}
+{block name="script"}
+<script>
+    require(['util'], function (util) {
+        $('#is_use').change(function () {
+            checkIsUse();
+        });
+        $('.v-nav-tabs').on('click',"li", function () {
+            var config_type = $(this).children('a').data('type');
+            loading(config_type);
+        });
+        function checkIsUse() {
+            if ($('#is_use').is(":checked")) {
+                $('#is_use').attr('checked', false);
+                //判断是否设置账号体系
+                $.ajax({
+                    'url':"{:__URL('PLATFORM_MAIN/system/getAccountType')}",
+                    'type':'post',
+                    'data':{},
+                    success:function(data){
+                        if(data.account_type === 0){
+                            util.alert('商城还没有设置会员账号体系，请先设置好账号体系再开启商城。', function () {
+                                window.open("{:__URL('PLATFORM_MAIN/system/accountSystem')}");
+                                util.alert('是否已设置完成？', function(){
+                                    $.ajax({
+                                        'url':"{:__URL('PLATFORM_MAIN/system/getAccountType')}",
+                                        'type':'post',
+                                        'data':{},
+                                        success:function(data){
+                                            if(data.account_type === 0){
+                                                $('#is_use').attr('checked', false);
+                                            }else{
+                                                $('#is_use').attr('checked', true);
+                                                $('.J-close').hide();
+                                                $('.J-open').show();
+                                                $('.J-close').find('input,textarea').addClass('ignore');
+                                                $('.J-open').find('input,extarea').removeClass('ignore');
+                                            }
+                                        }
+                                    })
+                                })
+                            })
+                        }else{
+                            $('#is_use').attr('checked', true);
+                            $('.J-close').hide();
+                            $('.J-open').show();
+                            $('.J-close').find('input,textarea').addClass('ignore');
+                            $('.J-open').find('input,extarea').removeClass('ignore');
+                        }
+                    }
+
+                })
+                
+            } else {
+                $('.J-open').hide();
+                $('.J-open').find('input,textarea').addClass('ignore');
+                $('.J-close').find('input,textarea').removeClass('ignore');
+                $('.J-close').show();
+            }
+        }
+        loading('basic');
+        function loading(config_type) {
+            $.ajax({
+                type: "post",
+                url: "{$pcSettingUrl}",
+                data:{"config_type":config_type},
+                success: function (data) {
+                    if(config_type=='seo'){
+                        $('#title').val(data['seo_title']);
+                        $("#meta").val(data['seo_meta']);
+                        $("#desc").val(data['seo_desc']);
+                    }
+                    if(config_type=='thirdParty'){
+                        if(data['wchat_config']['is_use']==1){
+                            $("#wchat_is_use").prop("checked", true);
+                            $("#wxLoginOpen").show();
+                        }
+                        else{
+                            $("#wxLoginOpen").hide();
+                        }
+                        if(data['qq_config']['is_use']==1){
+                            $("#qqchat_is_use").prop("checked", true);
+                            $("#qqLoginOpen").show();
+                        }
+                        else{
+                            $("#qqLoginOpen").hide();
+                        }
+                        $('#WX_APP_KEY').val(data['wchat_config']['value']['APP_KEY']);
+                        $('#WX_APP_SECRET').val(data['wchat_config']['value']['APP_SECRET']);
+                        $('#QQ_APP_KEY').val(data['qq_config']['value']['APP_KEY']);
+                        $('#QQ_APP_SECRET').val(data['qq_config']['value']['APP_SECRET']);
+                        html ='';
+                        html+='<tr>';
+                        html+='<td>';
+                        html+='<div class="media">';
+                        html+='<div class="media-left">';
+                        html+='<img src="PLATFORM_STATIC/images/wechat.png">';
+                        html+='</div>';
+                        html+='<div class="media-body text-left"> 微信登录';
+                        html+='<p class="p small-muted">微信联合登录</p>';
+                        html+='</div>';
+                        html+='</div>';
+                        html+='</td>';
+                        html+='<td>';
+                        if(data['wchat_config']['is_use']==1) {
+                            html += '<span class="label label-success third_party_is_use" data-id="'+data['wchat_config']['id']+'" data-is_use="0">开启</span>';
+                        }else{
+                            html+='<span class="label label-danger third_party_is_use" data-id="'+data['wchat_config']['id']+'" data-is_use="1">关闭</span>';
+                        }
+                        html+='</td>';
+                        html+='<td>';
+                        html+='<a href="javascript:void(0);" onclick="return false;" class="text-primary wLogin_set ">配置</a>';
+                        html+='</td>';
+                        html+='</tr>';
+                        // html+='<tr>';
+                        // html+='<td>';
+                        // html+='<div class="media">';
+                        // html+='<div class="media-left">';
+                        // html+='<img src="PLATFORM_STATIC/images/qq.png">';
+                        // html+='</div>';
+                        // html+='<div class="media-body text-left">QQ登录';
+                        // html+='<p class="p small-muted">QQ联合登录</p>';
+                        // html+='</div>';
+                        // html+='</div>';
+                        // html+='</td>';
+                        // html+='<td>';
+                        // if(data['qq_config']['is_use']==1){
+                        //     html+='<span class="label label-success third_party_is_use" data-id="'+data['qq_config']['id']+'" data-is_use="0">开启</span>';
+                        // }else{
+                        //     html+='<span class="label label-danger third_party_is_use" data-id="'+data['qq_config']['id']+'" data-is_use="1">关闭</span>';
+                        // }
+                        // html+='</td>';
+                        // html+='<td>';
+                        // html+='<a href="javscript:;" onclick="return false;" class="text-primary qqLogin_set">配置</a>';
+                        // html+='</td>';
+                        // html+='</tr>';
+                        $('#login_list').html(html)
+                    }
+                    if(config_type=='basic'){
+                        $("#web_qq").val(data['web_qq']);
+                        if (data['logo']) {
+                            $('#Logo').html('<a href="javascript:void(0);" class="close-box"><i class="icon icon-danger" title="删除"></i><img src="' + data['logo'] + '"></a>');
+                        } else {
+                            $('#Logo').html('<a href="javascript:void(0);" class="plus-box" data-toggle="singlePicture"><i class="icon icon-plus"></i></a><input type="text" data-visi-type="singlePicture" class="visibility" required name="picture-Logo">');
+                        }
+                        if (data['icon']) {
+                            $('#icon').html('<a href="javascript:void(0);" class="close-box"><i class="icon icon-danger" title="删除"></i><img src="' + data['icon'] + '"></a>');
+                        } else {
+                            $('#icon').html('<a href="javascript:void(0);" class="plus-box" data-toggle="singlePicture"><i class="icon icon-plus"></i></a><input type="text" data-visi-type="singlePicture" class="visibility" required name="picture-icon">');
+                        }
+                        if (data['web_qrcode']) {
+                            $('#web_qrcode').html('<a href="javascript:void(0);" class="close-box"><i class="icon icon-danger" title="删除"></i><img src="' + data['web_qrcode'] + '"></a>');
+                        }else {
+                            $('#web_qrcode').html('<a href="javascript:void(0);" class="plus-box" data-toggle="singlePicture"><i class="icon icon-plus"></i></a>');
+                        }
+                        if (data['pc_pop'] == 1) {
+                            $("#pc_pop").prop("checked", true);
+                        }else{
+                            $("#pc_pop").prop("checked", false);
+                        }
+                        if (data['is_use'] == 1) {
+                            $("#is_use").prop("checked", true);
+                        }else{
+                            $("#is_use").prop("checked", false);
+                        }
+                        if (data['pc_register_adv']) {
+                            $('#pc_register_adv').html('<a href="javascript:void(0);" class="close-box"><i class="icon icon-danger" title="删除"></i><img src="' + data['pc_register_adv'] + '"></a>');
+                        }else {
+                            $('#pc_register_adv').html('<a href="javascript:void(0);" class="plus-box" data-toggle="singlePicture"><i class="icon icon-plus"></i></a>');
+                        }
+                        $("#pc_register_jump").val(data['pc_register_jump']);
+                        if (data['pc_login_adv']) {
+                            $('#pc_login_adv').html('<a href="javascript:void(0);" class="close-box"><i class="icon icon-danger" title="删除"></i><img src="' + data['pc_login_adv'] + '"></a>');
+                        } else {
+                            $('#pc_login_adv').html('<a href="javascript:void(0);" class="plus-box" data-toggle="singlePicture"><i class="icon icon-plus"></i></a>');
+                        }
+                        $("#pc_login_jump").val(data['pc_login_jump']);
+                        if (data['pc_pop_adv']) {
+                            $('#pc_pop_adv').html('<a href="javascript:void(0);" class="close-box"><i class="icon icon-danger" title="删除"></i><img src="' + data['pc_pop_adv'] + '"></a>');
+                        } else {
+                            $('#pc_pop_adv').html('<a href="javascript:void(0);" class="plus-box" data-toggle="singlePicture"><i class="icon icon-plus"></i></a>');
+                        }
+                        $("#pc_pop_jump").val(data['pc_pop_jump']);
+                        $("#pc_pop_rule").val(data['pc_pop_rule']);
+                        $("#close_reason").val(data['close_reason']);
+                        checkIsUse();
+                    }
+                }
+            });
+        }
+        util.validate($('.form-validate'), function (form) {
+            var Logo = $("#Logo").find('img').attr('src');
+            var web_qrcode = $("#web_qrcode").find('img').attr('src');
+            var icon = $("#icon").find('img').attr('src');
+            var web_qq = $("#web_qq").val();
+            var is_use = 0;
+            var pc_pop = 0;
+            if ($("#pc_pop").is(":checked")) {
+                var pc_pop = 1;
+            }
+            if ($("#is_use").is(":checked")) {
+                var is_use = 1;
+            }
+            var pc_register_adv = $("#pc_register_adv").find('img').attr('src');
+            var pc_register_jump = $("#pc_register_jump").val();
+            var pc_login_adv = $("#pc_login_adv").find('img').attr('src');
+            var pc_login_jump = $("#pc_login_jump").val();
+            var pc_pop_adv = $("#pc_pop_adv").find('img').attr('src');
+            var pc_pop_jump = $("#pc_pop_jump").val();
+            var pc_pop_rule = $("#pc_pop_rule").val();
+            var close_reason = $("#close_reason").val();
+            $.ajax({
+                type: 'POST',
+                dataType: 'json',
+                url: '{$savePcSettingUrl}',
+                data: {
+                    'is_use': is_use,
+                    'logo': Logo,
+                    'icon': icon,
+                    'web_qrcode': web_qrcode,
+                    'web_qq': web_qq,
+                    'pc_register_adv': pc_register_adv,
+                    'pc_register_jump': pc_register_jump,
+                    'pc_login_adv': pc_login_adv,
+                    'pc_login_jump': pc_login_jump,
+                    'pc_pop': pc_pop,
+                    'pc_pop_adv': pc_pop_adv,
+                    'pc_pop_jump': pc_pop_jump,
+                    'pc_pop_rule': pc_pop_rule,
+                    'close_reason': close_reason
+                },
+                success: function (data) {
+                    if (data['code'] > 0) {
+                        util.message(data["message"], 'success');
+                    } else {
+                        util.message(data["message"], 'danger');
+                    }
+                }
+            });
+        });
+        //SEO设置
+        util.validate($('.form-validate2'),function(form){
+            var title = $('#title').val();
+            var meta = $("#meta").val();
+            var desc = $("#desc").val();
+            $.ajax({
+                type:"post",
+                url : "{$seoConfigUrl}",
+                async : true,
+                data : {
+                    "seo_title" : title,
+                    "seo_meta" : meta,
+                    "seo_desc" : desc
+                },
+                success : function(data) {
+                    if (data["code"] > 0) {
+                        util.message(data["message"],'success',loading('seo'));
+                    }else{
+                        util.message(data["message"],'danger');
+                    }
+                }
+            });
+        });
+        // 微信登录配置开关
+        $('body').on('change', '#wchat_is_use', function () {
+            if($(this).is(':checked')){
+                $('#wxLoginOpen').show();
+            }else{
+                $('#wxLoginOpen').hide();
+            }
+        });
+        util.copy2('.copy2','AUTHORIZE');
+        util.copy2('.copy3','CALLBACK');
+        //微信登录配置
+        $('body').on('click','.wLogin_set',function(){
+            var html = '<form class="form-horizontal padding-15" id="">';
+            html += '<div class="form-group"><label class="col-md-3 control-label">是否启用</label><div class="switch-inline"><div class="col-md-8"><input type="checkbox" id="wchat_is_use" ><label for="wchat_is_use" class=""></label></div></div></div></div>';
+            html += '<div id="wxLoginOpen" style="display:none">';
+            html += '<div class="form-group"><label class="col-md-3 control-label"><span class="text-bright">*</span>AppID</label><div class="col-md-8"><input type="text" class="form-control" id="WX_APP_KEY" value=""></div></div>';
+            html += '<div class="form-group"><label class="col-md-3 control-label"><span class="text-bright">*</span>AppSecrect</label><div class="col-md-8"><input type="text" class="form-control" id="WX_APP_SECRET" value=""></div></div>';
+            html += '<div class="form-group"><label class="col-md-3 control-label"><span class="text-bright">*</span>申请域名</label><div class="col-md-8"><div class="input-group"><input style="opacity: 0;position: absolute; z-index: -11;" type="text" class="form-control" id="AUTHORIZE" value="{$apply_realm}" ><input class="form-control" value="{$apply_realm}" disabled type="text"><span class="input-group-btn copy2"><a href="javascript:void(0);" class="btn btn-default">复制</a></span></div></div></div>';
+            html += '<div class="form-group"><label class="col-md-3 control-label"><span class="text-bright">*</span>回调域名</label><div class="col-md-8"><div class="input-group"><input style="opacity: 0;position: absolute; z-index: -11;" type="text" class="form-control" id="CALLBACK" value="{$apply_realm}"><input class="form-control" value="{$apply_realm}" disabled type="text"><span class="input-group-btn copy3"><a href="javascript:void(0);" class="btn btn-default">复制</a></span></div></div></div>';
+            html += '</div>';
+            html += '</form>';
+            loading('thirdParty');
+            util.confirm('微信登录配置',html,function(){
+                if(this.$content.find('#wchat_is_use').is(':checked')){
+                    var is_use =1;
+                }
+                var appkey = this.$content.find('#WX_APP_KEY').val();
+                var appsecret = this.$content.find('#WX_APP_SECRET').val();
+                var url = this.$content.find('#AUTHORIZE').val();
+                var call_back_url = this.$content.find('#CALLBACK').val();
+                if(appkey==''){
+                    util.message('请填写APP_KEY');
+                    this.$content.find('#WX_APP_KEYT').focus();
+                    return false;
+                }
+                if(appsecret==''){
+                    util.message('请填写APP_SECRET');
+                    this.$content.find('#WX_APP_SECRET').focus();
+                    return false;
+                }
+                $.ajax({
+                    type:"post",
+                    url:"{$loginWeiXinConfigUrl}",
+                    data:{
+                        'appkey':appkey,
+                        'appsecret':appsecret,
+                        'url':url,
+                        'call_back_url':call_back_url,
+                        "is_use" : is_use
+                    },
+                    async:true,
+                    success:function (data) {
+                        if (data["code"] > 0) {
+                            util.message( data["message"],'success',loading('thirdParty'));
+                        }else{
+                            util.message( data["message"],'danger');
+                        }
+                    }
+                });
+
+            },'large')
+        })
+        // // qq登录配置开关
+        // $('body').on('change', '#qqchat_is_use', function () {
+        //     if($(this).is(':checked')){
+        //         $('#qqLoginOpen').show();
+        //     }else{
+        //         $('#qqLoginOpen').hide();
+        //     }
+        // });
+        // util.copy2('.copy4','QQ_AUTHORIZE');
+        // util.copy2('.copy5','QQ_CALLBACK');
+        //QQ登录配置
+        // $('body').on('click','.qqLogin_set',function(){
+        //     var html = '<form class="form-horizontal  padding-15" id="">';
+        //     html += '<div class="form-group"><label class="col-md-3 control-label">是否启用</label><div class="col-md-8"><div class="switch-inline"><input type="checkbox" id="qqchat_is_use" ><label for="qqchat_is_use" class=""></label></div></div></div></div>';
+        //     html += '<div id="qqLoginOpen" style="display:none">';
+        //     html += '<div class="form-group"><label class="col-md-3 control-label"><span class="text-bright">*</span>AppID</label><div class="col-md-8"><input type="text" class="form-control" id="QQ_APP_KEY" value="" ></div></div>';
+        //     html += '<div class="form-group"><label class="col-md-3 control-label"><span class="text-bright">*</span>AppSecrect</label><div class="col-md-8"><input type="text" class="form-control" id="QQ_APP_SECRET" value="" ></div></div>';
+        //     html += '<div class="form-group"><label class="col-md-3 control-label"><span class="text-bright">*</span>申请域名</label><div class="col-md-8"><div class="input-group"><input style="opacity: 0;position: absolute; z-index: -11;" type="text" class="form-control" id="QQ_AUTHORIZE" value="{$apply_realm}"><input class="form-control" value="{$apply_realm}" disabled type="text"><span class="input-group-btn copy4"><a href="javascript:void(0);" class="btn btn-default">复制</a></span></div></div></div>';
+        //     html += '<div class="form-group"><label class="col-md-3 control-label"><span class="text-bright">*</span>回调域名</label><div class="col-md-8"><div class="input-group"><input style="opacity: 0;position: absolute; z-index: -11;" type="text" class="form-control" id="QQ_CALLBACK" value="https://{$apply_back_realm}"><input class="form-control" value="https://{$apply_back_realm}" disabled type="text"><span class="input-group-btn copy5"><a href="javascript:void(0);" class="btn btn-default">复制</a></span></div></div></div>';
+        //     html += '</div>';
+        //     html += '</form>';
+        //     loading('thirdParty');
+        //     util.confirm('QQ登录配置',html,function(){
+        //         if(this.$content.find('#qqchat_is_use').is(':checked')){
+        //             var is_use =1;
+        //         }
+        //         var appkey = this.$content.find('#QQ_APP_KEY').val();
+        //         var appsecret = this.$content.find('#QQ_APP_SECRET').val();
+        //         var url = this.$content.find('#QQ_AUTHORIZE').val();
+        //         var call_back_url = this.$content.find('#QQ_CALLBACK').val();
+        //         if(appkey==''){
+        //             util.message('请填写APP_KEY');
+        //             this.$content.find('#QQ_APP_KEY').focus();
+        //             return false;
+        //         }
+        //         if(appsecret==''){
+        //             util.message('请填写APP_SECRET');
+        //             this.$content.find('#QQ_APP_SECRET').focus();
+        //             return false;
+        //         }
+        //         if(url==''){
+        //             util.message('请填写申请域名');
+        //             this.$content.find('#QQ_AUTHORIZE').focus();
+        //             return false;
+        //         }
+        //         if(call_back_url==''){
+        //             util.message('请填写回调域名');
+        //             this.$content.find('#QQ_CALLBACK').focus();
+        //             return false;
+        //         }
+        //         $.ajax({
+        //             type:"post",
+        //             url:"{:__URL('PLATFORM_MAIN/config/loginQqConfig')}",
+        //             data:{
+        //                 'appkey':appkey,
+        //                 'appsecret':appsecret,
+        //                 'url':url,
+        //                 'call_back_url':call_back_url,
+        //                 "is_use" : is_use
+        //             },
+        //             async:true,
+        //             success:function (data) {
+        //                 if (data["code"] > 0) {
+        //                     util.message( data["message"],'success',loading('thirdParty'));
+        //                 }else{
+        //                     util.message( data["message"],'danger');
+        //                 }
+        //             }
+        //         });
+        //
+        //
+        //
+        //     },'large')
+        // })
+        //设置第三方登录是否开启
+        $('#login_list').on('click', '.third_party_is_use', function(){
+            var id = $(this).data('id');
+            if(id === 'undefined'){
+                util.message( '请先配置该登录方式','danger');return;
+            }else{
+                var is_use = $(this).data('is_use');
+            }
+            $.ajax({
+                type:"post",
+                url:"{:__URL('PLATFORM_MAIN/config/updateConfigIsuse')}",
+                data:{
+                    'id' : id, 'is_use' : is_use
+                },
+                async:true,
+                success:function (data) {
+                    if (data["code"] > 0) {
+                        util.message( data["message"],'success',loading('thirdParty'));
+                    }else{
+                        util.message( data["message"],'danger');
+                    }
+                }
+            });
+        });
+        // 选择链接
+        $('body').on('click', '[data-toggle="selectUrlPc"]', function () {
+            var _this = $(this);
+            // var curlId = _this.data('input');
+            var elm = _this.data('id');
+            util.linksDialogPc(function (data) {
+                $('#' + elm).val(data.params).change();
+            });
+        });
+    });
+</script>
+{/block}

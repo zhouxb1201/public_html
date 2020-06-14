@@ -1,0 +1,245 @@
+/* miniprogram/package/pages/signin/index/index.wxss */
+@import "/css/iconfont.wxss";
+
+page {
+  font-size: 28rpx;
+  background-color: #f8f8f8;
+}
+
+.head {
+  position: relative;
+  overflow: hidden;
+}
+
+.card-group-box {
+  margin: 20rpx;
+  border-radius: 20rpx;
+  overflow: hidden;
+  box-shadow: 0 0 20rpx 0 rgba(0, 0, 0, 0.05);
+}
+
+.head .bg {
+  max-width: 100%;
+  height: auto;
+  display: block;
+}
+
+.head .box {
+  position: absolute;
+  left: 0;
+  top: 0;
+  z-index: 1;
+  display: flex;
+  justify-content: space-between;
+  width: 100%;
+  height: 100%;
+  padding: 0 40rpx;
+}
+
+.head .info {
+  display: flex;
+  align-items: center;
+  z-index: 1;
+  flex: 1;
+}
+
+.head .info .img {
+  width: 100rpx;
+  height: 100rpx;
+  overflow: hidden;
+  border-radius: 50%;
+  border: 2px solid #fff;
+}
+
+.head .info .img image {
+  width: 100%;
+  height: 100%;
+}
+
+.head .info .text {
+  margin-left: 10px;
+  color: #fff;
+  line-height: 1.4;
+}
+
+.head .btn-group .btn {
+  color: #ffe49c;
+  border: 2rpx solid #ffe49c;
+  background: transparent;
+  padding: 0 16rpx;
+  height: 60rpx;
+  min-width: 120rpx;
+  font-size: 24rpx;
+  line-height: 56rpx;
+  appearance: none;
+  -webkit-appearance: none;
+  display: inline-block;
+  position: relative;
+  border-radius: 10em;
+  text-align: center;
+  box-sizing: border-box;
+}
+
+.head .btn-group .disabeld {
+  color: #999!important;
+  border: 2rpx solid #999!important;
+}
+
+.head .strong {
+  color: #ffe49c;
+}
+
+.flex-auto-center {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 40%;
+}
+
+/*********日历***********/
+
+.calendar_box {
+  width: 100%;
+  background-color: #fff;
+  box-sizing: border-box;
+}
+
+.canlendarTopView {
+  overflow: hidden;
+  width: 80%;
+  display: flex;
+  margin: auto;
+  justify-content: space-between;
+  padding-top: 20rpx;
+}
+
+.leftBgView {
+  float: left;
+  width: 20%;
+  text-align: center;
+}
+
+.leftView {
+  display: inline-block;
+  width: 24rpx;
+  height: 24rpx;
+  border: 4rpx solid #53acfc;
+  border-radius: 0;
+  border-top: none;
+  border-right: none;
+  transform: rotate(45deg);
+  margin-top: 18rpx;
+}
+
+.centerView {
+  float: left;
+  font-size: 32rpx;
+  height: 60rpx;
+  line-height: 60rpx;
+  width: 260rpx;
+  text-align: center;
+}
+
+.rightBgView {
+  float: left;
+  width: 20%;
+  text-align: center;
+}
+
+.rightView {
+  display: inline-block;
+  width: 24rpx;
+  height: 24rpx;
+  border: 4rpx solid #53acfc;
+  border-radius: 0;
+  border-top: none;
+  border-right: none;
+  transform: rotate(-135deg);
+  margin-top: 18rpx;
+}
+
+.weekBgView {
+  overflow: hidden;
+  display: flex;
+}
+
+.weekView {
+  flex: 1;
+  text-align: center;
+  font-size: 30rpx;
+  color: #000;
+  line-height: 80rpx;
+  height: 80rpx;
+}
+
+.dateBgView {
+  margin-bottom: 20rpx;
+  width: 100%;
+  overflow: hidden;
+}
+
+.dateView {
+  display: block;
+  position: relative;
+  float: left;
+  text-align: center;
+  width: 14.285714285714%;
+  height: 100rpx;
+}
+
+.datesView {
+  font-size: 30rpx;
+  color: #2b2b2b;
+  line-height: 60rpx;
+}
+
+.dateOn {
+  color: #008aff !important;
+}
+
+.dateOn:before {
+  content: "";
+  position: absolute;
+  width: 90%;
+  height: 98rpx;
+  border: 2rpx solid #008aff;
+  top: 0;
+  left: 5%;
+}
+
+.deteDisabeld {
+  color: silver !important;
+}
+
+.calendar-small {
+  width: 100%;
+  white-space: nowrap;
+  color: #008aff;
+  font-size: 24rpx;
+  transform: scale(0.9);
+}
+
+
+.no_open{
+  background-color: #fff;
+  position: fixed;
+  top: 0;
+  bottom: 0;
+  right: 0;
+  left: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.box{
+  text-align: center;
+}
+.box .img{
+  width: 400rpx;
+  height: 200rpx;
+  margin: 30rpx 0;
+}
+.img image{
+  width: 100%;
+  height: 100%;
+}

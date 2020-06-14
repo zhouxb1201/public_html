@@ -1,0 +1,48 @@
+page{
+  font-size: 28rpx;
+  background-color: #f8f8f8;
+}
+.points_group{
+  background-color: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-flow: column;
+  height: 200rpx;
+  margin-bottom: 20rpx;
+}
+.points_group .points_value{
+  color: #f44;
+  font-size: 40rpx;
+  font-weight: 800;
+  margin-top: 20rpx;
+}
+.points_list{
+  background-color: #fff;
+}
+.points_list_title{
+  padding: 20rpx 30rpx;
+  border-bottom: 1px solid #ebedf0;
+}
+.points_nomore{
+  text-align: center;
+  padding: 40rpx 30rpx;
+}
+
+.points_item{
+  padding: 20rpx 30rpx;
+  width: 100%;
+  box-sizing: border-box;
+  border-bottom: 1px solid #ebedf0;
+}
+.points_cell{
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 10rpx;
+}
+.points_num_green{
+  color: #4b0;
+}
+.points_num_red{
+  color: #f44;
+}

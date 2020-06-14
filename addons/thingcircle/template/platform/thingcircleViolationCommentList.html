@@ -1,0 +1,294 @@
+{block name="main"}
+			<!-- page -->
+                <form class="v-filter-container">
+                    <div class="filter-fields-wrap">
+                        <div class="filter-item clearfix">
+                            <div class="filter-item__field">
+                                <div class="v__control-group">
+                                    <label class="v__control-label">评论人</label>
+                                    <div class="v__controls">
+                                        <input type="text" id="search_user" class="v__control_input" placeholder="手机号码/会员ID/用户名/昵称" autocomplete="off">
+                                    </div>
+                                </div>
+
+                                <div class="v__control-group">
+                                    <label class="v__control-label">内容</label>
+                                    <div class="v__controls">
+                                        <input type="text" id="search_text" class="v__control_input" placeholder="请输入内容" autocomplete="off">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="filter-item clearfix">
+                            <div class="filter-item__field">
+                                <div class="v__control-group">
+                                    <label class="v__control-label"></label>
+                                    <div class="v__controls">
+                                        <a class="btn btn-primary search"><i class="icon icon-search"></i> 搜索</a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+
+            <ul class="nav nav-tabs v-nav-tabs add_tab1" role="tablist">
+                <li role="presentation" {if !$state} class="active" {/if}><a href="{:__URL('platform/Menu/addonmenu?addons=violationCommentsList')}" aria-controls="processed_comment" role="tab" class="flex-auto-center">待处理</a></li>
+                <li role="presentation" {if condition="$state eq 2"} class="active" {/if}><a href="{:__URL('platform/Menu/addonmenu?addons=violationCommentsList&state=2')}" aria-controls="ignored_comment" role="tab"class="flex-auto-center">已忽略</a></li>
+                <li role="presentation" {if condition="$state eq 3"} class="active" {/if}><a href="{:__URL('platform/Menu/addonmenu?addons=violationCommentsList&state=3')}" aria-controls="delete_comment" role="tab"class="flex-auto-center">已删除</a></li>
+            </ul>
+            <div class="mb-10">
+                {if !$state}
+                <a class="btn btn-default ign" href="javascript:void(0);">批量忽略</a>
+                <a class="btn btn-default del" href="javascript:void(0);">批量删除</a>
+                {elseif condition="$state eq 2"}
+                <a class="btn btn-default del" href="javascript:void(0);">批量删除</a>
+                {elseif condition="$state eq 3"}
+                <a class="btn btn-default rec" href="javascript:void(0);">批量恢复</a>
+                <a class="btn btn-default delete" href="javascript:void(0);">彻底删除</a>
+                {/if}
+            </div>
+			<table class="table v-table table-auto-center" id="selectComment">
+				<thead>
+				<tr>
+                    <th class="col-md-1"><input type="checkbox" id="checkAll"></th>
+					<th class="col-md-2">评论人</th>
+					<th class="col-md-3">评论内容 / 举报内容</th>
+                    <th class="col-md-2">举报人</th>
+					<th class="col-md-2">举报时间</th>
+					<th class="col-md-2 pr-14 operationLeft">操作</th>
+				</tr>
+				</thead>
+				<tbody id="list">
+
+				</tbody>
+			</table>
+			<input type="hidden" id="page_index" value="">
+            <input type="hidden" id="state" value="{$state}">
+			<nav aria-label="Page navigation" class="clearfix">
+				<ul id="page" class="pagination pull-right"></ul>
+			</nav>
+			<!-- page end -->
+{/block}
+{block name="script"}
+<script>
+    require(['util'],function(util){
+        util.initPage(getList);
+        function getList(page_index){
+            $("#page_index").val(page_index);
+            var search_user = $("#search_user").val();
+            var search_text = $("#search_text").val();
+            var state = $("#state").val();
+            $.ajax({
+                type : "post",
+                url : '{$thingcircleViolationCommentListUrl}',
+                async : true,
+                data : {
+                    "page_index" : page_index,"search_user" : search_user,"search_text" : search_text,"state" : state
+                },
+                success : function(data) {
+                    var html = '';
+                    if (data['data'].length>0) {
+                        for (var i = 0; i < data['data'].length; i++) {
+                            html += '<tr>';
+                            html += '<td><input value="' + data["data"][i]["id"] + '" data-comment_id="' + data['data'][i]['comment_id'] +'" type="checkbox"></td>';
+                            if(data['data'][i]["report_headimg"]){
+                                html +='<td class="text-left"><img src="'+__IMG(data['data'][i]["report_headimg"])+'" width="30" height="30" class="mr-04">' + data['data'][i]["report_user_name"] + '</span></td>';
+                            }else{
+                                html +='<td class="text-left"><img src="/public/static/images/headimg.png" width="30" height="30" class="mr-04">' + data['data'][i]["report_user_name"] + '</span></td>';
+                            }
+                            html += '<td class="text-left"><span class="label label-red">'+ data['data'][i]["name"] +'</span><div class="mt-04">' + data['data'][i]["content"] + '</div>';
+                            html += '<a href="javascript:void(0);" class="text-primary reportReason" data-type="0">[ 展开 - 举报内容 ]</a>';
+                            html += '<div class="reportReason-div">'+
+                                    '<p class="mb-04">' + data['data'][i]["report_reason"] + '</p>';
+                            html += '<div>';     
+                            for (var key in data['data'][i]["report_imgs"]) {
+                                html += '<img src="' + __IMG(data['data'][i]["report_imgs"][key]) + '" style="width:40px;height:40px;">&nbsp;';
+                            }
+                            html += '</div>'; 
+                            html += '</div></td>';
+
+                            if(data['data'][i]["user_headimg"]){
+                                html +='<td><img src="'+__IMG(data['data'][i]["user_headimg"])+'" width="30" height="30" class="mr-04">' + data['data'][i]["comment_user_name"] + '</span></td>';
+                            }else{
+                                html +='<td><img src="/public/static/images/headimg.png" width="30" height="30" class="mr-04">' + data['data'][i]["comment_user_name"] + '</span></td>';
+                            }
+							html += '<td><span class="block">' + data['data'][i]["create_time"] + '</span></td>';
+							html += '<td class="fs-0 operationLeft">';
+                            if(data['data'][i]["state"] == 1){
+                                html += '<a class="btn-operation ign" href="javascript:;" data-id="' + data['data'][i]['id'] +'">忽略举报</a>';
+                                html += '<a class="btn-operation del" href="javascript:;" data-id="' + data['data'][i]['comment_id'] +'">删除评论</a>';
+                            }
+                            if(data['data'][i]["state"] == 2 ){
+                                html += '<a class="btn-operation del" href="javascript:;" data-id="' + data['data'][i]['comment_id'] +'">删除评论</a>';
+                            }
+                            if(data['data'][i]["state"] == 3 ){
+                                html += '<a class="btn-operation rec" href="javascript:;" data-id="' + data['data'][i]['comment_id'] +'">恢复评论</a>';
+                                html += '<a class="btn-operation delete" href="javascript:;" data-id="' + data['data'][i]['comment_id'] +'">彻底删除</a>';
+                            }
+							html += '</td>';
+                            html += '</tr>';
+                            html += '<tr class="title-tr"><td colspan="6" class="text-right" style="border-top:0;">';
+                            html += '</td></tr>';
+                        }
+                    } else {
+                        html += '<tr><td class="h-200" colspan="6">暂无符合条件的数据记录</td></tr>';
+                    }
+                    $('#page').paginator('option', {
+                        totalCounts: data['total_count']  // 动态修改总数
+                    });
+                    $("#list").html(html);
+                }
+            });
+        }
+        $('.search').on('click',function(){
+            util.initPage(getList(1));
+        });
+        $("#checkAll").on('click',function(){
+            $("#selectComment input[type = 'checkbox']").prop("checked", this.checked);
+        });
+        $('body').on('click','.ign',function(){
+
+            var commentId = [];
+            if($(this).data('id')&&!isNaN($(this).data('id'))){
+                commentId.push($(this).data('id'));
+            }else{
+                $("#selectComment input[type = 'checkbox']:checked").each(function(){
+                    if (!isNaN($(this).val())) {
+                        commentId.push($(this).val());
+                    }
+                })
+            }
+            if(commentId.length==0){
+                util.message('请选择忽略的举报','danger');
+                return false;
+            }
+            $('#checkAll').prop('checked',false);
+
+            util.alert('是否忽略该举报？',function(){
+                $.ajax({
+                    type : "post",
+                    url : "{$ignThingcircleCommentUrl}",
+                    data:{"report_ids": commentId.toString()},
+                    async : true,
+                    success : function(data) {
+                        if(data["code"] > 0 ){
+                            util.message(data["message"], 'success', getList($("#page_index").val()));
+                        }else{
+                            util.message(data["message"], 'danger');
+                        }
+                    }
+                });
+            })
+        });
+        $('body').on('click','.del',function(){
+            var commentId = [];
+            if($(this).data('id')&&!isNaN($(this).data('id'))){
+                commentId.push($(this).data('id'));
+            }else{
+                $("#selectComment input[type = 'checkbox']:checked").each(function(){
+                    if (!isNaN($(this).val())) {
+                        commentId.push($(this).data('comment_id'));
+                    }
+                })
+            }
+            if(commentId.length==0){
+                util.message('请选择删除的评论','danger');
+                return false;
+            }
+            $('#checkAll').prop('checked',false);
+            util.alert('是否删除该评论？',function(){
+                $.ajax({
+                    type : "post",
+                    url : "{$delThingcircleCommentUrl}",
+                    data:{'comment_ids':commentId.toString()},
+                    async : true,
+                    success : function(data) {
+                        if(data["code"] > 0 ){
+                            util.message(data["message"], 'success', getList($("#page_index").val()));
+                        }else{
+                            util.message(data["message"], 'danger');
+                        }
+                    }
+                });
+            })
+        });
+        $('body').on('click','.delete',function(){
+            var commentId = [];
+            if($(this).data('id')&&!isNaN($(this).data('id'))){
+                commentId.push($(this).data('id'));
+            }else{
+                $("#selectComment input[type = 'checkbox']:checked").each(function(){
+                    if (!isNaN($(this).val())) {
+                        commentId.push($(this).data('comment_id'));
+                    }
+                })
+            }
+            if(commentId.length==0){
+                util.message('请选择彻底删除的评论','danger');
+                return false;
+            }
+            $('#checkAll').prop('checked',false);
+            util.alert('是否彻底删除该评论？',function(){
+                $.ajax({
+                    type : "post",
+                    url : "{$deleteThingcircleCommentUrl}",
+                    data:{'comment_ids':commentId.toString()},
+                    async : true,
+                    success : function(data) {
+                        if(data["code"] > 0 ){
+                            util.message(data["message"], 'success', getList($("#page_index").val()));
+                        }else{
+                            util.message(data["message"], 'danger');
+                        }
+                    }
+                });
+            })
+        });
+        $('body').on('click','.rec',function(){
+            var commentId = [];
+            if($(this).data('id')&&!isNaN($(this).data('id'))){
+                commentId.push($(this).data('id'));
+            }else{
+                $("#selectComment input[type = 'checkbox']:checked").each(function(){
+                    if (!isNaN($(this).val())) {
+                        commentId.push($(this).data('comment_id'));
+                    }
+                })
+            }
+            if(commentId.length==0){
+                util.message('请选择恢复的评论','danger');
+                return false;
+            }
+            $('#checkAll').prop('checked',false);
+            util.alert('是否恢复该评论？',function(){
+                $.ajax({
+                    type : "post",
+                    url : "{$recThingcircleCommentUrl}",
+                    data:{'comment_ids':commentId.toString()},
+                    async : true,
+                    success : function(data) {
+                        if(data["code"] > 0 ){
+                            util.message(data["message"], 'success', getList($("#page_index").val()));
+                        }else{
+                            util.message(data["message"], 'danger');
+                        }
+                    }
+                });
+            })
+        });
+        $('#list').on('click','.reportReason',function(){
+            var type = $(this).data('type');
+            if(type == 0){
+                $(this).data('type','1');
+                $(this).html('[ 收起 - 举报内容 ]');
+                $(this).siblings('.reportReason-div').show();
+            }else{
+                $(this).data('type','0');
+                $(this).html('[ 展开 - 举报内容 ]');
+                $(this).siblings('.reportReason-div').hide();
+            }
+        })
+    })
+</script>
+{/block}

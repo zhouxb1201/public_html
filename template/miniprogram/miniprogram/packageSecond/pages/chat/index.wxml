@@ -1,0 +1,238 @@
+<view class="page-wrap" id="body">
+  <scroll-view class="chat-container" scroll-y scroll-into-view="{{lastMessageId}}" scroll-top="{{scrollTop}}">
+    <!-- 历史记录 -->
+    <view wx:for='{{messagesLogs}}' wx:for-item='itemLog' wx:key='id' id='{{itemLog.log_id}}' class="chat-log">
+      <view class="user-message {{itemLog.type == 'user'? 'other':'me' }}">
+        <!-- 左边的客服历史记录 -->
+        <view class="left" wx:if="{{itemLog.type == 'user'}}">
+          <view class="chat-avatars">
+            <image src="{{itemLog.from_avatar}}"></image>
+          </view>
+          <view class="text">
+            <view class="nickname" style="color: {{message.color}};">{{itemLog.from_name}}</view>
+            <view class="{{itemLog.sign == 'audio'? 'audio_clear': ''}} content">
+              <view class="img" wx:if="{{itemLog.sign == 'img'}}">
+                <image mode="widthFix" src="{{itemLog.content}}"></image>
+              </view>
+              <view class="faces_msg" wx:elif="{{itemLog.sign == 'faces'}}">
+                <view class="faces" wx:for='{{itemLog.content}}' wx:key='' wx:for-item='faceItem'>
+                  <image mode="widthFix" src="{{faceItem}}"></image>
+                </view>
+              </view>
+              <view class="yuyin" wx:elif="{{itemLog.sign == 'audio'}}">
+                <view class='output-audio'>
+                  <!-- 默认状态 -->
+                  <view class='audio' wx:if="{{itemLog.bl==false}}" bindtap='audioPlay' data-audiosign="audiologs" data-vidsrc="{{itemLog.content}}" data-id="{{itemLog.log_id}}" data-bl="{{itemLog.bl}}">
+                    <image class='ico' src='/images/ico.png' />
+                  </view>
+                  <!-- 当前正在播放状态 -->
+                  <view class='audio' wx:if="{{itemLog.bl==true}}" bindtap='audioStop' data-audiosign="audiologs" data-vidsrc="{{itemLog.content}}" data-id="{{itemLog.log_id}}" data-bl="{{itemLog.bl}}">
+                    <image class='ico' src='/images/ico_paly.gif' />
+                  </view>
+                </view>
+              </view>
+              <view wx:else>
+                {{itemLog.content}}
+              </view>
+            </view>
+            <view class="read {{itemLog.read_status == 1?'already':'not'}}">{{itemLog.read_status == 1?'已读':'未读'}}</view>
+          </view>
+        </view>
+        <!-- 右边本人的历史记录 -->
+        <view class="right" wx:else>
+          <view class="text">
+            <!-- <view class="nickname" style="color: {{message.color}};">{{itemLog.from_name}}</view> -->
+            <view class="{{itemLog.sign == 'audio' || itemLog.sign == 'goods'? 'audio_clear': ''}} content">
+              <view class="img" wx:if="{{itemLog.sign == 'img'}}">
+                <image mode="widthFix" src="{{itemLog.content}}"></image>
+              </view>
+              <view class="faces_msg" wx:elif="{{itemLog.sign == 'faces'}}">
+                <view class="faces" wx:for='{{itemLog.content}}' wx:key='' wx:for-item='faceItem'>
+                  <image mode="widthFix" src="{{faceItem}}"></image>
+                </view>
+              </view>
+              <view class="goods_log" wx:elif="{{itemLog.sign == 'goods'}}" data-goodsid="{{itemLog.goods.goods_id}}" bindtap="onGoodsPage">
+                <view class="goods_img">
+                  <image src="{{itemLog.goods.goods_pic}}"></image>
+                </view>
+                <view class="goods_name">{{itemLog.goods.goods_name}}</view>
+                <view class="goods_price">¥{{itemLog.goods.goods_price}}</view>
+              </view>
+              <view class="yuyin" wx:elif="{{itemLog.sign == 'audio'}}">
+                <view class='output-audio'>
+                  <!-- 默认状态 -->
+                  <view class='audio' wx:if="{{itemLog.bl==false}}" bindtap='audioPlay' data-audiosign="audiologs" data-vidsrc="{{itemLog.content}}" data-id="{{itemLog.log_id}}" data-bl="{{itemLog.bl}}">
+                    <image class='ico right' src='/images/ico.png' />                    
+                  </view>
+                  <!-- 当前正在播放状态 -->
+                  <view class='audio' wx:if="{{itemLog.bl==true}}" bindtap='audioStop' data-audiosign="audiologs" data-vidsrc="{{itemLog.content}}" data-id="{{itemLog.log_id}}" data-bl="{{itemLog.bl}}">
+                    <image class='ico right' src='/images/ico_paly.gif' />                    
+                  </view>
+                </view>
+              </view>
+              <view wx:else>
+                {{itemLog.content}}
+              </view>
+            </view>
+            <view class="read {{itemLog.read_status == 1?'already':'not'}}">{{itemLog.read_status == 1?'已读':'未读'}}</view>
+          </view>
+          <view class="chat-avatars">
+            <image src="{{itemLog.from_avatar}}"></image>
+          </view>
+        </view>
+      </view>
+    </view>
+    <!-- 商品内容 -->
+    <view class="goods" wx:if='{{goods && isGoodShow == 1}}'>
+      <view class="goods_box">
+        <view class="good_img">
+          <image src="{{goods.pic_cover}}"></image>
+        </view>
+        <view class="goods_info">
+          <view class="goods_name">{{goods.goods_name}}</view>
+          <view class="goods_price">¥{{goods.price}}</view>
+          <view class="good_btn" bindtap="sandGoodsMessage">发给商家</view>
+        </view>
+      </view>
+    </view>
+    <!-- 当前聊天 -->
+    <view wx:for="{{messages}}" wx:for-item="message" wx:key="id" id="{{message.id}}" class="message {{message.type}}">
+      <view wx:if="{{message.type == 'speak'}}" class="user-message {{message.isMe}}">
+        <!-- 左边客服 -->
+        <view class="left" wx:if="{{message.isMe == 'other'}}">
+          <view class="chat-avatars">
+            <image src="{{message.logo}}"></image>
+          </view>
+          <view class="text">
+            <view class="nickname" style="color: {{message.color}};">{{message.user}}</view>
+            <view class="{{message.sign == 'audio'? 'audio_clear': ''}} content">
+              <view class="img" wx:if="{{message.sign == 'img'}}">
+                <image mode="widthFix" src="{{message.content}}"></image>
+              </view>
+              <view class="faces_msg" wx:elif="{{message.sign == 'faces'}}">
+                <view class="faces" wx:for='{{message.content}}' wx:key='' wx:for-item='faceItem'>
+                  <image mode="widthFix" src="{{faceItem}}"></image>
+                </view>
+              </view>
+              <view class="yuyin" wx:elif="{{message.sign == 'audio'}}">
+                <view class='output-audio'>
+                  <!-- 默认状态 -->
+                  <view class='audio' wx:if="{{message.content.bl==false}}" bindtap='audioPlay' data-audiosign="audio_now" data-vidsrc="{{message.content.content}}" data-id="{{message.id}}" data-bl="{{message.content.bl}}">
+                    <image class='ico' src='/images/ico.png' />
+                  </view>
+                  <!-- 当前正在播放状态 -->
+                  <view class='audio' wx:if="{{message.content.bl==true}}" bindtap='audioStop' data-audiosign="audio_now" data-vidsrc="{{message.content.content}}" data-id="{{message.id}}" data-bl="{{message.content.bl}}">
+                    <image class='ico' src='/images/ico_paly.gif' />
+                  </view>
+                </view>
+              </view>
+              <view wx:else>
+                {{message.content}}
+              </view>
+            </view>
+            <view class="read {{message.read_status == 1?'already':'not'}}">{{message.read_status == 1?'已读':'未读'}}</view>
+          </view>
+        </view>
+        <!-- 右边本人 -->
+        <view class="right" wx:else>
+          <view class="text">
+            <!-- <view class="nickname" style="color: {{message.color}};">{{message.user}}</view> -->
+            <view class="{{message.sign == 'audio' || message.sign == 'goods'? 'audio_clear': ''}} content">
+              <view class="img" wx:if="{{message.sign == 'img'}}">
+                <image mode="widthFix" src="{{message.content}}"></image>
+              </view>
+              <view class="faces_msg" wx:elif="{{message.sign == 'faces'}}">
+                <view class="faces" wx:for='{{message.content}}' wx:key='' wx:for-item='faceItem'>
+                  <image mode="widthFix" src="{{faceItem}}"></image>
+                </view>
+              </view>
+              <view class="goods_log" wx:elif="{{message.sign == 'goods'}}" data-goodsid="{{message.content.goods_id}}" bindtap="onGoodsPage">
+                <view class="goods_img">
+                  <image src="{{message.content.goods_pic}}"></image>
+                </view>
+                <view class="goods_name">{{message.content.goods_name}}</view>
+                <view class="goods_price">¥{{message.content.goods_price}}</view>
+              </view>
+              <view class="yuyin" wx:elif="{{message.sign == 'audio'}}">
+                <view class='output-audio'>
+                  <!-- 默认状态 -->
+                  <view class='audio' wx:if="{{message.content.bl==false}}" bindtap='audioPlay' data-audiosign="audio_now" data-vidsrc="{{message.content.content}}" data-id="{{message.id}}" data-bl="{{message.content.bl}}">
+                    <image class='ico right' src='/images/ico.png' />
+                  </view>
+                  <!-- 当前正在播放状态 -->
+                  <view class='audio' wx:if="{{message.content.bl==true}}" bindtap='audioStop' data-audiosign="audio_now" data-vidsrc="{{message.content.content}}" data-id="{{message.id}}" data-bl="{{message.content.bl}}">
+                    <image class='ico right' src='/images/ico_paly.gif' />
+                  </view>
+                </view>
+              </view>
+              <view wx:else>
+                {{message.content}}
+              </view>
+            </view>
+            <view class="read {{message.read_status == 1?'already':'not'}}">{{message.read_status == 1?'已读':'未读'}}</view>
+          </view>
+          <view class="chat-avatars">
+            <image src="{{message.logo}}"></image>
+          </view>
+        </view>
+
+      </view>
+      <view wx:if="{{message.type == 'system'}}" class="system-message">
+        {{message.content}}
+      </view>
+    </view>
+  </scroll-view>
+  <view class="buttom-box {{isFullSucreen?'fix-Full-button':''}}">
+    <view class="input-panel">
+      <view class="voice" bindtap="changeVoice">
+        <image mode="widthFix" src="/images/{{voiceShow?'keyboard.png':'icon_voice.png'}}"></image>
+      </view>
+      <button type="button" class="say_word" catchtouchstart="sayPassword" catchtouchmove='sayStop' catchtouchend="toServer" wx:if='{{voiceShow}}'>
+        {{say_bt_text}}
+      </button>
+      <input type="text" value="{{inputContent}}" bindchange="changeInputContent" class="send-input" adjust-position="false" confirm-type="send" confirm-hold="true" bindconfirm="inputMessage" wx:else></input>
+      <view class="emoji" bindtap="facesListFun">
+        <image src="/images/icon_smile.png"></image>
+      </view>
+      <view class="img-panel" bindtap="optionFun">        
+        <image src="/images/add.png"></image>
+      </view>
+    </view>
+    <view class="faces_box" wx:if='{{faceShow}}'>
+      <view class="faces_list">
+        <view class="item_face" wx:for='{{facesIconArray}}' wx:key='' wx:for-item='facesItem' data-facesicon="{{facesItem}}" bindtap="faceMessage">
+          <image src="./face/{{index}}.gif"></image>
+        </view>
+      </view>
+      <view class="sandFaces" bindtap="sandFacesMessage">发送</view>
+    </view>
+    <view class="options_box" wx:if='{{optionShow}}'>
+      <view class="option_list">
+        <view class="option_item">
+          <view class="option_img" data-mode="image" bindtap="chooseImageFun">
+            <view class="img_logo">
+              <image mode="widthFix" src="/images/icon_photo.png"></image>
+            </view>
+          </view>
+          <view class="option_text">照片</view>
+        </view>
+        <view class="option_item">
+          <view class="option_img" data-mode="takePhoto" bindtap="chooseImageFun">
+            <view class="img_logo">
+              <image mode="widthFix" src="/images/camera.png"></image>
+            </view>
+          </view>
+          <view class="option_text">拍摄</view>
+        </view>        
+        
+      </view>
+    </view>
+  </view>
+  <view class="microphone-box {{cancelShow == true ?'cancel-box':''}}"  wx:if='{{microphoneShow}}'>
+    <view class="microphone-img">
+      <image mode="widthFix" src="/images/microphone.png"></image>
+    </view>
+    <view class="text">手指划上，取消发送</view>
+  </view>
+
+</view>

@@ -1,0 +1,3 @@
+<view class='blank'>
+  <view style='background:{{temDataitem.style.background}};height:{{temDataitem.style.height}}px'></view>
+</view>

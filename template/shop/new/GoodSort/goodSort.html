@@ -1,0 +1,44 @@
+<{extend name="shop/new/base" /}
+{block name="main"}
+
+<div class="v-main">
+    <!--page-->
+    <div class="v-main-content clearfix w1200 shopMain">
+        <div class="goodStyle">
+            {notempty name="$goods_category_one"}
+            {foreach $goods_category_one as $vo}
+            <div class="goodsTitle"><a href="{:__URL('SHOP_MAIN/goods/goodslist','category_id='.$vo['category_id'])}" target="_blank">{$vo.category_name}</a></div>
+            <div class="goodsitem">
+                {if condition="$vo['child_list'] neq null "}
+                {foreach $vo['child_list'] as $vo2}
+                {if condition="$vo2.pid eq $vo.category_id"}
+                <div class="goods-seconds">
+                    <div class="goods-seconds-title"><a href="{:__URL('SHOP_MAIN/goods/goodslist','category_id='.$vo2['category_id'])}" target="_blank">{$vo2.category_name}</a></div>
+                    {if condition="$vo2['child_list'] neq null "}
+                    {foreach $vo2['child_list'] as $vo3}
+                    {if condition="$vo3.pid eq $vo2.category_id"}
+                    <a href="{:__URL('SHOP_MAIN/goods/goodslist','category_id='.$vo3['category_id'])}" target="_blank">{$vo3.category_name}</a>
+                    {/if}
+                    {/foreach}
+                    {/if}
+                </div>
+                {/if}
+                {/foreach}
+                {/if}
+            </div>
+            {/foreach}
+            {else /}
+            <p>当前还没有商品分类</p>
+            {/notempty}
+        </div>
+    </div>
+    <!--page-->
+</div>
+{/block}
+{block name="javascript"}
+<script>
+    require(['dialog'], function (Dialog) {
+        Dialog.withAccount(".search-tabs", "li", "active");
+    });
+</script>
+{/block}

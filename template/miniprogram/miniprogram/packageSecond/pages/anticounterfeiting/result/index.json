@@ -1,0 +1,6 @@
+{
+  "usingComponents": {
+    "steps":"../component/steps/index"
+  },
+  "navigationBarTitleText": "查询结果"
+}

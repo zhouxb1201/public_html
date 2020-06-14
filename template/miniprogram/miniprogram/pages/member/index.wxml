@@ -1,0 +1,29 @@
+<view class="member" wx:if='{{boxShow}}'>
+  <member_fixed-component 
+    memberData="{{memberData}}" 
+    user_name="{{user_name}}" 
+    extend_code="{{extend_code}}" 
+    member_img="{{member_img}}" 
+    temData="{{temData}}" 
+    items="{{memberFixed}}"
+    isLogin='{{is_login}}'>
+  </member_fixed-component>
+
+  <view bindtap='bindPhone' wx:if='{{mobileShow}}'>
+    <member_bind_fixed-component items="{{memberBind}}"></member_bind_fixed-component>
+  </view>
+
+  <member_assets_fixed-component 
+    memberData="{{memberData}}" 
+    items="{{membderAssetsFixed}}" 
+    isLogin='{{is_login}}'>
+  </member_assets_fixed-component>
+
+  <member_order_fixed-component memberData="{{memberData}}" items="{{membderOrder}}">
+  </member_order_fixed-component>
+
+  <tem-component wx:if="{{temData != ''}}" temData='{{temData}}'></tem-component>
+  <copyright-component wx:if="{{copyData != ''}}" copyData='{{copyData}}'></copyright-component>
+  <!-- 关联手机 -->
+  <phone-compoent phoneShow='{{phoneShow}}' bind:phoneEven='phonereResult'></phone-compoent>
+</view>

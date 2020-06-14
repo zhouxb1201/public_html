@@ -1,0 +1,24 @@
+<view class='shop_collection'>
+  <view class='list'>
+    <navigator url='../home/index?shopId={{item.shop_id}}' wx:for="{{shop_list}}" wx:key=''>
+      <view class='item'>
+        <view class='shop_logo'>
+          <image src="{{item.shop_logo != null? item.shop_logo :'../../../images/rectangle-error.png'}}"></image>
+        </view>
+        <view class='shop_info'>
+          <view class='name'>{{item.shop_name}}</view>
+          <view class='like'>
+            <van-icon class='icon' name="like" size='34rpx' />
+          </view>
+        </view>
+      </view>
+    </navigator>
+  </view>
+
+  <view class='noMore'>
+    <view>没有更多了</view>
+  </view>
+</view>
+
+<!-- 登录组件 -->
+<login-component loginShow='{{loginShow}}' bind:request='requestLogin'></login-component>

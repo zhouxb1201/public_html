@@ -1,0 +1,42 @@
+page{
+  font-size: 28rpx;
+  background-color: #f8f8f8;
+}
+
+.head{
+  text-align: center;
+  line-height: 1.8;
+  margin: 60rpx 0;
+  font-size: 32rpx;
+}
+.head .value{
+  font-weight: 800;
+}
+.order_money_red{
+  color: #ff454e;
+}
+.order_money_green{
+  color: #4b0;
+}
+.cell_group{
+  background-color: #fff;
+}
+.cell_group .cell_item{
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  line-height: 48rpx;
+  padding: 20rpx 30rpx;
+  border-bottom: 1px solid #ebedf0;
+}
+.cell_group .cell_item .cell_value{
+  color: #969799;
+  overflow: hidden;
+}
+.fail{
+  color: #ff454e;
+}
+.tips{
+  color: #f44;
+  margin: 20rpx 30rpx;
+}

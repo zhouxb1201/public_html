@@ -1,0 +1,42 @@
+<view class='report_detail'>
+  <view class="content">
+    <view class="row">
+      <view class="label">违规类型</view>
+      <view class="value"></view>
+    </view>
+    <view class="row" wx:for='{{report_arr}}' wx:key='index'>
+      <view class="label">{{item.violation_title}}</view>
+      <view class="value">
+        <icon wx:if="{{item.selected == 1}}" type="success" color="red" size='20' data-id="{{item.violation_id}}" bindtap='selectId' />
+        <icon type="circle" wx:else data-id="{{item.violation_id}}" bindtap='selectId' size='20' />
+      </view>
+    </view>
+    <view class="txt">
+      <textarea placeholder="请描述你的举报内容" bindinput="reportContent"></textarea>
+    </view>
+
+    <view class='cell_item'>
+      <view class='cell_value'>
+        <view class='img_list'>
+          <view class='item' wx:for='{{img_list}}' wx:key='index'>
+            <view class='btn_delete iconfont v-icon-close' data-index='{{index}}' bindtap='deleteImg'></view>
+            <view class='box_img' bindtap='previewImage'>
+              <image mode='widthFix' src='{{item}}'></image>
+            </view>
+          </view>
+        </view>
+        <view class='img_group'>
+          <view class='uploader'  bindtap='getImagesFun'>
+            <view class='upload_icon iconfont v-icon-camera'></view>
+            <view class='num'>{{img_list.length}}/3</view>
+          </view>
+        </view>
+
+      </view>
+    </view>
+
+  </view>
+  <view class="foot">
+    <view class="btn" bindtap="addLiveReport">举报</view>
+  </view>
+</view>

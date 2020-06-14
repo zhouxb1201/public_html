@@ -1,0 +1,126 @@
+page{
+  background-color: #f8f8f8;
+  font-size: 28rpx;
+}
+
+.img{
+  background-color: #fff;
+  margin-bottom: 20rpx;
+}
+
+
+.apply_group{
+  background-color: #fff;  
+}
+.apply_group .apply_cell{
+  padding: 20rpx 30rpx;
+  border-bottom: 1px solid #ebedf0;
+  display: flex;
+  align-items: center;  
+}
+.apply_group .apply_cell .title{
+  width: 180rpx;
+}
+.apply_group .apply_cell .value{
+  flex: 1;
+}
+
+
+.Agreement_btn{
+  background-color: #fff;
+  margin-bottom: 20rpx;
+}
+.Agreement_btn .Agreement_radio{
+  padding: 20rpx 30rpx;
+}
+.Agreement_btn .Agreement_radio radio{
+  transform:scale(0.9);
+}
+.Agreement_btn .sub_btn{
+  padding: 20rpx 30rpx;
+}
+.Agreement_btn .sub_btn button{
+  background-color: #ccc;
+  color: #ddd;
+  margin-bottom: 20rpx;
+  border-radius: 50rpx;
+}
+.Agreement_btn .active_btn button{  
+  background-color: #f44;
+  color: #fff;
+}
+
+
+
+.Agreement_content{
+  background-color: #fff;
+  padding: 20rpx 0;
+}
+.Agreement_content .Agreement_title{
+  padding: 0 30rpx;
+  text-align: center;
+  position: relative;
+  margin: 0 5%;
+}
+.Agreement_content .Agreement_title::before{
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 0;
+  border: 0 solid #eee;
+  transform-origin:0 0;
+  pointer-events: none;
+  width: 100%;
+  border-top-width: 1rpx; 
+}
+.Agreement_content .Agreement_title .title_text{
+  background-color: #fff;
+  position: relative;
+  z-index: 1;
+  color: #666;
+  letter-spacing: 1rpx;
+  padding: 4rpx 20rpx;
+}
+.Agreement_content .content{
+  padding: 20rpx 30rpx;
+}
+
+.condition_group{
+  background-color: #fff;
+  margin-bottom: 20rpx;
+}
+.condition_group .title{
+  padding: 20rpx 30rpx;
+  border-bottom: 1px solid #ebedf0;  
+}
+.condition_group .value{
+  padding: 10rpx 30rpx;
+}
+.condition_group .value .cell{
+  display: flex;
+  align-items: center;
+  line-height: 48rpx;
+}
+.condition_group .value .cell .num{
+  margin: 0 8rpx;
+  color: #f44;
+}
+.condition_group .value .cell .buy{
+  color: #008aff;
+  margin: 0 8rpx;
+}
+
+.auditing{
+  background-color: #fff;
+  padding: 40rpx 30rpx;
+  margin-bottom: 20rpx;
+}
+.auditing .info{
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction:column;
+}
+.auditing .info .icon{
+  margin: 40rpx;
+}

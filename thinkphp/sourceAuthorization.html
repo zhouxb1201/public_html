@@ -1,0 +1,266 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>授权页面</title>
+    <style>
+        body,
+        div,
+        dl,
+        dt,
+        dd,
+        ul,
+        ol,
+        li,
+        h1,
+        h2,
+        h3,
+        h4,
+        h5,
+        h6,
+        pre,
+        code,
+        form,
+        fieldset,
+        legend,
+        input,
+        button,
+        textarea,
+        p,
+        blockquote,
+        th,
+        td {
+            margin: 0;
+            padding: 0;
+        }
+        body {
+            background: #f5f5f5;
+            color: #555;
+            font-size: 12px;
+            font-family: "Microsoft yahei";
+            min-width: 1200px;
+        }
+        .login-box {
+            width: 600px;
+            height: 400px;
+            background-color: #fff;
+            position: absolute;
+            left: 50%;
+            top: 50%;
+            transform: translate(-50%,-50%);
+        }
+        .login-box .login-right {
+            float: left;
+            width: 600px;
+            height: 400px;
+            text-align: center;
+        }
+        .login-right .logos{
+            margin-top: 80px;
+            margin-bottom: 20px;
+        }
+        .login-right .submit {
+            margin-top: 20px;
+            width: 368px;
+            font-size: 18px;
+            padding-top: 16px;
+            padding-bottom: 16px;
+            background-color: #e4e4e4;
+            color: #fff;
+            border-style: none;
+            outline: none;
+            cursor: not-allowed;
+        }
+        .login-right .submit.okSubmit{
+            background-color:#2c9cf0;
+            cursor: pointer;
+        }
+        .form-control {
+            text-align: center;
+            width: 45px;
+            height: 24px;
+            padding: 6px 12px;
+            font-size: 12px;
+            line-height: 1.42857143;
+            color: #333;
+            background-color: #fff;
+            background-image: none;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            -webkit-box-shadow: inset 0 1px 1px rgba(0,0,0,0.075);
+            box-shadow: inset 0 1px 1px rgba(0,0,0,0.075);
+            -webkit-transition: border-color ease-in-out .15s, -webkit-box-shadow ease-in-out .15s;
+            -o-transition: border-color ease-in-out .15s, box-shadow ease-in-out .15s;
+            transition: border-color ease-in-out .15s, box-shadow ease-in-out .15s;
+        }
+        .authorization-tips{
+            margin-top: 10px;
+            color: #999;
+        }
+        /*消息提示*/
+        .alert-message-dialog{
+            position: fixed;
+            left: 50%;
+            transform: translateX(-50%);
+            top: 4%;
+            z-index: 100000000;
+            min-width: 320px;
+            max-width: 400px;
+            margin: 0;
+            text-align: center;
+            -webkit-animation-duration: .5s;
+            -webkit-animation-delay: .1s;
+            -webkit-animation-timing-function: ease-out;
+            -webkit-animation-fill-mode: both;
+            -moz-animation-duration: .5s;
+            -moz-animation-delay: .1s;
+            -moz-animation-timing-function: ease-out;
+            -moz-animation-fill-mode: both;
+            -ms-animation-duration: .5s;
+            -ms-animation-delay: .1s;
+            -ms-animation-timing-function: ease-out;
+            -ms-animation-fill-mode: both;
+            animation-duration: .5s;
+            animation-delay: .1s;
+            animation-timing-function: ease-out;
+            animation-fill-mode: both;
+        }
+        .alert-message-dialog .icon{
+            font-size: 20px;
+            padding-right: 4px;
+            vertical-align: text-top;
+        }
+        .alert {
+            padding-top: 10px;
+            border: 1px solid transparent;
+            border-radius: 4px;
+        }
+        .alert-success {
+            color: #3c763d;
+            background-color: #dff0d8;
+            border-color: #d6e9c6;
+        }
+        .alert-danger {
+            color: #a94442;
+            background-color: #f2dede;
+            border-color: #ebccd1;
+        }
+
+    </style>
+</head>
+<body>
+<div class="login-box">
+    <div class="login-right">
+        <form action="">
+            <div class="logos"><img src="../../public/logo.png"  alt=""></div>
+            <div class="authorization-code">
+                <input type="text" class="form-control" maxlength="5" id="code1">
+                <input type="text" class="form-control" maxlength="5" id="code2">
+                <input type="text" class="form-control" maxlength="5" id="code3">
+                <input type="text" class="form-control" maxlength="5" id="code4">
+                <input type="text" class="form-control" maxlength="5" id="code5">
+            </div>
+            <div class="authorization-tips">请输入25位授权码</div>
+            <div class="submits">
+                <input type="button"  onclick="save_source()" value="正版授权" class="submit ">
+            </div>
+
+        </form>
+    </div>
+</div>
+
+</body>
+<script type="text/javascript" src="https://libs.baidu.com/jquery/2.1.1/jquery.min.js"></script>
+<script>
+    // 改变“正版授权”触发方式
+    $('.form-control').bind('input propertychange', function(){
+        if($('#code1').val().length==5 && $('#code2').val().length==5 && $('#code3').val().length==5 && $('#code4').val().length==5 && $('#code5').val().length==5){
+            $('.submit').addClass('okSubmit');
+        }else{
+            $('.submit').removeClass('okSubmit');
+        }
+    })
+    //   监听粘贴事件
+    $(".form-control").bind("paste",function(e){
+        var pastedText = undefined;
+        if (window.clipboardData && window.clipboardData.getData) { // IE
+            pastedText = window.clipboardData.getData('Text');
+        } else {
+            pastedText = e.originalEvent.clipboardData.getData('Text');//e.clipboardData.getData('text/plain');
+        }
+        console.log(pastedText);
+        $(".form-control").eq(0).val(pastedText.substring(0, 5));
+        $(".form-control").eq(1).val(pastedText.substring(5, 10));
+        $(".form-control").eq(2).val(pastedText.substring(10, 15));
+        $(".form-control").eq(3).val(pastedText.substring(15, 20));
+        $(".form-control").eq(4).val(pastedText.substring(20, 25));
+    });
+    // 消息提示
+    function message(content,type,callback){
+        type ? type : type = 'info'
+        var messageHtml = '<div class="alert alert-'+type+' alert-message-dialog fadeInDown" id="msgHtml" role="alert"><i class="icon icon-'+type+'"></i>'+content+'</div>'
+        $(document.body).append(messageHtml)
+        setTimeout(function(){
+            $("#msgHtml").removeClass('fadeInDown').addClass('fadeInOut')
+            removeHtml()
+        },2000)
+        function removeHtml(){
+            setTimeout(function(){
+                $("#msgHtml").remove();
+                var regex = /^http(s)?:\/\/([\w-]+\.)+[\w-]+(\/[\w- ./?%&=#]*)?$/;
+                if(callback && typeof callback === "function") {
+                    callback();
+                }else if(regex.test(callback)){
+                    window.location.href=callback;
+                }
+            },500)
+        }
+    }
+    function save_source() {
+        var code1 = $('#code1').val();
+        var code2 = $('#code2').val();
+        var code3 = $('#code3').val();
+        var code4 = $('#code4').val();
+        var code5 = $('#code5').val();
+        if(code1 && code2 && code3 && code4 && code5){
+            $.ajax({
+                type: "post",
+                url: "/checkSecret.php",
+                async: true,
+                data:{
+                    'secret_key':code1+code2+code3+code4+code5,
+                },
+                success: function (data) {
+                    
+                    var jsonobj= eval('('+data+')');
+                    if (jsonobj.code > 0) {
+                        $.ajax({
+                            type: "post",
+                            url: '/source.php',
+                            async: true,
+                            data:{
+                                'secret_key':jsonobj.data.secret_key
+                            },
+                            success: function (data) {
+                                if(data == '1'){
+                                    message('授权成功','success',location.reload());
+                                }else{
+                                    message('授权失败,' + data);
+                                }
+                                 
+                            }
+                        });
+                    }else{
+                      message(jsonobj.message,'danger');
+                    }
+                }
+            });
+        }else{
+            message('请输入完整的25位授权码','danger');
+        }
+
+    }
+</script>
+</html>

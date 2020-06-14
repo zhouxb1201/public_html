@@ -1,0 +1,10 @@
+<view class='cotent' wx:if='boxShow'>
+  <tem-component wx:if="{{temData != ''}}" temData='{{temData}}'></tem-component>
+  <copyright-component wx:if="{{copyData != ''}}" copyData='{{copyData}}'></copyright-component> 
+</view>
+
+
+<!-- 登录组件 -->
+<login-component loginShow='{{loginShow}}' bind:request='requestLogin'></login-component>
+
+<topnav-component></topnav-component>

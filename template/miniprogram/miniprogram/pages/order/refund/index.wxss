@@ -1,0 +1,76 @@
+page{
+  font-size: 28rpx;
+  background-color: #f8f8f8;
+}
+
+.refund_header{
+  background-color: #fff;
+  padding: 20rpx 30rpx;
+  display: flex;
+  border-bottom: 1px solid #ebedf0;
+}
+.refund_header .good_img{
+  width: 180rpx;
+  height: 180rpx;
+  margin-right: 20rpx;
+}
+.refund_header .good_img image{
+  width: 100%;
+  height: 100%;
+}
+.refund_header .refund_info{
+  flex: 1;
+  position: relative;
+}
+.refund_header .refund_info .good_name{
+  font-weight: 700;
+}
+.refund_header .refund_info .good_num{
+  position: absolute;
+  bottom: 0;
+  font-size: 24rpx;  
+  width: 100%;
+}
+.refund_header .refund_info .good_num .num{
+  float: right;
+}
+
+.refund_group{
+  background-color: #fff;
+  margin-top: 30rpx;
+}
+.refund_group .cell{
+  padding: 20rpx 30rpx;
+  border-bottom: 1px solid #ebedf0;
+  display: flex;
+}
+.refund_group .cell .title{
+  max-width: 180rpx;
+  flex: 1;
+}
+.refund_group .cell .value{
+  flex: 1;
+}
+.refund_group .cell .value .disabled_point{
+  background-color: #f5f5f5;
+  color: #969799;
+  opacity: 1;
+}
+/* 缩小单选框 */
+radio {
+  transform:scale(0.8);
+}
+
+
+.foot_btn{
+  padding: 60rpx 30rpx;
+}
+.sub_btn{
+  border: 1rpx solid #f44;
+  height: 88rpx;
+  text-align: center;
+  line-height: 88rpx;
+  background-color: #f44;
+  color: #fff;
+  border-radius: 50rpx;
+}

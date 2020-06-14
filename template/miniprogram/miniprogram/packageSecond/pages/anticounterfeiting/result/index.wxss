@@ -1,0 +1,92 @@
+page{
+  background-color: #f8f8f8;
+  font-size: 28rpx;
+}
+
+.group{
+  margin: 20rpx;
+  border-radius: 20rpx;
+  overflow: hidden;
+  box-shadow: 0 0 10px 0 rgba(0, 0, 0, 0.05);
+}
+.group .van_cell{
+  display: flex;
+  align-items: center;
+  box-sizing: border-box;
+  color: #323233;
+  background-color: #fff;
+  padding: 20rpx 30rpx;
+  border-bottom:1px solid #ebedf0; 
+}
+
+.group .van_cell .tips{
+  display: flex;
+  flex-direction: column;
+}
+.group .van_cell .tips .code{
+  color: #969799;
+  font-size: 24rpx;
+  margin-top: 6rpx;
+}
+
+
+.good_card{
+  display: flex;
+  flex: 1;
+}
+.good_card .good_img{
+  width: 180rpx;
+  height: 180rpx;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: #f9f9f9;
+  margin-right: 20rpx;
+}
+.good_card .content{
+  position: relative;
+  flex: 1;
+  font-size: 24rpx;
+}
+.good_card .content .good_name{
+  display: -webkit-box; 
+  -webkit-box-orient: vertical; 
+  -webkit-line-clamp: 2; 
+  overflow: hidden;  
+  font-weight: 700;
+}
+.good_card .content .good_foot{
+  position: absolute;
+  bottom: 0;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+}
+.good_card .content .good_foot .price{
+  color: #f44;
+  font-weight: 600;
+  font-size: 28rpx;
+}
+.good_card .content .good_foot .buy_btn{
+  min-width: 120rpx;
+  min-height: 60rpx;
+  background-color: #f44;
+  border-radius: 10rpx;
+  color: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.bottom_box{
+  margin: 40rpx 20rpx;
+}
+.bottom_box .btn{
+  height: 80rpx;
+  line-height: 80rpx;
+  text-align: center;
+  background-color: #f44;
+  color: #fff;
+  border-radius: 50rpx;
+}

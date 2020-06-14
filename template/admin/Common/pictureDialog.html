@@ -1,0 +1,182 @@
+<div class="picture-dialog">
+    <div class="picture-header flex flex-pack-end padding-15">
+        <div>
+            <a href="javascript:void(0);" class="btn btn-primary" id="createAlbum">创建相册</a>
+            <button class="btn btn-info btn-file">上传图片<input id="fileupload" class="fileupload" type="file" name="file_upload" multiple></button>
+        </div>
+    </div>
+    <div class="picture-body">
+        <div class="picture-sidebar border-right">
+            <div class="list-group">
+				{volist name="$category" id="vo"}
+                <a href="javascript:void(0)" class="list-group-item album_category {if $vo['album_id'] eq $category_id} active {/if}" data-album_id="{$vo.album_id}">{$vo.album_name}<span class="badge"></span></a>
+				{/volist}
+            </div>
+        </div>
+        <div class="picture-container">
+        	<ul class="album-list clearfix"></ul>
+			<input type="hidden" id="pageIndex">
+			<nav aria-label="Page navigation" class="clearfix">
+				<ul id="page-pictureDialog" class="pagination pull-right"></ul>
+			</nav>
+	        <input type="hidden" id="selectedData">
+        </div>
+    </div>
+</div>
+<script>
+require(['util'],function(util){
+	var storage = new util.Storage('session');
+	var img_array = new Object();
+	img_array["id"] = new Array();
+	img_array["path"] = new Array();
+	var count = 0;
+	var maxCount = 5;
+    var album_id = {$category_id};
+
+    util.initPage(LoadingInfo,'page-pictureDialog');
+    function LoadingInfo(page_index,category_id) {
+
+        $("#pageIndex").val(pageIndex);
+        if(category_id>0){
+            var id = category_id;
+        }else{
+            var id = {$category_id};
+        }
+        var start_date = $("#startDate").val();
+        var end_date = $("#endDate").val();
+        // var state = $("#state").val();
+
+        $.ajax({
+            type: "post",
+            url: "{:__URL('ADMIN_MAIN/goods/pic_space')}"+'&id='+id,
+            data: {
+                "page_index": page_index,
+                "page_size": $("#showNumber").val(),
+                "start_date": start_date,
+            },
+            success: function (data) {
+
+                var html = '';
+                $("#total_count_num").text(data["total_count"]);
+                $("#page_count_num").text(data["page_count"]);
+                $("#page_count").val(data["page_count"]);
+                if (data["data"].length > 0) {
+                    for (var i = 0; i < data["data"].length; i++) {
+    					var pic_cover_micro = data["data"][i]['pic_cover'];
+                        var active = '';
+                        if ($.inArray(data["data"][i]['pic_id'].toString(), img_array['id']) >= 0) {
+                            active = 'active';
+                        }
+                        html +='<li class="item albumItem '+active+'" data-id="'+data["data"][i]['pic_id']+'" data-path="'+__IMG(pic_cover_micro)+'"><img src="'+__IMG(pic_cover_micro)+'"></li>';
+                    }
+                } else {
+                    html += '<div class="empty-box">暂无符合条件的数据记录</div>';
+                }
+                $('#page-pictureDialog').paginator('option', {
+                    totalCounts: data['total_count']  // 动态修改总数
+                });
+
+                $(".album-list").html(html);
+
+            }
+        });
+    }
+
+    //选择图片
+    $('.album-list').on('click','.albumItem',function(){
+        var id = $(this).data("id").toString();
+        var path = $(this).data("path");
+        if(storage.getKey('multiple') && storage.getItem('multiple') === '1'){
+            //多选图片
+            if ($(this).hasClass("active")) {
+                // 取消选中
+                $(this).removeClass("active");
+                var index = $.inArray(id, img_array["id"]);
+                img_array["id"].splice(index, 1);
+                img_array["path"].splice(index, 1);
+                --count;
+            } else {
+                // 选中图片
+                if(count>maxCount-1){
+                    util.message('最多可选择'+maxCount+'张图片')
+                    return false
+                }
+                $(this).addClass("active");
+                img_array["id"].push(id);
+                img_array["path"].push(path);
+                ++count;
+            }
+        }else{
+
+            //单选图片
+            if($(this).hasClass("active")){
+                $(this).removeClass("active");
+                img_array["id"] = [];
+                img_array["path"] = [];
+            }else{
+                $(this).addClass("active").siblings().removeClass('active');
+                img_array["id"][0] = id;
+                img_array["path"][0] = path;
+            }
+        }
+
+        $('#selectedData').data(img_array)
+    })
+
+
+    //跳转相册
+    $('.album_category').on('click',function(){
+        $(this).addClass('active').siblings().removeClass('active');
+        album_id = $(this).data('album_id');
+        LoadingInfo(1,album_id);
+    })
+
+	//创建相册
+	$('#createAlbum').on('click',function(){
+        var html = '<form class="form-horizontal padding-15" >';
+        html += '<div class="form-group"><label class="col-md-3 control-label">相册名称</label><div class="col-md-8"><input type="text" class="form-control albumName" /></div></div>';
+        html += '<div class="form-group"><label class="col-md-3 control-label">排序</label><div class="col-md-8"><input type="text" class="form-control" /></div></div>';
+        html += '</form>';
+        util.confirm('创建相册',html,function(){
+            var name = this.$content.find('.albumName').val();
+            var sort = this.$content.find('.sort').val()
+            if(!name){
+                util.message('内容不能为空')
+                return false;
+            }
+            $.ajax({
+                type: "post",
+                url: "{:__URL('ADMIN_MAIN/system/addalbumclass')}",
+                data : {
+                    "album_name" : name,
+                    "sort" : sort,
+                },
+                dataType: "json",
+                async : true,
+                success : function(data) {
+                    if (data["code"] > 0) {
+                        util.message(data["message"],'success',LoadingInfo(1,data["code"]));
+                        $('.album_category').removeClass('active');
+                    }else{
+                        util.message(data["message"],'error');
+                    }
+                }
+            });
+        });
+	});
+
+    $('.btn-file').click(function(){
+        if(album_id>0){
+            var path = "{:__URL('ADMIN_MAIN/upload/uploadFile')}"+'&album_id='+album_id;
+            util.fileupload(path,function (file_url) {
+                if(file_url.code == '1'){
+                    LoadingInfo(1,album_id)
+                }
+            })
+        }
+    })
+
+
+})
+
+</script>

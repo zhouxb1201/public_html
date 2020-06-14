@@ -1,0 +1,80 @@
+<view class='achieve'>
+  <view class='head'>
+    <view class='head_box'>
+      <view class='box_l' data-num='-1' bindtap='addMonth'>
+        <view class='icon iconfont v-icon-arrow-left'></view>
+      </view>
+      <view class='box_center'>
+        <view class='box_info'>
+          <view class='time'>本月业绩({{date_time}})</view>
+          <view class='num'>{{myChannelData.my_performance.sale_money}}</view>
+        </view>
+      </view>
+      <view class='box_r' data-num='1' bindtap='addMonth'>
+        <view class='icon iconfont v-icon-arrow-right'></view>
+      </view>
+    </view>
+  </view>
+
+  <view class='cell_group'>
+    <view class='cell_penel'>
+      <view class='item'>
+        <view class='box'>
+          <view class='title'>买入</view>
+          <view class='text'>{{myChannelData.my_performance.my_purchase_money}}</view>
+        </view>
+      </view>
+      <view class='item'>
+        <view class='box'>
+          <view class='title'>利润</view>
+          <view class='text'>{{myChannelData.my_performance.my_profit}}</view>
+        </view>
+      </view>
+      <view class='item'>
+        <view class='box'>
+          <view class='title'>奖金</view>
+          <view class='text'>{{myChannelData.my_performance.my_bonus}}</view>
+        </view>
+      </view>
+    </view>
+  </view>
+
+  <view class='cell_box'>
+    <view class='title'>团队业绩</view>
+    <view class='list' wx:if="{{myChannelData.down_channel.length != 0}}">
+      <view class='item' wx:for='{{myChannelData.down_channel}}' wx:key=''>
+        <view class='info'>
+          <view class='info_l'>
+            <view class='name'>{{item.name}}</view>
+            <view class='info_context'>
+              <view class='leader text-nowrap'>上级：{{item.up_channel_name}}</view>
+              <view class='recommend text-nowrap'>推荐人：{{item.referee_name}}</view>
+            </view>
+            <view class='level'>等级：{{item.grade_name}}</view>
+          </view>
+          <view class='info_r'>
+            <view>¥{{item.sale_money}}</view>
+            <view>本月业绩</view>
+          </view>
+        </view>
+        <view class='foot'>
+            <view class='text'>买入：{{item.my_purchase_money}}</view>
+            <view class='text'>利润：{{item.my_profit}}</view>
+            <view class='text'>奖金：{{item.my_bonus}}</view>
+        </view>
+      </view>
+    </view>
+
+    <view class='no_data' wx:if='{{myChannelData.down_channel.length == 0 && page_index == 1}}'>
+      <view class='no_data_box'>
+        <view class='img'>
+          <image src='/images/empty-order.png' mode='widthFix'></image>
+        </view>
+        <view class='no_data_text'>没有相关数据</view>
+      </view>
+    </view>
+    <view class='no_more' wx:else>
+      <view>没有更多</view>
+    </view>
+  </view>
+</view>

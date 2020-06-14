@@ -1,0 +1,37 @@
+<view class='list_box'>
+  <view class='box'>
+    <van-tabs active="{{ active }}" bind:change='stockStatusFun'>
+      <van-tab title="出售中"></van-tab>
+      <van-tab title="售罄"></van-tab>
+    </van-tabs>
+
+    <view class='list'>
+      <view class='item' wx:for='{{cloudData}}' wx:key=''>
+        <view class='good_l'>
+          <view class='good_img'>
+            <image mode='widthFix' src='{{item.pic_cover}}'></image>
+          </view>
+          <view class='good_info'>
+            <view class='good_name'>{{item.goods_name}}</view>
+            <view class='good_specs'>{{item.sku_name}}</view>
+            <view class='good_num' wx:if='{{stock_status == 1}}'>X{{item.stock}}</view>
+          </view>
+        </view>
+        <view class='good_r'>
+          <navigator class='cell good_detail' url='../detail/index?sku_id={{item.sku_id}}' hover-class='none' >
+            <view class='text_icon icon iconfont v-icon-form'></view>
+            <view>明细</view>
+          </navigator>
+          <navigator class='cell share' url='/pages/goods/share/index?goods_id={{item.goods_id}}' hover-class='none'>
+            <van-icon name="share" class='icon' size='20px' />
+            <view>分享</view>
+          </navigator>
+        </view>
+      </view>
+    </view>
+
+    <view class='no_more'>
+      <view>没有更多</view>
+    </view>
+  </view>
+</view>

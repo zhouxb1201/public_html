@@ -1,0 +1,100 @@
+{block name="resources"}
+{/block}
+{block name="main"}
+<div class="v-container couponsDetails">
+    <!-- page -->
+    <form class="form-horizontal">
+        <div class="form-group">
+            <div class="screen-title">
+                <span class="text">活动信息</span>
+            </div>
+            <div class="col-md-10">
+                <table class="table v-table table-auto-center table-bordered">
+                    <tbody>
+                    <tr>
+                        <td class="col-md-3 bg-f5">
+                            <div class="padding-15">
+                                <p>券包名称</p>
+                            </div>
+                        </td>
+                        <td class="text-left">
+                            <p id="voucher_package_name"></p>
+                        </td>
+                    </tr>
+                    <tr class="no_sku">
+                        <td class="col-md-3 bg-f5">
+                            <div class="padding-15">
+                                <p>发放数量</p>
+                            </div>
+                        </td>
+                        <td class="text-left">
+                            <p id="count"></p>
+                        </td>
+                    </tr>
+                    <tr class="no_sku">
+                        <td class="col-md-3 bg-f5">
+                            <div class="padding-15">
+                                <p>每人限领</p>
+                            </div>
+                        </td>
+                        <td class="text-left">
+                            <p id="max_fetch"></p>
+                        </td>
+                    </tr>
+                    <tr class="no_sku">
+                        <td class="col-md-3 bg-f5">
+                            <div class="padding-15">
+                                <p>领券时间</p>
+                            </div>
+                        </td>
+                        <td class="text-left">
+                            <p id="time"></p>
+                        </td>
+                    </tr>
+                    <tr class="no_sku">
+                        <td class="col-md-3 bg-f5">
+                            <div class="padding-15">
+                                <p>券包说明</p>
+                            </div>
+                        </td>
+                        <td class="text-left">
+                            <p id="desc"></p>
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <div class="form-group flex-auto-center">
+            <a class="btn btn-primary" href="javascript:history.go(-1);">返回</a>
+        </div>
+    </form>
+</div>
+{/block}
+{block name="script"}
+<script>
+    require(['utilAdmin'], function (utilAdmin) {
+        voucherPackageInfo({$voucher_package_id})
+
+        function voucherPackageInfo(voucher_package_id) {
+            $.ajax({
+                type: "post",
+                url: "{$getVoucherPackageInfo}",
+                data: {"voucher_package_id": voucher_package_id},
+                success: function (data) {
+                    $("#voucher_package_name").text(data["voucher_package_name"]);
+
+                    $("#count").text(data["count"] + '张');
+                    if (data["max_fetch"] == 0) {
+                        $("#max_fetch").text('不限');
+                    } else {
+                        $("#max_fetch").text(data["max_fetch"] + "次");
+                    }
+                    $("#time").text(utilAdmin.timeStampTurnTime(data["start_time"]) + "~" + utilAdmin.timeStampTurnTime(data["end_time"]));
+                    $("#desc").text(data['desc'].substring(0, 50));
+                }
+            });
+        }
+    })
+</script>
+{/block}

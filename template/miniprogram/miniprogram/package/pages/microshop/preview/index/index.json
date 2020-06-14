@@ -1,0 +1,7 @@
+{
+  "usingComponents": {
+    "login-component": "/pages/component/login/login",
+    "topnav-component": "/pages/component/topnav/topnav"
+  },
+  "navigationBarTitleText": "微店首页"
+}

@@ -1,0 +1,223 @@
+{block name="main"}
+        <!-- page -->
+        <form class="form-horizontal pt-15 form-validate widthFixedForm">
+            <div class="screen-title">
+                <span class="text">规则设置</span>
+            </div>
+             <div class="form-group">
+                <label class="col-md-2 control-label"><span class="text-bright">*</span>活动标签</label>
+                <div class="col-md-5">
+                    <input type="text" name="group_name" id="group_name" required maxlength="4" class="form-control w-200" autocomplete="off">
+                    <div class="mb-0 help-block">最多四个字符</div>
+                </div>
+                
+            </div>
+             <div class="form-group">
+                <label class="col-md-2 control-label"><span class="text-bright">*</span>成团人数</label>
+                <div class="col-md-5">
+                    <div class="input-group w-200">
+                        <input type="number" name="group_num" id="group_num" min="2" max="10" required class="form-control" autocomplete="off">
+                        <div class="input-group-addon">人</div>
+                    </div>
+                    <div class="mb-0 help-block">满足成团人数后，参团成功</div>
+                </div>
+                
+            </div>
+             <div class="form-group">
+                <label class="col-md-2 control-label"><span class="text-bright">*</span>成团时限</label>
+                <div class="col-md-5">
+                    <div class="input-group w-200">
+                        <input class="form-control" type="number" min="0" name="group_time" id="group_time" value="" required>
+                        <div class="input-group-addon">分钟</div>
+                    </div>
+                    <div class="mb-0 help-block">超时未成团，则订单自动执行退款</div>
+                </div>
+                
+            </div>
+
+            <div class="form-group" id="sele_goods">
+                <label class="col-md-2 control-label"><span class="text-bright">*</span>选择商品</label>
+                <div class="col-md-5">
+                    <div  id="selectGoods" class="btn btn-primary-diy">点击选择</div>
+                </div>
+            </div>
+            <div id="goods_info_box" class="form-group hidden">
+                <label class="col-md-2 control-label"></label>
+                <div class="col-md-5">
+                    <div class="media text-left">
+                        <div class="media-left goods-img">
+                            <img  src="http://iph.href.lu/60x60" onerror="this.src='http://iph.href.lu/60x60';" width="60" height="60">
+                        </div>
+                        <div class="media-body max-w-300">
+                            <div class="line-2-ellipsis goods-text"></div>
+                            <div class="line-1-ellipsis text-danger strong goods-price"></div>
+                        </div>
+                    </div>
+                    <input type="hidden" name="goods_id" id="goods_id" value="">
+                    <input type="hidden" name="sku_ids" id="sku_id" value="">
+                </div>
+            </div>
+            <div id="product_sku" class="hidden">
+                <div class="form-group">
+                    <label class="col-md-2 control-label">活动库存 / 价格</label>
+                    <div class="col-md-9">
+                        <table class="table table-bordered table-auto-center" id="stock_table" required style="display: table;">
+
+                        </table>
+                    </div>
+                </div>
+            </div>
+            <div id="four-select" class="hidden">
+                <div class="form-group">
+                    <label class="col-md-2 control-label"><span class="text-bright">*</span>拼团价</label>
+                    <div class="col-md-5">
+                        <div class="input-group w-200">
+                            <input class="form-control ignore" type="number" name="group_price" id="group_price" value="" required>
+                            <div class="input-group-addon">元</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-md-2 control-label">限购</label>
+                    <div class="col-md-5">
+                        <div class="input-group w-200">
+                            <input class="form-control ignore" min="1" type="number" name="group_limit_buy" id="group_limit_buy" value="" required>
+                            <div class="input-group-addon">件</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!--<div class="form-group">-->
+                <!--<label class="col-md-2 control-label">活动状态</label>-->
+                <!--<div class="col-md-5">-->
+                    <!--<label class="radio-inline">-->
+                        <!--<input type="radio" name="status" value="1" checked> 进行中-->
+                    <!--</label>-->
+                <!--</div>-->
+            <!--</div>-->
+            <div id="sub_val">
+                <div class="form-group">
+                    <label class="col-md-2 control-label"></label>
+                    <div class="col-md-8">
+                        <button class="btn btn-primary-diy" type="submit" id="submit">添加</button>
+                        <a href="javascript:history.go(-1);" class="btn btn-default-diy">返回</a>
+                    </div>
+                </div>
+            </div>
+
+        </form>
+
+        <!-- page end -->
+{/block}
+{block name="script"}
+<script>
+    require(['util'], function (util) {
+        //添加秒杀活动
+        util.validate($('.form-validate'), function (form) {
+            //判断商品是否选择了
+            var goods_id = $('#goods_id').val();
+            if(goods_id == ''){
+                $('#sele_goods').addClass('has-error');
+                var info = '<span id="group-error" class="help-block-error">请选择商品</span>';
+                $('#selectGoods').after(info);
+                return;
+            }
+            if($('#product_sku').hasClass('hidden')){
+                var data = {};
+                var goods_info = {};
+            }else{
+                var data = {};
+            }
+            var status = $("input[name='status']:checked").val();
+            data.status = status;
+            // 成团时限
+            var group_time = $('#group_time').val();
+            data.group_time = group_time;
+            //活动标签
+            var group_name = $('#group_name').val();
+            data.group_name = group_name;
+            //成团人数
+            var group_num = $('#group_num').val();
+            data.group_num = group_num;
+            //商品id
+            data.goods_id = goods_id;
+            //活动库存
+            if($('#product_sku').hasClass('hidden')){
+                //活动价格
+                var  group_price = $('#group_price').val();
+                //限购
+                var group_limit_buy = $('#group_limit_buy').val();
+                //sku_id
+                var sku_id = $('#sku_id').val();
+                goods_info.group_price = group_price;
+                goods_info.group_limit_buy = group_limit_buy;
+                var temp = {};
+                temp[sku_id] = goods_info;
+                data.goods_info = temp;
+                // console.log(data);return;
+            }else{
+                //这里是有sku的区间，先获取当前商品有多少个sku_id
+                var sku_obj = $('input[name=sku_id]');
+                var group_price_obj = $('input[name=group_price]');
+                var group_limit_buy_obj = $('input[name=group_limit_buy]');
+                var goods_info = {};
+                // console.log(sku_obj);return;
+                for(var i=0;i<sku_obj.length;i++){
+                    var sku_id = $(sku_obj[i]).val();
+                    goods_info[sku_id] = {};
+                    var group_price = $(group_price_obj[i]).val();
+                    var group_limit_buy = $(group_limit_buy_obj[i]).val();
+                    goods_info[sku_id].group_price = group_price;
+                    goods_info[sku_id].group_limit_buy = group_limit_buy;
+                }
+                data.goods_info = goods_info;
+            }
+            // console.log(data);return;
+            $.post('{$addGroupShoppingUrl}',
+                    data,
+                    function(res){
+                    if (res["code"] > 0) {
+                        util.message('添加成功', 'success', "{:__URL('ADDONS_ADMIN_MAINgroupShoppingList')}");
+                    } else {
+                        util.message(res["message"], 'danger');
+                    }
+            });
+        })
+
+        $('#selectGoods').click(function () {
+            util.goodsDialog('url:'+"{$modalGroupShoppingGoodsList}",function(data){
+            });
+        });
+        // 批量设置
+        $('#stock_table').on('click','.batchSet',function(){
+            var batch_text = $(this).text();
+            var batch_type = $(this).data('batch_type');
+            var html = '<form class="form-horizontal padding-15">';
+            html += '<div class="form-group"><label class="col-md-3 control-label">'+batch_text+'</label><div class="col-md-8">';
+            html += '<input type="number" min="0" oninput="if(value.length>9)value=value.slice(0,9)" name="batch_'+batch_type+'" class="form-control">';
+            html += '</div></div></form>';
+            util.confirm('批量修改'+batch_text,html,function(){
+                var val;
+                var maxNum = 9999999.99;
+                var currInput = $('#stock_table input[name="'+batch_type+'"]');
+                val = this.$content.find('input[name="batch_'+batch_type+'"]').val();
+                if(!val || val == ''){
+                    util.message(batch_text+'不能为空');
+                    return false;
+                }else if(val > maxNum && batch_type !== 'goods_code'){
+                    util.message('价格最大为 '+maxNum);
+                    return false;
+                }else if(val === '0' && batch_type !== 'goods_code'){
+                    util.message(batch_text+'不能为0');
+                    return false;
+                }
+                currInput.each(function(i,e){
+                    e.value = val;
+                });
+            });
+
+        });
+
+    });
+</script>
+{/block}

@@ -1,0 +1,27 @@
+
+
+                                                                                                                    
+  [think\exception\ErrorException]                                                                                  
+  error_log(/www/web/vslai_com_cn/public_html/runtime/log/201812/24.log): failed to open stream: Permission denied  
+                                                                                                                    
+
+
+PHP Fatal error:  Uncaught exception 'think\exception\ErrorException' with message 'error_log(/www/web/vslai_com_cn/public_html/runtime/log/201812/24.log): failed to open stream: Permission denied' in /www/web/vslai_com_cn/public_html/thinkphp/library/think/log/driver/File.php:98
+Stack trace:
+#0 [internal function]: think\Error::appError(2, 'error_log(/www/...', '/www/web/vslai_...', 98, Array)
+#1 /www/web/vslai_com_cn/public_html/thinkphp/library/think/log/driver/File.php(98): error_log('[ 2018-12-24T14...', 3, '/www/web/vslai_...')
+#2 /www/web/vslai_com_cn/public_html/thinkphp/library/think/Log.php(157): think\log\driver\File->save(Array)
+#3 /www/web/vslai_com_cn/public_html/thinkphp/library/think/Error.php(84): think\Log::save()
+#4 [internal function]: think\Error::appShutdown()
+#5 {main}
+  thrown in /www/web/vslai_com_cn/public_html/thinkphp/library/think/log/driver/File.php on line 98
+
+Fatal error: Uncaught exception 'think\exception\ErrorException' with message 'error_log(/www/web/vslai_com_cn/public_html/runtime/log/201812/24.log): failed to open stream: Permission denied' in /www/web/vslai_com_cn/public_html/thinkphp/library/think/log/driver/File.php:98
+Stack trace:
+#0 [internal function]: think\Error::appError(2, 'error_log(/www/...', '/www/web/vslai_...', 98, Array)
+#1 /www/web/vslai_com_cn/public_html/thinkphp/library/think/log/driver/File.php(98): error_log('[ 2018-12-24T14...', 3, '/www/web/vslai_...')
+#2 /www/web/vslai_com_cn/public_html/thinkphp/library/think/Log.php(157): think\log\driver\File->save(Array)
+#3 /www/web/vslai_com_cn/public_html/thinkphp/library/think/Error.php(84): think\Log::save()
+#4 [internal function]: think\Error::appShutdown()
+#5 {main}
+  thrown in /www/web/vslai_com_cn/public_html/thinkphp/library/think/log/driver/File.php on line 98

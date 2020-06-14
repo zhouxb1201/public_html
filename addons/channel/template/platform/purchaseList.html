@@ -1,0 +1,209 @@
+{block name="main"}
+<!-- page -->
+<div class="panel-detail">
+    <div class="item">
+        <div class="media">
+            <div class="media-left">
+                <img src="" width="160px" height="160px" id="user_headimg" >
+            </div>
+            <div class="media-body">
+                <p class="p">昵称：<span id="nick_name"></span></p>
+                <p class="p">姓名：<span id="channel_real_name"></span></p>
+                <p class="p">手机号码：<span id="channel_p"></span></p>
+                <p class="p">下级渠道商：<span class="text-bright" id="channel_number"></span>人</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- <form action="" class="form">
+    <div class="v-form-inline ">
+        <div class="form-group">
+            <label class="control-label">会员信息</label>
+            <input type="text" class="form-control" id="name">
+        </div>
+        <div class="form-group">
+            <label class="control-label">手机</label>
+            <input type="number" class="form-control" id="channel_phone">
+        </div>
+    </div>
+
+    <div class="v-form-inline ">
+        <div class="form-group">
+            <label class="control-label" >渠道商等级</label>
+            <select class="form-control" id="channel_grade">
+                <option value="">请选择等级...</option>
+                {foreach name="channel_grade_list" item="value"}
+                <option value="{$value.channel_grade_id}">{$value.channel_grade_name}</option>
+                {/foreach}
+            </select>
+        </div>
+        <div class="form-group">
+            <label class="control-label"></label>
+            <a class="btn btn-primary search" href="javascript:;"><i class="icon icon-search"></i> 搜索</a>
+        </div>
+    </div>
+</form>
+<div class="screen-title">
+    <span class="text">信息列表</span>
+</div>
+<ul class="nav nav-tabs v-nav-tabs fs-12" data-type="uncheck" id="check_now_time">
+    <li role="presentation" class="active" data-status="2"><a href="javascript:;" class="flex-auto-center channel_status">全部<span class="J-all">({$channel_count['all_count']})</span></a></li>
+    <li role="presentation" class="" data-status="1"><a href="javascript:;" class="flex-auto-center channel_status">已审核<span class="J-all">({$channel_count['checked_count']})</span></a></li>
+    <li role="presentation" class="" data-status="0"><a href="javascript:;" class="flex-auto-center channel_status">待审核<span class="J-all">({$channel_count['uncheck_count']})</span></a></li>
+    <li role="presentation" class="" data-status="-1"><a href="javascript:;" class="flex-auto-center channel_status">审核不通过<span class="J-all">({$channel_count['nocheck_count']})</span></a></li>
+    &lt;!&ndash;默认是2展示出所有的渠道商&ndash;&gt;
+    <input type="hidden" id="search_status" value="2">
+</ul>-->
+<table class="table v-table table-auto-center">
+    <thead>
+    <tr>
+        <th>商品</th>
+        <th>商城售价 / 库存</th>
+        <th>渠道商进货价 / 库存</th>
+        <th>累计进货 / 累计销量</th>
+        <th class="col-md-2 pr-14 operationLeft">操作</th>
+    </tr>
+    </thead>
+    <tbody id="list">
+
+
+
+
+    </tbody>
+</table>
+<input type="hidden" id="page_index" value="">
+<nav aria-label="Page navigation" class="clearfix">
+    <ul id="page" class="pagination pull-right"></ul>
+</nav>
+
+<!-- page end -->
+{/block}
+{block name="script"}
+<script>
+    require(['util'],function(util){
+        util.initPage(getList);
+        function getList(page_index){
+            $("#page_index").val(page_index);
+            var channel_id = '{$channel_id}';
+            var uid = '{$uid}';
+            $.ajax({
+                type : "post",
+                url : '{$purchaseList}',
+                async : true,
+                data : {
+                    "page_index" :page_index, "channel_id" : channel_id, "uid" : uid
+                },
+                success : function(data) {
+                    // console.log(data);return;
+                    if(data["channel_info"]){
+                        $('#user_headimg').attr('src', data["channel_info"]['user_headimg']);
+                        $('#nick_name').html(data["channel_info"]['name']);
+                        $('#channel_real_name').html(data["channel_info"]['channel_name']);
+                        $('#channel_p').html(data["channel_info"]['channel_phone']);
+                        $('#channel_number').html(data["channel_info"]['channel_num']);
+                    }
+                    var html = '';
+                    var key = Object.keys(data["data"]['data']);
+                    data["data"] = data["data"]['data'];
+                    if (key.length>0) {
+                        for (var i = 0; i < key.length; i++) {
+                            html += '<tr>';
+                            html += '<td><div class="media text-left "><div class="media-left"><p><img src="'+ data["data"][i]['pic_cover'] +'" style="width:60px;height:60px;"></p></div><div class="media-body max-w-300 "><div class="line-2-ellipsis line-title">'+ data["data"][i]['goods_name'] +'</div><div class="line-1-ellipsis text-danger strong goods-price">'+ data["data"][i]['sku_name'] +'</div> </div></div></td>';
+                            // html += '<td><p>'+data["data"][i]['goods_name']+'</p><p>'+data["data"][i]['sku_name']+'</p></td>';
+                            //商城售价 / 库存
+                            html += '<td><p class="p">';
+                            html += '<span class="label label-success">售价：'+ data["data"][i]['platform_price'] +'元</span>';
+                            html += '</p>';
+                            html += '<span class="label label-danger">库存：'+ data["data"][i]['platform_stock'] +'件</span></td>';
+                            //渠道商等级
+                            html += '<td><p class="p">';
+                            html += '<span class="label label-success">当前进货价：'+ data["data"][i]['price'] +'元</span>';
+                            html += '</p>';
+                            html += '<span class="label label-danger">库存：'+ data["data"][i]['stock'] +'件</span></td>';
+                            //渠道商等级
+                            html += '<td><p class="p">';
+                            html += '<span class="label label-success">进货：'+ data["data"][i]['purchase_num'] +'件</span>';
+                            html += '</p>';
+                            html += '<span class="label label-danger">销量：'+ data["data"][i]['sku_sales'] +'件</span></td>';
+                            html += '<td class="fs-0 operationLeft"><a href="'+__URL('ADDONS_MAINpurchaseRecordList&goods_id='+ data['data'][i]['goods_id']) +'&sku_id='+data['data'][i]['sku_id']+'&channel_id='+data['data'][i]['channel_id']+'" class="btn-operation isexamine">采购记录</a></td>';
+                            html += '</tr>';
+                        }
+                    } else {
+                        html += '<tr><td class="h-200" colspan="5">暂无符合条件的数据记录</td></tr>';
+                    }
+                    $('#page').paginator('option', {
+                        totalCounts: data['total_count']  // 动态修改总数
+                    });
+                    $("#list").html(html);
+                }
+            });
+        }
+        $('.search').on('click',function(){
+            util.initPage(getList);
+        });
+
+        $('body').on('click','.save',function(){
+            var status = $(this).data('type');
+            var channel_id = $(this).data('channel_id');
+            if(status==-1){
+                util.alert('确定审核不通过？',function(){
+                    $.ajax({
+                        type : "post",
+                        url : "{$channelCheckStatus}",
+                        data:{'channel_id':channel_id,'status':status},
+                        async : true,
+                        success : function(data) {
+                            if(data["code"] > 0 ){
+                                util.message(data["message"], 'success', getList($("#page_index").val()));
+                            }else{
+                                util.message(data["message"], 'danger', getList($("#page_index").val()));
+                            }
+                        }
+                    });
+                })
+            }else{
+                util.alert('确定审核通过？',function(){
+                    $.ajax({
+                        type : "post",
+                        url : "{$channelCheckStatus}",
+                        data:{'channel_id':channel_id,'status':status},
+                        async : true,
+                        success : function(data) {
+                            if(data["code"] > 0 ){
+                                util.message(data["message"], 'success', getList($("#page_index").val()));
+                            }else{
+                                util.message(data["message"], 'danger', getList($("#page_index").val()));
+                            }
+                        }
+                    });
+                })
+            }
+        })
+        $('body').on('click','.pass',function(){
+            var status = $(this).data('type');
+            var channel_id = $(this).data('channel_id');
+            $.ajax({
+                type : "post",
+                url : "{$channelCheckStatus}",
+                data:{'channel_id':channel_id,'status':status},
+                async : true,
+                success : function(data) {
+                    if(data["code"] > 0 ){
+                        util.message(data["message"], 'success', getList($("#page_index").val()));
+                    }else{
+                        util.message(data["message"], 'danger', getList($("#page_index").val()));
+                    }
+                }
+            });
+        })
+        $('body').on('click','.channel_status',function(){
+            var status = $(this).parent().data('status');
+            //实现点击某一个按钮，颜色就选中
+            $(this).parent().addClass('active').siblings().removeClass('active');
+            $('#search_status').val(status);
+            getList($("#page_index").val())
+        })
+    })
+</script>
+{/block}

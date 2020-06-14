@@ -1,0 +1,414 @@
+{extend name="shop/new/Member/base" /} {block name="main"}
+<div class="v-main-right fl">
+    <div class="v-container">
+        <!--page-->
+        <div class="tabs-container orderList">
+            <ul class="tabs clearfix myOrder-ul">
+                <li class="active"><a href="javascript:void(0);" class="orderType" data-status="all">全部（<span>{$statusNum['all']}</span>）</a></li>
+                <li><a href="javascript:void(0);" class="orderType" data-status="0">待付款（<span>{$statusNum['wait_pay']}</span>）</a></li>
+                <li><a href="javascript:void(0);" class="orderType" data-status="1">待发货（<span>{$statusNum['wait_delivery']}</span>）</a></li>
+                <li><a href="javascript:void(0);" class="orderType" data-status="2">待收货（<span>{$statusNum['wait_recieved']}</span>）</a></li>
+                <li><a href="javascript:void(0);" class="orderType" data-status="3">已收货（<span>{$statusNum['recieved']}</span>）</a></li>
+                <li><a href="javascript:void(0);" class="orderType" data-status="4">退款/售后（<span>{$statusNum['refunding']}</span>）</a></li>
+                <li><a href="javascript:void(0);" class="orderType" data-status="5">待评价（<span>{$statusNum['wait_evaluate']}</span>）</a></li>
+            </ul>
+            <div class="tab_container">
+                <div id="tab1" class="tab_content" style="display: block; ">
+                    <div class="search clearfix">
+                        <div class="searchs fr">
+                            <input type="text" class="searchs-ipt search_text" placeholder="订单号">
+                            <button class="search_to">搜索</button>
+                        </div>
+                    </div>
+                    <div class="cart-wrapper">
+                        <div class="cart-header">
+                            <div class="cart-table-header">
+                                <div class="inner-box c6">
+                                    <div class="th th-item">商品信息</div>
+                                    <div class="th th-receive">收货人</div>
+                                    <div class="th th-money">金额</div>
+                                    <div class="th th-state">订单状态</div>
+                                    <div class="th th-op">操作</div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="cart-list" id="list">
+
+                        </div>
+                    </div>
+                    <!--page-->
+                    <div class="page clearfix">
+                        <div class="M-box3 m-style fr"></div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+    </div>
+</div>
+<input type="hidden" id="page_index">
+{/block} {block name="javascript"}
+<script>
+    require(['common', 'dialog'], function (common, Dialog) {
+        Dialog.withAccount(".myOrder-ul", "li", "active");
+        LoadingInfo(1, 'all');
+        var cart_info = {};
+        function LoadingInfo(page_index, status) {
+            $("#page_index").val(page_index);
+            var search_text = $(".search_text").val();
+            // if (!status) {
+            //     status = $(".myOrder-ul").children('.active').children('a').data('status');
+            // }
+            $.ajax({
+                type: "post",
+                url: __URL(SHOPMAIN + "/member/orderList"),
+                data: {
+                    "search_text": search_text,
+                    "status": status,
+                    "page_index": page_index
+                },
+                success: function (data) {
+                    var html = '';
+                    var flag = 1;
+
+                    if (data["data"].length > 0) {
+                        for (var i = 0; i < data["data"].length; i++) {
+                            html += '<div class="cart-item">';
+                            html += '<div class="item-info">';
+                            if (data["data"][i]['shop_name']) {
+                                html += '<span class="storeName">' + data["data"][i]['shop_name'] + '</span>';
+                            } else {
+                                html += '<span class="storeName">官方旗舰店</span>';
+                            }
+                            html += '<span>订单号：<i class="orderNum">' + data["data"][i]['order_no'] +
+                                '</i></span>';
+                            html += '<span class="times">' + data["data"][i]['create_time'] +
+                                '</span>';
+                            html += '</div>';
+                            var cart_order_id = data["data"][i]['order_id'];
+                            cart_info[cart_order_id] = {};
+                            for (var j = 0; j < data["data"][i]["order_item_list"].length; j++) {
+                                cart_info[cart_order_id][j]={};
+                                var pic_cover_micro = __IMG(data["data"][i]["order_item_list"][j]["picture"]['pic_cover_micro']); //商品图
+                                var goods_id = data["data"][i]["order_item_list"][j]["goods_id"]; //商品id
+                                var order_goods_id = data["data"][i]["order_item_list"][j]["order_goods_id"]; //订单商品id
+                                var goods_name = data["data"][i]["order_item_list"][j]["goods_name"]; //商品名称
+                                var sku_name = data["data"][i]["order_item_list"][j]["sku_name"]; //sku名称
+                                var sku_id = data["data"][i]["order_item_list"][j]["sku_id"]; //sku名称
+                                var price = data["data"][i]["order_item_list"][j]["price"]; //价格
+                                var num = data["data"][i]["order_item_list"][j]["num"]; //购买数量
+                                var spec_info = data["data"][i]["order_item_list"][j]["spec"];
+                                var type = data["data"][i]["order_item_list"][j]["refund_type"]; //退款类型（1为退款2为退货）
+                                cart_info[cart_order_id][j]['sku_id'] = sku_id;
+                                cart_info[cart_order_id][j]['num'] = num;
+                                html += '<div class="item-main clearfix">';
+                                html += '<div class="td td-item clearfix">';
+                                html += '<div class="item-pic">';
+                                html += '<a href="' + __URL('SHOP_MAIN/goods/goodsinfo?goodsid=' + goods_id) + '" class="item-img-box">';
+                                if (pic_cover_micro) {
+                                    html += '<img src="' + pic_cover_micro + '" width="60px" height="60px" alt="">';
+                                } else {
+                                    html +=
+                                        '<img src="__TEMP__/shop/new/public/image/missing.png" width="60px" height="60px" alt="">';
+                                }
+                                html += '</a>';
+                                html += '</div>';
+                                html += '<div class="item-desc">';
+                                html += '<a href="' + __URL('SHOP_MAIN/goods/goodsinfo?goodsid=' + goods_id) + '" class="item-title">' + goods_name + '</a>';
+                                html += '<p class="colors">';
+                                $.each(spec_info, function (spec_k, spec_v) {
+                                    html += spec_v['spec_name'] + ':' + spec_v['spec_value_name'] + ' ';
+                                });
+                                html += '</p>';
+                                html += '</div>';
+                                html += '<div class="item-cancel" style="text-align: right">';
+                                html += '<p class="colors">x<span>' + num + '</span></p>';
+                                if (data["data"][i]['promotion_status'] == 0) {
+                                    if (data["data"][i]["order_item_list"][j]['refund_status'] != 0 && data["data"][i]["order_item_list"][j]['refund_status'] != -2 && data["data"][i]["order_item_list"][j]['refund_status'] != 5) {
+                                        html += '<a href="' + __URL('SHOP_MAIN/member/refundDetail?order_goods_id=' + order_goods_id + '&type=' + type) + '" class="item-return">售后情况</a>';
+                                    }
+                                    if (data["data"][i]['order_status'] == 1 && data["data"][i]["order_item_list"][j]['refund_status'] == 0 && data["data"][i]['order_type'] != 2 && data["data"][i]['order_type'] != 3 && data["data"][i]['order_type'] != 4 && data["data"][i]['money_type']!=1) {
+                                        if(data["data"][i]["order_item_list"].length>1){
+                                            if(data["data"][i]['offline_pay'] == 2){
+                                                html += '<a href="javascript:;" class="item-return unrefund_pay">退款</a>';
+                                            }else if( data["data"][i]['unrefund'] == 1){
+                                                html += '<a href="javascript:;" data-reason="'+data['data'][i]['unrefund_reason']+'" class="item-return unrefund_pays">退款</a>';
+                                            }else{
+                                                html += '<a href="' + __URL('SHOP_MAIN/member/refundMoney?order_goods_id=' + order_goods_id) + '" class="item-return">退款</a>';
+                                            }
+                                        }else if(data["data"][i]["order_item_list"].length==1 ){
+                                            if(data["data"][i]['offline_pay'] == 2){
+                                                html += '<a href="javascript:;" class="item-return unrefund_pay">退款</a>';
+                                            }else if( data["data"][i]['unrefund'] == 1){
+                                                html += '<a href="javascript:;" data-reason="'+data['data'][i]['unrefund_reason']+'" class="item-return unrefund_pays">退款</a>';
+                                            }else{
+                                                html += '<a href="' + __URL('SHOP_MAIN/member/refundMoney?order_id=' + data["data"][i]["order_id"]) + '" class="item-return">退款</a>';
+                                            }
+                                        }
+                                    }
+                                    if (data["data"][i]['order_status'] == 2 || data["data"][i]['order_status'] == 3 ) {
+                                        if (data["data"][i]["order_item_list"][j]['refund_status'] == 0 && data["data"][i]['order_type'] != 2 && data["data"][i]['order_type'] != 3 && data["data"][i]['order_type'] != 4) {
+                                            if(data["data"][i]["order_item_list"].length>1){
+                                                if(data["data"][i]['offline_pay'] == 2){
+                                                    html += '<a href="javascript:;" class="item-return unrefund_pay">退货/退款</a>';
+                                                }else if( data["data"][i]['unrefund'] == 1){
+                                                    html += '<a href="javascript:;" data-reason="'+data['data'][i]['unrefund_reason']+'" class="item-return unrefund_pays">退货/退款</a>';
+                                                }else {
+                                                    html += '<a href="' + __URL('SHOP_MAIN/member/refundDetail?order_goods_id=' + order_goods_id) + '" class="item-return">退货/退款</a>';
+                                                }
+                                            }else if(data["data"][i]["order_item_list"].length==1 && data["data"][i]['order_type'] != 3 && data["data"][i]['order_type'] != 4){
+                                                if(data["data"][i]['offline_pay'] == 2){
+                                                    html += '<a href="javascript:;" class="item-return unrefund_pay">退货/退款</a>';
+                                                }else if( data["data"][i]['unrefund'] == 1){
+                                                    html += '<a href="javascript:;" data-reason="'+data['data'][i]['unrefund_reason']+'" class="item-return unrefund_pays">退货/退款</a>';
+                                                }else {
+                                                    html += '<a href="' + __URL('SHOP_MAIN/member/refundDetail?order_id=' + data["data"][i]["order_id"]) + '" class="item-return">退货/退款</a>';
+                                                }
+                                            }
+
+                                        }
+                                    }
+                                }
+                                if (data["data"][i]['promotion_status'] == 1 && data["data"][i]["order_item_list"].length==1) {
+                                    if (data["data"][i]["order_item_list"][j]['refund_status'] != 0 && data["data"][i]["order_item_list"][j]['refund_status'] != -2 && data["data"][i]["order_item_list"][j]['refund_status'] != 5) {
+                                        html += '<a href="' + __URL('SHOP_MAIN/member/refundDetail?order_goods_id=' + order_goods_id + '&type=' + type) + '" class="item-return">售后情况</a>';
+                                    }
+                                    if (data["data"][i]['order_status'] == 1 && data["data"][i]["order_item_list"][j]['refund_status'] == 0 && data["data"][i]['order_type'] != 2 && data["data"][i]['order_type'] != 3 && data["data"][i]['order_type'] != 4 && data["data"][i]['money_type']!=1 && data["data"][i]['unrefund'] != 1) {
+                                        if(data["data"][i]['offline_pay'] == 2){
+                                            html += '<a href="javascript:;" class="item-return unrefund_pay">退款</a>';
+                                        }else{
+                                            html += '<a href="' + __URL('SHOP_MAIN/member/refundMoney?order_id=' + data["data"][i]["order_id"]) + '" class="item-return">退款</a>';
+                                        }
+                                    }
+                                    if (data["data"][i]['order_status'] == 2 || data["data"][i]['order_status'] == 3 ) {
+                                        if (data["data"][i]["order_item_list"][j]['refund_status'] == 0 && data["data"][i]['order_type'] != 2 && data["data"][i]['order_type'] != 3 && data["data"][i]['order_type'] != 4 && data["data"][i]['money_type']!=1 && data["data"][i]['unrefund'] != 1) {
+                                            if(data["data"][i]['offline_pay'] == 2){
+                                                html += '<a href="javascript:;" class="item-return unrefund_pay">退货/退款</a>';
+                                            }else {
+                                                html += '<a href="' + __URL('SHOP_MAIN/member/refundDetail?order_id=' + data["data"][i]["order_id"]) + '" class="item-return">退货/退款</a>';
+                                            }
+                                       }
+                                    }
+                                }
+                                html += '</div>';
+                                html += '</div>';
+                                if (j == 0) {
+                                    html += '<div class="td td-receive">' + data["data"][i][
+                                        'receiver_name'
+                                    ] + '</div>';
+                                    html += '<div class="td td-money">';
+                                    html += '<div>';
+                                    html += '<p>' + data["data"][i]['order_money'] + '</p>';
+                                    html += '<p class="colorB1">' + data["data"][i]['pay_type_name'] + '</p>';
+                                    html += '</div>';
+                                    html += '</div>';
+                                    html += '<div class="td td-state prs">';
+
+                                    if (data["data"][i]["order_item_list"][j]['express_no'] && flag == 1 && data["data"][i]['all_express']==false) {
+                                        flag = 2;
+                                        html += '<a href="javascript:void(0);" class="colorB1">部分发货</a></br>';
+                                        html += '<a href="javascript:void(0);" data-name="'+data["data"][i]["order_item_list"][0]['express_name']+'" data-id="' + data["data"][i]["order_item_list"][0]['express_no'] + '" class="express_info logistics-a"><i class="icon-logistics"></i>物流';
+                                        html+='<div class="logistics-box">';
+                                        html+='<span class="logistics-span"></span>'; 
+                                        html+='<div class="logistics-img"><ul class="express_list"></ul></div>';    
+                                        html+='</div>';    
+                                        html+='</a>';
+                                    } else {
+                                        html += '<a href="javascript:void(0);" class="colorB1">' + data["data"][i]["status_name"] + '</a>';
+                                    }
+                                    html += '</div>';
+                                    html += '<div class="td td-op">';
+                                    if (data["data"][i]['order_status'] == 0) {
+                                        html += '<a href="' + __URL('SHOP_MAIN/order/orderPay?id=' + data["data"][i]["order_id"]) + '" class="blue">立即付款</a>';
+                                        html += '<a href="javascript:void(0);" data-id="' + data["data"][i]["order_id"] + '" class="orderClose colorB1">取消订单</a>';
+                                    }
+                                    if (data["data"][i]["order_item_list"][0]['refund_status'] != 0 && data["data"][i]["order_item_list"][0]['refund_status'] != -2 && data["data"][i]["order_item_list"][0]['refund_status'] != 5  && data["data"][i]["order_item_list"].length>1) {
+                                        html += '<a href="' + __URL('SHOP_MAIN/member/refundDetail?order_id=' + data["data"][i]["order_id"] + '&type=' + type) + '" class="item-return">售后情况</a>';
+                                    }
+                                    if (data["data"][i]['order_status'] == 1 && data["data"][i]['promotion_status'] == 1 && data["data"][i]["order_item_list"][0]['refund_status'] == 0 && data["data"][i]["order_item_list"].length>1 && data["data"][i]['order_type'] != 3 && data["data"][i]['order_type'] != 4 && data["data"][i]['order_type'] != 2 && data["data"][i]['money_type']!=1 && data["data"][i]['unrefund'] != 1) {
+                                        if(data["data"][i]['offline_pay'] == 2){
+                                            html += '<a href="javascript:;" class="item-return unrefund_pay">退款</a>';
+                                        }else{
+                                            html += '<a href="' + __URL('SHOP_MAIN/member/refundMoney?order_id=' + data["data"][i]["order_id"]) + '" class="item-return">退款</a>';
+                                        }
+                                    }
+                                    if ((data["data"][i]['order_status'] == 2 || data["data"][i]['order_status'] == 3) && data["data"][i]["order_item_list"][0]['refund_status'] == 0 && data["data"][i]['promotion_status'] == 1 && data["data"][i]["order_item_list"].length>1 && data["data"][i]['order_type'] != 3 && data["data"][i]['order_type'] != 2 && data["data"][i]['order_type'] != 4 && data["data"][i]['money_type']!=1 && data["data"][i]['unrefund'] != 1) {
+                                        if(data["data"][i]['offline_pay'] == 2){
+                                            html += '<a href="javascript:;" class="item-return unrefund_pay">退货/退款</a>';
+                                        }else{
+                                            html += '<a href="' + __URL('SHOP_MAIN/member/refundDetail?order_id=' + data["data"][i]["order_id"]) + '" class="item-return">退货/退款</a>';
+                                        }
+                                    }
+                                    if ((data["data"][i]['order_status'] == 2) && data["data"][i]["order_item_list"][0]['refund_status'] == 0) {
+                                        html += '<a href="javascript:void(0);" data-id="' + data["data"][i]["order_id"] + '" class="orderTakeDelivery">确认收货</a>';
+                                    }
+
+                                    if (data["data"][i]['order_status'] == 4 || data["data"][i]['order_status'] == 3) {
+                                        if (data["data"][i]['is_evaluate'] == 1) {
+                                            html += '<a href="' + __URL('SHOP_MAIN/member/reviewagain?order_id=' + data["data"][i]["order_id"]) + '">追评</a>';
+                                        } else if (data["data"][i]['is_evaluate'] == 0) {
+                                            html += '<a href="' + __URL('SHOP_MAIN/member/reviewcommodity?order_id=' + data["data"][i]["order_id"]) + '">评价</a>';
+                                        }
+                                        if(data["data"][i]['card_store_id']=='' || data["data"][i]['card_store_id']==0){
+                                        	html += '<a href="javascript:void(0);" class="again_cart" data-id="'+cart_order_id+'"  >再次购买</a>';
+                                        }
+                                    }
+                                    html += '<a  href="' + __URL('SHOP_MAIN/member/orderDetail?order_id=' + data["data"][i]["order_id"]) + '" class="colorB1">订单详情</a>';
+                                    html += '</div>';
+                                } else {
+                                    html += '<div class="td td-receive"></div>';
+                                    html += '<div class="td td-money">';
+                                    html += '<div>';
+                                    html += '<p></p>';
+                                    html += '<p></p>';
+                                    html += '</div>';
+                                    html += '</div>';
+                                    html +=
+                                        '<div class="td td-state prs"><a href="javascript:void(0);"></a></div>';
+                                    html +=
+                                        '<div class="td td-op"><a href="javascript:void(0);"></a></div>';
+                                }
+
+                                html += '</div>';
+                            }
+                            html += '</div>';
+                        }
+                    } else {
+                        html += '<div style="text-align:center">暂无相关订单！</div>';
+                    }
+                    $("#list").html(html);
+                    common.Pages('.M-box3', data['total_count'], data["page_count"], page_index, LoadingInfo);
+                }
+            });
+        }
+        $('.search_to').on('click', function () {
+            LoadingInfo(1)
+        });
+        $('.orderType').on('click', function () {
+            var status = $(this).data('status');
+            LoadingInfo(1, status);
+        });
+        $('body').on('click', ".unrefund_pay", function () {
+             layer.msg('该订单为后台操作付款，不能在线操作售后，请联系客服');
+        })
+        $('body').on('click', ".unrefund_pays", function () {
+            var reason = $(this).data('reason');
+            layer.msg(reason);
+        })
+        $('body').on('click', ".orderTakeDelivery", function () {
+            var order_id = $(this).data('id');
+            layer.confirm('确认已收货？', {
+                btn: ['确定', '取消'] //按钮
+            }, function () {
+                $.ajax({
+                    type: "post",
+                    url: __URL(SHOPMAIN + "/order/orderTakeDelivery"),
+                    data: {
+                        "order_id": order_id
+                    },
+                    success: function (data) {
+                        if (data['code'] > 0) {
+                            layer.msg('收货成功');
+                            LoadingInfo($("#page_index").val(), $(".myOrder-ul").children(
+                                '.active').children('a').data('status'));
+                        } else {
+                            layer.msg('收货失败');
+                        }
+                    }
+                })
+            });
+        })
+        $('body').on('click', ".orderClose", function () {
+            var order_id = $(this).data('id');
+            layer.confirm('确定取消订单？', {
+                btn: ['确定', '取消'] //按钮
+            }, function () {
+                $.ajax({
+                    type: "post",
+                    url: __URL(SHOPMAIN + "/member/orderClose"),
+                    data: {
+                        "order_id": order_id
+                    },
+                    success: function (data) {
+                        if (data['code'] > 0) {
+                            layer.msg('取消成功');
+                            LoadingInfo($("#page_index").val(), $(".myOrder-ul").children(
+                                '.active').children('a').data('status'));
+                        } else {
+                            layer.msg('取消失败');
+                        }
+                    }
+                })
+            });
+
+        })
+
+        $('body').on('mouseover','.logistics-a',function(){
+            // console.log(123);
+            var _this=$(this);
+            var express_id = $(this).data('id');
+            var express_name = $(this).data('name');
+            $.ajax({
+                type: "post",
+                url: __URL(SHOPMAIN + "/member/getordergoodsexpressmessage"),
+                data: {
+                    "express_no": express_id
+                },
+                success: function (data) {
+                    var html = '';
+                    if (data["code"] > 0) {
+                        html += '<li>'+express_name+':'+express_id+'</li>';
+                        $.each(data.data.data, function (k_ex, v_ex) {
+                            if(k_ex<2){
+                                html += '<li><p>' + v_ex.context + '</p><p class="time">' +
+                                v_ex.time + '</p></li>';
+                            }
+                        });
+                    } else {
+                        html += '<li>'+express_name+':'+express_id+'</li><li style="text-align:center">暂无物流信息</li>';
+                    }
+                    // _this.siblings('.logistics-box').find('.express_list').html(html);
+                    // _this.siblings('.logistics-box').show();
+                    _this.find('.express_list').html(html);
+                    // _this.find('.logistics-box').show();
+                }
+            })
+        })
+        // $('body').on('mouseout','.logistics-a',function(){
+        //     $('.logistics-box').hide();
+        // })
+        // $('body').on('mouseout','.logistics-box',function(){
+        //     console.log(123);
+        //     $('.logistics-box').hide();
+        // })
+        $('body').on('click','.again_cart', function () {
+            var order_id = $(this).data('id');
+            var orderInfo = cart_info[order_id];
+            var cart_tag = "addCart";//暂时没用，保留。
+            $.ajax({
+                url: __URL(SHOPMAIN + "/goods/againCart"),
+                type: "post",
+                data: {"cart_detail": JSON.stringify(orderInfo), "cart_tag": cart_tag},
+                success: function (res) {
+                    if (res > 0) {
+                        $(".add-cart").removeClass("js-disabled");
+                        Dialog.refreshCart();//里边会加载购物车中的数量
+                        layer.msg("添加购物车成功");
+                        location.href = __URL(SHOPMAIN + "/goods/cart");
+                    } else {
+                        if(res==-2){
+                            layer.msg("部分商品已下架,添加购物车失败");
+                        }else {
+                            layer.msg("添加购物车失败");
+                        }
+
+                    }
+                }
+            });
+        });
+
+    });
+</script>
+{/block}

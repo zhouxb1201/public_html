@@ -1,0 +1,85 @@
+{block name="main"}
+			<!-- page -->
+			<div class="screen-title">
+				<span class="text">基本信息</span>
+			</div>
+			<div class="row panel-detail">
+				<div class="col-md-6">
+					<div class="item h-auto">
+						<div class="media">
+							<div class="media-left">
+								<img src="{:__IMG($info['pic'])}" width="160px" height="160px" >
+							</div>
+							<div class="media-body">
+								<p class="p"><span class="text-label">ID：</span><span id="uid">{$info['uid']}</span></p>
+								<p class="p"><span class="text-label">用户名：</span><span>{$info['user_name']}</span></p>
+								<div class="p">
+									<span class="text-label">手机号码：</span><span>{$info['mobile']}</span>
+								</div>
+								<div class="p" style="min-width: 250px">
+									<span class="text-label">股东等级：</span>
+									<select id="type" class="form-control select-form-control inline-block">
+										{foreach name="agent_level" item="value"}
+										<option value="{$value.id}" {if $info['global_agent_level_id']==$value.id}selected{/if}>{$value.level_name}</option>
+										{/foreach}
+									</select>
+								</div>
+								<div class="p">
+									<span class="text-label">当前状态：</span>
+									<select name="" class="form-control select-form-control inline-block" id="status">
+										<option value="2" {if $info['is_global_agent']==2}selected{/if} >已审核</option>
+										<option value="1" {if $info['is_global_agent']==1}selected{/if}>待审核</option>
+									</select>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="col-md-6">
+					<div class="item h-auto">
+						<div class="media-body">
+							<p class="p">推荐人：{if $info['referee_name']}{$info['referee_name']}{else}总店{/if} </p>
+							<p class="p">累计分红：{if $info['total_bonus']}{$info['total_bonus']}{else}0.00{/if} </p>
+							<p class="p">已发分红：{if $info['grant_bonus']}{$info['grant_bonus']}{else}0.00{/if}</p>
+							<p class="p">申请成为股东时间：{$info['apply_global_agent_time']}</p>
+							<p class="p">成为股东时间：{$info['become_global_agent_time']}</p>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="v-form-inline">
+				<div class="form-group">
+					<label class="control-label"></label>
+					<a href="javascript:;" class="btn btn-primary add">保存</a>
+				</div>
+			</div>
+
+			<!-- page end -->
+{/block}
+{block name="script"}
+<script>
+    require(['util'],function(util){
+        $('.add').click(function (e) {
+            var type = $("#type").val();
+            var uid = $("#uid").html();
+            var status = $("#status").val();
+            $.ajax({
+                type : "post",
+                url : '{$updateGlobalAgentInfoUrl}',
+                async : true,
+                data : {
+                    "uid":uid,"global_agent_level_id":type,'status':status
+                },
+                success : function(data) {
+                    if (data['code']>0 ) {
+                        util.message(data["message"], 'success', "{:__URL('ADDONS_MAINglobalAgentInfo')}&agent_id="+uid);
+                    } else {
+                        util.message(data["message"], 'danger');
+                    }
+                }
+            });
+		})
+
+    })
+</script>
+{/block}

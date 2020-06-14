@@ -1,0 +1,247 @@
+{extend name="platform/new_base" /}
+{block name="resources"/}
+{/block}
+{block name="main"}
+			<!-- page -->
+			<form class="form-horizontal form-validate pt-15">
+				<div class="form-group">
+					<label class="col-md-2 control-label"><span class="text-bright">*</span>标签名称</label>
+					<div class="col-md-5">
+						<input type="text" class="form-control" name="group_name" required value="{if $list.group_name}{$list.group_name}{/if}">
+					</div>
+				</div>
+				<div class="form-group">
+					<label class="col-md-2 control-label">自动打标签</label>
+					<div class="col-md-5">
+						<div class="switch-inline">
+							<input type="checkbox" id="upgrade-switch" value="1" name="is_label" {if condition="$list.is_label eq 1"}checked{/if}>
+							<label for="upgrade-switch"></label>
+						</div>
+					</div>
+				</div>
+				<div id="isupgrade" class="{if condition='$list.is_label neq 1'}hide{/if}">
+					<div class="form-group">
+						<label class="col-md-2 control-label">标签条件</label>
+						<div class="col-md-5">
+							<div>
+							<label class="radio-inline">
+								<input type="radio" value="1" name="upgradecondition" {if condition="$list.label_condition eq 1"}checked{/if} > 满足所有勾选条件
+							</label>
+							<label class="radio-inline">
+								<input type="radio" value="2" name="upgradecondition" {if condition="$list.label_condition eq 2"}checked{/if}> 满足勾选条件之一即可
+							</label>
+								</div>
+						</div>
+					</div>
+					<div class="form-group" id="upgrade-condition">
+						<label class="col-md-2 control-label"></label>
+						<div class="col-md-8">
+							<div class="form-additional">
+								<div class="form-group">
+									<label class="col-md-5 control-label"><input type="checkbox" name="upgradeconditions" value="1"> 累积交易金额</label>
+									<div class="col-md-7 control-group">
+										<div class="input-group">
+											<input type="number" class="form-control" min="0" name="order_money" value="{if $list.order_money}{$list.order_money}{/if}">
+											<div class="input-group-addon">元</div>
+										</div>
+									</div>
+								</div>
+								<div class="form-group">
+									<label class="col-md-5 control-label"><input type="checkbox" name="upgradeconditions" value="2"> 累积支付订单</label>
+									<div class="col-md-7 control-group">
+										<div class="input-group">
+											<input type="number" class="form-control" min="0" name="order_pay" value="{if $list.order_pay}{$list.order_pay}{/if}">
+											<div class="input-group-addon">笔</div>
+										</div>
+									</div>
+								</div>
+								<div class="form-group">
+									<label class="col-md-5 control-label"><input type="checkbox" name="upgradeconditions" value="3"> 当前积分大于</label>
+									<div class="col-md-7 control-group">
+										<div class="input-group">
+											<input type="number" class="form-control" min="0" name="point" value="{if $list.point}{$list.point}{/if}">
+											<div class="input-group-addon">积分</div>
+										</div>
+									</div>
+								</div>
+								<div class="form-group">
+									<label class="col-md-5 control-label"><input type="checkbox" name="upgradeconditions" value="4"> 当前余额大于</label>
+									<div class="col-md-7 control-group">
+										<div class="input-group">
+											<input type="number" class="form-control" min="0" name="balance" value="{if $list.balance}{$list.balance}{/if}">
+											<div class="input-group-addon">元</div>
+										</div>
+									</div>
+								</div>
+								<div class="form-group">
+									<label class="col-md-5 control-label"><input type="checkbox" name="upgradeconditions" value="5"> 购买指定商品</label>
+									<div class="col-md-7 control-group" >
+										<div class="picture-list">
+											<a href="javascript:;" class="{if $list.pic}close-box1{else}plus-box search_goods{/if}">
+												{if $list.pic}
+												<i class='icon icon-danger' title='删除'></i><img src="{:__IMG($list.pic)}" style='width:80px;height:80px;margin:0;'>
+												{else}
+												<i class="icon icon-plus"></i>
+												{/if}
+											</a>
+											<input type="text" class="visibility" data-visi-type="singlePicture" name="picture-Logo">
+										</div>
+										<input type="hidden" name='pic_id' id="pic_id" value="">
+                                        <input type="hidden" name='selectgoods_id' id="selectgoods_id" value="{$list.goods_id}">
+										<div class="input-group selectid">
+											{if($list.goods_id)}指定商品：{$list.goods_name}{/if}
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="form-group"></div>
+				<div class="form-group">
+					<label class="col-md-2 control-label"></label>
+					<div class="col-md-8">
+						<button class="btn btn-primary add" type="submit" >添加</button>
+						<a href="javascript:history.go(-1);" class="btn btn-default">返回</a>
+					</div>
+				</div>
+			</form>
+
+
+
+<input type="hidden" id="group_id" value="{$list['group_id']}">
+<input type="hidden" id="default_group_name" value="{$list['group_name']}">
+			<!-- page end -->
+{/block}
+{block name="script"}
+<script>
+    require(['util'],function(util) {
+        $("input[name='group_name']").on('blur',function () {
+            var group_name = $("input[name='group_name']").val();
+            var default_group_name = $("#default_group_name").val();
+            if(default_group_name!=group_name ){
+                $.ajax({
+                    type : "post",
+                    url : "{:__URL('PLATFORM_MAIN/Member/checkLabel')}",
+                    async : true,
+                    data : {
+                        'group_name' :group_name,
+                    },
+                    success : function(data) {
+                        if (data["code"] > 0) {
+                            util.message('该标签名已存在','danger');
+                            $("input[name='group_name']").val('');
+                            return false;
+                        }
+                    }
+                });
+            }
+        })
+        loading();
+        function loading() {
+            var upgradeconditions = "{$list.labelconditions}";
+            upgradeconditions = upgradeconditions.split(',');
+            for (var i = 0; i < upgradeconditions.length; i++) {
+                $('[name="upgradeconditions"][value="' + upgradeconditions[i] + '"]').prop("checked", true);
+                if(upgradeconditions[i]!="5"){
+                    $('[name="upgradeconditions"][value="' + upgradeconditions[i] + '"]').parent(".control-label").siblings(".control-group").find("input").attr("required",true);
+                }
+            }
+        }
+        $("#upgrade-switch").change(function () {
+            var is_label = $("input[name='is_label']:checked").val();
+            if(is_label==1){
+                $("input[name='upgradecondition']").attr("required",true);
+                $("#isupgrade").removeClass("hide");
+            }else{
+                $("input[name='upgradecondition']").removeAttr("required",true);
+                $("#isupgrade").addClass("hide");
+            }
+        })
+        $("input[name='upgradeconditions']").click(function () {
+            if($(this).is(':checked')){
+                var vals=$(this).val();
+                if(vals!=5 || $("input[name='selectgoods_id']").val()==''){
+                    $(this).parent(".control-label").siblings(".control-group").find("input").attr("required",true);
+                }
+            } else{
+                $(this).parents(".form-group").removeClass('has-error');
+                $(this).parents(".form-group").find('.help-block-error').html('');
+                $(this).parent(".control-label").siblings(".control-group").find("input").removeAttr("required",true);
+            }
+        })
+        function isInArray(arr,value){
+            for(var i = 0; i < arr.length; i++){
+                if(value === arr[i]){
+                    return true;
+                }
+            }
+            return false;
+        }
+        util.validate($('.form-validate'),function(form){
+            var group_name = $("input[name='group_name']").val();
+            var is_label = $("input[name='is_label']:checked").val();
+            var label_condition = $("input[name='upgradecondition']:checked").val();
+            var order_money = $("input[name='order_money']").val();
+            var order_pay = $("input[name='order_pay']").val();
+            var point = $("input[name='point']").val();
+            var balance = $("input[name='balance']").val();
+			var upgradeconditions = $("input:checkbox[name='upgradeconditions']:checked").map(function (index, elem) {
+                return $(elem).val();
+            }).get().join(',');
+            var arr=upgradeconditions.split(',');
+            if(isInArray(arr,"5")){
+                var goods_id = $("input[name='selectgoods_id']").val();
+            }else{
+                var goods_id ='';
+            }
+            if(is_label==1 && upgradeconditions==''){
+                util.message('请填写标签条件');
+                return false;
+            }
+            $('.add').attr({disabled: "disabled"}).html('提交中...');
+            $.ajax({
+                type: "post",
+                url: "{:__URL('PLATFORM_MAIN/member/updateLabel')}",
+                data: {
+                    'group_id': $("#group_id").val(),
+                    'group_name': group_name,
+                    'is_label': is_label,
+                    'label_condition': label_condition,
+                    'order_pay': order_pay,
+                    'order_money': order_money,
+                    'point': point,
+                    'balance': balance,
+                    'labelconditions': upgradeconditions,
+                    'goods_id': goods_id
+                },
+                async: true,
+                success: function (data) {
+                    if (data['code'] > 0) {
+                        util.message(data["message"], 'success', "{:__URL('PLATFORM_MAIN/member/memberGroupList')}");
+                    } else {
+						util.message(data["message"], 'danger');
+                        $('.add').removeAttr('disabled').html('添加');
+                    }
+                }
+            });
+
+        })
+        $('body').on('click','.search_goods', function () {
+            var url = "{:__URL('PLATFORM_MAIN/goods/selectGoodsList')}";
+            util.confirm('选择商品','url:'+url, function () {
+                var data = this.$content.find('.goods_val').val();
+                var pic = $('#pic_id').val();
+                $(".selectid").html('指定商品：'+data);
+                html='';
+                html += "<i class='icon icon-danger' title='删除'></i><img src="+__IMG(pic)+" style='width:80px;height:80px;margin:0;'>";
+                $(".search_goods").find('.visibility').removeAttr("required");
+                $(".search_goods").addClass('close-box1').removeClass('plus-box').removeClass('search_goods');
+                $(".close-box1").html(html);
+                $(".close-box1").siblings('.visibility').removeAttr("required");
+            },'large')
+
+        })
+    })
+</script>
+{/block}

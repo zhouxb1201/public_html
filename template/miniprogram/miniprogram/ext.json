@@ -1,0 +1,61 @@
+{
+  "extEnable": true,
+  "ext": {
+    "domain": "https://mall.maker1122.com",
+    "domain_wap": "https://mall.maker1122.com",
+    "pathList": [
+      "pages/index/index",
+      "pages/category/index",
+      "pages/shop/list/index",
+      "pages/shopcart/index",
+      "pages/member/index"
+    ],
+    "website_id": 1,
+    "auth_id": 1
+  },
+  "extAppid": "wxa5d44a5d637293dc",
+  "window": {
+    "navigationBarBackgroundColor": "#000000",
+    "navigationBarTextStyle": "white",
+    "navigationBarTitleText": "商城",
+    "backgroundColor": "#000000",
+    "backgroundTextStyle": "dark"
+  },
+  "tabBar": {
+    "list": [{
+        "pagePath": "pages/index/index",
+        "text": "首页",
+        "iconPath": "foots/icon/home-normal-1.png",
+        "selectedIconPath": "foots/icon/home-active-1.png"
+      },
+      {
+        "pagePath": "pages/category/index",
+        "text": "分类",
+        "iconPath": "foots/icon/category-normal-1.png",
+        "selectedIconPath": "foots/icon/category-active-1.png"
+      },
+      {
+        "pagePath": "pages/shop/list/index",
+        "text": "店铺街",
+        "iconPath": "foots/icon/commission-normal-1.png",
+        "selectedIconPath": "foots/icon/commission-active-1.png"
+      },
+      {
+        "pagePath": "pages/shopcart/index",
+        "text": "购物车",
+        "iconPath": "foots/icon/cart-normal-1.png",
+        "selectedIconPath": "foots/icon/cart-active-1.png"
+      },
+      {
+        "pagePath": "pages/member/index",
+        "text": "会员中心",
+        "iconPath": "foots/icon/member-normal-1.png",
+        "selectedIconPath": "foots/icon/member-active-1.png"
+      }
+    ]
+  },
+  "networkTimeout": {
+    "request": 10000,
+    "downloadfile": 10000
+  }
+}

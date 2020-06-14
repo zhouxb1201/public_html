@@ -1,0 +1,9 @@
+<form class="recharge" bindsubmit="templateSend" report-submit="true">
+  <view class='recharge_group'>
+    <view class='recharge_title'>充值金额</view>
+    <input class='recharge_text' type='text' placeholder='请输入充值金额' bindinput='rechargeMoneyFun'></input>
+  </view>
+  <view class='recharge_foot'>
+    <button class='recharge_btn' formType="submit">充值</button>
+  </view>  
+</form>

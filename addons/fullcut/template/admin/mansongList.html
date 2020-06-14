@@ -1,0 +1,248 @@
+{block name="resources"/}
+<style>
+</style>
+{/block}
+{block name="main"}
+<input type="hidden" name="shop_id" value="{$shop_id}">
+<div class="row addBtnSearch">
+    <div class="col-sm-6 add">
+        <a href="{:__URL('ADDONS_ADMIN_MAINaddFullCut')}" class="add_btn"><i class="icon icon-add1"></i> 添加活动</a>
+    </div>
+    <div class="searchFr search">
+        <input type="text" id='search_text' placeholder="请输入活动名称" class="searchs"/>
+        <button type="button" class="search_to">搜索</button>
+    </div>
+</div>
+
+<table class="table v-table fullSend">
+    <thead>
+    <tr>
+        <!--<th><input type="checkbox" onclick="CheckAll(this)"></th>-->
+        <th>活动名称</th>
+        <th>优惠名称</th>
+        <th>生效时间</th>
+        <th>状态</th>
+        <th class="col-md-2 pr-14 operationLeft">操作</th>
+    </tr>
+    </thead>
+    <tbody class="trs"></tbody>
+</table>
+<div class="page clearfix">
+    <div class="M-box3 m-style fr">
+    </div>
+</div>
+
+<!-- 模态框（Modal） -->
+<div class="modal fade hide" id="mansongInfo" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
+     aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                <h3>满减送详情</h3>
+            </div>
+            <div class="modal-body">
+                <div class="modal-infp-style">
+                    <table>
+                        <tr>
+                            <td style="width:60px;">活动名称</td>
+                            <td colspan='5' id="gift_name"></td>
+                        </tr>
+                        <tr>
+                            <td>有效期</td>
+                            <td colspan='5' id="time"></td>
+                        </tr>
+                        <tr>
+                            <td>活动状态</td>
+                            <td colspan='5' id="status"></td>
+                        </tr>
+                        <tr>
+                            <td colspan='6'>优惠规则</td>
+                        </tr>
+                        <tr id="rule">
+                            <td>满足金额</td>
+                            <td>减现金</td>
+                            <td>免邮费</td>
+                            <td>送积分</td>
+                            <td>送优惠券</td>
+                            <td>送赠品</td>
+                        </tr>
+                        <tr>
+                            <td colspan='1'>适用范围</td>
+                            <td colspan="5" id="goods_list"></td>
+                        </tr>
+                        <tr>
+                            <td colspan='1'>备注</td>
+                            <td colspan="5" id="remark"></td>
+                        </tr>
+                        <tr id="goods_list"></tr>
+                    </table>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+            </div>
+        </div>
+    </div>
+</div>
+{/block}
+{block name="script"}
+<script type="text/javascript">
+  require(['utilAdmin','util'], function (utilAdmin,util) {
+    $(function () {
+        LoadingInfo(1);
+    })
+
+    function LoadingInfo(page_index) {
+        $('#page_index').val(page_index ? page_index : '1');
+        var search_text = $("#search_text").val();
+        var status = {$status};
+        var shop_id = $("input[name='shop_id']").val();
+        $.ajax({
+            type: "post",
+            url: "{:__URL('ADMIN_MAIN/Menu/addonmenu&addons=fullCutList&ajax=1')}",
+            data: {
+                "shop_id": shop_id,
+                "page_index": page_index,
+                "page_size": $("#showNumber").val(),
+                "search_text": search_text,
+                "status": status
+            },
+            success: function (data) {
+                var html = '';
+                //var data = eval('(' + data + ')');
+                if (data["data"].length > 0) {
+                    for (var i = 0; i < data["data"].length; i++) {
+                        switch (parseInt(data['data'][i]['status'])) {
+                            case 0:
+                                var status_name = '<span class="label label-success">未开启</span>';
+                                break;
+                            case 1:
+                                var status_name = '<span class="label label-danger">进行中</span>';
+                                break;
+                            case 3:
+                                var status_name = '<span class="label label-danger">已关闭</span>';
+                                break;
+                            case 4:
+                                var status_name = '<span class="label label-danger">已结束</span>';
+                                break;
+                        }
+                        html += '<tr>';
+                        html += '<td>' + data["data"][i]["mansong_name"] + '</td>';
+                        if (data['data'][i]['type'] == 1) {
+                            html += '<td>普通优惠</td>';
+                        } else {
+                            html += '<td>多级优惠</td>';
+                        }
+                        html += '<td><div>' + utilAdmin.timeStampTurnTime(data["data"][i]["start_time"]) + '</div>';
+                        html += '<div>~</div>';
+                        html += '<div>' + utilAdmin.timeStampTurnTime(data["data"][i]["end_time"]) + '</div></td>';
+                        html += '<td>' + status_name + '</td>';
+                        html += '<td class="fullSend-ol fs-0 operationLeft">';
+                        if (data['data'][i]['status'] == 0) {
+                            html += '<a class="btn-operation" href="' + __URL('admin/Menu/addonmenu?addons=editFullCut&mansong_id=' + data["data"][i]["mansong_id"]) + '" >编辑</a>';
+                            html += '<a class="del btn-operation text-red1" href="javascript:void(0);" data-id="' + data["data"][i]["mansong_id"] + '" >删除</a>';
+                        } else if (data['data'][i]['status'] == 1) {
+                            html += '<a class="close_a btn-operation" href="javascript:void(0);" data-id="' + data["data"][i]["mansong_id"] + '" >关闭</a>';
+                        } else if (data['data'][i]['status'] == 3) {
+                            html += '<a class="del btn-operation text-red1" href="javascript:void(0);" data-id="' + data["data"][i]["mansong_id"] + '" >删除</a>';
+                        } else if (data['data'][i]['status'] == 4) {
+                            html += '<a class="del btn-operation text-red1" href="javascript:void(0);" data-id="' + data["data"][i]["mansong_id"] + '" >删除</a>';
+                        }
+                        html += '<a class="btn-operation" href=' + __URL('admin/Menu/addonmenu?addons=fullCutInfo&mansong_id=' + data["data"][i]["mansong_id"]) + ' >详情</a>';
+                        html += '</td> ';
+                        html += '</tr>';
+                    }
+                } else {
+                    html += '<tr align="center"><td class="h-200" colspan="5">暂无符合条件的数据记录</td></tr>';
+                }
+                $(".trs").html(html);
+                utilAdmin.tips();
+                utilAdmin.page(".M-box3", data['total_count'], data["page_count"], page_index, LoadingInfo);
+            }
+        });
+    }
+
+    //关闭满减送
+    function closeMansong(mansong_id) {
+        $.ajax({
+            type: "post",
+            url: "{:__URL('admin/addons/execute/addons/fullcut/controller/fullcut/action/closemansong')}",
+            data: {"mansong_id": mansong_id},
+            success: function (data) {
+                if (data["code"] > 0) {
+                    utilAdmin.message("关闭成功","success", function () {
+                        LoadingInfo($("#page_index").val());
+                    })
+                } else {
+                    utilAdmin.message(data["message"], "danger");
+                }
+            }
+        })
+    }
+
+    //删除满减送
+    function delMansong(mansong_id) {
+        $(".tooltip.fade.top.in").remove();
+        $.ajax({
+            type: "post",
+            url: "{:__URL('admin/addons/execute/addons/fullcut/controller/fullcut/action/delPromotionMansong')}",
+            data: {"mansong_id": mansong_id.toString()},
+            dataType: "json",
+            success: function (data) {
+                if (data["code"] > 0) {
+                    utilAdmin.message("删除成功","success", function () {
+                        LoadingInfo($("#page_index").val());
+                    })
+                } else if (data["code"] == -1) {
+                    utilAdmin.message('正在进行中的活动不可删除！',"danger")
+                } else {
+                    utilAdmin.message(data['message'], "danger")
+                }
+            }
+        })
+    }
+
+    //全选
+    function CheckAll(event) {
+        var checked = event.checked;
+        $(".table-class tbody input[type = 'checkbox'][name='sub_no_use']").prop("checked", checked);
+    }
+
+    //批量删除
+    function batchDelete() {
+        var mansong_id = new Array();
+        $(".table-class tbody input[type='checkbox']:checked").each(function () {
+            if (!isNaN($(this).val())) {
+                mansong_id.push($(this).val());
+            }
+        });
+        if (mansong_id.length == 0) {
+            $("#dialog").dialog({
+                buttons: {
+                    "确定,#e57373": function () {
+                        $(this).dialog('close');
+                    }
+                },
+                contentText: "请选择需要操作的记录",
+                title: "消息提醒",
+            });
+            return false;
+        }
+        delMansong(mansong_id);
+    }
+    $('body').on('click','.search_to',function(){
+        LoadingInfo(1);
+    });
+    $('body').on('click','.del',function(){
+        var mansong_id=$(this).attr("data-id");
+        delMansong(mansong_id);
+    });
+    $('body').on('click','.close_a',function(){
+        var mansong_id=$(this).attr("data-id");
+        closeMansong(mansong_id);
+        
+    });
+  })
+</script>
+{/block}

@@ -1,0 +1,57 @@
+<view class='receive_giftvouchaer'>
+  <view class='giftvoucher_detail_box'>
+    <view class='info'>
+      <view class='logo'>
+        <image class='logo_img' mode='widthFix' src="{{giftvoucherdetail.shop_logo != '' ? giftvoucherdetail.shop_logo : '/images/no-avatar.png'}}"></image>
+      </view>
+      <view class='name'>{{giftvoucherdetail.shop_name}}</view>
+      <view class='time'>{{giftvoucherdetail.start_time}} ~ {{giftvoucherdetail.end_time}}</view>      
+    </view>
+    <view class="giftvoucher_box {{giftvoucherdetail.is_giftvoucher <=0 ? 'no_giftvoucher' : ''}}">
+      <view class='giftvoucher_r'>
+        <view class='giftvoucher_img'>          
+          <image src="{{giftvoucherdetail.pic_cover_mid != '' ? giftvoucherdetail.pic_cover_mid : '/images/no-goods.png'}}"></image>
+        </view>
+        <view class='giftvoucher_text'>
+          <view class='giftvoucher_name'>{{giftvoucherdetail.giftvoucher_name}}</view>          
+        </view>
+      </view>      
+      <view class='giftvoucher_btn'>
+        <view class='btn receive_btn' wx:if='{{giftvoucherdetail.is_giftvoucher > 0}}' bindtap='giftvoucherReceive' >立即领取</view>
+        <view class='btn received_btn' wx:elif='{{giftvoucherdetail.is_giftvoucher == 0}}'>已领取</view>
+        <view class='btn received_btn' wx:elif='{{giftvoucherdetail.is_giftvoucher == -1}}'>未开始</view>
+        <view class='btn received_btn' wx:elif='{{giftvoucherdetail.is_giftvoucher == -2}}'>已过期</view>
+      </view>
+    </view>
+  </view>
+
+  <view class='auto_shop_box'>
+    <view class='title'>使用门店</view>
+    <view class='auto_shop'>
+      <view class='store_list' wx:for='{{store_list}}' wx:key=''>
+        <view class='head'>
+          <view class='store_name'>{{item.store_name}}</view>
+          <view class='distance'>{{item.distance}}Km</view>
+        </view>
+        <view class='address'>
+          <view class='icon_location iconfont v-icon-location'></view>
+          <view class='address_text'>
+            {{item.province_name}}{{item.city_name}}{{item.dictrict_name}}{{item.address}}
+          </view>
+        </view>
+      </view>
+      <view class='no_more'>没有更多了</view>
+    </view>
+  </view>
+  
+</view>
+
+
+<!-- 关联手机 -->
+<phone-compoent phoneShow='{{phoneShow}}' bind:phoneEven='phonereResult'></phone-compoent>
+
+<!-- 登录组件 -->
+<login-component loginShow='{{loginShow}}' bind:request='requestLogin'></login-component>
+
+<!-- 小导航 -->
+<topnav-component></topnav-component>

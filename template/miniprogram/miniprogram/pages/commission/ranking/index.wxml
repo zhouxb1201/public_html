@@ -1,0 +1,63 @@
+<view class="rank_box">
+  <van-tabs active="{{ active }}" bind:change='typesChange'>
+    <van-tab title="推荐榜"></van-tab>
+    <van-tab title="佣金榜"></van-tab>
+    <van-tab title="积分榜"></van-tab>
+  </van-tabs>
+
+  <view class="list_box">
+    <view class="tab_group">
+      <view class="tabs_wap">
+        <view class="tab_wap_nav">
+          <view class="van_tab {{times == 'month'?'activetime':''}}" data-times="month" bindtap="timeChange">月榜</view>
+          <view class="van_tab {{times == 'year'?'activetime':''}}" data-times="year" bindtap="timeChange">年榜</view>
+          <view class="van_tab {{times == 'all'?'activetime':''}}" data-times="all" bindtap="timeChange" style="border-right:none">总榜</view>
+        </view>
+      </view>
+    </view>
+
+    <view class="rank_center">
+      <view class="item rank_{{item.ranking}}" wx:for='{{topThreeList}}' wx:key='index'>
+        <view class="img">
+          <view class="img_box">
+            <image src="{{item.user_headimg?item.user_headimg:'/images/no-avatar.png'}}"></image>
+          </view>
+          <view class="num">{{item.ranking}}</view>
+        </view>
+        <view class="name text-nowrap">{{item.nick_name?item.nick_name:''}}</view>
+        <view class="total text-nowrap">{{item.number}}{{item.unit}}</view>
+      </view>
+    </view>
+
+    <view class="list_group">
+      <view class="list_item" wx:for='{{listItem}}' wx:key='index'>
+        <view class="num">{{item.ranking}}</view>
+        <view class="title">
+          <view class="img">
+            <image src="{{item.user_headimg?item.user_headimg:'/images/no-avatar.png'}}"></image>
+          </view>
+          <view class="name">{{item.nick_name?item.nick_name:''}}</view>
+        </view>
+        <view class="total">
+          <view class="n">{{item.number}}</view>
+          {{item.unit}}
+        </view>
+      </view>
+    </view>
+  </view>
+
+</view>
+
+<view class="user_item" wx:if="{{userlist != ''}}">
+  <view class="num">{{userlist.ranking}}</view>
+  <view class="title">
+    <view class="img">
+      <image src="{{userlist.user_headimg?userlist.user_headimg:'/images/no-avatar.png'}}"></image>
+    </view>
+    <view class="name">{{userlist.nick_name?userlist.nick_name:''}}</view>
+  </view>
+  <view class="total">
+    <view class="n">{{userlist.number}}</view>
+    {{userlist.unit}}
+  </view>
+</view>

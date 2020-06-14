@@ -1,0 +1,41 @@
+page{
+  background-color: #f8f8f8;
+  font-size: 28rpx;
+}
+
+.cell{
+  padding: 20rpx 30rpx;
+  box-sizing: border-box;
+  background-color: #fff;
+  border-bottom: 1px solid #ebedf0;  
+}
+.cell .item{
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  line-height: 45rpx;
+}
+.cell .item .text_title{
+  display: flex;
+  align-items: center;
+}
+.cell .item .num{
+  display: flex;
+  align-items: center;
+}
+.cell .item .order_no{
+  font-size: 24rpx;
+  color: #606266;
+}
+.cell .item .time{
+  font-size: 24rpx;
+  color: #606266;
+}
+
+.no_more{
+  padding: 40rpx;
+  color: #606266;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}

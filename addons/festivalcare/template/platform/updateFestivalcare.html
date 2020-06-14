@@ -1,0 +1,436 @@
+{block name="main"}
+        <!-- page -->
+        <form class="form-horizontal form-validate widthFixedForm">
+            <div class="screen-title">
+                <span class="text">规则设置</span>
+            </div>
+            <div class="form-group">
+                <label class="col-md-2 control-label"><span class="text-bright">*</span>活动名称</label>
+                <div class="col-md-5">
+                    <input type="text" id="festivalcare_name" class="form-control" name="festivalcare_name" required value="{$info['festivalcare_name']}">
+                </div>
+            </div>
+              
+            <div class="form-group">
+                <label class="col-md-2 control-label"><span class="text-bright">*</span>活动时间</label>
+                <div class="col-md-8">
+                    <div class="v-datetime-input-control">
+                        <label for="effect_time">
+                            <input type="text" class="form-control" id="start_time" placeholder="请选择时间" value="{php}if($info['start_time']) echo date('Y-m-d H:i:s',$info['start_time']){/php}" autocomplete="off" name="start_time" required data-types="datetime">
+                            <i class="icon icon-calendar"></i>
+                        </label>
+                    </div>
+                    <div class="help-block mb-0">开始时间点为选中日期的0:00:00</div>
+                </div>
+            </div>
+            
+            <div class="form-group">
+            <label class="col-md-2 control-label"><span class="text-bright">*</span>推送会员</label>
+            <div class="col-md-5">
+	            <select class="form-control w-200" name="group_id" id="group_id" required>
+	            	<option value="0">所有标签</option>
+	            	{volist name="group_list['data']" id="gr"}
+	            		<option value="{$gr['group_id']}" {if($info['group_id']==$gr['group_id'])}selected = "selected"{/if}>{$gr['group_name']}</option>
+	            	{/volist}
+	            </select>
+                <div class="mb-0 help-block">没有标签？去 <a href="{:__URL('PLATFORM_MAIN/member/addLabel')}" class="text-primary" target="_blank">新建</a>，新建完点 <a href="" class="text-primary">刷新</a> 重新加载数据</div>
+	        </div>
+            </div>
+            
+            <div class="form-group">
+                <label class="col-md-2 control-label"><span class="text-bright">*</span>微信推送内容</label>
+                <div class="col-md-5">
+                    <textarea id="weixin_msg" class="form-control" name="desc" rows="4" required>{if($info['weixin_msg'])}{$info['weixin_msg']}{else}今天中秋节，我们为你准备了[奖品名称]，领取链接[奖品链接]，[奖品过期时间]后失效。{/if}</textarea>
+                    <p class="small-muted">变量：[奖品名称] [奖品链接] [奖品过期时间]</p>
+                </div>
+            </div>
+            
+            <div class="form-group">
+                <label class="col-md-2 control-label"><span class="text-bright">*</span>优先级</label>
+                <div class="col-md-5">
+                    <input type="number" id="priority" name="priority" class="form-control w-200" min="0" value="{if($info['priority'])}{$info['priority']}{else}0{/if}">
+                    <div class="help-block mb-0">当同时出现两档有效活动时，数字越大越优先</div>
+                </div>
+            </div>
+            
+			<div class="form-group"></div>
+            <div class="screen-title">
+                <span class="text">奖品设置</span>
+            </div>	        	
+        	<div class="form-group">
+            	<label class="col-md-2 control-label"><span class="text-bright">*</span>奖品类型</label>
+                <div class="col-md-6">
+                    <label class="radio-inline">
+                      <input type="radio" name="prize_type" value="1" {if($info['prize_type']==1 || !$info['prize_type'])}checked{/if} aria-invalid="false" onclick="optionType(this.value)">余额
+                    </label>
+                    <label class="radio-inline">
+                      <input type="radio" name="prize_type" value="2" {if($info['prize_type']==2)}checked{/if} aria-invalid="false" onclick="optionType(this.value)">积分
+                    </label>
+                    <label class="radio-inline">
+                      <input type="radio" name="prize_type" value="5" {if($info['prize_type']==5)}checked{/if} aria-invalid="false" onclick="optionType(this.value)">商品
+                    </label>
+                    {if($setup['coupontype']['is_state']==1)}
+                    <label class="radio-inline">
+                      <input type="radio" name="prize_type" value="3" {if($info['prize_type']==3)}checked{/if} aria-invalid="false" onclick="optionType(this.value)" {if($setup['coupontype']['is_use']==0)}class="disabled"{/if}>优惠券
+                    </label>
+                    {/if}
+                    {if($setup['giftvoucher']['is_state']==1)}
+                    <label class="radio-inline">
+                      <input type="radio" name="prize_type" value="4" {if($info['prize_type']==4)}checked{/if} aria-invalid="false" onclick="optionType(this.value)" {if($setup['giftvoucher']['is_use']==0)}class="disabled"{/if}>礼品券
+                    </label>
+                    {/if}
+                    {if($setup['gift']['is_state']==1)}
+                    <label class="radio-inline">
+                      <input type="radio" name="prize_type" value="6" {if($info['prize_type']==6)}checked{/if} aria-invalid="false" onclick="optionType(this.value)" {if($setup['gift']['is_use']==0)}class="disabled"{/if}>赠品
+                    </label>
+                    {/if}
+                </div>
+            </div>
+                   
+            <div class="form-group">
+	            <label class="col-md-2 control-label"><span class="text-bright">*</span>奖品名称</label>
+	            <div class="col-md-5">
+	                <input type="text" id="prize_name" class="form-control" name="prize_name" required value="{$info['prize_name']}">
+	            </div>
+	        </div>
+            
+            <div class="form-group" id="prize-type">
+            	{if($info['prize_type']==1 || !$info['prize_type'])}
+                <label class="col-md-2 control-label"><span class="text-bright">*</span>赠送余额</label>
+                <div class="col-md-5">
+                    <div class="input-group w-200">
+                        <input type="number" id="prize_money" name="prize_money" class="form-control" required min="0.01" value="{$info['prize_money']}">
+                        <div class="input-group-addon">元</div>
+                    </div>
+                </div>
+                {/if}
+                {if($info['prize_type']==2)}
+                <label class="col-md-2 control-label"><span class="text-bright">*</span>赠送积分</label>
+				<div class="col-md-5">
+ 					<div class="input-group w-200">
+	  					<input type="number" id="prize_point" name="prize_point" class="form-control" required min="1" value="{$info['prize_point']}">
+	  					<div class="input-group-addon">积分</div>
+ 					</div>
+				</div>
+                {/if}
+                {if($info['prize_type']==3)}
+            	<label class="col-md-2 control-label"><span class="text-bright">*</span>赠送优惠券</label>
+       			<div class="col-md-5">
+        			<select class="form-control w-200" name="seckill_name" id="seckill_name" required="" onchange="typeId(this.value)">
+        				{volist name="info['coupon']" id="coupon"}
+        				<option value="{$coupon['coupon_type_id']}" {if($coupon['coupon_type_id']==$info['prize_type_id'])}selected = "selected"{/if} >{$coupon['coupon_name']}</option>
+        				{/volist}
+        			</select>
+        			<span id="seckill_name-error" class="help-block-error"></span>
+       			</div>
+             	{/if}
+             	{if($info['prize_type']==4)}
+            	<label class="col-md-2 control-label"><span class="text-bright">*</span>赠送礼品券</label>
+       			<div class="col-md-4">
+        			<select class="form-control w-200" name="seckill_name" id="seckill_name" required="" aria-required="true" aria-describedby="seckill_name-error" aria-invalid="false" onchange="typeId(this.value)">
+        				{volist name="info['giftvoucher']" id="giftvoucher"}
+        				<option value="{$giftvoucher['gift_voucher_id']}" {if($giftvoucher['gift_voucher_id']==$info['prize_type_id'])}selected = "selected"{/if}>{$giftvoucher['giftvoucher_name']}</option>
+        				{/volist}
+        			</select>
+        			<span id="seckill_name-error" class="help-block-error"></span>
+       			</div>
+       			{/if}
+       			{if($info['prize_type']==5)}
+       			<label class="col-md-2 control-label"><span class="text-bright">*</span>赠送商品</label>
+				<div class="col-md-3">
+					<div class="btn btn-primary-diy" onclick="loadList(5)">点击选择</div>
+					<div id="goods_info" class="media text-left">
+		    			<div class="media-left goods-img"><img src="{$info['prize_goods']['pic_cover']}" width="60" height="60"></div>
+		    			<div class="media-body max-w-300"><div class="line-2-ellipsis goods-name">{$info['prize_goods']['goods_name']}</div><div class="line-1-ellipsis text-danger strong goods-price">{$info['prize_goods']['price']}</div></div>
+		    		</div>
+				</div>
+             	{/if}
+             	{if($info['prize_type']==6)}
+       			<label class="col-md-2 control-label"><span class="text-bright">*</span>赠送赠品</label>
+				<div class="col-md-3">
+					<div class="btn btn-primary-diy" onclick="loadList(6)">点击选择</div>
+					<div id="gift_info" class="media text-left">
+		    			<div class="media-left gift-img"><img src="{$info['prize_gift']['pic_cover']}" width="60" height="60"></div>
+		    			<div class="media-body max-w-300"><div class="line-2-ellipsis gift-name">{$info['prize_gift']['gift_name']}</div><div class="line-1-ellipsis text-danger strong gift-price">{$info['prize_gift']['price']}</div></div>
+		    		</div>
+				</div>
+             	{/if}
+            </div>
+	            
+            <input type="hidden" name="prize_type_id" value="{$info['prize_type_id']}" id="prize_type_id" class="prize_type_id" autocomplete="off">
+	        <div class="form-group">
+		        <label class="col-md-2 control-label">奖品图片</label>
+		        <div class="col-md-8">
+		        	<div class="mb-20">
+				        <div id="prize_pic" class="picture-list">
+				        	{if($info['prize_pic'])}
+				        	<a href="javascript:void(0);" class="close-box">
+				        		<i class="icon icon-danger" style="margin-right:10px;" title="删除"></i>
+				        		<img src="{$info['prize_pic']}">
+				        	</a>
+				        	{else}
+				        	<a href="javascript:void(0);" class="plus-box" data-toggle="singlePicture"><i class="icon icon-plus"></i></a>
+				        	{/if}
+				        </div>
+			        </div>
+			        <p class="small-muted">建议100*100PNG格式图片，不传则用系统默认图</p>
+		        </div>
+	        </div>
+		        
+		    <div class="form-group">
+                <label class="col-md-2 control-label"><span class="text-bright">*</span>奖品过期时间</label>
+                <div class="col-md-8">
+                    <div class="v-datetime-input-control">
+                        <label for="expire_time">
+                            <input type="text" class="form-control expire_time" id="expire_time" placeholder="过期时间" value="{php}if($info['expire_time'])echo date('Y-m-d',$info['expire_time']){/php}" autocomplete="off" name="expire_time" required>
+                            <i class="icon icon-calendar"></i>
+                        </label>
+                    </div>
+                    <div class="mb-0 help-block">超出时间未领取则不能领取,开始时间点为选中日期的0:00:00</div>
+                </div>
+            </div>
+            <input type="hidden" name="prize_id" value="{$info['prize_id']}" class="prize_id" autocomplete="off"/>
+            
+            <div class="form-group"></div>
+            <div class="form-group">
+                <label class="col-md-2 control-label"></label>
+                <div class="col-md-8">
+                    <button class="btn btn-primary" type="submit">{if($info['festival_care_id']>0)}修改{else}添加{/if}</button>
+                    <a href="javascript:history.go(-1);" class="btn btn-default">返回</a>
+                </div>
+            </div>
+            <input type="hidden" id="festival_care_id" name="festival_care_id" value="{$info['festival_care_id']}" autocomplete="off"/>
+        </form>
+
+        <!-- page end -->
+{/block}
+{block name="script"}
+<script>
+	var setup = {
+   		coupontype:{$setup['coupontype']['is_use']},	
+   		giftvoucher:{$setup['giftvoucher']['is_use']},
+   		gift:{$setup['gift']['is_use']}
+    }
+    require(['util'], function (util) {
+        util.layDate("#start_time");
+        util.layDate("#expire_time");
+        
+        var festival_care_id = $("#festival_care_id").val();
+        if(festival_care_id>0){
+        	var url = "{$updateFestivalcareUrl}";
+        }else{
+        	var url = "{$addFestivalcareUrl}";
+        }
+
+        //提交数据
+        var flag = false;
+        util.validate($('.form-validate'), function (form) {
+        	var festival_care_id = $("#festival_care_id").val();
+            var festivalcare_name = $("#festivalcare_name").val();
+            var start_time = $("#start_time").val();
+            var group_id = $("#group_id").val();
+            var weixin_msg = $("#weixin_msg").val();
+            var priority = $("#priority").val();
+            var prize_type = $("input[name='prize_type']:checked").val();
+            var prize_name = $("#prize_name").val();
+            var prize_type_id = $("#prize_type_id").val();
+            var prize_money = $("#prize_money").val();
+            var prize_point = $("#prize_point").val();
+            var prize_pic = $("#prize_pic img").attr('src'); 
+            var expire_time = $("#expire_time").val();
+            if (flag)return;
+        	if(prize_type_id==0 && prize_type==3){
+        		util.message('请选择优惠券');
+        		return false;
+        	}
+        	if(prize_type_id==0 && prize_type==4){
+        		util.message('请选择礼品券');
+        		return false;
+        	}
+        	if(prize_type_id==0 && prize_type==5){
+        		util.message('请选择商品');
+        		return false;
+        	}
+        	if(prize_type_id==0 && prize_type==6){
+        		util.message('请选择赠品');
+        		return false;
+        	}
+            if (util.DateTurnTime(expire_time) <= util.DateTurnTime(start_time)){
+                util.message('奖品过期时间必须大于活动结束时间！', 'info', function () {
+                    $('#expire_time').focus();
+                });
+            	return false;
+            }
+            flag = true;
+            var data = {};
+        	data.festival_care_id = festival_care_id;
+        	data.festivalcare_name = festivalcare_name;
+        	data.start_time = start_time;
+			data.group_id = group_id;
+        	data.weixin_msg = weixin_msg;
+        	data.priority = priority;
+        	data.prize_type = prize_type;
+        	data.prize_name = prize_name;
+        	data.prize_type_id = prize_type_id;
+        	data.prize_money = prize_money;
+        	data.prize_point = prize_point;
+        	data.prize_pic = prize_pic;
+        	data.expire_time = expire_time;
+            $.ajax({
+                type: "post",
+                url: url,
+                data: data,
+                success: function (data) {
+                    if (data["code"] > 0) {
+                        util.message(data["message"], 'success',function(){
+                            window.location.href="{:__URL('ADDONS_MAINfestivalcareList')}";
+                        });
+                    } else {
+                    	flag = false;
+                        util.message(data["message"], 'danger');
+                    }
+                }
+            });
+        });
+    })
+    //选项
+    function optionType(value){
+    	var html = '';
+    	typeId(0);
+    	if(value==1){
+	        html += '<label class="col-md-2 control-label"><span class="text-bright">*</span>赠送余额</label>';
+	        html += '<div class="col-md-5"><div class="input-group w-200"><input type="number" id="prize_money" name="prize_money" class="form-control prize_money" required min="0.01" value=""><div class="input-group-addon">元</div></div></div>';
+    	}else if(value==2){
+	        html += '<label class="col-md-2 control-label"><span class="text-bright">*</span>赠送积分</label>';
+	        html += '<div class="col-md-5"><div class="input-group w-200"><input type="number" id="prize_point" name="prize_point" class="form-control prize_point" required min="1" value=""><div class="input-group-addon">积分</div></div></div>';
+    	}else if(value==3 || value==4){
+            $.ajax({
+                type: "post",
+                url: "{$prizeTypeUrl}",
+                data: {
+                    'type': value
+                },
+                success: function (data) {
+                	var code = data.code;
+                	var data = data.data;
+                	if(value==3 && code==1){
+                		html += '<label class="col-md-2 control-label"><span class="text-bright">*</span>赠送优惠券</label>';
+                		html += '<div class="col-md-5">';
+                		html += '<select class="form-control w-200" name="seckill_name" id="seckill_name" required="" aria-required="true" aria-describedby="seckill_name-error" aria-invalid="false" onchange="typeId(this.value)">';
+                		if(data.length>0){
+                			for (var c=0;c<data.length;c++){
+                				if(c==0)typeId(data[c].coupon_type_id);
+                				html += '<option value="'+data[c].coupon_type_id+'">'+data[c].coupon_name+'</option>';
+                			}
+                		}else{
+                			html += '<option value="0">请添加优惠券</option>';
+                		}
+                		html += '</select><span id="seckill_name-error" class="help-block-error"></span></div>';
+                		$('input[name="prize_type"][value="'+ value +'"]').removeClass('disabled');
+                	}else if(value==3 && code==0){
+                		$('input[name="prize_type"][value="'+ value +'"]').addClass('disabled');
+                		require(['util'], function (util) {
+                        util.alert2('<div style="margin-top:5px;"><label class="prompt">优惠券应用未开启，请先前往开启后再设置</label></div>', function () {
+                        	window.open("{:__URL('ADDONS_MAINcouponSetting')}");
+                            util.alert('<div style="margin-top:5px;"><label class="prompt">是否已设置完成</label></div>', function () {
+                            	optionType(value);
+                            })
+                        })
+                		})
+                	}
+                	if(value==4 && code==1){
+                		html += '<label class="col-md-2 control-label"><span class="text-bright">*</span>赠送礼品券</label>';
+                		html += '<div class="col-md-5">';
+                		html += '<select class="form-control w-200" name="seckill_name" id="seckill_name" required="" aria-required="true" aria-describedby="seckill_name-error" aria-invalid="false" onchange="typeId(this.value)">';
+                		if(data.length>0){
+                			for (var g=0;g<data.length;g++){
+                				if(g==0)typeId(data[g].gift_voucher_id);
+                				html += '<option value="'+data[g].gift_voucher_id+'">'+data[g].giftvoucher_name+'</option>';
+                			}
+                		}else{
+                			html += '<option value="0">请选择礼品券</option>';
+                		}
+                		html += '</select><span id="seckill_name-error" class="help-block-error"></span></div>';
+                		$('input[name="prize_type"][value="'+ value +'"]').removeClass('disabled');
+                	}else if(value==4 && code==0){
+                		$('input[name="prize_type"][value="'+ value +'"]').addClass('disabled');
+                		require(['util'], function (util) {
+                        util.alert2('<div style="margin-top:5px;"><label class="prompt">礼品券应用未开启，请先前往开启后再设置</label></div>', function () {
+                        	window.open("{:__URL('ADDONS_MAINgiftvoucherSetting')}");
+                            util.alert('<div style="margin-top:5px;"><label class="prompt">是否已设置完成</label></div>', function () {
+                            	optionType(value);
+                            })
+                        })
+                		})
+                	}
+                	if(!$("#prize-type").html() && code==1)$("#prize-type").html(html);
+                }
+            });
+    	}else if(value==5){
+    		html += '<label class="col-md-2 control-label"><span class="text-bright">*</span>赠送商品</label>';
+    		html += '<div class="col-md-3">';
+    		html += '<div class="btn btn-primary-diy" onclick="loadList(5)">点击选择</div>';
+   			html += '<div id="goods_info" class="media text-left hidden">';
+   			html += '<div class="media-left goods-img"><img src="http://iph.href.lu/60x60" width="60" height="60"></div>';
+   			html += '<div class="media-body max-w-300"><div class="line-2-ellipsis goods-name"></div><div class="line-1-ellipsis text-danger strong goods-price"></div></div>';
+   			html += '</div>';
+    		html += '</div>';
+		}else if(value==6 && setup.gift==1){
+			html += '<label class="col-md-2 control-label"><span class="text-bright">*</span>赠送赠品</label>';
+			html += '<div class="col-md-3">';
+			html += '<div class="btn btn-primary-diy" onclick="loadList(6)">点击选择</div>';
+			html += '<div id="gift_info" class="media text-left hidden">';
+			html += '<div class="media-left gift-img"><img src="http://iph.href.lu/60x60" width="60" height="60"></div>';
+			html += '<div class="media-body max-w-300"><div class="line-2-ellipsis gift-name"></div><div class="line-1-ellipsis text-danger strong gift-price"></div></div>';
+			html += '</div>';
+			html += '</div>';
+		}
+    	$("#prize-type").html(html);
+    }
+    function typeId(id){
+    	$("#prize_type_id").val(id);
+    }
+    //选商品
+    function loadList(type){
+    	if(type==5){
+    		title = '选择商品';
+    	}else{
+    		title = '选择赠品';
+    	}
+        $.confirm({
+            title: title,
+            content: 'url:'+'{$prizeTypeUrl}?type='+type,
+            animation: 'top',
+            columnClass: 'large',
+            closeAnimation: 'bottom',
+            backgroundDismiss: true,
+            animateFromElement: false,
+            closeIcon: true,
+            buttons: {
+                confirm: {
+                    text:'确定',
+                    btnClass:'btn-primary',
+                    action:function(){
+                        var content = this.$content.find('#selectedData').data();
+                        if(util.isEmpty(content)){
+                            util.message('请'+title)
+                            return false;
+                        }
+                        if(callback && callback !== undefined && typeof(callback) === 'function'){
+                            callback(content);
+                        }
+                    }
+                },
+                cancel: {
+                    text:'取消',
+                    btnClass:'btn-default',
+                    action:function(){
+                        console.log('取消了')
+                    }
+                }
+            }
+
+        });
+    }
+</script>
+{/block}

@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>登录</title>
+    <link rel="stylesheet" href="__TEMP__/shop/new/public/css/common.css">
+    <link rel="stylesheet" href="__TEMP__/shop/new/public/css/shop.css">
+    {if $colorStyle && $colorStyle!='default'}
+    <link rel="stylesheet" href="PLATFORM_NEW_CSS/indexDecorate/css/{$colorStyle}.css">
+    {/if}
+    <script src="__TEMP__/shop/new/public/scripts/lib/require.js" data-main="__TEMP__/shop/new/public/scripts/app/main"></script>
+</head>
+<body style="background-color: #fff">
+    <div class="v-layout-login" >
+        <div class="v-head-full">
+            <div class="v-head w1200 clearfix">
+                <div class="logo-left clearfix">
+                    <a href="{:__URL('SHOP_MAIN')}" class="fl"><img src="{$pc_info['logo']}" alt=""></a>
+                    <i class="shu fl"></i>
+                    <span class="title fl">会员登录</span>
+                </div>
+                <div class="registered-right fr">没有账号？<a href="{:__URL('SHOP_MAIN/login/register')}">注册></a></div>
+            </div>
+        </div>
+       
+        <div class="v-login-bg" style="background: url('{if $pc_info['pc_login_adv']}{$pc_info['pc_login_adv']}{else}__STATIC__/images/login.png{/if}') no-repeat center">
+            <div class="v-login clearfix w1200">
+                <div class="imgHref fl"><a href="{$pc_info['pc_login_jump']}"></a></div>
+                <div class="login-box fr">
+                    <form action="">
+                        <h3 class="title">欢迎来到会员登录</h3>
+                        <div class="login-msg" style="display: none">
+                            <p class="error hint" >账户名错误</p>
+                        </div>
+                        <dl class="clearfix">
+                            <dt class="userName fl"><img src="PLATFORM_STATIC/login_register/L-account.png" alt=""></dt>
+                            <dd class="userName-ipt fl"><input type="text" class="inputs" id="txtName" placeholder="请输入您的手机号"></dd>
+                        </dl>
+                        <!--请输入验证码-->
+                        <div class="tip clearfix v-code pr" style="display: none">
+                            <input type="text" placeholder="请输入验证码" id="vertification" class="v-code-ipt">
+                            <a href="javascript:void(0);" class="vCode-a"><img id="verify_img" src="{:__URL('SHOP_MAIN/captcha')}" alt="captcha" onclick="this.src='{:__URL('SHOP_MAIN/captcha?tag=1')}'+'&send='+Math.random()"></a>
+                        </div>
+                        <dl class="clearfix">
+                            <dt class="userName fl"><img src="PLATFORM_STATIC/login_register/L-pwd.png" alt=""></dt>
+                            <dd class="userName-ipt fl"><input type="password" id="txtPWD" class="inputs" placeholder="请输入长度6-20位密码"></dd>
+                        </dl>
+
+                        <div class="tip clearfix">
+                            <div class="fr"><a href="{:__URL('SHOP_MAIN/login/findpasswd')}" class="white">忘记密码？</a></div>
+                        </div>
+
+                        <div class="submits mb20">
+                            <input type="button" class="submit okSubmit btnlogin" value="登录">
+                        </div>
+                        {if $qq_info['is_use']==1 || $Wchat_info['is_use']==1}
+                        <div class="tip clearfix">
+                            <div class="go fl">使用合作账号登录</div>
+                            <div class="fr">
+                                {if condition="$qq_info['is_use'] eq 1"}
+                                <a href="{:__URL('SHOP_MAIN/login/oauthlogin','type=QQLOGIN')}">
+                                    <img src="__TEMP__/shop/new/public/image/reglogin/QQ.png" alt="">
+                                </a>
+                                {/if}
+                                {if condition="$Wchat_info['is_use'] eq 1"}
+                                <a href="{:__URL('SHOP_MAIN/login/oauthlogin','type=WCHAT')}">
+                                    <img src="__TEMP__/shop/new/public/image/reglogin/微信.png" alt="">
+                                </a>
+                                {/if}
+                            </div>
+                        </div>
+                        {/if}
+                    </form>
+                </div>
+            </div>
+        </div>   
+
+        
+<input type="hidden" id="num" value="">
+    </div>
+    {$bottom}
+</body>
+<script>
+    require(['dialog'],function(dialog){
+        
+        function isIE() {
+            if (!!window.ActiveXObject || "ActiveXObject" in window){
+                location.href="{:__URL('SHOP_MAIN/login/versionLow')}";
+            }
+        }
+        isIE();
+        
+        loading();
+        dialog.footerImg();
+        function loading(){
+            $(".rights").css("display","none");
+        }
+
+        $("#vertification").change(function(){
+            var vertification = $.trim($('#vertification').val());
+            if("{$login_verify_code['pc']}" == 1 && $("#num").val()>=3) {
+                if (vertification == undefined || vertification == "") {
+                    $(".hint").html('请输入验证码');
+                    $(".login-msg").css("display", "block");
+                    $("#vertification").focus();
+                }else{
+                    $(".login-msg").css("display", "none");
+                    $.ajax({
+                        type: "post",
+                        url: "{:__URL('SHOP_MAIN/login/vertify')}",
+                        data: {'vertification': vertification},
+                        async: false,
+                        dataType: 'json',
+                        success: function (data) {
+                            if (data['code'] == 1) {
+                                $(".login-msg").css("display", "none");
+                            } else {
+                                $(".hint").html('验证码错误');
+                                $(".login-msg").css("display", "block");
+                                $("#vertification").val('');
+                                $("#vertification").focus();
+                                $("#verify_img").attr("src",'{:__URL('SHOP_MAIN/captcha?tag=1')}&send='+Math.random());
+                            }
+                        }
+                    });
+                }
+            }
+            })
+
+        $(".btnlogin").click(function(){
+            ClearCookie(); //登录时清除之前的cookie
+            var userName = $.trim($('#txtName').val());
+            var password = $.trim($('#txtPWD').val());
+            var vertification = $.trim($('#vertification').val());
+            if( userName == "" || userName == undefined || userName == null ) {
+                $(".hint").html('请输入用户名');
+                $(".login-msg").css("display", "block");
+                $("#txtName").focus();
+                return false;
+            }else if (password == "") {
+                $(".hint").html('请输入密码');
+                $(".login-msg").css("display", "block");
+                $("#txtPWD").focus();
+                return false;
+            }else{
+                $(".login-msg").css("display", "none");
+            }
+            if("{$login_verify_code['pc']}" == 1 && $("#num").val()>=3){
+                if(vertification == undefined || vertification == ""){
+                    $(".hint").html('请输入验证码');
+                    $(".login-msg").css("display", "block");
+                    $("#vertification").focus();
+                    return false;
+                }else{
+                    $.ajax({
+                        type: "post",
+                        url: "{:__URL('SHOP_MAIN/login/vertify')}",
+                        data: {'vertification': vertification},
+                        async: false,
+                        dataType: 'json',
+                        success: function (data) {
+                            if (data['code'] == 1) {
+                                $(".login-msg").css("display", "none");
+                            } else {
+                                $(".hint").html('验证码错误');
+                                $(".login-msg").css("display", "block");
+                                $("#vertification").val('');
+                                $("#vertification").focus();
+                                $("#verify_img").attr("src",'{:__URL('SHOP_MAIN/captcha?tag=1')}&send='+Math.random());
+                                return false;
+                            }
+                        }
+                    });
+                }
+            }
+            $.ajax({
+                type: "POST",
+                url: "{:__URL('SHOP_MAIN/login/index')}",
+                data: {
+                    "username" : userName,
+                    "password" : password
+                },
+                success: function(data){
+                    if (data['code'] >0) {
+                        window.location.href = data['url'];
+                    }else{
+                        $("#num").val(data['num']);
+                        if("{$login_verify_code['pc']}" == 1 &&data['num']>=3){
+                            $(".v-code").css("display", "block");
+                        }
+                        if(data['code']=='-2002'){
+                            $(".hint").html('您的账号已被加入黑名单！');
+                        }else{
+                            $(".hint").html(data['message']);
+                        }
+                        $(".login-msg").css("display", "block");
+                        $("#verify_img").attr("src",'{:__URL('SHOP_MAIN/captcha?tag=1')}&send='+Math.random());
+                    }
+                }
+            });
+        });
+        function ClearCookie() {
+            var expires = new Date();
+            expires.setTime(expires.getTime() - 1000);
+            document.cookie = "appCode='';path=/;expires=" + expires.toGMTString() + "";
+            document.cookie = "roleID='';path=/;expires=" + expires.toGMTString() + "";
+            document.cookie = "parentMenuID='';path=/;expires=" + expires.toGMTString() + "";
+            document.cookie = "currentMenuName='';path=/;expires=" + expires.toGMTString() + "";
+        }
+    })
+
+</script>
+</html>
+
+

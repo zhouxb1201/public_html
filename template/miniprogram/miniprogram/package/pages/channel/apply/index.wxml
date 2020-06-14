@@ -1,0 +1,82 @@
+<import src="/common/wxParse/wxParse.wxml"/>
+<view class='apply_channel'>
+  <view class='img' wx:if="{{applayChannelData.channel_agreement.logo != ''}}">
+    <image mode='widthFix' src='{{applayChannelData.channel_agreement.logo}}'></image>
+  </view>
+
+  <!-- 等待审核 -->
+  <view class='auditing' wx:if='{{is_checked == 1}}'>
+    <view class='info'>
+      <van-icon class='icon' name="underway" size='4em' color='rgb(25, 137, 250)'/>
+      <view>提交成功，等待审核！</view>
+    </view>
+  </view>
+
+  <!-- 审核失败 -->
+  <view class='auditing' wx:if='{{is_checked == -1}}'>
+    <view class='info'>
+      <van-icon class='icon' name="clear" size='4em' color='rgb(102, 102, 102)'/>
+      <view>后台拒绝申请，请联系客服！</view>
+    </view>
+  </view>
+
+  <!-- 未申请，满足条件之一 / 满足以下所有条件-->
+  <view wx:if="{{is_checked ==  -2}}">
+    <view class='condition_group' >
+      <view class='title' wx:if="{{channel_condition == 'single'}}">满足其中一个条件即可成为分销商</view>
+      <view class='title' wx:if="{{channel_condition == 'all'}}">满足以下条件自动成为分销商</view>
+      <view class='value'>
+        <view class='cell'>{{condition.condition1.text}}</view>
+        <view class='cell'>{{condition.condition2.text}}</view>
+        <view class='cell'>{{condition.condition3.text}}</view>
+        <view class='cell'>{{condition.condition4.text}}<navigator class='buy' url='../../goods/detail/index?goodsId={{condition.condition4.goods_id}}'>去购买</navigator></view>
+      </view>
+    </view>    
+  </view>
+
+
+  <!-- 未申请，直接申请 -->
+  <view wx:if='{{is_checked == 0 || is_checked == -1 }}'>
+    <view>
+      <view class='apply_group' wx:if="{{customform.length == 0}}">
+        <view class='apply_cell'>
+          <view class='title'>真实姓名</view>
+          <view class='value'>
+            <input type='text' placeholder='请输入真实姓名' value='{{real_name}}' bindblur='realNameFun'></input>
+          </view>
+        </view>
+        <view class='apply_cell'>
+          <view class='title'>手机号码</view>
+          <view class='value'>
+            <input type='text' value='{{applayChannelData.user_tel}}' disabled='disabled'></input>
+          </view>
+        </view>
+      </view>
+      <view wx:else>
+        <!-- 自定义表单    -->
+        <form-com wx:if="{{customform != ''}}" customform='{{customform}}' bind:customformEven='customformData' ></form-com>
+      </view>
+      <view class='Agreement_btn'>
+        <view class='Agreement_radio'>
+          <label class='radio' data-checked='{{radioChecked}}' bindtap='radioApplyChange'>
+              <radio value="" checked="{{radioChecked}}" color='#1989fa'></radio>
+              我已阅读并同意以下协议
+            </label>
+        </view>    
+        <view class="sub_btn {{radioChecked == true ? 'active_btn' : ''}}">
+          <button bindtap='applayChannel'>提交申请</button>
+        </view>    
+      </view>
+    </view>
+  </view>
+
+
+  <!-- 协议 -->
+  <view class='Agreement_content'>
+    <view class='Agreement_title'><text class='title_text'>申请协议</text></view>
+    <view class='content'>
+      <template is="wxParse" data="{{wxParseData:content.nodes}}" />
+    </view>
+  </view>
+
+</view>

@@ -1,0 +1,474 @@
+{block name="main"}
+			<!-- page -->
+			<div class="screen-title">
+				<span class="text">基本信息</span>
+			</div>
+			<div class="row panel-detail">
+				<div class="col-md-6">
+					<div class="item h-auto">
+						<div class="media">
+							<div class="media-left">
+								<img src="{if $info['pic']}{:__IMG($info['pic'])}{else}/public/static/images/headimg.png{/if}" width="160px" height="160px" >
+							</div>
+							<div class="media-body">
+								<p class="p"><span class="text-label">ID：</span><span id="uid">{$info['uid']}</span></p>
+								<p class="p"><span class="text-label">用户名：</span><span>{$info['user_name']}</span></p>
+								<div class="p">
+									<span class="text-label">手机号码：</span><span>{$info['mobile']}</span>
+								</div>
+								<div class="p">
+									<span class="text-label">代理商等级：</span>
+									<select name="" id='type' class="form-control select-form-control inline-block">
+										{foreach name="agent_level" item="value"}
+										<option value="{$value.id}" {if $info['area_agent_level_id']==$value.id}selected{/if}>{$value.level_name}</option>
+										{/foreach}
+									</select>
+								</div>
+								<!--<div class="p">-->
+									<!--<span class="text-label">代理区域：</span>-->
+									<!--<select name="" class="form-control select-form-control inline-block" id="area_id">-->
+										<!--<option value="1" {if $info['area_type']==1}selected{/if}>省级代理</option>-->
+										<!--<option value="2" {if $info['area_type']==2}selected{/if}>市级代理</option>-->
+										<!--<option value="3" {if $info['area_type']==3}selected{/if}>区级代理</option>-->
+									<!--</select>-->
+								<!--</div>-->
+								<!--<div class="p nowrap">-->
+									<!--<span class="text-label">代理地区：</span>-->
+									<!--<div class="area-form-group">-->
+										<!--<select name="province" id="selProvinces"  class="form-control getProvince">-->
+										<!--<option value="-1">请选择省...</option>-->
+										<!--</select>-->
+										<!--<span class="selCities" {if $info['area_type']>1} style="display: show"{else}style="display: none"{/if} >-->
+										<!--<select name="city" id="selCities"  class="form-control getSelCity">-->
+											<!--<option value="-1">请选择市...</option>-->
+										<!--</select>-->
+										<!--</span>-->
+										<!--<span class="selDistricts" {if $info['area_type']>2} style="display: show"{else}style="display: none"{/if} >-->
+										<!--<select name="district" id="selDistricts" class="form-control">-->
+											<!--<option value="-1">请选择区...</option>-->
+										<!--</select>-->
+										<!--</span>-->
+									<!--</div>-->
+								<!--</div>-->
+								<div class="p">
+									<span class="text-label">当前状态：</span>
+									<select name="" id="status" class="form-control select-form-control inline-block">
+										<option value="2" {if $info['is_area_agent']==2}selected{/if} >已审核</option>
+										<option value="1" {if $info['is_area_agent']==1}selected{/if}>待审核</option>
+									</select>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="col-md-6">
+					<div class="item h-auto">
+						<div class="media-body">
+							<p class="p">推荐人：{if $info['referee_name']}{$info['referee_name']}{else}总店{/if} </p>
+							<p class="p">累计分红：{if $info['total_bonus']}{$info['total_bonus']}{else}0.00{/if} </p>
+							<p class="p">已发分红：{if $info['grant_bonus']}{$info['grant_bonus']}{else}0.00{/if}</p>
+							<p class="p">申请成为区域代理时间：{$info['apply_agent_time']}</p>
+							<p class="p">成为区域代理时间：{$info['become_area_agent_time']}</p>
+						</div>
+					</div>
+				</div>
+			</div>
+
+			<div class="screen-title">
+				<span class="text">代理地区</span>
+			</div>
+            <div>
+                <table class="table v-table table-auto-center">
+                    <thead>
+                        <tr>
+                            <th>代理区域</th>
+                            <th>代理地区</th>
+                            <th class="col-md-2 pr-14 operationLeft">操作</th>
+                        </tr>
+                    </thead>
+                    <tbody class="agencyList">
+					{foreach $info['area_type'] as $k=>$v}
+					{if $k==0}
+                        <tr>
+                            <td>
+                                <select name="agencyArea" class="form-control w-192 agencyArea agencyArea0" data-area='0'>
+                                    <option value="3" {if $v==3}selected{/if}>区级代理</option>
+                                    <option value="2" {if $v==2}selected{/if}>市级代理</option>
+                                    <option value="1" {if $v==1}selected{/if}>省级代理</option>
+                                </select>
+                            </td>
+                            <td class="td_area">
+                                <div class="area-form-group">
+									{if $v==1}
+                                    <select name="province" class="form-control selProvinces selProvinces0" data-pro='0'>
+                                        <option value="-1">请选择省...</option>
+                                    </select>
+									<select name="city" class="form-control selCities selCities0 hide" data-cit='0'>
+										<option value="-1">请选择市...</option>
+									</select>
+									<select name="district" class="form-control selDistricts selDistricts0 hide" data-dis='0'>
+										<option value="-1">请选择区...</option>
+									</select>
+									{/if}
+									{if $v==2}
+									<select name="province" class="form-control selProvinces selProvinces0 " data-pro='0'>
+										<option value="-1">请选择省...</option>
+									</select>
+                                    <select name="city" class="form-control selCities selCities0" data-cit='0'>
+                                        <option value="-1">请选择市...</option>
+                                    </select>
+									<select name="district" class="form-control selDistricts selDistricts0 hide" data-dis='0'>
+										<option value="-1">请选择区...</option>
+									</select>
+									{/if}
+									{if $v==3}
+									<select name="province" class="form-control selProvinces selProvinces0" data-pro='0'>
+										<option value="-1">请选择省...</option>
+									</select>
+									<select name="city" class="form-control selCities selCities0" data-cit='0'>
+										<option value="-1">请选择市...</option>
+									</select>
+                                    <select name="district" class="form-control selDistricts selDistricts0" data-dis='0'>
+                                        <option value="-1">请选择区...</option>
+                                    </select>
+									{/if}
+                                </div>
+                            </td>
+							<td class="operationLeft"></td>
+                        </tr>
+					{else}
+					    <tr>
+						<td>
+							<select name="agencyArea" class="form-control w-192 agencyArea agencyArea{$info['area_leg'][$k]}" data-area='{$info['area_leg'][$k]}'>
+								<option value="3" {if $v==3}selected{/if}>区级代理</option>
+								<option value="2" {if $v==2}selected{/if}>市级代理</option>
+								<option value="1" {if $v==1}selected{/if}>省级代理</option>
+							</select>
+						</td>
+						<td class="td_area">
+							<div class="area-form-group">
+								{if $v==1}
+								<select name="province" class="form-control selProvinces selProvinces{$info['area_leg'][$k]}" data-pro={$info['area_leg'][$k]}>
+									<option value="-1">请选择省...</option>
+								</select>
+								<select name="city" class="form-control selCities selCities{$info['area_leg'][$k]} hide" data-cit={$info['area_leg'][$k]}>
+									<option value="-1">请选择市...</option>
+								</select>
+								<select name="district" class="form-control selDistricts selDistricts{$info['area_leg'][$k]} hide" data-dis={$info['area_leg'][$k]}>
+									<option value="-1">请选择区...</option>
+								</select>
+								{/if}
+								{if $v==2}
+								<select name="province" class="form-control selProvinces selProvinces{$info['area_leg'][$k]} " data-pro={$info['area_leg'][$k]}>
+									<option value="-1">请选择省...</option>
+								</select>
+								<select name="city" class="form-control selCities selCities{$info['area_leg'][$k]}" data-cit={$info['area_leg'][$k]}>
+									<option value="-1">请选择市...</option>
+								</select>
+								<select name="district" class="form-control selDistricts selDistricts{$info['area_leg'][$k]} hide" data-dis={$info['area_leg'][$k]}>
+									<option value="-1">请选择区...</option>
+								</select>
+								{/if}
+								{if $v==3}
+								<select name="province" class="form-control selProvinces selProvinces{$info['area_leg'][$k]}" data-pro={$info['area_leg'][$k]}>
+									<option value="-1">请选择省...</option>
+								</select>
+								<select name="city" class="form-control selCities selCities{$info['area_leg'][$k]}" data-cit={$info['area_leg'][$k]}>
+									<option value="-1">请选择市...</option>
+								</select>
+								<select name="district" class="form-control selDistricts selDistricts{$info['area_leg'][$k]}" data-dis={$info['area_leg'][$k]}>
+									<option value="-1">请选择区...</option>
+								</select>
+								{/if}
+							</div>
+						</td>
+						<td class="operationLeft"><a class="btn-operation delete text-red1" href="javascript:void(0);">删除</a></td>
+					</tr>
+                    {/if}
+					{/foreach}
+					<tr>
+						<td colspan="3" class="text-left">
+							<a href="javascript:void(0);" class="btn btn-primary" id="add-area">增加代理地区</a>
+						</td>
+					</tr>
+                    </tbody>
+
+                </table>
+            </div>
+
+			<div class="v-form-inline">
+				<div class="form-group">
+					<a href="javascript:;" class="btn btn-primary add">保存</a>
+				</div>
+			</div>
+<input type="hidden" id="agent_area_id" value="{$info['agent_area_id']}">
+<input type="hidden" id="area_type" value="{$info['area_types']}">
+<input type="hidden" id="area_leg" value="{$info['area_legs']}">
+			<!-- page end -->
+{/block}
+{block name="script"}
+<script>
+    require(['util'],function(util){
+        loading();
+        function loading(){
+            var area_leg_default = $("#area_leg").val().split(',');
+            var agent_area_id = $("#agent_area_id").val().split(',');
+            var area_type = $("#area_type").val().split(',');
+            if(area_type){
+                var index = 0;
+                for(var i=0;i<area_type.length;i++){
+                    initProvince(agent_area_id[index],".selProvinces"+area_leg_default[i]);
+                    if(area_type[i]==3){
+                        getProvince(agent_area_id[index],agent_area_id[index+1],".selCities"+area_leg_default[i]);
+                        getSelCity(agent_area_id[index+1],agent_area_id[index+2],".selDistricts"+area_leg_default[i]);
+                        $(".selProvinces"+area_leg_default[i]).val(agent_area_id[index]);
+                        $(".selCities"+area_leg_default[i]).val(agent_area_id[index+1]);
+                        $(".selDistricts"+area_leg_default[i]).val(agent_area_id[index+2]);
+                        index = index+4;
+					}
+                    if(area_type[i]==2){
+                        getProvince(agent_area_id[index],agent_area_id[index+1],".selCities"+area_leg_default[i]);
+                        $(".selProvinces"+area_leg_default[i]).val(agent_area_id[index]);
+                        $(".selCities"+area_leg_default[i]).val(agent_area_id[index+1]);
+                        index = index+3;
+                    }
+                    if(area_type[i]==1){
+                        $(".selProvinces"+area_leg_default[i]).val(agent_area_id[index]);
+                        index = index+2;
+                    }
+                }
+			}
+		}
+        // 代理地区js
+        $(".agencyList").on("change","select[name='agencyArea']",function(){
+            var _this = $(this);
+            var val = _this.find("option:selected").val();
+
+            if(val==3){
+				 var cid = _this.parent("td").siblings(".td_area").find("select[name='city']").val();
+                 getSelCity(cid,0,  _this.parent("td").siblings(".td_area").find("select[name='district']"));
+                _this.parent("td").siblings(".td_area").find("select[name='province']").removeClass("hide");
+                _this.parent("td").siblings(".td_area").find("select[name='city']").removeClass("hide");
+                _this.parent("td").siblings(".td_area").find("select[name='district']").removeClass("hide");
+            }
+            if(val==2){
+                var pid = _this.parent("td").siblings(".td_area").find("select[name='province']").val();
+                getProvince(pid,0,  _this.parent("td").siblings(".td_area").find("select[name='city']"));
+                _this.parent("td").siblings(".td_area").find("select[name='province']").removeClass("hide");
+                _this.parent("td").siblings(".td_area").find("select[name='city']").removeClass("hide");
+                _this.parent("td").siblings(".td_area").find("select[name='district']").addClass("hide");
+            }
+            if(val==1){
+                _this.parent("td").siblings(".td_area").find("select[name='province']").removeClass("hide");
+                _this.parent("td").siblings(".td_area").find("select[name='city']").addClass("hide");
+                _this.parent("td").siblings(".td_area").find("select[name='district']").addClass("hide");
+            }
+        })
+        // 添加代理地区点击事件
+        $("#add-area").on("click",function(){
+            var length = $(this).parents('tr').prev().find('.agencyArea').data('area');
+            length=length+1;
+            var html = '';
+                html += '<tr>';
+                html += '<td><select name="agencyArea" class="form-control w-192 agencyArea agencyArea'+ length +'" data-area='+length+'><option value="3">区级代理</option><option value="2">市级代理</option><option value="1">省级代理</option></select></td>';
+                html += '<td class="td_area"><div class="area-form-group">';
+                html += '<select name="province" class="form-control selProvinces selProvinces'+ length +'" data-pro='+length+'><option value="-1">请选择省...</option></select>';
+                html += '<select name="city" class="form-control selCities selCities'+ length +'" data-cit='+length+'><option value="-1">请选择市...</option></select>';
+                html += '<select name="district" class="form-control selDistricts selDistricts'+ length +'" data-dis='+length+'><option value="-1">请选择区...</option></select>';
+                html += '</div></td>';
+                html += '<td class="operationLeft"><a class="btn-operation delete text-red1" href="javascript:void(0);">删除</a></td></tr>';
+            initProvince(0,'.selProvinces'+ length +'');
+            $(this).parents('tr').before(html);
+        })
+        // 代理地区删除事件
+        $(".agencyList").on("click",".delete",function(){
+            $(this).parents("tr").remove();
+        })
+        initProvince(0,".selProvinces");
+        function initProvince(pid,obj){
+            $.ajax({
+                type : "post",
+                url : "{$getProvinceUrl}",
+                dataType : "json",
+                success : function(data) {
+                    if (data != null && data.length > 0) {
+                        var str = "";
+                        for (var i = 0; i < data.length; i++) {
+                            if(pid == data[i].province_id){
+                                str += '<option selected value="'+data[i].province_id+'">'+data[i].province_name+'</option>';
+                            }else{
+                                str += '<option value="'+data[i].province_id+'">'+data[i].province_name+'</option>';
+                            }
+                        }
+                        $(obj).append(str);
+                    }
+                }
+            });
+        }
+        function getProvince(pid,cid,obj) {
+            $.ajax({
+                type : "post",
+                url :"{$getCityUrl}",
+                dataType : "json",
+                data : {
+                    "province_id" : pid
+                },
+                success : function(data) {
+                    if (data != null && data.length > 0) {
+                        var str = "<option value='-1'>请选择市</option>";
+                        for (var i = 0; i < data.length; i++) {
+                            if(cid == data[i].city_id) {
+                                str += '<option selected value="' + data[i].city_id + '">' + data[i].city_name + '</option>';
+                            }else{
+                                str += '<option  value="' + data[i].city_id + '">' + data[i].city_name + '</option>';
+                            }
+                        }
+                        $(obj).html(str);
+                    }
+                }
+            });
+        }
+        function getSelCity(cid,aid,obj) {
+            $.ajax({
+                type : "post",
+                url : "{$getDistrictUrl}",
+                dataType : "json",
+                data : {
+                    "city_id" : cid
+                },
+                success : function(data) {
+                    if (data != null && data.length > 0) {
+                        var str = "<option value='-1'>请选择区</option>";
+                        for (var i = 0; i < data.length; i++) {
+                            if(aid==data[i].district_id){
+                                str += '<option selected value="'+data[i].district_id+'">'+data[i].district_name+'</option>';
+                            }else{
+                                str += '<option value="'+data[i].district_id+'">'+data[i].district_name+'</option>';
+                            }
+
+                        }
+                        $(obj).html(str);
+                    }
+                }
+            });
+        }
+        //选择省份弹出市区
+        $('.agencyList').on('change','.selProvinces', function () {
+            var _this = $(this);
+            var id = _this.val();
+            if(id==-1){
+                id = pid;
+            }
+            var cid = _this.siblings('.selCities').val();
+            $.ajax({
+                type : "post",
+                url :"{$getCityUrl}",
+                dataType : "json",
+                data : {
+                    "province_id" : id
+                },
+                success : function(data) {
+                    if (data != null && data.length > 0) {
+                        var str = "<option value='-1'>请选择市</option>";
+                        for (var i = 0; i < data.length; i++) {
+                            if(cid == data[i].city_id) {
+                                str += '<option selected value="' + data[i].city_id + '">' + data[i].city_name + '</option>';
+                            }else{
+                                str += '<option  value="' + data[i].city_id + '">' + data[i].city_name + '</option>';
+                            }
+                        }
+                        _this.siblings('.selCities').html(str);
+                    }
+                }
+            });
+        })
+        //选择市区弹出区域
+        $('.agencyList').on('change','.selCities', function () {
+            var _this = $(this);
+            var id = _this.val();
+            var aid = _this.siblings('.selDistricts').val();
+            if(id==-1){
+                id = cid;
+            }
+            $.ajax({
+                type : "post",
+                url : "{$getDistrictUrl}",
+                dataType : "json",
+                data : {
+                    "city_id" : id
+                },
+                success : function(data) {
+                    if (data != null && data.length > 0) {
+                        var str = "<option value='-1'>请选择区</option>";
+                        for (var i = 0; i < data.length; i++) {
+                            if(aid==data[i].district_id){
+                                str += '<option selected value="'+data[i].district_id+'">'+data[i].district_name+'</option>';
+                            }else{
+                                str += '<option value="'+data[i].district_id+'">'+data[i].district_name+'</option>';
+                            }
+
+                        }
+                        _this.siblings('.selDistricts').html(str);
+                    }
+                }
+            });
+        })
+
+        $('.add').click(function (e) {
+            var type = $("#type").val();
+            var status = $("#status").val();
+            var uid = $("#uid").html();
+            var area_id = [];
+            var area_leg = [];
+            var agent_area_id = [];
+            var province_id = 0;
+            var city_id = 0;
+            var district_id = 0;
+            var real_id = '';
+            $(".agencyArea option:selected").each(function(){
+                area_id.push($(this).val());
+                area_leg.push($(this).parent('select').data('area'));
+            });
+            if(area_leg.length>0){
+                for(var i=0;i<area_leg.length;i++){
+                    if(area_id[i]==1){
+                        province_id = $(".selProvinces"+i).val();
+                        real_id = province_id+',p';
+                        agent_area_id.push(real_id);
+                    }
+                    if(area_id[i]==2){
+                        province_id = $(".selProvinces"+i).val();
+                        city_id = $(".selCities"+i).val();
+                        real_id = province_id+','+city_id+',c';
+                        agent_area_id.push(real_id);
+                    }
+                    if(area_id[i]==3){
+                        province_id = $(".selProvinces"+i).val();
+                        city_id = $(".selCities"+i).val();
+                        district_id = $(".selDistricts"+i).val();
+                        real_id = province_id+','+city_id+','+district_id+',d';
+                        agent_area_id.push(real_id);
+                    }
+                }
+			}
+
+            $.ajax({
+                type : "post",
+                url : '{$updateAreaAgentInfoUrl}',
+                async : true,
+                data : {
+                    "uid":uid,"area_agent_level_id":type,'area_leg':area_leg.join(','),'area_id':area_id.join(',') ,'agent_area_id':agent_area_id.join(','),'status':status
+                },
+                success : function(data) {
+                    if (data['code']>0 ) {
+                        util.message(data["message"], 'success', "{:__URL('ADDONS_MAINareaAgentInfo')}&agent_id="+uid);
+                    } else {
+                        util.message(data["message"], 'danger');
+                    }
+                }
+            });
+        })
+
+    })
+</script>
+{/block}

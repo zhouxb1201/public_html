@@ -1,0 +1,40 @@
+<view class="category">
+  <view class='category_search'>
+    <view class='search_input'>
+      <navigator url='../../../../../pages/search/index?searchKey=microshopchoose'>
+        <van-icon name="search" color='#999' style='position:absolute;top:15rpx;left:15rpx;' />
+        <input placeholder="请输入搜索关键词" disabled='true' placeholder-style="font-size:12px;color:#999" style='border:1rpx solid #fff;color:#999;padding-left:30px;font-size:25rpx;'></input>
+      </navigator>
+    </view>
+  </view>
+  <view class='category_list'>
+    <view class='r_first_category' style='width:160rpx'>
+      <scroll-view scroll-y style='height:{{clientHeight}}px;'>
+        <view class="r_item {{itemIndex === index ? 'item_active':'' }}" wx:for="{{first_category}}" wx:key="" data-id="{{item.category_id}}" data-index="{{index}}" bindtap='navFirstChange'>
+          {{item.short_name != ''? item.short_name:item.category_name}}
+        </view>
+      </scroll-view>
+    </view>
+    <view style='width:590rpx'>
+      <scroll-view scroll-y style='height:{{clientHeight}}px;'>
+        <view class='l_detail' wx:for="{{first_category[itemIndex].second_category}}" wx:key="" wx:for-item="i">
+          <view class='l_item_top' data-categoryid='{{i.category_id}}' data-categoryname='{{i.category_name}}' bindtap='onGoodsListPage'>
+            <text wx:if="{{i.short_name != ''}}">{{i.short_name}}</text>
+            <text wx:else>{{i.category_name}}</text>
+          </view>
+          <view class='l_list clear'>
+            <view class='l_item' wx:for="{{i.third_category}}" wx:key="" wx:for-item="c">
+              <navigator url="../list/list?category_id={{c.category_id}}&category_name={{c.category_name}}">
+                <view class='l_item_img'>
+                  <image mode='scaleToFill' src="{{c.category_pic != '' ? c.category_pic :'/images/no-goods.png'}}"></image>
+                </view>
+                <text class='ov_h'>{{c.short_name != '' ? c.short_name:c.category_name}}</text>
+              </navigator>
+            </view>
+          </view>
+        </view>
+
+      </scroll-view>
+    </view>
+  </view>
+</view>

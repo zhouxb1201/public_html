@@ -1,0 +1,7 @@
+{
+  "usingComponents": {
+    "form-com": "/pages/component/form-com/index",
+    "phone-compoent": "/pages/component/phone/phonecom"
+  },
+  "navigationBarTitleText": "基本信息"
+}

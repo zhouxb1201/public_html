@@ -1,0 +1,10 @@
+<!-- 单选框 -->
+    <view class='custom customDisplay wx:if="{{customitem.required == true ? "custom_padd" : ""}}"'>
+      <view class='label_text'><text class="star" wx:if='{{customitem.required == true}}'>*</text>{{customitem.label}}</view>
+      <radio-group class="radio-group" data-index="{{index}}" bindchange="radioChange">
+        <label class="radio" wx:for="{{customitem.options}}" wx:key=''>
+          <radio value="{{item.value}}" checked="{{item.checked}}" />
+          <text>{{item.value}}</text>
+        </label>
+      </radio-group>
+    </view>

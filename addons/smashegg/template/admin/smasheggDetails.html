@@ -1,0 +1,198 @@
+{block name="resources"}
+{/block}
+{block name="main"}
+        <!-- page -->
+        <form class="form-horizontal">
+            <div class="screen-title">
+                <span class="text">活动信息</span>
+            </div>
+            <div class="form-group">
+            <div class="col-md-10">
+                <table class="table v-table table-auto-center table-bordered">
+                    <tbody>
+                        <tr>
+                            <td class="col-md-3 bg-f5">
+                                <p>活动名称</p>
+                            </td>
+                            <td class="text-left">
+                                <p>{$info['smashegg_name']}</p>
+                            </td>
+                        </tr>
+                        <tr class="no_sku">
+                            <td class="col-md-3 bg-f5">
+                            	<p>活动时间</p>
+                            </td>
+                            <td class="text-left">
+                                <p>{php}echo date('Y-m-d H:i:s',$info['start_time']).' ~ '.date('Y-m-d H:i:s',$info['end_time']) {/php}</p>
+                            </td>
+                        </tr>
+                        <tr class="no_sku">
+                            <td class="col-md-3 bg-f5">
+                            	<p>消耗积分</p>
+                            </td>
+                            <td class="text-left">
+                                <p>{$info['point']}积分</p>
+                            </td>
+                        </tr>
+                        <tr class="no_sku">
+                            <td class="col-md-3 bg-f5">
+                            	<p>参与次数 </p>
+                            </td>
+                            <td class="text-left">
+                                <p>每人每天限{$info['max_partake_daily']}次，每人{if($info['max_partake']==0)}无限{else}最多限{$info['max_partake']}{/if}次</p>
+                            </td>
+                        </tr>
+                        <tr class="no_sku">
+                            <td class="col-md-3 bg-f5">
+                            	<p>活动说明</p>
+                            </td>
+                            <td class="text-left">
+                                <p>{$info['desc']}</p>
+                            </td>
+                        </tr>
+                        <tr class="no_sku">
+                            <td class="col-md-3 bg-f5">
+                           		<p>活动状态</p>
+                            </td>
+                            <td class="text-left">
+                            	{if($info['state']==1)}
+                                <p style="color: #f0ad4e;">待开始</p>
+                                {elseif($info['state']==2)}
+                                <p style="color: #5cb85c;">进行中</p>
+                                {elseif($info['state']==3)}
+                                <p style="color:#d9534f;">已结束</p>
+                                {/if}
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            </div>
+            <div class="screen-title">
+                <span class="text">奖项信息</span>
+            </div>
+            <div class="form-group">
+            	<div class="col-md-10">
+		            <ul class="nav nav-tabs v-nav-tabs" role="tablist">
+		            	{volist name="info['prize']" id="li" key="k"}
+	                	<li role="presentation" class="{if($k==1)}active{/if}"><a href="#prize_{$k}" role="tab" data-toggle="tab" class="flex-auto-center">{$li['term_name']}</a></li>
+	                	{/volist}
+	                	<li role="presentation"><a href="#not" role="tab" data-toggle="tab" class="flex-auto-center">未中奖</a></li>
+	                </ul>
+	                <div class="tab-content">
+	                	{volist name="info['prize']" id="prize" key="sort"}
+		                <div role="tabpanel" class="tab-pane fade {if($sort==1)}active in{/if}" id="prize_{$sort}">
+		                <table class="table v-table table-auto-center table-bordered">
+		                    <tbody>
+		                        <tr>
+		                            <td class="col-md-3 bg-f5">
+		                                <p>奖项名称</p>
+		                            </td>
+		                            <td class="text-left">
+		                                <p>{$prize['term_name']}</p>
+		                            </td>
+		                        </tr>
+		                        <tr class="no_sku">
+		                            <td class="col-md-3 bg-f5">
+		                            	<p>奖品类型 </p>
+		                            </td>
+		                            <td class="text-left">
+		                                <p>
+		                                {if($prize['prize_type']==1)}余额
+		                                {elseif($prize['prize_type']==2)}积分
+		                                {elseif($prize['prize_type']==3)}优惠券
+		                                {elseif($prize['prize_type']==4)}礼品券
+		                                {elseif($prize['prize_type']==5)}商品
+		                                {elseif($prize['prize_type']==5)}赠品
+		                                {/if}
+		                                </p>
+		                            </td>
+		                        </tr>
+		                        <tr class="no_sku">
+		                            <td class="col-md-3 bg-f5">
+		                            	<p>奖品名称 </p>
+		                            </td>
+		                            <td class="text-left">
+		                                <p>{$prize['prize_name']}</p>
+		                            </td>
+		                        </tr>
+		                        <tr class="no_sku">
+		                            <td class="col-md-3 bg-f5">
+		                            	<p>奖品数量</p>
+		                            </td>
+		                            <td class="text-left">
+		                                <p>{$prize['num']}</p>
+		                            </td>
+		                        </tr>
+		                        <tr class="no_sku">
+		                            <td class="col-md-3 bg-f5">
+		                            	<p>中奖概率</p>
+		                            </td>
+		                            <td class="text-left">
+		                                <p>{$prize['probability']}%</p>
+		                            </td>
+		                        </tr>
+		                        <tr class="no_sku">
+		                            <td class="col-md-3 bg-f5">
+		                            	<p>奖品</p>
+		                            </td>
+		                            <td class="text-left">
+		                                <p>
+		                                {if($prize['prize_type']==1)}{$prize['prize_money']}元
+		                                {elseif($prize['prize_type']==2)}{$prize['prize_point']}积分
+		                                {elseif($prize['prize_type']==3)}{$prize['name']}优惠券
+		                                {elseif($prize['prize_type']==4)}{$prize['name']}礼品券
+		                                {elseif($prize['prize_type']==5)}{$prize['name']}
+		                                {elseif($prize['prize_type']==6)}{$prize['name']}
+		                                {/if}
+		                                </p>
+		                            </td>
+		                        </tr>
+		                        {if($prize['prize_pic'])}
+		                        <tr class="no_sku">
+		                            <td class="col-md-3 bg-f5">
+		                            	<p>奖品图片</p>
+		                            </td>
+		                            <td class="text-left">
+		                                <p><img src="{$prize['prize_pic']}" width="60" height="60"></p>
+		                            </td>
+		                        </tr>
+		                        {/if}
+		                        <tr class="no_sku">
+		                            <td class="col-md-3 bg-f5">
+		                            	<p>奖品过期时间</p>
+		                            </td>
+		                            <td class="text-left">
+		                                <p>{php}echo date('Y-m-d H:i:s',$prize['expire_time']){/php}</p>
+		                            </td>
+		                        </tr>
+		                    </tbody>
+		                </table>
+		                </div>
+		                {/volist}
+		                <div role="tabpanel" class="tab-pane fade" id="not">
+		                <table class="table v-table table-auto-center table-bordered">
+		                    <tbody>
+		                        <tr>
+		                            <td class="col-md-3 bg-f5">
+		                                <p>未中奖提示</p>
+		                            </td>
+		                            <td class="text-left">
+		                                <p>{$info['noprize_tip']}</p>
+		                            </td>
+		                        </tr>
+		                    </tbody>
+		                </table>
+		                </div>
+	                </div>
+                </div>
+            </div>
+            <div class="form-group"></div>
+            <div class="form-group">
+                <label class="col-md-2 control-label"></label>
+                <div class="col-md-8">
+                    <a href="javascript:history.go(-1);" class="btn btn-default">返回</a>
+                </div>
+            </div>
+        </form>
+{/block}

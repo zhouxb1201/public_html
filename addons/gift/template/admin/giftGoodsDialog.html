@@ -1,0 +1,98 @@
+<div class="goods-dialog" id="goods-dialog">
+    <ul class="nav nav-tabs v-nav-tabs pt-15" role="tablist">
+        <li role="presentation" class="active"><a href="#list" aria-controls="list" role="tab" data-toggle="tab" class="flex-auto-center">商品列表</a></li>
+        <div class="input-group search-input-group pull-right">
+            <input type="text" class="form-control" name="name" placeholder="商品名称">
+            <span class="input-group-btn"><button class="btn search search-color" >搜索</button></span>
+        </div>
+    </ul>
+    <div class="dialog-box tab-content">
+        <div role="tabpanel" class="tab-pane fade in active" id="list">
+            <table class="table v-table table-auto-center">
+                <thead>
+                    <tr>
+                        <th>商品信息</th>
+                        <th width="150">操作</th>
+                    </tr>
+                </thead>
+                <tbody id="content"></tbody>
+            </table>
+            <nav aria-label="Page navigation" class="clearfix">
+                <ul id="page_goods" class="pagination pull-right"></ul>
+            </nav>
+        </div>
+    </div>
+    <input type="hidden" id="selectedData">
+</div>
+<script id='goods_tpl_content' type='text/html'>
+    <%each data as item itemid%>
+    <tr>
+        <td>
+            <div class="media text-left">
+                <div class="media-left">
+                    <img src="<%item.pic_cover%>" onerror="this.src='http://iph.href.lu/60x60';" width="60" height="60">
+                </div>
+                <div class="media-body max-w-300">
+                    <div class="line-2-ellipsis"><%item.goods_name%></div>
+                    <div class="line-1-ellipsis text-danger strong"><%item.price%></div>
+                </div>
+            </div>
+        </td>
+        <td>
+            <a href="javascript:;" class="text-primary selec_btn" data-goods_name="<%item.goods_name%>" data-price="<%item.price%>" data-description="<%item.description%>" data-goods_id="<%item.goods_id%>" >选择</a>
+            <div class="J-imgList" style="display: none;">
+            <%each item.img_temp_array as img%>
+                    <a href="javascript:void(0);" id="goods_pic_list" style="margin-right:10px;">
+                        <i class="icon icon-danger" style="right:-15px;" title="删除"></i>
+                        <img src="<%img.pic_cover%>" />
+                    </a>
+                    <input type="hidden" name="upload_img_id" value="<%img.pic_id%>" />
+            <%/each%>
+            <a href="javascript:void(0);" class="plus-box" data-toggle="multiPicture"><i class="icon icon-plus"></i></a>
+            </div>
+        </td>
+    </tr>
+    <%/each%>
+</script>
+<script>
+require(['utilAdmin','tpl'],function(utilAdmin,tpl){
+    var all_data = {};
+    utilAdmin.initPage(LoadingInfo,'page_goods');
+    function LoadingInfo(page_index){
+        var val = $('input[name="name"]').val();
+        $.ajax({
+            type: "post",
+            url: "{$modalGiftGoodsList}",
+            async: true,
+            data: {
+                "page_index": page_index,
+                "search_text": val
+            },
+            success: function (data) {
+                all_data = data;
+                $('#goods-dialog #content').html(tpl('goods_tpl_content',all_data));
+                $('#page_goods').paginator('option', {
+                    totalCounts: data.total_count
+                });
+            }
+        });
+    }
+    // 搜索
+    $('.search').on('click',function(){
+        LoadingInfo(1);
+    });
+    // 选择
+    $('#goods-dialog').on('click','.selec_btn',function(){
+        var goods_name = $(this).data('goods_name');
+        var price = $(this).data('price');
+        var description = $(this).data('description');
+        var imgList = $(this).next('.J-imgList').html()
+        $('#gift_name').val(goods_name);
+        $('#price').val(price);
+        $('.J-desc').html("<div id='UE-gift-content' data-content='"+description+"'></div>");
+        utilAdmin.ueditor('UE-gift-content');
+        $('.picture-list').html(imgList);
+        $('.jconfirm-closeIcon').click();
+    });
+});
+</script>

@@ -1,0 +1,151 @@
+<view class='customerServie'>
+  <!-- 1:买家已经申请售后 -->
+  <view wx:if='{{refund_detail.refund_status == 1 || refund_detail.refund_status == 2 || refund_detail.refund_status == 3}}'>
+    <view class='customerServie_header' wx:for='{{goodData}}' wx:key='' wx:for-item='goodsItem'>
+      <view class='good_img'>
+        <image src="{{goodsItem.pic_cover != '' ? goodsItem.pic_cover : '/images/rectangle-error.png'}}"></image>
+      </view>
+      <view class='customerServie_info'>
+        <view class='good_name'>{{goodsItem.goods_name}}</view>
+        <view class='good_num'>
+          <view class='num'>X {{goodsItem.num}}</view>
+        </view>
+      </view>
+    </view>
+  </view>
+
+  <view wx:if='{{refund_detail.refund_status == 1}}'>
+    <view class='customerServie_group'>
+      <view class='cell'>
+        <view class='title'>处理方式</view>
+        <view class='value'>
+          <text wx:if='{{refund_detail.refund_type == 1}}'>退款</text>
+          <text wx:if='{{refund_detail.refund_type == 2 && refund_detail.goods_type != 3}}'>退货退款</text>
+        </view>
+      </view>
+      <view class='cell'>
+        <view class='title'>退款原因</view>
+        <view class='value'>
+          <view>{{refundReason[index]}}</view>
+        </view>
+      </view>
+      <view class='cell' wx:if='{{refund_detail.refund_max_money != 0}}'>
+        <view class='title'>退款金额</view>
+        <view class='value'>
+          <input type='number' class='disabled_point' value='¥{{refund_detail.require_refund_money}}' disabled='disabled'></input>
+        </view>
+      </view>
+      <view class='cell' wx:if='{{refund_detail.refund_point != 0}}'>
+        <view class='title'>退积分</view>
+        <view class='value'>
+          <input type='number' class='disabled_point' value='{{refund_detail.refund_point}}' disabled='disabled'></input>
+        </view>
+      </view>
+
+    </view>
+
+    <view class='foot_btn'>
+      <view class='sub_btn' wx:if='{{refund_detail.refund_type == 1}}' bindtap='refundCancel'>取消退款</view>
+      <view class='sub_btn' wx:if='{{refund_detail.refund_type == 2}}' bindtap='refundCancel'>取消退货退款</view>
+    </view>
+  </view>
+
+
+  <view class='refund_result' wx:if='{{refund_detail.refund_status == 2 || refund_detail.refund_status == 3}}'>
+    <view class='shop_place'>
+      <view class='saller_result'>卖家已经同意退货，请把商品回寄到以下地址：</view>
+      <view class='saller_info'>
+        <text class='name'>{{shop_info.consigner}}</text>
+        <text class='tel'>{{shop_info.mobile}}</text>
+      </view>
+      <view class='address'>{{shop_info.address}}</view>
+    </view>
+    <view class='logistics_group'>
+      <view class='logistics_company cell'>
+        <view class='title'>物流公司</view>
+        <view class='value' wx:if='{{refund_detail.refund_status == 2}}' bindtap="getvExpressCompany">
+          <input value="{{select_logistics_company}}" disabled="true" placeholder="请选择物流公司"></input>
+          <!-- <picker mode='selector' value='{{logisticsIndex}}' range='{{logistics_company}}' range-key="{{'company_name'}}" bindchange='logisticsChange'>
+            <input wx:if='{{logisticsIndex == -1}}' placeholder='请选择物流公司' disabled='true'></input>
+            <view class='picker' wx:else>
+              {{logistics_company[logisticsIndex].company_name}}
+            </view>
+          </picker>  -->
+        </view>
+        <view class='value' wx:if='{{refund_detail.refund_status == 3}}'>
+          {{refund_detail.refund_shipping_company_name}}
+        </view>
+      </view>
+      <view class='logistics_no cell'>
+        <view class='title'>物流单号</view>
+        <view class='value' wx:if='{{refund_detail.refund_status == 2}}'>
+          <input type='text' placeholder='请输入物流单号' bindblur='logisticsNo'></input>
+        </view>
+        <view class='value' wx:if='{{refund_detail.refund_status == 3}}'>
+          {{refund_detail.refund_shipping_code}}
+        </view>
+      </view>
+    </view>
+
+    <view class='foot_btn' wx:if='{{refund_detail.refund_status == 2}}'>
+      <view class='sub_btn' bindtap='orderGoodsRefundExpress'>提交</view>
+    </view>
+  </view>
+
+  <view class='result_box' wx:if='{{refund_detail.refund_status == 4 }}'>
+    <view class='result_info'>
+      <icon type='success' size='28'></icon>
+      <view wx:if='{{refund_detail.refund_type == 1}}'>卖家已同意您的退款，请耐心等待打款！</view>
+      <view wx:if='{{refund_detail.refund_type == 2}}'>卖家已收到商品，等待卖家处理退款！</view>
+    </view>
+  </view>
+
+  <view class='result_box' wx:if='{{refund_detail.refund_status == 5}}'>
+    <view class='result_info'>
+      <icon type='success' size='28'></icon>
+      <view>退款成功，退款到账可能会有1-3天延迟，请留意你的账户！</view>
+    </view>
+  </view>
+
+  <view class='result_box' wx:if='{{refund_detail.refund_status == -3}}'>
+    <view class='result_info'>
+      <icon type='cancel' size='28'></icon>
+      <view>
+        <view>卖家已拒绝您的退款！</view>
+        <view class='reject_result'>原因：{{refund_detail.reason}}</view>
+      </view>
+    </view>
+  </view>
+
+  <view class='foot_btn' wx:if='{{refund_detail.refund_status == -3}}'>
+    <view class='sub_btn' bindtap='refundAgain'>重新申请</view>
+  </view>
+</view>
+
+
+<!-- 物流公司列表 -->
+<van-popup show="{{ expressShow }}" position="bottom" custom-style="height:100%;" bind:click-overlay="expressClose">
+  <view class="expressBox">
+    <view class='popup_title'>
+      <view class='close' bindtap='expressClose'>
+        <text class='icon_left iconfont v-icon-arrow-left2'></text>
+      </view>
+      <view class='search_box'>
+        <view class="iconfont v-icon-search"></view>
+        <view>
+          <input placeholder="请输入关键字" bindinput="inputKey"></input>
+        </view>
+      </view>
+      <view bindtap="searchKeyexpress">搜索</view>
+    </view>
+    <view class="popup_content">
+      <view class="list">
+        <view class="exp_item" wx:for="{{expressList}}" wx:key='index' wx:for-item='expIitem' data-cid="{{expIitem.co_id}}" data-companyname="{{expIitem.company_name}}" bindtap="selectCompany">
+          <view>{{expIitem.company_name}}</view>
+        </view>
+      </view>
+    </view>
+  </view>
+
+
+</van-popup>

@@ -1,0 +1,152 @@
+<import src="/common/wxParse/wxParse.wxml" />
+<view class="goodDetail">
+  <view class='goodDetail_box'>
+    <swiper indicator-dots="{{indicatorDots}}" vertical="{{vertical}}" autoplay="{{autoplay}}" duration="{{duration}}" interval='{{interval}}' circular="{{circular}}" style="height:{{imgheights[imgcurrent] > 750 ? 750 : imgheights[imgcurrent]}}rpx;">
+      <block wx:for='{{imgList}}' wx:key="{{index}}">
+        <swiper-item>
+          <image src="{{item != '' ? item : '/images/no-goods.png'}}" data-id='{{index}}' class="slide-image" mode="widthFix" lazy-load="true" bindload="imageLoad" binderror='imgError' />
+        </swiper-item>
+      </block>
+    </swiper>
+    <button class='share' open-type="share" hover-class="other-button-hover">
+      <van-icon name="share" color='#999' />
+    </button>
+  </view>
+
+  <view class="detail-cell-group">
+    <view class="detail-cell">
+      <view class="detail-cell-value">
+        <view class="title">{{ goods_detail.goods_name }}</view>
+        <view class="price">
+          <text wx:if="{{goods_detail.point_exchange}}">{{goods_detail.point_exchange}}积分</text>
+          <text wx:if="{{goods_detail.point_exchange && goodsPrice > 0}}">+</text>
+          <text wx:if="{{goodsPrice > 0}}">￥{{goodsPrice}}</text>
+          <text class="market">￥{{goods_detail.min_market_price}}</text>
+        </view>
+      </view>
+    </view>
+    <view class="detail-cell express">
+      <view class="detail-cell-value">
+        <view class="detail-col col-10">运费：{{ goods_detail.shipping_fee }}</view>
+        <view class="detail-col col-14">兑换量：{{ goods_detail.sales }}</view>
+      </view>
+    </view>
+  </view>
+
+  <view class="detail-cell" wx:if="{{goods_detail.day_num > 0 && goods_detail.limit_num > 0}}">
+    <view class="detail-cell-title">
+      <text class="detail-tag">限购</text>
+      <text class="custom-text">每人限购{{goods_detail.limit_num}}件，每天提供{{goods_detail.day_num}}件</text>
+    </view>
+  </view>
+
+  <!-- 选择规格 -->
+  <view class='choose' bindtap="skuBtnShow">
+    <view class='chosen' wx:if="{{specName != ''}}">已选：{{specName}}</view>
+    <view class='chosen' wx:else>已选：1件</view>
+    <text class='icon iconfont v-icon-arrow-right'></text>
+  </view>
+
+  <!-- 规格弹出框 -->
+  <van-popup show="{{ skuShow }}" position="bottom" custom-style="border-radius:30rpx 30rpx 0 0;" bind:click-overlay="skuOnclose">
+    <view class='goods_sku'>
+      <view class='goodHeader'>
+        <view class='goodHeaderImg'>
+          <image src='{{imgList[0]}}'></image>
+        </view>
+        <view class='goodHeaderTop'>
+          <view class='goodTitle'>
+            <view class='goods_name'>{{goods_detail.goods_name}}</view>
+            <view class="price" wx:if="{{goodsPrice > 0 && goodsPoint}}">
+              {{goodsPoint}}积分 + ¥{{goodsPrice}}
+            </view>
+            <view class="price" wx:else>
+              {{goodsPoint}}积分
+            </view>
+            <view class='icon_closeBtn'>
+              <van-icon name='close' color='#969799' size='20px' bindtap='skuOnclose' />
+            </view>
+          </view>
+        </view>
+      </view>
+
+      <view class="{{sku.tree.length != 0 ? 'goods_sku_tree' :''}} ">
+        <view class='goods_sku_tree_item' wx:for="{{sku.tree}}" wx:key='' wx:for-index='group_idx'>
+          <view class='goods_sku_tree_key'>{{item.k}}:</view>
+
+          <view wx:for="{{item.v}}" class="goods_sku_tree_value {{i.isSelect == 'true' ? 'active_value':''}}" wx:for-item='i' wx:for-index='index' data-attr-index="{{index}}" data-select-index="{{group_idx}}" data-attr-id="{{i.id}}" wx:key='item' catchtap="clickMenu"
+            data-isSelect="{{i.isSelect}}">
+            <text>{{i.name}}</text>
+          </view>
+        </view>
+      </view>
+
+      <view class='stock_num'>
+        <view class='buy_num'>
+          <view>购买数量：</view>
+          <van-stepper v-model="value" class='v_stepper' value="{{buyNum}}" max="{{maxBuy != ''?maxBuy:stockNum}}" bind:change="changeBuynum" />
+        </view>
+        <view class='surplus_num'>剩余{{stockNum}}件
+          <text class='maxbuy' wx:if="{{maxBuy != ''}}">每次限购{{maxBuy}}件</text> </view>
+      </view>
+    </view>
+    <view class='bottomBtn' wx:if="{{goods_detail && goods_detail.state}}">
+      <view class='nocartbtn' wx:if="{{stockNum == 0}}">商品已售罄</view>
+      <view class='nocartbtn' wx:elif="{{goods_detail.member_point <= goodsPoint}}">积分不足</view>
+      <view class='buyOn' bindtap='buyNowOrder' wx:else>立即兑换</view>
+    </view>
+    <view class='nocartbtn' wx:else>商品已下架</view>
+  </van-popup>
+
+  <view class='navTab'>
+    <view class='topTab'>
+      <van-tabs active="{{ 0 }}" z-index='0' bind:change="checkCurrent">
+        <van-tab title="详情"></van-tab>
+        <van-tab title="属性"></van-tab>
+      </van-tabs>
+    </view>
+    <view class='tabDetail'>
+      <view wx:if="{{currentnum == 0}}">
+        <template is="wxParse" data="{{wxParseData:description.nodes}}" />
+        <view class='no_detail' wx:if="{{goods_detail.description == ''}}">
+          <text>暂无详情</text>
+        </view>
+      </view>
+      <view wx:if="{{currentnum == 1}}">
+        <view class='goods_attr' wx:if="{{goods_detail.goods_attribute_list != ''}}">
+          <van-row class='attr_item' wx:for="{{goods_detail.goods_attribute_list}}" wx:key=''>
+            <van-col span="8">{{item.attr_value}}</van-col>
+            <van-col span="16">{{item.attr_value_name}}</van-col>
+          </van-row>
+        </view>
+        <view class='no_detail' wx:else>
+          <text>暂无属性</text>
+        </view>
+      </view>
+    </view>
+  </view>
+  <!-- 底部菜单 -->
+  <view class='foot_manu'>
+    <van-goods-action>
+      <van-goods-action-icon icon="wap-home" text="首页" bindtap='onIntegralIndex' />
+      <!-- 普通 -->
+      <view class='type_btn'>
+        <view class='goods_type_btn' wx:if="{{goods_detail && goods_detail.state}}">
+          <button class='disabled_btn' disabled='true'  wx:if="{{stockNum == 0}}">商品已售罄</button>
+          <button class='disabled_btn' disabled='true'  wx:elif="{{goods_detail.member_point <= goodsPoint}}">积分不足</button>
+          <button class='fun_btn' bindtap='onOrderBtn' wx:else>立即兑换</button>
+        </view>
+        <view class='goods_type_btn' wx:else>
+          <button class='disabled_btn' disabled='true'>商品已下架</button>
+        </view>
+      </view>
+    </van-goods-action>
+  </view>
+
+</view>
+
+<!-- 关联手机 -->
+<phone-compoent phoneShow='{{phoneShow}}'></phone-compoent>
+
+<!-- 登录组件 -->
+<login-component loginShow='{{loginShow}}'></login-component>

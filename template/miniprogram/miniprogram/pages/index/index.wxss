@@ -1,0 +1,71 @@
+page{
+  background-color: #f3f3f3;
+  font-size: 28rpx;
+}
+.swiper image {
+  width: 100%;
+  height: 100%;
+}
+
+.login{
+  padding: 20rpx 30rpx;
+}
+.login .title{
+  display: flex;
+  align-items: center;
+  font-size: 42rpx;
+}
+.login .title .wx_img{
+  width: 80rpx;
+  height: 80rpx;
+  border-radius: 50%;
+  overflow: hidden;
+  border: 1rpx solid #f44;
+  margin: 40rpx 40rpx 40rpx 0;
+}
+.login .content{
+  font-size: 28rpx;
+}
+.login .content .info{
+  margin: 20rpx 0;
+}
+.login .content .item{
+  font-size: 24rpx;
+  color: rgba(141, 140, 140, 0.678);
+}
+.login .foot_group{
+  margin: 40rpx 0;
+}
+.login .foot_group .sure{
+  background-color: #51A938;
+  color: #fff;
+  border-radius: 50rpx;
+}
+.login .foot_group .no_sure{
+  text-align: right;
+  font-size: 28rpx;
+  margin-top: 20rpx;
+}
+
+.popup-customer{
+  position: fixed;
+  bottom: 60rpx;
+  right: 10rpx;
+  z-index: 100;
+}
+
+.btn-customer{
+  appearance: none;
+  -webkit-appearance: none;
+  background-color: transparent;
+  border: none;
+  position: relative;
+}
+.btn-customer:after{
+  border: none;
+}
+
+.btn-customer image{
+  width: 80rpx;
+  height: 80rpx;
+}

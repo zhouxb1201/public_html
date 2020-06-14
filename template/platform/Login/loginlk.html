@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>登录页面 - 领客 - 让更多的人帮你卖货！</title>
+    <link rel="stylesheet" href="PLATFORM_NEW_CSS/bootstrap.min.css">
+    <link rel="stylesheet" href="PLATFORM_NEW_CSS/common.css">
+    <link rel="stylesheet" href="PLATFORM_NEW_CSS/jquery.slider.css">
+    <link rel="stylesheet" href="PLATFORM_NEW_CSS/login.css">
+    <link rel="stylesheet" href="PLATFORM_NEW_CSS//indexDecorate/css/layer.css">
+    <script type="text/javascript" src="PLATFORM_NEW_JS/jquery.min.js"></script>
+    <script type="text/javascript" src="PLATFORM_NEW_JS/bootstrap.min.js"></script>
+    <script type="text/javascript" src="PLATFORM_NEW_JS/jquery.slider.min.js"></script>
+    <script src="PLATFORM_NEW_JS/indexDecorate/layer.js"></script>
+    <style>
+        /*以下css仅针对本页面*/
+
+        html,
+        body {
+            height: 100%;
+        }
+
+        body {
+            background: url("PLATFORM_STATIC/login_register/loginBG.jpg") top center no-repeat;
+            background-size: cover;
+            position: relative;
+            background-color: #fff;
+        }
+        #slider1{
+            margin-left: 50px;
+            margin-bottom: 20px;
+        }
+        .login-msg{
+            width: 280px;
+            margin: 2px 0 16px 50px;
+            border: 1px solid #ffb4a8;
+            line-height: 16px;
+            padding: 6px 10px;
+            overflow: hidden;
+            background: #fef2f2;
+            color: #6C6C6C;
+        }
+        .login-msg p {
+            white-space: normal;
+            word-wrap: break-word;
+            width: 240px;
+        }
+    </style>
+    {include file="platform/controlCommonVariable" }
+    {include file="platform/urlModel"}
+</head>
+
+<body onkeydown="keyLogin();">
+    <div class="v-layout-login">
+        <div class="v-head-full">
+            <div class="v-head w1200 clearfix">
+                <div class="logo-left clearfix">
+                    <a href="javascript:void(0);" class="fl"><img src="PLATFORM_STATIC/login_register/logo3_lk.png" alt=""></a>
+                    <i class="shu fl"></i>
+                    <span class="title fl">让更多的人帮你卖货</span>
+                </div>
+                <div class="registered-right fr"><a href="http://www.vslai.com/" target="_blank"><img src="PLATFORM_STATIC/login_register/icon-home.png" alt=""> 官网首页</a></div>
+            </div>
+        </div>
+        <div class="v-login clearfix w1200 v-login-position">
+            <!--<div class="imgHref fl"><a href="javascript:void(0);"></a></div>-->
+            <div class="login-box ">
+                <form action="">
+                    <h3 class="title">欢迎登录领客</h3>
+                    <div class="login-msg" style="display: none">
+                        <p class="error hint" >账户名错误</p>
+                    </div>
+                    <dl class="clearfix">
+                        <dt class="userName fl"><img src="PLATFORM_STATIC/login_register/L-account.png" alt=""></dt>
+                        <dd class="userName-ipt fl"><input type="text" class="inputs" id="username" placeholder="请输入手机号码"></dd>
+                    </dl>
+
+                    <dl class="clearfix">
+                        <dt class="userName fl"><img src="PLATFORM_STATIC/login_register/L-pwd.png" alt=""></dt>
+                        <dd class="userName-ipt fl"><input type="password" class="inputs" id="password" placeholder="请输入密码"></dd>
+                    </dl>
+
+                    <div id="slider1"></div>
+
+                    <div class="submits">
+                        <input type="button" class="submit" disabled="disabled" value="登录" onclick="login()">
+                    </div>
+
+                    <div class="tips clearfix">
+                        <div class="go fl">没有账号？<a href="{:__URL('PLATFORM_MAIN/login/registerlk')}" class="blue">直接注册</a></div>
+                        <div class="fr"><a href="{:__URL('PLATFORM_MAIN/login/retrievePwd')}" class="blue">忘记密码</a></div>
+                    </div>
+
+                </form>
+            </div>
+        </div>
+
+        <div class="v-footer">
+            <p></p>
+        </div>
+    </div>
+
+
+    <script>
+
+          // ie浏览器判断
+    function isIE() {
+        if (!!window.ActiveXObject || "ActiveXObject" in window){
+            location.href=__URL(PLATFORMMAIN+'/login/versionLow');
+        }else{
+             
+        }
+     }
+     isIE();
+        $("#slider1").slider({
+            width: 300, // width
+            height: 40, // height
+            fontSize: 14,
+            callback: function (result) {
+                if(result){
+                    $(".submit").addClass("okSubmit").removeAttr("disabled");
+                }
+            }
+        });
+
+
+        function keyLogin(){
+            if (event.keyCode==13 && $('.submit').hasClass('okSubmit')){
+                //回车键的键值为13
+                $(".submit").click(); //调用登录按钮的登录事件
+            }   
+        }
+
+        function login() {
+            var userName = $("#username").val();
+            var password = $("#password").val();
+            if( userName == "" || userName == undefined || userName == null ) {
+                $(".hint").html('请输入用户名');
+                $(".login-msg").css("display", "block");
+                $("#txtName").focus();
+                return false;
+            }else if (password == "") {
+                $(".hint").html('请输入密码');
+                $(".login-msg").css("display", "block");
+                $("#txtPWD").focus();
+                return false;
+            }else{
+                $(".login-msg").css("display", "none");
+            }
+            $.ajax({
+                type : "post",
+                url : "{:__URL('PLATFORM_MAIN/login/login')}",
+                data : {
+                    'username' : userName,
+                    'password' : password
+                },
+                success : function(data) {
+                    if(data["code"]>0){
+                        location.href = __URL(PLATFORMMAIN+'/'+data['data']['url']);
+                    }else{
+                        layer.msg(data['message'], {time: 1000});
+                    }
+                }
+            });
+        }
+
+    </script>
+</body>
+
+</html>

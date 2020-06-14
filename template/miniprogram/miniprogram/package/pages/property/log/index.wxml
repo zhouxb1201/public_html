@@ -1,0 +1,17 @@
+<view class='balanceLog'>
+  <view class='log_list'>
+    <view class='log_cell' wx:for='{{balancelist}}' wx:key='index' data-id="{{item.id}}"  bindtap="onlogDetailPage">
+      <view class='order'>
+        <view class='log_type'>{{item.type_name}}</view>
+        <view class="fail" wx:if="{{item.status == -1 || item.status == 4}}">{{item.number}}</view>
+        <view class="{{item.number < 0 ? 'order_money_red' : 'order_money_green'}}" wx:else>{{item.number}}</view>
+      </view>
+      <view class="order">
+        <view class="fail" wx:if="{{item.status == -1 || item.status == 4}}">余额：{{item.balance}}</view>
+        <view class="balance" wx:else>余额：{{item.balance}}</view>
+        <view class='order_time'>{{item.create_time}}</view>
+      </view>
+    </view>
+  </view>
+  <view class='noMore' hidden='{{noMore}}'>没有更多了</view>
+</view>

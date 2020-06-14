@@ -1,0 +1,20 @@
+.copyright{
+  text-align: center;
+  padding: 10px 24px;
+  line-height: 20px;
+  position: relative;  
+}
+
+.copyright .crstyle-0 .copytext{
+  display: inline-block; 
+}
+
+.copyright .image{    
+  height: 40px;  
+  vertical-align: middle;
+  
+}
+.copyright .copytext{
+  color:#cecece;
+  font-size: 12px;
+}

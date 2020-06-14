@@ -1,0 +1,796 @@
+<!-- 视图 -->
+<script type="text/html" id="tpl_show_wechat">
+    <div class="fixed nodelete" data-itemid="<%itemid%>">
+        <div class="vui-wechat">
+            <div class="img">
+                <img src="http://iph.href.lu/40x40?text=logo">
+            </div>
+            <div class="text">
+                <div class="title1 line-1-ellipsis"><%default_title1%></div>
+                <div class="title2 line-1-ellipsis"><span><%default_title2%></span></div>
+            </div>
+            <div class="btn-box">
+                <button class="btn btn-danger btn-sm line-1-ellipsis"><%btn_text||'立即关注'%></button>
+            </div>
+        </div>
+    </div>
+</script>
+<script type="text/html" id="tpl_show_search">
+    <div class="drag" data-itemid="<%itemid%>">
+        <div class="vui-search" style="background: <%style.background%>; padding: <%style.paddingtop||'10'%>px <%style.paddingleft||'10'%>px;">
+            <div class="inner left" >
+                <div class="search-icon" ><i class="icon icon-search"></i></div>
+                <div class="search-input" >
+                    <span><%params.placeholder%></span>
+                </div>
+            </div>
+        </div>
+    </div>
+</script>
+<script type="text/html" id="tpl_show_tabbar">
+    <div class="vui-tabbar">
+        <% each data as item%>
+        <div class="vui-tabbar-item">
+            <div class="vui-tabbar-item-icon">
+                <img src="<%item.normal%>">
+            </div>
+            <div class="vui-tabbar-item-text">
+                <span><%item.text%></span>
+            </div>
+        </div>
+        <%/each%>
+    </div>
+</script>
+<script type="text/html" id="tpl_show_copyright">
+    <div class="vui-copyright style-<%style.showtype%>">
+        <%if params.showlogo == '1'%>
+        <img src="<%params.src%>">
+        <%/if%>
+        <span class="text"><%params.text%></span>
+    </div>
+</script>
+<script type="text/html" id="tpl_show_banner">
+    <div class="drag" data-itemid="<%itemid%>">
+        <div class="vui-banner">
+            <%each data as item%>
+            <img src="<%item.imgurl%>" />
+            <%/each%>
+            <div class="dots">
+                <%each data as item%>
+                <span></span>
+                <%/each%>
+            </div>
+        </div>
+    </div>
+</script>
+<script type="text/html" id="tpl_show_menu">
+    <div class="drag" data-itemid="<%itemid%>">
+        <div class="vui-icon-group noborder col-<%style.rownum%>" style="background: <%style.background||'#ffffff'%>">
+            <%each data as item%>
+            <div class="vui-icon-col">
+                <div class="icon"><img src="<%item.imgurl%>"></div>
+                <div class="text" style="color: <%item.color%>"><%item.text%></div>
+            </div>
+            <%/each%>
+        </div>
+    </div>
+</script>
+<script type="text/html" id="tpl_show_notice">
+    <div class="drag" data-itemid="<%itemid%>">
+        <div class="vui-notice" style="background: <%style.background%>">
+            <div class="vui-notice-icon"><img src="/public/platform/images/custom/default/notice-icon.png"></div>
+            <div class="vui-notice-wrap">
+                <div class="vui-notice-content" style="color: <%style.color%>"><%params.text%></div>
+            </div>
+        </div>
+    </div>
+</script>
+<script type="text/html" id="tpl_show_picture">
+    <div class="drag" data-itemid="<%itemid%>">
+        <div class="vui-picture" style="padding-bottom: <%style.paddingtop%>px; background: <%style.background%>;">
+            <%each data as item%>
+            <div style="display: block; padding: <%style.paddingtop%>px <%style.paddingleft%>px 0;">
+                <img src="<%item.imgurl%>" />
+            </div>
+            <%/each%>
+        </div>
+    </div>
+</script>
+<script type="text/html" id="tpl_show_title">
+    <div class="drag" data-itemid="<%itemid%>">
+        <div class="vui-title" style="background: <%style.background||''%>; color: <%style.color||''%>; font-size: <%style.fontsize||'12'%>px; text-align: <%style.textalign||''%>; padding: <%style.paddingtop||'0'%>px <%style.paddingleft||'5'%>px;">
+            <%if params.link%>
+            <a href="<%params.link%>" style="color: <%style.color||''%>"><%params.title||'请输入标题内容'%></a>
+            <%else%>
+            <%params.title||'请输入标题内容'%>
+            <%/if%>
+        </div>
+    </div>
+</script>
+<script type="text/html" id="tpl_show_line">
+    <div class="drag" data-itemid="<%itemid%>">
+        <div class="vui-line" style="background: <%style.background%>; padding: <%style.padding%>px 0;">
+            <div class="line" style="border-top: <%style.height||'2'%>px <%style.linestyle||'solid'%> <%style.bordercolor||'#000000'%>"></div>
+        </div>
+    </div>
+</script>
+<script type="text/html" id="tpl_show_blank">
+    <div class="drag" data-itemid="<%itemid%>">
+        <div style="height: <%style.height%>px; background: <%style.background%>"></div>
+    </div>
+</script>
+<script type="text/html" id="tpl_show_picturew">
+    <div class="drag" data-itemid="<%itemid%>">
+        <%if params.row=='1'%>
+        <div class="vui-cube" style="background: <%style.background%>; <%if count(data)==1%>padding: <%style.paddingtop%>px <%style.paddingleft%>px;<%/if%>">
+            <%if count(data)==1%>
+            <img src="<%toArray(data)[0].imgurl%>" />
+            <%/if%>
+            <%if count(data)>1%>
+            <div class="vui-cube-left" style="padding: <%style.paddingtop%>px <%style.paddingleft%>px; padding-right: 0;">
+                <img src="<%toArray(data)[0].imgurl%>" />
+            </div>
+            <div class="vui-cube-right" <%if count(data)==2%> style="padding: <%style.paddingtop%>px <%style.paddingleft%>px;"<%/if%>>
+                <%if count(data)==2%>
+                <img src="<%toArray(data)[1].imgurl%>" />
+                <%/if%>
+                <%if count(data)>2%>
+                <div class="vui-cube-right1" style="padding: <%style.paddingtop%>px <%style.paddingleft%>px; padding-bottom: 0;">
+                    <img src="<%toArray(data)[1].imgurl%>" />
+                </div>
+                <div class="vui-cube-right2" <%if count(data)==3%> style="padding: <%style.paddingtop%>px <%style.paddingleft%>px;"<%/if%>>
+                    <%if count(data)==3%>
+                    <img src="<%toArray(data)[2].imgurl%>" />
+                    <%/if%>
+                    <%if count(data)>3%>
+                    <div class="left" style="padding: <%style.paddingtop%>px <%style.paddingleft%>px; padding-right: 0;">
+                        <img src="<%toArray(data)[2].imgurl%>" />
+                    </div>
+                    <%/if%>
+                    <%if count(data)>=4%>
+                    <div class="right" style="padding: <%style.paddingtop%>px <%style.paddingleft%>px;">
+                        <img src="<%toArray(data)[3].imgurl%>" />
+                    </div>
+                    <%/if%>
+                </div>
+                <%/if%>
+            </div>
+            <%/if%>
+        </div>
+        <%/if%>
+        <%if params.row>1%>
+        <div class="vui-picturew row-<%params.row%>" style="padding: <%style.paddingtop%>px; <%style.paddingleft%>px; background: <%style.background%>;">
+            <%each data as item%>
+            <div class="item" style="padding: <%style.paddingtop%>px <%style.paddingleft%>px;">
+                <img src="<%item.imgurl%>">
+            </div>
+            <%/each%>
+        </div>
+        <%/if%>
+    </div>
+</script>
+<script type="text/html" id="tpl_show_goods">
+    <div class="drag" data-itemid="<%itemid%>">
+        <div class="vui-goods-group" style="background-color: <%style.background%>">
+            <%if params.recommendtype == '0'%>
+            <div class="vui-goods-item vui-goods-item-<%params.showtype%>">
+                <div class="image">
+                    <img src="/public/platform/images/custom/default/goods-1.jpg">
+                </div>
+                <div class="detail">
+                    <div class="name">
+                        (自动推荐的
+                        <%if params.goodstype=='0'%>自营商品<%/if%>
+                        <%if params.goodstype=='1'%>全平台商品<%/if%>,
+                        <%if params.goodssort=='0'%>按上架时间升序<%/if%>
+                        <%if params.goodssort=='1'%>按上架时间降序<%/if%>
+                        <%if params.goodssort=='2'%>按销量升序<%/if%>
+                        <%if params.goodssort=='3'%>按销量降序<%/if%>
+                        <%if params.goodssort=='4'%>按收藏数升序<%/if%>
+                        <%if params.goodssort=='5'%>按收藏数降序<%/if%>
+                        )
+                    </div>
+                    <div class="price">
+                        <div class="text">
+                            <span class="minprice">￥11.00</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="vui-goods-item vui-goods-item-<%params.showtype%>">
+                <div class="image">
+                    <img src="/public/platform/images/custom/default/goods-2.jpg">
+                </div>
+                <div class="detail">
+                    <div class="name">
+                        (自动推荐的
+                        <%if params.goodstype=='0'%>自营商品<%/if%>
+                        <%if params.goodstype=='1'%>全平台商品<%/if%>,
+                        <%if params.goodssort=='0'%>按上架时间升序<%/if%>
+                        <%if params.goodssort=='1'%>按上架时间降序<%/if%>
+                        <%if params.goodssort=='2'%>按销量升序<%/if%>
+                        <%if params.goodssort=='3'%>按销量降序<%/if%>
+                        <%if params.goodssort=='4'%>按收藏数升序<%/if%>
+                        <%if params.goodssort=='5'%>按收藏数降序<%/if%>
+                        )
+                    </div>
+                    <div class="price">
+                        <div class="text">
+                            <span class="minprice">￥11.00</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <%/if%>
+            <%if params.recommendtype == '1'%>
+            <%each data as item%>
+            <div class="vui-goods-item vui-goods-item-<%params.showtype%>" data-goodsid="<%item.goods_id%>">
+                <div class="image">
+                    <img src="<%item.pic_cover_mid%>">
+                </div>
+                <div class="detail">
+                    <div class="name"><%item.goods_name%></div>
+                    <div class="price">
+                        <div class="text">
+                            <span class="minprice">￥<%item.price%></span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <%/each%>
+            <%/if%>
+        </div>
+    </div>
+</script>
+<script type="text/html" id="tpl_show_goodsIntegral">
+    <div class="drag" data-itemid="<%itemid%>">
+        <div class="vui-goods-group" style="background-color: <%style.background%>">
+            <%if params.recommendtype == '0'%>
+            <div class="vui-goods-item vui-goods-item-<%params.showtype%>">
+                <div class="image">
+                    <img src="/public/platform/images/custom/default/goods-1.jpg">
+                </div>
+                <div class="detail">
+                    <div class="name">
+                        (自动推荐的
+                        <%if params.goodstype=='0'%>自营商品<%/if%>
+                        <%if params.goodstype=='1'%>全平台商品<%/if%>,
+                        <%if params.goodssort=='0'%>按上架时间升序<%/if%>
+                        <%if params.goodssort=='1'%>按上架时间降序<%/if%>
+                        <%if params.goodssort=='2'%>按兑换量升序<%/if%>
+                        <%if params.goodssort=='3'%>按兑换量降序<%/if%>
+                        <%if params.goodssort=='4'%>按积分升序<%/if%>
+                        <%if params.goodssort=='5'%>按积分降序<%/if%>
+                        )
+                    </div>
+                    <div class="price">
+                        <div class="text">
+                            <span>50积分</span>
+                            <span>+</span>
+                            <span class="minprice">￥11.00</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="vui-goods-item vui-goods-item-<%params.showtype%>">
+                <div class="image">
+                    <img src="/public/platform/images/custom/default/goods-2.jpg">
+                </div>
+                <div class="detail">
+                    <div class="name">
+                        (自动推荐的
+                        <%if params.goodstype=='0'%>自营商品<%/if%>
+                        <%if params.goodstype=='1'%>全平台商品<%/if%>,
+                        <%if params.goodssort=='0'%>按上架时间升序<%/if%>
+                        <%if params.goodssort=='1'%>按上架时间降序<%/if%>
+                        <%if params.goodssort=='2'%>按兑换量升序<%/if%>
+                        <%if params.goodssort=='3'%>按兑换量降序<%/if%>
+                        <%if params.goodssort=='4'%>按积分升序<%/if%>
+                        <%if params.goodssort=='5'%>按积分降序<%/if%>
+                        )
+                    </div>
+                    <div class="price">
+                        <div class="text">
+                            <span>50积分</span>
+                            <span>+</span>
+                            <span class="minprice">￥11.00</span>
+                        </div>
+                        <!--<div class="buy">购买</div>-->
+                    </div>
+                </div>
+            </div>
+            <%/if%>
+            <%if params.recommendtype == '1'%>
+            <%each data as item%>
+            <div class="vui-goods-item vui-goods-item-<%params.showtype%>" data-goodsid="<%item.goods_id%>">
+                <div class="image">
+                    <img src="<%item.pic_cover_mid%>">
+                </div>
+                <div class="detail">
+                    <div class="name">
+                        <%if item.goods_type == '1'%>
+                        <span class="label label-red">优惠券</span>
+                        <%else if item.goods_type == '2'%>
+                        <span class="label label-red">礼品券</span>
+                        <%else if item.goods_type == '3'%>
+                        <span class="label label-red">余额</span>
+                        <%else if item.goods_type == '0'%>
+                        <span class="label label-red">商品</span>
+                        <%/if%>
+                        <%item.goods_name%>
+                    </div>
+                    <div class="price">
+                        <div class="text">
+                            <span class="minprice">
+                                <%if item.goods_point != 0 %>
+                                  <%item.goods_point%>积分
+                                <%/if%>
+                                <%if item.goods_point != 0 && item.price > 0 %>
+                                +
+                                <%/if%>
+                                <%if item.price > 0 %>
+                                  ￥<%item.price%>
+                                <%/if%>
+                                
+                            </span>
+                        </div>
+                        <!--<div class="buy">购买 <%item.goods_point%></div>-->
+                    </div>
+                </div>
+            </div>
+            <%/each%>
+            <%/if%>
+        </div>
+    </div>
+</script>
+<script type="text/html" id="tpl_show_shop">
+    <div class="drag" data-itemid="<%itemid%>">
+        <div class="vui-shop">
+            <div class="vui-shop-title">——<span class="text"><%params.title%></span>——</div>
+            <%if params.recommendtype == '0'%>
+            <div class="vui-shop-list">
+                <div class="vui-shop-item">
+                    <img src="http://iph.href.lu/100x50?text=100x50">
+                </div>
+                <div class="vui-shop-item">
+                    <img src="http://iph.href.lu/100x50?text=100x50">
+                </div>
+                <div class="vui-shop-item">
+                    <img src="http://iph.href.lu/100x50?text=100x50">
+                </div>
+                <div class="vui-shop-item">
+                    <img src="http://iph.href.lu/100x50?text=100x50">
+                </div>
+                <div class="vui-shop-item">
+                    <img src="http://iph.href.lu/100x50?text=100x50">
+                </div>
+                <div class="vui-shop-item">
+                    <img src="http://iph.href.lu/100x50?text=100x50">
+                </div>
+            </div>
+            <%else%>
+            <div class="vui-shop-list">
+                <%each data as item%>
+                <div class="vui-shop-item">
+                    <img src="<%item.pic_cover%>">
+                </div>
+                <%/each%>
+            </div>
+            <%/if%>
+        </div>
+    </div>
+</script>
+<script type="text/html" id="tpl_show_listmenu">
+    <div class="drag" data-itemid="<%itemid%>">
+        <div class="vui-cell-group vui-cell-click" style="margin-top: <%style.margintop%>px; background-color: <%style.background%>;">
+            <%each data as item%>
+                <div class="vui-cell">
+                    <%if item.iconclass%>
+                        <div class="vui-cell-icon" style="color: <%style.iconcolor%>;"><i class="v-icon <%item.iconclass%>"></i></div>
+                    <%/if%>
+                    <div class="vui-cell-text" style="color: <%style.textcolor%>;"><%item.text%></div>
+                    <div class="vui-cell-remark" style="color: <%style.remarkcolor%>;"><%item.remark%></div>
+                    <div class="vui-cell-right"><i class="icon icon-right-arrow"></i></div>
+                </div>
+            <%/each%>
+        </div>
+    </div>
+</script>
+<script type="text/html" id="tpl_show_richtext">
+    <div class="drag" data-itemid="<%itemid%>">
+        <div class="vui-richtext" style="padding: <%style.padding%>px;">
+            <%if params.content%>
+            <%=decode(params.content)%>
+            <%else%>
+            <p><span style="font-size: 20px;">这里是『富文本』区域</span></p>
+            <%/if%>
+        </div>
+    </div>
+</script>
+<script type="text/html" id="tpl_show_shop_head">
+    <div class="drag fixed nodelete" data-itemid="<%itemid%>">
+        <div class="vui-shop_head">
+            <div class="box">
+                <i class="icon v-icon-menu1"></i>
+                <%if style.backgroundimage%>
+                    <img src="<%style.backgroundimage%>" class="bg">
+                    <img src="/public/platform/images/custom/shop_head_default_0<%params.styletype%>.png" class="img">
+                <%else%>
+                    <img src="/public/platform/images/custom/default/shop-head-0<%params.styletype%>.jpg" class="bg">
+                    <img src="/public/platform/images/custom/shop_head_default_0<%params.styletype%>.png" class="img">
+                <%/if%>
+            </div>
+            <div class="foot">
+                <span class="item"><i class="icon icon-search"></i>搜索</span>
+                <span class="item">全部商品</span>
+            </div>
+        </div>
+    </div>
+</script>
+<script type="text/html" id="tpl_show_detail_fixed">
+    <div class="fixed nodelete" data-itemid="<%itemid%>">
+        <img src="/public/platform/images/custom/detail_default.png" width="100%">
+    </div>
+</script>
+<script type="text/html" id="tpl_show_member_fixed">
+    <div class="drag fixed nodelete" data-itemid="<%itemid%>">
+        <div class="vui-member_head">
+            <div class="box">
+                <%if style.backgroundimage%>
+                    <img src="<%style.backgroundimage%>" class="bg">
+                    <img src="/public/platform/images/custom/member_head_default_0<%params.styletype%>.png" class="img">
+                <%else%>
+                    <img src="/public/platform/images/custom/default/member-head-0<%params.styletype%>.png" class="bg">
+                    <img src="/public/platform/images/custom/member_head_default_0<%params.styletype%>.png" class="img">
+                <%/if%>
+            </div>
+        </div>
+    </div>
+</script>
+<script type="text/html" id="tpl_show_member_bind_fixed">
+    <div class="drag fixed nodelete" data-itemid="<%itemid%>" style="overflow: initial;">
+        <div class="vui-member_bind vui-cell-group" >
+            <div class="box" style="background: <%style.background%>">
+                <div class="left">
+                    <div class="img">
+                        <i class="icon v-icon-bind-phone" style="color: <%style.iconcolor%>"></i>
+                    </div>
+                    <div class="text">
+                        <div class="title" style="color: <%style.titlecolor%>"><%params.title%></div> 
+                        <div class="tip" style="color: <%style.desccolor%>"><%params.desc%></div>
+                    </div>
+                </div>
+                <i class="icon v-icon-arrow-right right"></i>
+            </div>
+        </div>
+    </div>
+</script>
+<script type="text/html" id="tpl_show_member_assets_fixed">
+    <div class="drag fixed nodelete" data-itemid="<%itemid%>">
+        <div class="vui-member_assets" style="background: <%style.background%>">
+            <div class="vui-cell">
+                <%if params.iconclass %>
+                    <div class="vui-cell-icon" style="color: <%style.titleiconcolor%>;"><i class="v-icon <%params.iconclass%>"></i></div>
+                <%/if%>
+                <div class="vui-cell-text" style="color: <%style.titlecolor%>;"><%params.title%></div>
+                <div class="vui-cell-remark" style="color: <%style.titleremarkcolor%>;"><%params.remark%></div>
+                <div class="vui-cell-right"><i class="icon icon-right-arrow"></i></div>
+            </div>
+            <div class="cell-panel cell-panel-3">
+                <%each data as item%>
+                <%if item.no_addons != '1' && item.is_show == '1' %>
+                <div class="item">
+                    <div class="box">
+                        <div class="title" style="color: <%style.textcolor%>;"><%item.text%></div> 
+                        <div class="text" style="color: <%style.highlight%>;">0</div>
+                    </div>
+                </div>
+                <%/if%>
+                <%/each%>
+            </div>
+        </div>
+    </div>
+</script>
+<script type="text/html" id="tpl_show_member_order_fixed">
+    <div class="drag fixed nodelete" data-itemid="<%itemid%>">
+        <div class="vui-member_order" style="background: <%style.background%>">
+            <div class="vui-cell">
+                <%if params.iconclass %>
+                    <div class="vui-cell-icon" style="color: <%style.titleiconcolor%>;"><i class="v-icon <%params.iconclass%>"></i></div>
+                <%/if%>
+                <div class="vui-cell-text" style="color: <%style.titlecolor%>;"><%params.title%></div>
+                <div class="vui-cell-remark" style="color: <%style.titleremarkcolor%>;"><%params.remark%></div>
+                <div class="vui-cell-right"><i class="icon icon-right-arrow"></i></div>
+            </div>
+            <div class="cell-panel cell-panel-5">
+                <%each data as item%>
+                <%if item.is_show == '1' %>
+                <div class="item">
+                    <div class="box">
+                        <div class="icon" style="color: <%style.iconcolor%>;"><i class="v-icon <%item.iconclass%>"></i></div> 
+                        <div class="text" style="color: <%style.textcolor%>;"><%item.text%></div>
+                    </div>
+                </div>
+                <%/if%>
+                <%/each%>
+            </div>
+        </div>
+    </div>
+</script>
+<script type="text/html" id="tpl_show_commission_fixed">
+    <div class="drag fixed nodelete" data-itemid="<%itemid%>">
+        <div class="vui-commission_head">
+            <div class="box">
+                <%if style.backgroundimage%>
+                    <img src="<%style.backgroundimage%>" class="bg">
+                    <img src="/public/platform/images/custom/commission_head_default_0<%params.styletype%>.png?" class="img">
+                <%else%>
+                    <img src="/public/platform/images/custom/default/commission-head-0<%params.styletype%>.png?" class="bg">
+                    <img src="/public/platform/images/custom/commission_head_default_0<%params.styletype%>.png?" class="img">
+                <%/if%>
+            </div>
+            <div class="foot">
+                <img src="/public/platform/images/custom/commission_default.png?" width="100%">
+            </div>
+        </div>
+    </div>
+</script>
+<script type="text/html" id="tpl_show_seckill">
+    <div class="drag" data-itemid="<%itemid%>">
+        <div class="vui-seckill-head">
+            <div class="text"><%params.title%></div>
+            <div class="time">
+                <span class="time-text">0点场</span>
+                <div class="time-box">
+                    <span>00</span>
+                    <i>:</i>
+                    <span>00</span>
+                    <i>:</i>
+                    <span>00</span>
+                </div>
+            </div>
+        </div>
+        <div class="vui-seckill-group">
+            <div class="vui-seckill-item">
+                <div class="image">
+                    <span class="tag">秒杀</span>
+                    <img src="/public/platform/images/custom/default/goods-1.jpg">
+                </div>
+                <div class="detail">
+                    <div class="name">
+                        秒杀商品名称
+                    </div>
+                    <div class="price">
+                        <div class="text">
+                            <span class="minprice">￥11.00</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="vui-seckill-item">
+                <div class="image">
+                    <span class="tag">秒杀</span>
+                    <img src="/public/platform/images/custom/default/goods-2.jpg">
+                </div>
+                <div class="detail">
+                    <div class="name">
+                        秒杀商品名称
+                    </div>
+                    <div class="price">
+                        <div class="text">
+                            <span class="minprice">￥11.00</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="vui-seckill-item">
+                <div class="image">
+                    <span class="tag">秒杀</span>
+                    <img src="/public/platform/images/custom/default/goods-1.jpg">
+                </div>
+                <div class="detail">
+                    <div class="name">
+                        秒杀商品名称
+                    </div>
+                    <div class="price">
+                        <div class="text">
+                            <span class="minprice">￥11.00</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</script>
+<script type="text/html" id="tpl_show_detail_banner">
+    <div class="drag" data-itemid="<%itemid%>">
+        <div class="vui-detail-banner">
+            <div class="img">
+                <img src="/public/platform/images/custom/default/goods-3.jpg">
+            </div>
+            <div class="indicator <%style.shape%> <%style.position%>">
+                <span class="active" style="background: <%style.color%>"></span>
+                <span></span>
+                <span></span>
+            </div>
+        </div>
+    </div>
+</script>
+<script type="text/html" id="tpl_show_detail_info">
+    <div class="drag" data-itemid="<%itemid%>">
+        <div class="vui-detail-info" style="margin-top: <%style.margintop%>px;margin-bottom: <%style.marginbottom%>px;">
+            <div class="info">
+                <div class="price-group">
+                    <div class="sale">
+                        <span class="price" style="color:<%style.pricecolor%>">¥1 </span>
+                    </div>
+                    <div class="market" style="color:<%style.pricelightcolor%>">¥ 1</div>
+                </div>
+                <div class="name-group" style="color:<%style.titlecolor%>">商品名称</div>
+            </div>
+            <div class="freight-sales">
+                <span class="freight">运费：包邮</span>
+                <span class="sales">销量：99笔</span>
+            </div>
+        </div>
+    </div>
+</script>
+<script type="text/html" id="tpl_show_detail_promote">
+    <div class="drag" data-itemid="<%itemid%>">
+        <div class="vui-detail-promote" style="margin-top: <%style.margintop%>px;margin-bottom: <%style.marginbottom%>px;">
+            <%each data as item%>
+            <%if item.key == 'fullcut'%>
+            <div class="item" >
+                <div class="title" style="color:<%style.titlecolor%>">促销</div>
+                <div class="value">
+                    <span>满减</span>
+                    <span>满赠</span>
+                    <span>满邮</span>
+                </div>
+                <div class="right-icon">
+                    <i class="icon icon-right-arrow"></i>
+                </div>
+            </div>
+            <%/if%>
+            <%if item.key == 'coupon'%>
+            <div class="item">
+                <div class="title" style="color:<%style.titlecolor%>">优惠</div>
+                <div class="value coupon-value">
+                    <span>优惠券|¥5</span>
+                    <span>优惠券|5折</span>
+                </div>
+                <div class="right-icon">
+                    <i class="icon icon-right-arrow"></i>
+                </div>
+            </div>
+            <%/if%>
+            <%if item.key == 'rebate'%>
+            <div class="item">
+                <div class="title" style="color:<%style.titlecolor%>">返利</div>
+                <div class="value">
+                    <span>返佣金</span>
+                    <span>返积分</span>
+                </div>
+                <div class="right-icon">
+                    <i class="icon icon-right-arrow"></i>
+                </div>
+            </div>
+            <%/if%>
+            <%/each%>
+        </div>
+    </div>
+</script>
+<script type="text/html" id="tpl_show_detail_specs">
+    <div class="drag" data-itemid="<%itemid%>">
+        <div class="vui-detail-specs" style="margin-top: <%style.margintop%>px;margin-bottom: <%style.marginbottom%>px;">
+            <div class="item">
+                <div class="title" style="color:<%style.titlecolor%>">规格</div>
+                <div class="value" style="color:<%style.nocurrentcolor%>">请选择规格</div>
+                <div class="right-icon">
+                    <i class="icon icon-right-arrow"></i>
+                </div>
+            </div>
+        </div>
+    </div>
+</script>
+<script type="text/html" id="tpl_show_detail_delivery">
+    <div class="drag" data-itemid="<%itemid%>">
+        <div class="vui-detail-delivery" style="margin-top: <%style.margintop%>px;margin-bottom: <%style.marginbottom%>px;">
+            <div class="item">
+                <div class="title" style="color:<%style.titlecolor%>">配送</div>
+                <div class="value" style="color:<%style.nocurrentcolor%>">请选择配送地址</div>
+                <div class="right-icon">
+                    <span class="text">切换</span>
+                    <i class="icon icon-right-arrow"></i>
+                </div>
+            </div>
+        </div>
+    </div>
+</script>
+<script type="text/html" id="tpl_show_detail_service">
+    <div class="drag" data-itemid="<%itemid%>">
+        <div class="vui-detail-service" style="margin-top: <%style.margintop%>px;margin-bottom: <%style.marginbottom%>px;">
+            <div class="item">
+                <div class="value">
+                    <%each data as item%>
+                    <div class="value-item">
+                        <img src="<%item.imgurl%>">
+                        <span style="color:<%style.titlecolor%>"><%item.title%></span>
+                    </div>
+                    <%/each%>
+                </div>
+                <div class="right-icon">
+                    <i class="icon icon-right-arrow"></i>
+                </div>
+            </div>
+        </div>
+    </div>
+</script>
+<script type="text/html" id="tpl_show_detail_shop">
+    <div class="drag" data-itemid="<%itemid%>">
+        <div class="vui-detail-shop" style="margin-top: <%style.margintop%>px;margin-bottom: <%style.marginbottom%>px;">
+            <div class="info">
+                <div class="left-info">
+                    <div class="shop-logo">
+                        <img src="http://iph.href.lu/70x32?text=logo">
+                    </div>
+                    <div class="name-score">
+                        <div class="name" style="color: <%style.namecolor%>;">店铺名称</div>
+                        <div class="score" style="color: <%style.starcolor%>;">
+                            <i class="v-icon v-icon-rate-on"></i>
+                            <i class="v-icon v-icon-rate-on"></i>
+                            <i class="v-icon v-icon-rate-on"></i>
+                            <i class="v-icon v-icon-rate-on"></i>
+                            <i class="v-icon v-icon-rate-on"></i>
+                        </div>
+                    </div>
+                </div>
+                <div class="right-btn">
+                    <button class="btn btn-sm" style="background: <%style.btncolor%>;color: <%style.btntextcolor%>;">全部商品</button>
+                    <button class="btn btn-sm" style="background: <%style.btncolor%>;color: <%style.btntextcolor%>;">进入店铺</button>
+                </div>
+            </div>
+            <div class="score-group">
+                <div class="item">
+                    <span style="color: <%style.titlecolor%>;">描述</span>
+                    <span style="color: <%style.scorecolor%>;">5.0</span>
+                </div>
+                <div class="item">
+                    <span style="color: <%style.titlecolor%>;">物流</span>
+                    <span style="color: <%style.scorecolor%>;">5.0</span>
+                </div>
+                <div class="item">
+                    <span style="color: <%style.titlecolor%>;">服务</span>
+                    <span style="color: <%style.scorecolor%>;">5.0</span>
+                </div>
+            </div>
+        </div>
+    </div>
+</script>
+<script type="text/html" id="tpl_show_detail_desc">
+    <div class="drag" data-itemid="<%itemid%>">
+        <div class="vui-detail-desc">这里是商品描述内容示例，不可编辑，仅能拖动排序</div>
+    </div>
+</script>
+<script type="text/html" id="tpl_show_goodsCps">
+    <div class="drag" data-itemid="<%itemid%>">
+        <div class="vui-goods-group" style="background-color: <%style.background%>">
+            <%each data as item%>
+            <div class="vui-goods-item vui-goods-item-<%params.showtype%>" data-goodsid="<%item.goods_id%>">
+                <div class="image">
+                    <img src="<%item.pic_cover%>">
+                </div>
+                <div class="detail">
+                    <div class="name"><%item.goods_name%></div>
+                    <div class="price">
+                        <div class="text">
+                            <span class="minprice">￥<%item.price%></span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <%/each%>
+        </div>
+    </div>
+</script>
+<!-- 视图 end -->

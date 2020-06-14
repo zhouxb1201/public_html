@@ -1,0 +1,635 @@
+{extend name="platform/new_base" /} {block name="resources"/}
+<style>
+</style>
+{/block} {block name="main"}
+<!-- page -->
+<ul class="nav nav-tabs v-nav-tabs" role="tablist">
+    <li role="presentation" class="active"><a href="#paySuccess" aria-controls="paySuccess" data-type="paySuccess" role="tab" data-toggle="tab" class="flex-auto-center">付款成功</a></li>
+    <li role="presentation"><a href="#orderClose" aria-controls="orderClose" data-type="orderClose" role="tab" data-toggle="tab" class="flex-auto-center">订单关闭</a></li>
+    <li role="presentation"><a href="#balanceChange" aria-controls="balanceChange" data-type="balanceChange" role="tab" data-toggle="tab" class="flex-auto-center">余额变动</a></li>
+    <li role="presentation"><a href="#afterSale" aria-controls="afterSale" data-type="afterSale" role="tab" data-toggle="tab" class="flex-auto-center">售后情况</a></li>
+    <li role="presentation"><a href="#distributionNotice" aria-controls="distributionNotice" data-type="distributionNotice" role="tab" data-toggle="tab" class="flex-auto-center">分销商通知</a></li>
+</ul>
+<div class="tab-content pt-15">
+    <div role="tabpanel" class="tab-pane fade in active" id="paySuccess">
+        <div class="tNews-container flex flex-pack-center">
+            <div class="tNews-view">
+                <div class="tNews-title" >团大人商城</div>
+                <div class="view-main" >
+                    <div class="tNews-notice">
+                        <h4 class="tNews-notice-title">付款成功通知</h4>
+                        <div class="tNews-notice-content fs-12">
+                            <p class="text-primary line-1-ellipsis pb-4">你的订单已完成付款</p>
+                            <p class="line-1-ellipsis pb-4">订单金额：145.25元</p>
+                            <p class="line-1-ellipsis pb-4">商品详情：七匹狼正品 牛皮男士钱包 真皮钱…</p>
+                            <p class="line-1-ellipsis pb-4">收货信息：黄宏东，广东省 深圳市 宝安区</p>
+                            <p class="line-1-ellipsis pb-4">订单编号：546787944-55446467-544749</p>
+                            <p class="text-primary line-1-ellipsis">商家会尽快为您安排发货，感谢你对我们的支持</p>
+                        </div>
+                        <div class="tNews-detail">详情 <span class="pull-right" style="padding-top: 2px"><i class="icon icon-right-arrow"></i></span></div>
+                    </div>
+                </div>
+            </div>
+            <div class="custom-editor1 fs-12">
+                <div class="editor1-main" style="margin-top: 0px;">
+                    <div class="editor1-arrow"></div>
+                    <div class="editor1-inner">
+                        <div class="form-editor1-title">使用场景：支付成功</div>
+                        <div class="form-group">
+                            <div class="col-sm-2 control-label">模版标题</div>
+                            <div class="col-sm-10 mt-6">付款成功通知</div>
+                        </div>
+                        <div class="form-group">
+                            <div class="col-sm-2 control-label">模版编号</div>
+                            <div class="col-sm-10 mt-6">TM00398</div>
+                        </div>
+                        <div class="form-group">
+                            <div class="col-sm-2 control-label"><span class="text-bright">*</span>模版ID</div>
+                            <div class="col-sm-10">
+                                <input class="form-control input-sm diy-bind" id="template_id1" value="{if $list['type1']['template_id']}{$list['type1']['template_id']}{/if}">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="col-sm-2 control-label">通知人</div>
+                            <div class="col-sm-10" style="margin-top: 3px">
+                                <label class="checkbox-inline"><input type="checkbox" name="inform1" value="1" {if $list['type1']['inform'] }checked{/if}> <span style="padding-top: 2px;display: inline-block;">会员</span> </label>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="col-sm-2 control-label">状态</div>
+                            <div class="col-sm-10">
+                                <div class="switch-inline">
+                                    <input type="checkbox" id="switch1" {if $list['type1']['is_use'] }checked{/if}>
+                                    <label for="switch1" class=""></label>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="col-md-2 control-label"></label>
+                            <div class="col-md-8">
+                                <a class="btn btn-primary add1" href="javascript:;">保存</a>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+                <div class="editor1-main-tips mt-10">
+                    <p class="mb-10">1、登录【微信公众号平台】=>【功能】=>【消息模板】;</p>
+                    <p class="mb-10">2、如找不到该功能，则在【微信公众号平台】=>【功能】=>添加功能插件=>消息模板 中添加；</p>
+                    <p class="mb-10">3、选择行业为：“IT科技-互联网|电子商务”</p>
+                    <p class="mb-10">4、在【模板库】通过“模版标题”进行搜索，在搜索结果处通过“模版编号”找到相应的模版然后点击添加即可。</p>
+                    <p class="mb-10">5、在【我的模板】找到对应的“模版ID”，填入商城的“模版ID”处，勾选通知人然后开启保存即可。</p>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div role="tabpanel" class="tab-pane fade" id="orderClose">
+        <div class="tNews-container flex flex-pack-center">
+            <div class="tNews-view">
+                <div class="tNews-title" >团大人商城</div>
+                <div class="view-main">
+                    <div class="tNews-notice">
+                        <h4 class="tNews-notice-title">订单取消通知</h4>
+                        <div class="tNews-notice-content fs-12">
+                            <p class="text-primary line-1-ellipsis pb-4">您的订单已取消</p>
+                            <p class="line-1-ellipsis pb-4">订单金额：44.20元</p>
+                            <p class="line-1-ellipsis pb-4">商品详情：七匹狼真皮鞋包七匹狼真皮鞋包</p>
+                            <p class="line-1-ellipsis pb-4">收货信息：深圳市宝安区海秀路23号</p>
+                            <p class="line-1-ellipsis pb-4">订单编号：8976541236598771</p>
+                            <p class="text-primary">点击“详情”查看订单相关信息，如有疑问可联系客服。</p>
+                        </div>
+                        <div class="tNews-detail">详情 <span class="pull-right" style="padding-top: 2px"><i class="icon icon-right-arrow"></i></span></div>
+                    </div>
+                </div>
+            </div>
+            <div class="custom-editor1 fs-12">
+                <div class="editor1-main"  style="margin-top: 0px;">
+                    <div class="editor1-arrow"></div>
+                    <div class="editor1-inner">
+                        <div class="form-editor1-title">使用场景：用户取消订单、订单超时</div>
+                        <div class="form-group">
+                            <div class="col-sm-2 control-label">模版标题</div>
+                            <div class="col-sm-10 mt-6">订单取消通知</div>
+                        </div>
+                        <div class="form-group">
+                            <div class="col-sm-2 control-label">模版编号</div>
+                            <div class="col-sm-10 mt-6">TM00850</div>
+                        </div>
+                        <div class="form-group">
+                            <div class="col-sm-2 control-label"><span class="text-bright">*</span>模版ID</div>
+                            <div class="col-sm-10">
+                                <input class="form-control input-sm diy-bind" id="template_id2" value="{if $list['type2']['template_id']}{$list['type2']['template_id']}{/if}">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="col-sm-2 control-label">通知人</div>
+                            <div class="col-sm-10" style="margin-top: 3px">
+                                <label class="checkbox-inline"><input type="checkbox" name="inform2" value="1" {if $list['type2']['inform'] }checked{/if}> <span style="padding-top: 2px;display: inline-block;">会员</span> </label>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="col-sm-2 control-label">状态</div>
+                            <div class="col-sm-10">
+                                <div class="switch-inline">
+                                    <input type="checkbox" id="switch2" {if $list['type2']['is_use'] }checked{/if}>
+                                    <label for="switch2" class=""></label>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="col-md-2 control-label"></label>
+                            <div class="col-md-8">
+                                <a class="btn btn-primary add2" href="javascript:;">保存</a>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+                <div class="editor1-main-tips mt-10">
+                    <p class="mb-10">1、登录【微信公众号平台】=>【功能】=>【消息模板】;</p>
+                    <p class="mb-10">2、如找不到该功能，则在【微信公众号平台】=>【功能】=>添加功能插件=>消息模板 中添加；</p>
+                    <p class="mb-10">3、选择行业为：“IT科技-互联网|电子商务”</p>
+                    <p class="mb-10">4、在【模板库】通过“模版标题”进行搜索，在搜索结果处通过“模版编号”找到相应的模版然后点击添加即可。</p>
+                    <p class="mb-10">5、在【我的模板】找到对应的“模版ID”，填入商城的“模版ID”处，勾选通知人然后开启保存即可。</p>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div role="tabpanel" class="tab-pane fade" id="balanceChange">
+        <div class="tNews-container flex flex-pack-center">
+            <div class="tNews-view">
+                <div class="tNews-title">团大人商城</div>
+                <div class="view-main">
+                    <div class="tNews-notice">
+                        <h4 class="tNews-notice-title">账户余额变动通知</h4>
+                        <div class="tNews-notice-content fs-12">
+                            <p class="text-primary line-1-ellipsis pb-4">您的账户余额发生变动，信息如下</p>
+                            <p class="line-1-ellipsis pb-4">账户类型：余额</p>
+                            <p class="line-1-ellipsis pb-4">操作类型：<span class="text-success">提现成功</span></p>
+                            <p class="line-1-ellipsis pb-4">操作内容：流水号2015163443230008</p>
+                            <p class="line-1-ellipsis pb-4">变动额度：-205.00元</p>
+                            <p class="line-1-ellipsis pb-4">账户余额：568.00元</p>
+                            <p class="text-primary">如对上述余额变动有异议，请联系客服人员协助处理。</p>
+                        </div>
+                        <div class="tNews-detail">详情 <span class="pull-right" style="padding-top: 2px"><i class="icon icon-right-arrow"></i></span></div>
+                    </div>
+                    <div class="tNews-notice">
+                        <h4 class="tNews-notice-title">账户余额变动通知</h4>
+                        <div class="tNews-notice-content fs-12">
+                            <p class="text-primary line-1-ellipsis pb-4">您的账户余额发生变动，信息如下</p>
+                            <p class="line-1-ellipsis pb-4">账户类型：余额</p>
+                            <p class="line-1-ellipsis pb-4">操作类型：<span class="text-danger">提现失败</span></p>
+                            <p class="line-1-ellipsis pb-4">操作内容：流水号2015163443230008</p>
+                            <p class="line-1-ellipsis pb-4">变动额度：0元</p>
+                            <p class="line-1-ellipsis pb-4">账户余额：568.00元</p>
+                            <p class="text-primary">失败原因：XXXXXXXXXXXXXXXXXXXX，如有疑问请联系客服。</p>
+                        </div>
+                        <div class="tNews-detail">详情 <span class="pull-right" style="padding-top: 2px"><i class="icon icon-right-arrow"></i></span></div>
+                    </div>
+                    <div class="tNews-notice">
+                        <h4 class="tNews-notice-title">账户余额变动通知</h4>
+                        <div class="tNews-notice-content fs-12">
+                            <p class="text-primary line-1-ellipsis pb-4">您的账户余额发生变动，信息如下</p>
+                            <p class="line-1-ellipsis pb-4">账户类型：余额</p>
+                            <p class="line-1-ellipsis pb-4">操作类型：<span class="text-success">充值成功</span></p>
+                            <p class="line-1-ellipsis pb-4">操作内容：流水号2015163443230008</p>
+                            <p class="line-1-ellipsis pb-4">变动额度：+205.00元</p>
+                            <p class="line-1-ellipsis pb-4">账户余额：568.00元</p>
+                            <p class="text-primary">如对上述余额变动有异议，请联系客服人员协助处理。</p>
+                        </div>
+                        <div class="tNews-detail">详情 <span class="pull-right" style="padding-top: 2px"><i class="icon icon-right-arrow"></i></span></div>
+                    </div>
+                    <div class="tNews-notice">
+                        <h4 class="tNews-notice-title">账户余额变动通知</h4>
+                        <div class="tNews-notice-content fs-12">
+                            <p class="text-primary line-1-ellipsis pb-4">您的账户余额发生变动，信息如下</p>
+                            <p class="line-1-ellipsis pb-4">账户类型：余额</p>
+                            <p class="line-1-ellipsis pb-4">操作类型：<span class="text-success">奖品领取成功</span></p>
+                            <p class="line-1-ellipsis pb-4">操作内容：流水号Ac190529052448716</p>
+                            <p class="line-1-ellipsis pb-4">变动额度：+205.00元</p>
+                            <p class="line-1-ellipsis pb-4">账户余额：568.00元</p>
+                            <p class="text-primary">如对上述余额变动有异议，请联系客服人员协助处理。</p>
+                        </div>
+                        <div class="tNews-detail">详情 <span class="pull-right" style="padding-top: 2px"><i class="icon icon-right-arrow"></i></span></div>
+                    </div>
+                    <div class="tNews-notice">
+                        <h4 class="tNews-notice-title">账户余额变动通知</h4>
+                        <div class="tNews-notice-content fs-12">
+                            <p class="text-primary line-1-ellipsis pb-4">您的账户余额发生变动，信息如下</p>
+                            <p class="line-1-ellipsis pb-4">账户类型：余额</p>
+                            <p class="line-1-ellipsis pb-4">操作类型：<span class="text-success">签到余额发放成功</span></p>
+                            <p class="line-1-ellipsis pb-4">操作内容：流水号Si190529052448716</p>
+                            <p class="line-1-ellipsis pb-4">变动额度：+205.00元</p>
+                            <p class="line-1-ellipsis pb-4">账户余额：568.00元</p>
+                            <p class="text-primary">如对上述余额变动有异议，请联系客服人员协助处理。</p>
+                        </div>
+                        <div class="tNews-detail">详情 <span class="pull-right" style="padding-top: 2px"><i class="icon icon-right-arrow"></i></span></div>
+                    </div>
+                </div>
+            </div>
+            <div class="custom-editor1 fs-12">
+                <div class="editor1-main"  style="margin-top: 0px;">
+                    <div class="editor1-arrow"></div>
+                    <div class="editor1-inner">
+                        <div class="form-editor1-title">使用场景：充值、提现等</div>
+                        <div class="form-group">
+                            <div class="col-sm-2 control-label">模版标题</div>
+                            <div class="col-sm-10 mt-6">账户余额变动通知</div>
+                        </div>
+                        <div class="form-group">
+                            <div class="col-sm-2 control-label">模版编号</div>
+                            <div class="col-sm-10 mt-6">OPENTM205454780</div>
+                        </div>
+                        <div class="form-group">
+                            <div class="col-sm-2 control-label"><span class="text-bright">*</span>模版ID</div>
+                            <div class="col-sm-10">
+                                <input class="form-control input-sm diy-bind" id="template_id3" value="{if $list['type3']['template_id']}{$list['type3']['template_id']}{/if}">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="col-sm-2 control-label">通知人</div>
+                            <div class="col-sm-10" style="margin-top: 3px">
+                                <label class="checkbox-inline"><input type="checkbox" name="inform3" value="1" {if $list['type3']['inform'] }checked{/if}> <span style="padding-top: 2px;display: inline-block;">会员</span> </label>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="col-sm-2 control-label">状态</div>
+                            <div class="col-sm-10">
+                                <div class="switch-inline">
+                                    <input type="checkbox" id="switch3" {if $list['type3']['is_use'] }checked{/if}>
+                                    <label for="switch3" class=""></label>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="col-md-2 control-label"></label>
+                            <div class="col-md-8">
+                                <a class="btn btn-primary add3" href="javascript:;">保存</a>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+                <div class="editor1-main-tips mt-10">
+                    <p class="mb-10">1、登录【微信公众号平台】=>【功能】=>【消息模板】;</p>
+                    <p class="mb-10">2、如找不到该功能，则在【微信公众号平台】=>【功能】=>添加功能插件=>消息模板 中添加；</p>
+                    <p class="mb-10">3、选择行业为：“IT科技-互联网|电子商务”</p>
+                    <p class="mb-10">4、在【模板库】通过“模版标题”进行搜索，在搜索结果处通过“模版编号”找到相应的模版然后点击添加即可。</p>
+                    <p class="mb-10">5、在【我的模板】找到对应的“模版ID”，填入商城的“模版ID”处，勾选通知人然后开启保存即可。</p>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div role="tabpanel" class="tab-pane fade" id="afterSale">
+        <div class="tNews-container flex flex-pack-center">
+            <div class="tNews-view">
+                <div class="tNews-title" id="page">团大人商城</div>
+                <div class="view-main" id="view">
+                    <div class="tNews-notice">
+                        <h4 class="tNews-notice-title">售后服务进度通知</h4>
+                        <div class="tNews-notice-content fs-12">
+                            <p class="text-primary line-1-ellipsis pb-4">您申请的售后服务有新的进度！</p>
+                            <p class="line-1-ellipsis pb-4">售后类型：仅退款</p>
+                            <p class="line-1-ellipsis pb-4">当前进度：<span class="text-success">退款成功</span></p>
+                            <p class="line-1-ellipsis pb-4">商品详情：富川脐橙</p>
+                            <p class="line-1-ellipsis pb-4">订单编号：32160910125478</p>
+                            <p class="text-primary">您的退款已原路返回，退款金额为999.00元，退款可能有延时，请留意到账情况。</p>
+                        </div>
+                        <div class="tNews-detail">详情 <span class="pull-right" style="padding-top: 2px"><i class="icon icon-right-arrow"></i></span></div>
+                    </div>
+                    <div class="tNews-notice">
+                        <h4 class="tNews-notice-title">售后服务进度通知</h4>
+                        <div class="tNews-notice-content fs-12">
+                            <p class="text-primary line-1-ellipsis pb-4">您申请的售后服务有新的进度！</p>
+                            <p class="line-1-ellipsis pb-4">售后类型：退款</p>
+                            <p class="line-1-ellipsis pb-4">当前进度：<span class="text-danger">拒绝退款</span></p>
+                            <p class="line-1-ellipsis pb-4">商品详情：富川脐橙</p>
+                            <p class="line-1-ellipsis pb-4">订单编号：32160910125478</p>
+                            <p class="text-primary">失败原因：XXXXXXXXXXXXXXXXXXXX，如有疑问请联系客服。</p>
+                        </div>
+                        <div class="tNews-detail">详情 <span class="pull-right" style="padding-top: 2px"><i class="icon icon-right-arrow"></i></span></div>
+                    </div>
+                    <div class="tNews-notice">
+                        <h4 class="tNews-notice-title">售后服务进度通知</h4>
+                        <div class="tNews-notice-content fs-12">
+                            <p class="text-primary line-1-ellipsis pb-4">您申请的售后服务有新的进度！</p>
+                            <p class="line-1-ellipsis pb-4">售后类型：退货退款</p>
+                            <p class="line-1-ellipsis pb-4">当前进度：<span class="text-success">同意退货</span></p>
+                            <p class="line-1-ellipsis pb-4">商品详情：富川脐橙</p>
+                            <p class="line-1-ellipsis pb-4">订单编号：32160910125478</p>
+                            <p class="text-primary">点击“详情”查看商家收货信息，如有疑问请联系客服。</p>
+                        </div>
+                        <div class="tNews-detail">详情 <span class="pull-right" style="padding-top: 2px"><i class="icon icon-right-arrow"></i></span></div>
+                    </div>
+                    <div class="tNews-notice">
+                        <h4 class="tNews-notice-title">售后服务进度通知</h4>
+                        <div class="tNews-notice-content fs-12">
+                            <p class="text-primary line-1-ellipsis pb-4">您申请的售后服务有新的进度！</p>
+                            <p class="line-1-ellipsis pb-4">售后类型：退款</p>
+                            <p class="line-1-ellipsis pb-4">当前进度：<span class="text-danger">拒绝退货</span></p>
+                            <p class="line-1-ellipsis pb-4">商品详情：富川脐橙</p>
+                            <p class="line-1-ellipsis pb-4">订单编号：32160910125478</p>
+                            <p class="text-primary">失败原因：XXXXXXXXXXXXXXXXXXXX，如有疑问请联系客服。</p>
+                        </div>
+                        <div class="tNews-detail">详情 <span class="pull-right" style="padding-top: 2px"><i class="icon icon-right-arrow"></i></span></div>
+                    </div>
+                </div>
+            </div>
+            <div class="custom-editor1 fs-12">
+                <div class="editor1-main" id="editor" style="margin-top: 0px;">
+                    <div class="editor1-arrow"></div>
+                    <div class="editor1-inner">
+                        <div class="form-editor1-title">使用场景：退货、退款</div>
+                        <div class="form-group">
+                            <div class="col-sm-2 control-label">模版标题</div>
+                            <div class="col-sm-10 mt-6">售后服务进度通知</div>
+                        </div>
+                        <div class="form-group">
+                            <div class="col-sm-2 control-label">模版编号</div>
+                            <div class="col-sm-10 mt-6">OPENTM408263742</div>
+                        </div>
+                        <div class="form-group">
+                            <div class="col-sm-2 control-label"><span class="text-bright">*</span>模版ID</div>
+                            <div class="col-sm-10">
+                                <input class="form-control input-sm diy-bind" id="template_id4" value="{if $list['type4']['template_id']}{$list['type4']['template_id']}{/if}">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="col-sm-2 control-label">通知人</div>
+                            <div class="col-sm-10" style="margin-top: 3px">
+                                <label class="checkbox-inline"><input type="checkbox" name="inform4" value="1" {if $list['type4']['inform'] }checked{/if}> <span style="padding-top: 2px;display: inline-block;">会员</span> </label>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="col-sm-2 control-label">状态</div>
+                            <div class="col-sm-10">
+                                <div class="switch-inline">
+                                    <input type="checkbox" id="switch4" {if $list['type4']['is_use'] }checked{/if}>
+                                    <label for="switch4" class=""></label>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="col-md-2 control-label"></label>
+                            <div class="col-md-8">
+                                <a class="btn btn-primary add4" href="javascript:;">保存</a>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+                <div class="editor1-main-tips mt-10">
+                    <p class="mb-10">1、登录【微信公众号平台】=>【功能】=>【消息模板】;</p>
+                    <p class="mb-10">2、如找不到该功能，则在【微信公众号平台】=>【功能】=>添加功能插件=>消息模板 中添加；</p>
+                    <p class="mb-10">3、选择行业为：“IT科技-互联网|电子商务”</p>
+                    <p class="mb-10">4、在【模板库】通过“模版标题”进行搜索，在搜索结果处通过“模版编号”找到相应的模版然后点击添加即可。</p>
+                    <p class="mb-10">5、在【我的模板】找到对应的“模版ID”，填入商城的“模版ID”处，勾选通知人然后开启保存即可。</p>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div role="tabpanel" class="tab-pane fade" id="distributionNotice">
+        <div class="tNews-container flex flex-pack-center">
+            <div class="tNews-view">
+                <div class="tNews-title" >团大人商城</div>
+                <div class="view-main" >
+                    <div class="tNews-notice">
+                        <h4 class="tNews-notice-title">分销商通知</h4>
+                        <div class="tNews-notice-content fs-12">
+                            <p class="line-1-ellipsis pb-4">消息类别：成为分销商通知</p>
+                            <p class="line-1-ellipsis pb-4">通知用户：张三</p>
+                            <p class="line-1-ellipsis pb-4">通知内容：亲爱的用户，您已成为分销商！</p>
+                            <p class="line-1-ellipsis pb-4">通知时间：2019-01-01</p>
+                        </div>
+                        <div class="tNews-detail">详情 <span class="pull-right" style="padding-top: 2px"><i class="icon icon-right-arrow"></i></span></div>
+                    </div>
+                </div>
+            </div>
+            <div class="custom-editor1 fs-12">
+                <div class="editor1-main" style="margin-top: 0px;">
+                    <div class="editor1-arrow"></div>
+                    <div class="editor1-inner">
+                        <div class="form-editor1-title">使用场景：成为分销商通知</div>
+                        <div class="form-group">
+                            <div class="col-sm-2 control-label">模版标题</div>
+                            <div class="col-sm-10 mt-6">审核提醒</div>
+                        </div>
+                        <div class="form-group">
+                            <div class="col-sm-2 control-label">模版编号</div>
+                            <div class="col-sm-10 mt-6">OPENTM207684797</div>
+                        </div>
+                        <div class="form-group">
+                            <div class="col-sm-2 control-label"><span class="text-bright">*</span>模版ID</div>
+                            <div class="col-sm-10">
+                                <input class="form-control input-sm diy-bind" id="template_id5" value="{if $list['type5']['template_id']}{$list['type5']['template_id']}{/if}">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="col-sm-2 control-label">通知人</div>
+                            <div class="col-sm-10" style="margin-top: 3px">
+                                <label class="checkbox-inline"><input type="checkbox" name="inform5" value="5" {if $list['type5']['inform'] }checked{/if}> <span style="padding-top: 2px;display: inline-block;">会员</span> </label>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="col-sm-2 control-label">状态</div>
+                            <div class="col-sm-10">
+                                <div class="switch-inline">
+                                    <input type="checkbox" id="switch5" {if $list['type5']['is_use'] }checked{/if}>
+                                    <label for="switch5" class=""></label>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="col-md-2 control-label"></label>
+                            <div class="col-md-8">
+                                <a class="btn btn-primary add5" href="javascript:;">保存</a>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+                <div class="editor1-main-tips mt-10">
+                    <p class="mb-10">1、登录【微信公众号平台】=>【功能】=>【消息模板】;</p>
+                    <p class="mb-10">2、如找不到该功能，则在【微信公众号平台】=>【功能】=>添加功能插件=>消息模板 中添加；</p>
+                    <p class="mb-10">3、选择行业为：“IT科技-互联网|电子商务”</p>
+                    <p class="mb-10">4、在【模板库】通过“模版标题”进行搜索，在搜索结果处通过“模版编号”找到相应的模版然后点击添加即可。</p>
+                    <p class="mb-10">5、在【我的模板】找到对应的“模版ID”，填入商城的“模版ID”处，勾选通知人然后开启保存即可。</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<!-- page end -->
+{/block} {block name="script"}
+<script>
+    require(['util'], function (util) {
+        $('.add1').on('click',function(){
+            var type = 1;
+            var inform = $("input:checkbox[name='inform1']:checked").val();
+            if($("#switch1").is(":checked")){
+                var is_use = 1;
+            }else{
+                var is_use = 0;
+            }
+            var template_id = $("#template_id1").val();
+            if(template_id==''){
+                util.message('模板ID不能为空','danger');
+                return false;
+            }
+            $.ajax({
+                type: "post",
+                url: __URL(PLATFORMMAIN + "/wchat/addMessageTemplate"),
+                async: true,
+                data: {
+                    'type':type,
+                    'inform':inform,
+                    'is_use':is_use,
+                    'template_id':template_id
+                },
+                success: function (data) {
+                    if (data['code']>0) {
+                        util.message('添加成功','success');
+                    }else{
+                        util.message('添加失败','danger');
+                    }
+                }
+            })
+        });
+        $('.add2').on('click',function(){
+            var type = 2;
+            var inform = $("input:checkbox[name='inform2']:checked").val();
+            if($("#switch2").is(":checked")){
+                var is_use = 1;
+            }else{
+                var is_use = 0;
+            }
+            var template_id = $("#template_id2").val();
+            if(template_id==''){
+                util.message('模板ID不能为空','danger');
+                return false;
+            }
+            $.ajax({
+                type: "post",
+                url: __URL(PLATFORMMAIN + "/wchat/addMessageTemplate"),
+                async: true,
+                data: {
+                    'type':type,
+                    'inform':inform,
+                    'is_use':is_use,
+                    'template_id':template_id
+                },
+                success: function (data) {
+                    if (data['code']>0) {
+                        util.message('添加成功','success');
+                    }else{
+                        util.message('添加失败','danger');
+                    }
+                }
+            })
+        });
+        $('.add3').on('click',function(){
+            var type = 3;
+            var inform = $("input:checkbox[name='inform3']:checked").val();
+            if($("#switch3").is(":checked")){
+                var is_use = 1;
+            }else{
+                var is_use = 0;
+            }
+            var template_id = $("#template_id3").val();
+            if(template_id==''){
+                util.message('模板ID不能为空','danger');
+                return false;
+            }
+            $.ajax({
+                type: "post",
+                url: __URL(PLATFORMMAIN + "/wchat/addMessageTemplate"),
+                async: true,
+                data: {
+                    'type':type,
+                    'inform':inform,
+                    'is_use':is_use,
+                    'template_id':template_id
+                },
+                success: function (data) {
+                    if (data['code']>0) {
+                        util.message('添加成功','success');
+                    }else{
+                        util.message('添加失败','danger');
+                    }
+                }
+            })
+        });
+        $('.add4').on('click',function(){
+            var type = 4;
+            var inform = $("input:checkbox[name='inform4']:checked").val();
+            if($("#switch4").is(":checked")){
+                var is_use = 1;
+            }else{
+                var is_use = 0;
+            }
+            var template_id = $("#template_id4").val();
+            if(template_id==''){
+                util.message('模板ID不能为空','danger');
+                return false;
+            }
+            $.ajax({
+                type: "post",
+                url: __URL(PLATFORMMAIN + "/wchat/addMessageTemplate"),
+                async: true,
+                data: {
+                    'type':type,
+                    'inform':inform,
+                    'is_use':is_use,
+                    'template_id':template_id
+                },
+                success: function (data) {
+                    if (data['code']>0) {
+                        util.message('添加成功','success');
+                    }else{
+                        util.message('添加失败','danger');
+                    }
+                }
+            })
+        });
+        $('.add5').on('click',function(){
+            var type = 5;
+            var inform = $("input:checkbox[name='inform5']:checked").val();
+            if($("#switch5").is(":checked")){
+                var is_use = 1;
+            }else{
+                var is_use = 0;
+            }
+            var template_id = $("#template_id5").val();
+            if(template_id==''){
+                util.message('模板ID不能为空','danger');
+                return false;
+            }
+            $.ajax({
+                type: "post",
+                url: __URL(PLATFORMMAIN + "/wchat/addMessageTemplate"),
+                async: true,
+                data: {
+                    'type':type,
+                    'inform':inform,
+                    'is_use':is_use,
+                    'template_id':template_id
+                },
+                success: function (data) {
+                    if (data['code']>0) {
+                        util.message('添加成功','success');
+                    }else{
+                        util.message('添加失败','danger');
+                    }
+                }
+            })
+        });
+    })
+</script>
+{/block}

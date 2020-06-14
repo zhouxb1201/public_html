@@ -1,0 +1,50 @@
+<view class='commission_box'>
+  <view class='can_use_commission cell_group'>
+    <view class='can_use_commission_title'>{{txt_withdrawable_commission}}（元）</view>
+    <view class='can_use_commission_detail'>
+      <view class='can_use_commission_value'>¥ {{myCommissionData.commission}}</view>
+      <navigator url='../log/index'>
+        <view class='ondetail'>查看明细</view>
+      </navigator>
+    </view>
+  </view>
+
+  <view class='cell_group'>
+    <view class='cell bottomLine'>
+      <view class='cell_title'>
+        <view>{{txt_total_commission}}</view>
+        <view class='cell_label'>累计获得{{txt_commission}}</view>
+      </view>
+      <view class='cell_value'>¥ {{myCommissionData.total_money}}</view>
+    </view>
+    <view class='cell bottomLine'>
+      <view class='cell_title'>
+        <view>{{txt_withdrawals_commission}}</view>
+        <view class='cell_label'>提现成功的{{txt_commission}}</view>
+      </view>
+      <view class='cell_value'>¥ {{myCommissionData.withdrawals}}</view>
+    </view>
+    <view class='cell bottomLine'>
+      <view class='cell_title'>
+        <view>{{txt_frozen_commission}}</view>
+        <view class='cell_label'>待发放的{{txt_commission}}</view>
+      </view>
+      <view class='cell_value'>¥ {{myCommissionData.freezing_commission}}</view>
+    </view>
+    <view class='cell'>
+      <view class='cell_title'>
+        <view>{{txt_withdrawal}}</view>
+        <view class='cell_label'>提现中的{{txt_commission}}</view>
+      </view>
+      <view class='cell_value'>¥ {{myCommissionData.apply_withdraw}}</view>
+    </view>
+  </view>
+
+  <view class='foot_group'>
+    <button class="btn" wx:if='{{myCommissionData.commission == 0}}'>提现金额为0，不可提现</button>
+    <button class="btn recharge" wx:else bindtap='onWithdrawPage'>提现</button>    
+  </view>
+</view>
+
+<!-- 登录组件 -->
+<login-component loginShow='{{loginShow}}' bind:request='requestLogin'></login-component>

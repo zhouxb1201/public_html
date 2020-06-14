@@ -1,0 +1,90 @@
+<view class='channel_centre' wx:if='{{pageShow == true}}'>
+  <view class='header'>
+    <view class='info'>
+      <view class='img'>
+        <image mode='widthFix' src='{{channelData.user_headimg}}'></image>
+      </view>
+      <view class='text'>
+        <view>{{channelData.name}}</view>
+        <view>等级：{{channelData.channel_grade_name}}</view>
+        <view>加入时间：{{channel_time}}</view>
+      </view>
+    </view>
+  </view>
+
+  <view class='cell_group'>
+    <view class='cell_titel'>订单</view>
+    <view class='cell_value'>
+      <navigator class='item' url='../order/list/index?buy_type=purchase' hover-class='none'>
+        <view class='icon iconfont v-icon-form'></view>
+        <view>采购订单</view>
+      </navigator>
+      <navigator class='item' url='../order/list/index?buy_type=pickupgoods' hover-class='none'>
+        <view class='icon iconfont v-icon-form'></view>
+        <view>提货订单</view>
+      </navigator>
+      <navigator class='item' url='../order/list/index?buy_type=output' hover-class='none'>
+        <view class='icon iconfont v-icon-form'></view>
+        <view>出货订单</view>
+      </navigator>
+      <navigator class='item' url='../order/list/index?buy_type=retail' hover-class='none'>
+        <view class='icon iconfont v-icon-form'></view>
+        <view>零售订单</view>
+      </navigator>
+    </view>
+  </view>
+
+  <view class='cell_group'>
+    <view class='cell_titel'>常用</view>
+    <view class='cell_value'>
+      <navigator class='item' url='../goods/index?buy_type=purchase' hover-class='none'>
+        <view class='icon iconfont v-icon-stock'></view>
+        <view>云仓采购</view>
+      </navigator>
+      <navigator class='item' url='../goods/index?buy_type=pickupgoods' hover-class='none'>
+        <view class='icon iconfont v-icon-take'></view>
+        <view>云仓提货</view>
+      </navigator>
+      <navigator class='item' url='../depot/mydepot/index' hover-class='none'>
+        <view class='icon iconfont v-icon-manage'></view>
+        <view>云仓管理</view>
+      </navigator>
+    </view>
+    <view class='cell_value'>
+      <navigator class='item' url='../finance/index' hover-class='none'>
+        <view class='icon iconfont v-icon-assets'></view>
+        <view>财务管理</view>
+      </navigator>
+      <navigator class='item' url='../achieve/index' hover-class='none'>
+        <view class='icon iconfont v-icon-channel'></view>
+        <view>我的业绩</view>
+      </navigator>
+      <navigator class='item' url='../team/index' hover-class='none'>
+        <view class='icon iconfont v-icon-team'></view>
+        <view>我的团队</view>
+      </navigator>
+    </view>
+    <view class='cell_value'>
+      <navigator class='item' url='/packageSecond/pages/credential/code/index' hover-class='none'>
+        <view class='icon iconfont v-icon-guarantee'></view>
+        <view>授权证书</view>
+      </navigator>
+      <navigator class='item' url='' hover-class='none'>
+        <view></view>
+        <view></view>
+      </navigator>
+      <navigator class='item' url='' hover-class='none'>
+        <view></view>
+        <view></view>
+      </navigator>
+    </view>
+  </view>
+
+
+</view>
+
+<!-- 小导航 -->
+<topnav-component></topnav-component>
+
+<!-- 登录组件 -->
+<login-component loginShow='{{loginShow}}' bind:request='requestLogin'></login-component>

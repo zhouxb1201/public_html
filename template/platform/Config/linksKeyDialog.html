@@ -1,0 +1,83 @@
+<div class="goods-dialog">
+    <ul class="nav nav-tabs v-nav-tabs pt-15" role="tablist">
+        <div class="input-group search-input-group pull-right" style="padding: 4px">
+            <input type="text" class="form-control" style="height: 30px
+" placeholder="规则名称/关键字" name="key_name" id="key_name">
+            <span class="input-group-btn" ><a class="btn btn-primary search" style="padding: 0px">搜索</a></span>
+        </div>
+    </ul>
+    <div class="dialog-box">
+        <table class="table v-table table-auto-center">
+            <thead>
+            <tr>
+                <th>规则名称</th>
+                <th>匹配类型</th>
+                <th>关键字</th>
+                <th>操作</th>
+            </tr>
+            </thead>
+            <tbody id="list">
+
+            </tbody>
+        </table>
+    </div>
+    <div>
+        <span class="user_name_span J-user_name">选中的关键字：</span>
+        <input type="text" class="form-control key_val J-admin_name"  name="goods_val" disabled>
+    </div>
+   <input type="hidden" id="selectedData" value="">
+    <input type="hidden" id="selectedId" value="">
+</div>
+<script>
+    require(['util'],function(util) {
+        $(document).ready(function(){
+            var width = $(".J-user_name").innerWidth();
+            $('.J-admin_name').css('padding-left',width);
+        });
+        util.initPage(getList);
+        function getList(page_index) {
+            var key_name = $("#key_name").val();
+            $.ajax({
+                type: "post",
+                url: "{:__URL('PLATFORM_MAIN/Wchat/keyReplayList')}",
+                async: true,
+                data: {
+                    "key_name": key_name
+                },
+                success: function (data) {
+                    var html = '';
+                    if (data["data"].length > 0) {
+                        for (var i = 0; i < data["data"].length; i++) {
+                            html += '<tr>';
+                            html += '<td>'+ data["data"][i]['rule_name']+'</td>';
+                            if(data["data"][i]['match_type']==1){
+                                html += '<td>模糊匹配</td>';
+                            }else{
+                                html += '<td>全局匹配</td>';
+                            }
+                            html += '<td>'+ data["data"][i]['key']+'</td>';
+                            html += '<td><a href="javascript:void(0);" class="text-primary selectedKey" data-id = "' + data["data"][i]['id'] + '" data-key="' + data["data"][i]['key'] + '">选择</a></td>';
+                            html += '</tr>';
+                        }
+
+                    } else {
+                        html += '<tr align="center"><th colspan="4">暂无符合条件的数据记录</th></tr>';
+                    }
+                    $("#list").html(html);selectedKey();
+                }
+            });
+        }
+        $('.search').on('click', function () {
+            util.initPage(getList);
+        });
+        function selectedKey() {
+            $('.selectedKey').on('click', function () {
+                var id = $(this).data('id');
+                var key = $(this).data('key');
+                $("#selectedId").val(id);
+                $("#selectedData").val(key);
+                $(".key_val").val(key);
+            })
+        }
+    })
+</script>

@@ -1,0 +1,575 @@
+{extend name="admin/base" /}
+{block name="resources"/}
+<!--<script src="ADMIN_JS/jquery.timers.js"></script>
+<script src="__STATIC__/lib/Echarts/echarts.js"></script>
+<script src="__STATIC__/lib/Echarts/walden.js"></script>
+<script src="ADMIN_JS/index.js"></script>-->
+<!-- ********************【脚本统一写在index.js中】******************** -->
+  <style>
+	.jconfirm-buttons{
+		float: none !important;
+		text-align: center !important;
+	}
+	.v-container{
+		background-color: #f5f5f5;
+		padding:10px;
+		margin-bottom:0px;
+        padding-bottom: 0;
+	}
+    .copyrights{
+        margin-top: 0;
+    }
+</style>
+{/block}
+{block name="second_menu_list"}{/block}
+{block name="main"}
+
+<!-- page -->
+
+    <div class="">
+
+        <!--商城助手-->
+        <div class="v-card-body" id="mallGuide">
+            <div class="newbie mb-20 flex flex-pack-justify">
+                <div class="bold">商城助手</div>
+                <div class="pr remove-pr">
+                    <a href="javascript:void(0);"><i class="icon icon-set"></i></a>
+                    <div class="remove-pos">
+                        <div class="remove-arrow">
+                            <a href="javascript:void(0)" id="remove">永久关闭</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="process">
+                <div class="procedure">
+                    <div class="step-number">
+                        <img src="/public/platform/images/index/1.png" alt="">
+                        <div class="select">
+                            <div class="flex">
+                                <div class="choose">店铺基本配置</div>
+                                <div class="v-tooltip">									
+                                    <span class="tips-box"><i class="icon icon-index-guide"></i></span>
+                                    <div class="v-tooltip-box">
+                                        <div class="v-tooltip-box-arrow">
+                                            <ul class="tooltip-box-ul">
+                                                <li><i class="icon {if $basic_set}icon-index-sel{else}icon-index-noSel{/if}"></i>店铺信息</li>
+                                            </ul>
+                                        </div>
+
+                                    </div>
+                                </div>
+                            </div>
+                            <div>
+                                {if $basic_set}
+                                <span class="v-btn-finish"><i class="icon icon-success-l"></i> 完成</span>
+                                {else}
+                                <a href="{:__URL('ADMIN_MAIN/shop/shopconfig')}" class="v-btn-set">前往设置</a>
+                                {/if}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="procedure">
+                    <div class="step-number">
+                        <img src="/public/platform/images/index/2.png" alt="">
+                        <div class="select">
+                            <div class="flex">
+                                <div class="choose">配置物流信息</div>
+                                <div class="v-tooltip">
+                                    <span class="tips-box"><i class="icon icon-index-guide"></i></span>
+                                    <div class="v-tooltip-box">
+                                        <div class="v-tooltip-box-arrow">
+                                            <ul class="tooltip-box-ul">
+                                                <li><i class="icon {if $express_company_set}icon-index-sel{else}icon-index-noSel{/if}"></i>物流公司</li>
+                                                <li><i class="icon {if $shipping_fee_set}icon-index-sel{else}icon-index-noSel{/if}"></i>运费模板</li>
+                                            </ul>
+                                        </div>
+
+                                    </div>
+                                </div>
+                            </div>
+                            <div>
+                                {if $express_company_set && $shipping_fee_set}
+                                <span class="v-btn-finish"><i class="icon icon-success-l"></i> 完成</span>
+                                {elseif $express_company_set}
+                                <a href="{:__URL('ADMIN_MAIN/express/freighttemplatelist')}" class="v-btn-set">前往设置</a>
+                                {elseif $shipping_fee_set}
+                                <a href="{:__URL('ADMIN_MAIN/express/expresscompany')}" class="v-btn-set">前往设置</a>
+                                {else}
+                                <a href="{:__URL('ADMIN_MAIN/express/expresscompany')}" class="v-btn-set">前往设置</a>
+                                {/if}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="procedure">
+                    <div class="step-number">
+                        <img src="/public/platform/images/index/4.png" alt="">
+                        <div class="select">
+                            <div class="flex">
+                                <div class="choose">发布商品</div>
+                                <div class="v-tooltip">
+                                    <span class="tips-box"><i class="icon icon-index-guide"></i></span>
+                                    <div class="v-tooltip-box">
+                                        <div class="v-tooltip-box-arrow">
+                                            <ul class="tooltip-box-ul">
+                                                <li><i class="icon {if $goods_set}icon-index-sel{else}icon-index-noSel{/if}"></i>发布商品</li>
+                                            </ul>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div>
+                                {if $goods_set}
+                                <span class="v-btn-finish"><i class="icon icon-success-l"></i> 完成</span>
+                                {else}
+                                <a href="{:__URL('ADMIN_MAIN/goods/goodslist')}" class="v-btn-set">前往设置</a>
+                                {/if}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="procedure">
+                    <div class="step-number">
+                        <img src="/public/platform/images/index/5.png" alt="">
+                        <div class="select">
+                            <div class="flex">
+                                <div class="choose">店铺装修</div>
+                                <div class="v-tooltip">
+                                    <span class="tips-box"><i class="icon icon-index-guide"></i></span>
+                                    <div class="v-tooltip-box">
+                                        <div class="v-tooltip-box-arrow">
+                                            <ul class="tooltip-box-ul">
+                                                <li><i class="icon {if $custom_shop_set}icon-index-sel{else}icon-index-noSel{/if}"></i>店铺首页</li>
+                                            </ul>
+                                        </div>
+
+                                    </div>
+                                </div>
+                            </div>
+                            <div>
+                                {if $custom_shop_set}
+                                <span class="v-btn-finish"><i class="icon icon-success-l"></i> 完成</span>
+                                {else}
+                                <a href="{:__URL('ADMIN_MAIN/config/customtemplatelist')}" class="v-btn-set">前往设置</a>
+                                {/if}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!--商城助手-->
+        <!--运营状况-->
+        <div class="v-card-body">
+            <div class="newbie mb-20 flex flex-pack-justify">
+                <div class="bold">运营概况</div>
+            </div>
+            <div class="engage">
+                <div class="payment">
+                    <div class="payment-one">
+                        <div class="pay-img"><img src="/public/platform/images/index/6.png" alt=""></div>
+                        <div class="string"></div>
+                        <div class="figures">
+                            <div class="figure">
+                                <div class="pay-mange">待发货订单</div>
+                                <div class="pay-num"><a href="{:__URL('ADMIN_MAIN/order/orderlist')}?order_status=1" class="index-order-red">{$order_data['daifahuo']}</a></div>
+                            </div>
+                            <div class="figure">
+                                <div class="pay-mange">售后订单</div>
+                                <div class="pay-num"><a href="{:__URL('ADMIN_MAIN/order/afterorderlist')}" class="index-order-red">{$order_data['tuikuanzhong']}</a></div>
+                            </div>
+                            <div class="figure">
+                                <div class="pay-mange">本月成交订单</div>
+                                <div class="pay-num"><a href="javascript:void(0)" class="index-order-red">{$order_data['complete']}</a></div>
+                                <div class="pay-day">上月：{$order_data['complete1']}</div>
+                            </div>
+
+                        </div>
+                    </div>
+
+                </div>
+                <div class="payment">
+                    <div class="payment-one">
+                        <div class="pay-img"><img src="/public/platform/images/index/7.png" alt=""></div>
+                        <div class="string"></div>
+                        <div class="figures">
+                            <div class="figure">
+                                <div class="pay-mange">今日营业额</div>
+                                <div class="pay-num"><a href="javascript:void(0)" class="index-order-red">{$sale_data['sale_money_day1']}</a></div>
+                                <div class="pay-day">昨日：{$sale_data['sale_money_day2']}</div>
+                            </div>
+                            <div class="figure">
+                                <div class="pay-mange">今日支付订单</div>
+                                <div class="pay-num"><a href="javascript:void(0)" class="index-order-red">{$sale_data['sale_num_day1']}</a></div>
+                                <div class="pay-day">昨日：{$sale_data['sale_num_day2']}</div>
+                            </div>
+                            <div class="figure">
+                                <div class="pay-mange">支付人数</div>
+                                <div class="pay-num"><a href="javascript:void(0)" class="index-order-red">{$sale_data['sale_member_day1']}</a></div>
+                                <div class="pay-day">昨日：{$sale_data['sale_member_day2']}</div>
+                            </div>
+
+                        </div>
+                    </div>
+
+                </div>
+                <div class="payment">
+                    <div class="payment-one">
+                        <div class="pay-img"><img src="/public/platform/images/index/8.png" alt=""></div>
+                        <div class="string"></div>
+                        <div class="figures">
+                            <div class="figure">
+                                <div class="pay-mange">出售中商品</div>
+                                <div class="pay-num"><a href="javascript:void(0)" class="index-order-blue">{$goods_data['sale']}</a></div>
+                            </div>
+                            <div class="figure">
+                                <div class="pay-mange">仓库中商品</div>
+                                <div class="pay-num"><a href="javascript:void(0)" class="index-order-blue">{$goods_data['store']}</a></div>
+                            </div>
+                            <div class="figure">
+                                <div class="pay-mange">库存预警</div>
+                                <div class="pay-num"><a href="javascript:void(0)" class="index-order-blue">{$goods_data['warning']}</a></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="payment">
+                    <div class="payment-one">
+                        <div class="pay-img"><img src="/public/platform/images/index/9.png" alt=""></div>
+                        <div class="string"></div>
+                        <div class="figures">
+                            <div class="figure">
+                                <div class="pay-mange">待处理提现</div>
+                                <div class="pay-num"><a href="javascript:void(0)" class="index-order-blue">{$withdraws_data['withdraw']}</a></div>
+                            </div>
+
+                        </div>
+                    </div>
+
+                </div>
+
+
+            </div>
+        </div>
+        <!--运营状况-->
+        <!--快捷入口-->
+        <div class="v-card-body">
+            <div class="newbie mb-20 flex flex-pack-justify">
+                <div class="bold">快捷入口</div>
+            </div>
+            <div class="succession">
+                <div class="balance">
+                    <a href="{:__URL('ADMIN_MAIN/goods/addgoods')}" class="balanceOperation">
+                        <img src="/public/platform/images/index/12.png" alt="">
+                        <div class="ml-10">发布商品</div>
+                    </a>
+                    <a href="{:__URL('ADMIN_MAIN/config/customtemplatelist')}" class="balanceOperation">
+                        <img src="/public/platform/images/index/13.png" alt="">
+                        <div class="ml-10">店铺装修</div>
+                    </a>
+                    <a href="{:__URL('ADMIN_MAIN/financial/shopaccount')}" class="balanceOperation">
+                        <img src="/public/platform/images/index/14.png" alt="">
+                        <div class="ml-10">店铺收入</div>
+                    </a>
+                    <a href="{:__URL('ADMIN_MAIN/order/orderlist')}" class="balanceOperation">
+                        <img src="/public/platform/images/index/15.png" alt="">
+                        <div class="ml-10">订单管理</div>
+                    </a>
+                    <a href="{:__URL('ADMIN_MAIN/Statistics/ordersAnalysis')}" class="balanceOperation">
+                        <img src="/public/platform/images/index/16.png" alt="">
+                        <div class="ml-10">订单分析</div>
+                    </a>
+                    <a href="{:__URL('ADMIN_MAIN/shop/shopconfig')}" class="balanceOperation">
+                        <img src="/public/platform/images/index/17.png" alt="">
+                        <div class="ml-10">店铺信息</div>
+                    </a>
+                    <a href="{:__URL('ADDONS_ADMIN_MAINformList')}" class="balanceOperation">
+                        <img src="/public/platform/images/index/18.png" alt="">
+                        <div class="ml-10">发货助手</div>
+                    </a>
+                    <a href="{:__URL('ADDONS_ADMIN_MAINgoodImportHelper')}" class="balanceOperation">
+                        <img src="/public/platform/images/index/19.png" alt="">
+                        <div class="ml-10">商品助手</div>
+                    </a>
+                    <a href="{:__URL('ADDONS_ADMIN_MAINcouponTypeList')}" class="balanceOperation">
+                        <img src="/public/platform/images/index/20.png" alt="">
+                        <div class="ml-10">优惠券</div>
+                    </a>
+                    <a href="{:__URL('ADDONS_ADMIN_MAINfullCutList')}" class="balanceOperation">
+                        <img src="/public/platform/images/index/21.png" alt="">
+                        <div class="ml-10">满减送</div>
+                    </a>
+                </div>
+            </div>
+        </div>
+        <!--快捷入口-->
+        <div class="row">
+            <div class="col-sm-6 pr-10">
+                <div class="v-card-body">
+                    <div class="newbie mb-20 flex flex-pack-justify">
+                        <div class="bold">订单概况</div>
+                    </div>
+                    <div class="tab-content mb" style="margin-bottom: 5px">
+                        <div role="tabpanel" class="tab-pane fade in active" id="website_create" style="height: 300px;"></div>
+                    </div>
+
+                </div>
+            </div>
+            <div class="col-sm-6 tradeState pl-10">
+                <div class="v-card-body">
+                    <div class="newbie mb-20 flex flex-pack-justify">
+                        <div class="bold">转化概况</div>
+                    </div>
+
+                    <div class="panel-body pr panel-paddings">
+                        <div class="left ">
+                            <div class="left-data">
+                                <div class="ts-item" style="background-color: #f2f6fd">
+                                    <ul class="ts-item-ul clearfix">
+                                        <li>
+                                        <p>访客人数</p>
+                                        <p id="visitor_num" class="index-order-red"></p>
+                                        </li>
+                                    </ul>
+
+                                </div>
+                                <div class="ts-item" style="background-color: #eff8f0">
+                                    <ul class="ts-item-ul clearfix">
+                                        <li>
+                                        <p>下单买家数</p>
+                                        <p id="order_num" class="index-order-red"></p>
+                                        </li>
+                                        <li>
+                                        <p>下单金额</p>
+                                        <p id="order_money" class="index-order-red"></p>
+                                        </li>
+                                    </ul>
+                                </div>
+                                <div class="ts-item" style="background-color: #fdf7ed">
+                                    <ul class="ts-item-ul clearfix">
+                                        <li>
+                                        <p>支付买家数</p>
+                                        <p id="pay_num" class="index-order-red"></p>
+                                        </li>
+                                        <li>
+                                        <p>支付金额</p>
+                                        <p id="pay_money" class="index-order-red"></p>
+                                        </li>
+                                        <li>
+                                        <p>客单价</p>
+                                        <p id="unit_price" class="index-order-red"></p>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+                            <div class="left-chart">
+                                <div class="pr">
+                                    <div class="rate-item1">
+                                        <p>转化率</p>
+                                        <p id="order_conversion" class="index-order-red"></p>
+                                    </div>
+                                    <div class="rate-item2">
+                                        <p>转化率</p>
+                                        <p id="orderpay_conversion" class="index-order-red"></p>
+                                    </div>
+                                    <div class="rate-item3">
+                                        <p>转化率</p>
+                                        <p id="pay_conversion" class="index-order-red"></p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+
+
+
+
+
+<input type="hidden" id="entry_ids" value="{$entry_ids}">
+<!--<div class="index_tables">
+    <div id="website_create" style="height: 400px"></div>
+</div>-->
+<!-- page end -->
+{/block}
+
+{block name="script"}
+<script>
+      require(['utilAdmin','util'], function (utilAdmin,util) {
+$(function () {
+    getOrderMovementCharts();
+    getGoodsList(-1);
+    getTransactionStatus(1);
+
+    var type_module =  $("#entry_ids").val();
+    if(type_module){
+        var type_module_array = type_module.split(',');
+        for (var i = 0; i < type_module_array.length; i++) {
+            $('input[type="checkbox"][value="' + type_module_array[i] + '"]').prop("checked", true);
+        }
+    }
+});
+function getOrderMovementCharts() {
+    $.ajax({
+        type: "post",
+        url: __URL(ADMINMAIN + '/index/getordermovementschartcount'),
+        async: true,
+        success: function (datas) {
+            var data = eval(datas);
+
+            // 指定图表的配置项和数据
+            var option = {
+                title: {
+                    subtext:'近7日自营订单走势',
+                    left: 'center',
+                    top:'20'
+                },
+                // tooltip: {
+                //     trigger: 'item',
+                //     formatter: '{a} <br/>{b} : {c}'
+                // },
+                  tooltip: {
+                      trigger: 'axis'
+                  },
+                legend: {
+                    left: 'center',
+                    // top: '30px',
+                    data: data.ordertype,
+                },
+                xAxis: {
+                    type: 'category',
+                    data: data.day,
+                    boundaryGap: false,
+                },
+                grid: {
+                    left: '3%',
+                    right: '4%',
+                    bottom: '3%',
+                    containLabel: true
+                },
+                yAxis: {
+                    type: 'value',
+                    name:'数量',
+                },
+                series: data.all
+            };
+
+            util.chart('website_create',option);
+        }
+    });
+}
+
+function getGoodsList(time){
+    $.ajax({
+        type:"post",
+        url : __URL(ADMINMAIN+'/index/goodsAnalysis'),
+        async : true,
+        data :{'times':time},
+        success : function(data) {
+            var html = '';
+            if (data['data']['data'].length >=7) {
+                for (var g = 0; g < data['data']["data"].length; g++) {
+                    if(g<=6){
+                        html +='<ul class="ranking-table-tr flex">';
+                        html +='<li>'+(g+1)+'</li>';
+                        html +='<li class="line1-1">'+data["data"]['data'][g]["goods_name"]+'</li>';
+                        html +='<li> '+ data["data"]['data'][g]['sumCount'] +' </li>';
+                        html +='<li class="orange">'+ data["data"]['data'][g]['sumMoney'] +'</li>';
+                        html +='</ul>';
+                    }
+                }
+            }else if( data['data']['data'].length < 7 && data['data']['data'].length > 0 ){
+                for (var i = 0; i < data["data"]['data'].length; i++) {
+                    html += '<ul class="ranking-table-tr flex">';
+                    html += '<li>' + (i + 1) + '</li>';
+                    html += '<li class="line1-1">' + data["data"]['data'][i]["goods_name"] + '</li>';
+                    html += '<li> ' + data["data"]['data'][i]['sumCount'] + ' </li>';
+                    html += '<li class="orange">' + data["data"]['data'][i]['sumMoney'] + '</li>';
+                    html += '</ul>';
+                }
+                var real_length = 7 - data['data']['data'].length;
+                if(data["data1"]['data'].length>0){
+                    for (var j = 0; j < data["data1"]['data'].length; j++) {
+                        if(j<real_length){
+                            html += '<ul class="ranking-table-tr flex">';
+                            html += '<li>' + (data['data']['data'].length+j + 1) + '</li>';
+                            html += '<li class="line1-1">' + data["data1"]['data'][j]["goods_name"] + '</li>';
+                            html += '<li> 0 </li>';
+                            html += '<li class="orange"> 0 </li>';
+                            html += '</ul>';
+                        }
+                    }
+                }
+            }else if(data["data"]['data'].length==0 && data["data1"]['data'].length>0){
+                for (var k = 0; k < data["data1"]['data'].length; k++) {
+                    if(k<=6){
+                        html += '<ul class="ranking-table-tr flex">';
+                        html += '<li>' + (k + 1) + '</li>';
+                        html += '<li class="line1-1">' + data["data1"]['data'][k]["goods_name"] + '</li>';
+                        html += '<li> 0 </li>';
+                        html += '<li class="orange"> 0 </li>';
+                        html += '</ul>';
+                    }
+                }
+            }else{
+                html += '<ul class="ranking-table-tr flex"><li style="width:100%">暂无商品售出</li><ul>';
+            }
+            $("#goods_list").html(html);
+        }
+    });
+}
+function getTransactionStatus(time) {
+    $.ajax({
+        type:"post",
+        url : __URL(ADMINMAIN+'/index/getTransactionStatus'),
+        async : true,
+        data :{'times':time},
+        success : function(data) {
+            $("#vistor").html(data['visitor_num']);
+            $("#visitor_num").html(data['visitor_num']);
+            $("#order_num").html(data['order_num']);
+            $("#order_money").html(data['order_money']);
+            $("#pay_num").html(data['pay_num']);
+            $("#pay_money").html(data['pay_money']);
+            $("#unit_price").html(data['unit_price']);
+            $("#order_conversion").html(data['order_conversion']);
+            $("#orderpay_conversion").html(data['orderpay_conversion']);
+            $("#pay_conversion").html(data['pay_conversion']);
+        }
+    });
+}
+//定时器
+// function everyTimePut(tag_name, num) {
+//     if (num > 0) {
+//         var number = 1;
+//         $('body').everyTime('0.01s', 'B', function () {
+//             $(tag_name).text(number);
+//             number++;
+//             if (number > 100) {
+//                 $(tag_name).text(num);
+//                 return false;
+//             }
+//         }, parseInt(num));
+//     } else {
+//         $(tag_name).text(0);
+//     }
+// }
+
+		// 永久移除点击事件
+		$("#remove").on("click",function(){
+			util.alert("移除模块后，商家后台首页将不会再呈现商城助手。",function(){
+				$("#mallGuide").fadeOut();
+			})
+		})
+
+      })
+</script>
+{/block}

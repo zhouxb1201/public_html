@@ -1,0 +1,867 @@
+{extend name="platform/new_base" /}
+{block name="resource"}
+<style>
+    .label-danger a {
+        padding-top: 5px;
+    }
+</style>
+{/block}
+{block name="main"}
+        <!-- page -->
+
+        <div class="screen-title">
+            <span class="text">详情信息</span>
+        </div>
+        <div class="row panel-detail">
+            <div class="col-md-4">
+                <div class="item border-right" style="height: auto;">
+                    <h3 class="strong">订单详情</h3>
+
+                    <p class="p">订单类型：{$order['order_type_name']}</p>
+                    <p class="p">订单编号：{$order['order_no']}</p>
+                    {if $order["presell_id"] eq '0'}
+                    <p class="p">外部交易号：{$order['out_trade_no']}</p>
+                    {else}
+                    <p class="p">外部交易号（定金）：{$order['out_trade_no']}</p>
+                    <p class="p">外部交易号（尾款）：{$order['out_trade_no_presell']}</p>
+                    {/if}
+                    {if condition='$order["order_status"] eq 0 && $order["presell_id"] eq 0'}
+                    <p class="p">订单状态：买家付款</p>
+                    {elseif condition="$order['order_status']=='0' && $order['presell_id']>0 && $order['money_type']==0"}
+                    <p class="p">订单状态：待付定金</p>
+                    {elseif condition="$order['order_status']=='0' && $order['money_type']==1"}
+                    <p class="p">订单状态：待付尾款</p>
+                    {/if}
+                    {if condition='$order["order_status"] eq 1'}<p class="p">订单状态：{if $order['shipping_type']==2}待提货{else}待发货{/if}</p>{/if}
+                    {if condition='$order["order_status"] eq 2'}<p class="p">订单状态：待收货</p>{/if}
+                    {if condition='$order["order_status"] eq 3'}<p class="p">订单状态：已收货</p>{/if}
+                    {if condition='$order["order_status"] eq 4'}<p class="p">订单状态：交易完成</p>{/if}
+                    <p class="p">下单时间：{:date('Y-m-d H:i:s',$order['create_time'])}</p>
+                    <p class="p">配送方式：{$order['shipping_type_name']}</p>
+                    <p class="p">买家留言：{$order['buyer_message']}</p>
+                </div>
+            </div>
+            {if $order['goods_type'] != 3 && $order['goods_type'] != 4}
+            {if $order['shipping_type']==1}
+            <div class="col-md-4">
+                <div class="item border-right">
+                    <h3 class="strong">收货人信息</h3>
+
+                    <p class="p">收货人：{$order['receiver_name']}</p>
+                    <p class="p">手机号码：{$order['receiver_mobile']}</p>
+                    <p class="p">地址：{$order['address']}</p>
+                    {if $shop_id == $order['shop_id']}
+                    <p class="p">
+                        <button class="btn btn-primary editInfo">编辑信息</button>
+                    </p>
+                    {/if}
+                </div>
+            </div>
+            {else}
+            <div class="col-md-4">
+                <div class="item border-right">
+                    <h3 class="strong">{if($order['card_store_id']>0)}核销{else}提货{/if}人信息</h3>
+                    <p class="p">手机号码：{$order['order_pickup']['user_tel']}</p>
+                    <p class="p">{if($order['card_store_id']>0)}核销{else}提货{/if}地址：{$order['order_pickup']['province_name']}{$order['order_pickup']['city_name']}{$order['order_pickup']['dictrict_name']}{$order['order_pickup']['address']}</p>
+                </div>
+            </div>
+            {/if}
+            {/if}
+            <div class="col-md-4">
+                <div class="item">
+                    <h3 class="strong">订单详情</h3>
+                    {if $order['presell_id']}
+                        <p class="p">支付方式：{$order['payment_type_name']}{if $order['offline_pay_presell']==2}(后台支付){/if} + {$order['payment_type_presell_name']} {if $order['offline_pay']==2}(后台支付){/if}</p>
+                    {else}
+                        <p class="p">支付方式：{$order['payment_type_name']} {if $order['offline_pay']==2}(后台支付){/if}</p>
+                    {/if}
+                    {if $order['presell_id']}
+                    <p class="p">
+                        商品总额：
+                            定金：￥{$order['first_money']}
+                            + 尾款：￥{$order['final_money']}
+                    </p>
+                    {elseif $order['order_type'] == 10}
+                    <p class="p">商品总额：{if $order['goods_money']==0}{$order['point']}积分{else}{$order['point']}积分 + ￥{$order['goods_money']}{/if}</p>
+                    {else}
+                        <p class="p">商品总额：￥{$order['goods_money']}</p>
+                    {/if}
+					
+					{if($order['deduction_money']>0)}
+					<p class="p">积分抵扣：￥{$order['deduction_money']}</p>
+					{/if}
+                    <p class="p">优惠：￥{$order['order_promotion_money']}</p>
+                    <p class="p">价格调整：￥{if $order['order_adjust_money'] > 0}+{/if}{$order['order_adjust_money']}</p>
+                    <p class="p">运费：￥{$order['shipping_money'] - $order['promotion_free_shipping']}{if $order['promotion_free_shipping'] != 0}(已减{$order['promotion_free_shipping']}){/if}</p>
+                    {if $order['invoice_tax'] > 0}
+                    <p class="p">税费：￥{$order['invoice_tax']}</p>
+                    {/if}
+                    {if $order['presell_id']}
+                    <p class="p">
+                        实收金额：
+                        {if $order['money_type'] == 1}
+                        {$order['pay_money']}
+                        {elseif $order['money_type'] == 2}
+                        {$order['order_money']}
+                        {/if}
+
+                    </p>
+                    {elseif $order['order_type'] == 10}
+                    <p class="p">实收金额：{if $order['order_money']==0}{$order['point']}积分{else}{$order['point']}积分 + ￥{$order['order_money']}{/if}</p>
+                    {else}
+                    <p class="p">实收金额：{$order['order_money']}</p>
+                    {/if}
+                </div>
+            </div>
+        </div>
+        {if $order.commissionA_id || $order.commissionB_id || $order.commissionC_id }
+        <div class="screen-title">
+            <span class="text">分销商信息</span>
+        </div>
+        <table class="table v-table table-bordered table-auto-center">
+            <tbody>
+            <tr>
+                {if $order.commissionA_id}
+                <td>
+                    <img src="{if $order.commissionA_user_headimg}{:__IMG($order.commissionA_user_headimg)}{else}/public/static/images/headimg.png{/if}" width="50px" height="50px">
+                    <span class="block">{$order.commissionA_name}</span>
+                    <p class="strong">一级佣金：{$order.commissionA}元</p>
+                    <p class="strong">一级积分：{$order.pointA}积分</p>
+                </td>
+                {/if}
+                {if $order.commissionB_id}
+                <td>
+                    <img src="{if $order.commissionB_user_headimg}{:__IMG($order.commissionB_user_headimg)}{else}/public/static/images/headimg.png{/if}" width="50px" height="50px">
+                    <span class="block">{$order.commissionB_name}</span>
+                    <p class="strong">二级佣金：{$order.commissionB}元</p>
+                    <p class="strong">二级积分：{$order.pointB}积分</p>
+                </td>
+                {/if}
+                {if $order.commissionC_id}
+                <td>
+                    <img src="{if $order.commissionC_user_headimg}{:__IMG($order.commissionC_user_headimg)}{else}/public/static/images/headimg.png{/if}" width="50px" height="50px">
+                    <span class="block">{$order.commissionC_name}</span>
+                    <p class="strong">三级佣金：{$order.commissionC}元</p>
+                    <p class="strong">三级积分：{$order.pointC}积分</p>
+                </td>
+                {/if}
+            </tr>
+            </tbody>
+        </table>
+        {/if}
+        {if $order.global_bonus || $order.area_bonus || $order.team_bonus}
+        <div class="screen-title">
+            <span class="text">代理商信息</span>
+        </div>
+        <table class="table v-table table-bordered table-auto-center">
+            <tbody>
+            <tr>
+                {if $order.global_bonus}
+                <td>
+                    <p class="strong">全球分红：{$order.global_bonus}元  <a href="javacript:void(0);" class="btn btn-primary bonusDetail" data-type="1" data-id="{$order.order_id}">分红明细</a></p>
+                </td>
+                {/if}
+                {if $order.area_bonus}
+                <td>
+                    <p class="strong">区域分红：{$order.area_bonus}元  <a href="javacript:void(0);" class="btn btn-primary bonusDetail" data-type="2" data-id="{$order.order_id}">分红明细</a></p>
+                </td>
+                {/if}
+                {if $order.team_bonus}
+                <td>
+                    <p class="strong">团队分红：{$order.team_bonus}元  <a href="javacript:void(0);" class="btn btn-primary bonusDetail" data-type="3" data-id="{$order.order_id}">分红明细</a></p>
+                </td>
+                {/if}
+            </tr>
+            </tbody>
+        </table>
+        {/if}
+        {if $order.profitA_id || $order.profitB_id || $order.profitC_id }
+        <div class="screen-title">
+            <span class="text">微店店主信息</span>
+        </div>
+        <table class="table v-table table-bordered table-auto-center">
+            <tbody>
+            <tr>
+                {if $order.profitA_id}
+                <td>
+                    <img src="{if $order.profitA_user_headimg}{:__IMG($order.profitA_user_headimg)}{else}/public/static/images/headimg.png{/if}" width="50px" height="50px">
+                    <span class="block">{$order.profitA_name}</span>
+                    <p class="strong">一级收益：{$order.profitA}元</p>
+                </td>
+                {/if}
+                {if $order.profitB_id}
+                <td>
+                    <img src="{if $order.profitB_user_headimg}{:__IMG($order.profitB_user_headimg)}{else}/public/static/images/headimg.png{/if}" width="50px" height="50px">
+                    <span class="block">{$order.profitB_name}</span>
+                    <p class="strong">二级收益：{$order.profitB}元</p>
+                </td>
+                {/if}
+                {if $order.profitC_id}
+                <td>
+                    <img src="{if $order.profitC_user_headimg}{:__IMG($order.profitC_user_headimg)}{else}/public/static/images/headimg.png{/if}" width="50px" height="50px">
+                    <span class="block">{$order.profitC_name}</span>
+                    <p class="strong">三级收益：{$order.profitC}元</p>
+                </td>
+                {/if}
+            </tr>
+            </tbody>
+        </table>
+        {/if}
+        <div class="screen-title">
+            <span class="text">订单商品</span>
+        </div>
+        <table class="table v-table table-auto-center">
+            <thead>
+            <tr>
+                <th>商品</th>
+                {if $order['order_type'] == 10}
+                <th>兑换价</th>
+                {else}
+                <th>单价</th>
+                {/if}
+                <th>数量</th>
+                <th>优惠</th>
+                {if $order['invoice_tax']>0}
+                <th>税费</th>
+                {/if}
+                <th>价格调整</th>
+                <th>合计</th>
+            </tr>
+            </thead>
+            <tbody>
+            {if $order['order_goods_no_delive']}
+            {foreach name="order['order_goods_no_delive']" item="goods"}
+            <tr>
+                <td>
+                    <div class="media text-left">
+                        <div class="media-left" style="width:60px;height:60px;">
+                            <img src="{:__IMG($goods['picture_info']['pic_cover_mid'])}" alt="" width="60" height="60">
+                        </div>
+                        <div class="media-body max-w-300">
+                            <div class="line-2-ellipsis">{$goods['goods_name']}</div>
+                            <div class="small-muted line-2-ellipsis">
+                                {foreach name="goods['spec']" item="spec_info"}
+                                <span>{$spec_info.spec_name . ' : ' . $spec_info.spec_value_name}</span>
+                                {/foreach}
+                            </div>
+                        </div>
+                    </div>
+                </td>
+                {if $goods['order_type'] == 10}
+                <td>{$goods['goods_point']}积分 + ￥{$goods['price']}</td>
+                {else}
+                <td>￥{$goods['price']}</td>
+                {/if}
+                <td>{$goods['num']}</td>
+                <td>￥{:round($goods['order_goods_promotion_money'],2)}</td>
+                {if $goods['invoice_tax'] > 0}
+                <td>￥{$goods['invoice_tax']}</td>
+                {/if}
+                <td>￥{if $goods['adjust_money'] > 0}+{/if}{:round($goods['adjust_money'] * $goods['num'],2)}</td>
+                <td>￥{$goods['real_money'] + $goods['invoice_tax']}</td>
+            </tr>
+            {/foreach}
+            {/if}
+
+            {if $order['goods_packet_list']}
+            {foreach name="order.goods_packet_list" item="list"}
+            {if !$order['store_id'] && $order['goods_type'] != '3'}
+            <tr><td colspan="6" class="text-left bg-f9">
+                <span>{$list.packet_name}</span>
+                <span style="padding-right: 30px">{$list.express_name}</span>
+                <span style="padding-right: 30px">单号:{$list.express_code}</span>
+                <span style="padding-right: 30px">
+            <a href="javascript:void(0);" data-express-code="{$list.express_code}" data-com="{$list['express_company_id']}" class="text-primary J-logistics-info">物流跟踪</a>
+            </span>
+            </td></tr>
+            {/if}
+            {foreach name="list.order_goods_list" item="goods"}
+            <tr>
+                <td class="picword_td">
+                    <div class="media text-left">
+                        <div class="media-left">
+                            <p>
+                                <img src="{:__IMG($goods['picture_info']['pic_cover_mid'])}" style="width:60px;height:60px;">
+                            </p>
+                        </div>
+                        <div class="media-body max-w-300">
+                            <div class="line-2-ellipsis">
+                                <a href="javascript:;" target="_blank">{$goods['goods_name']} </a>
+                            </div>
+                            <div class="small-muted line-2-ellipsis">
+                                {foreach name="goods['spec']" item="spec_info"}
+                                <span>{$spec_info.spec_name . ' : ' . $spec_info.spec_value_name}</span>
+                                {/foreach}
+                            </div>
+                        </div>
+                    </div>
+                </td>
+                <td>￥{$goods['price']}</td>
+                <td>{$goods['num']}</td>
+                <td>￥{$goods['order_goods_promotion_money']}</td>
+                <td>￥{if $goods['adjust_money'] > 0}+{/if}{:round($goods['adjust_money'] * $goods['num'],2)}</td>
+                <td>￥{$goods['actual_price'] * $goods['num']}</td>
+            </tr>
+            {/foreach}
+            {/foreach}
+            {/if}
+            </tbody>
+        </table>
+        {if $order['order_status'] == 0 && $shop_id == $order['shop_id'] && $order['order_type'] != 7}
+        <div class="mb-20 clearfix">
+            <a href="javascript:void(0);" class="text-primary pull-right edit">修改价格</a>
+        </div>
+        {/if}
+
+        <div class="screen-title">
+            <span class="text">操作信息</span>
+        </div>
+        <ul class="nav nav-tabs v-nav-tabs" role="tablist">
+            <li role="presentation" class="active"><a href="#orderNote" aria-controls="orderNote" role="tab"
+                                                      data-toggle="tab" class="flex-auto-center">订单备注</a></li>
+            <li role="presentation"><a href="#orderLog" aria-controls="orderLog" role="tab" data-toggle="tab"
+                                       class="flex-auto-center">订单日志</a></li>
+            <li role="presentation"><a href="#orderRefund" aria-controls="orderRefund" role="tab" data-toggle="tab"
+                                       class="flex-auto-center">退款日志</a></li>
+        </ul>
+        <div class="tab-content">
+            <div role="tabpanel" class="tab-pane fade in active" id="orderNote">
+                <table class="table v-table table-auto-center">
+                    <thead>
+                    <tr>
+                        <th>备注内容</th>
+                        <th>操作人</th>
+                        <th>操作时间</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    {if $order['memo_lists']}
+                    {foreach name="order['memo_lists']" item="list"}
+                    <tr>
+                        <td>{$list['memo']}</td>
+                        <td>{$list['user_name']}</td>
+                        <td>{$list['create_date']}</td>
+                    </tr>
+                    {/foreach}
+                    {else}
+                    <tr>
+                        <td colspan="3">暂时没有数据</td>
+                    </tr>
+                    {/if}
+
+                    </tbody>
+                </table>
+            </div>
+            <div role="tabpanel" class="tab-pane fade" id="orderLog">
+                <table class="table v-table table-auto-center">
+                    <thead>
+                    <tr>
+                        <th>操作类型</th>
+                        <th>操作人</th>
+                        <th>操作时间</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    {foreach name="order['order_action']" item="action"}
+                    <tr>
+                        <td>{$action['action']}</td>
+                        <td>{$action['user_name']}</td>
+                        <td>{:date('Y-m-d H:i:s', $action['action_time'])}</td>
+                    </tr>
+                    {/foreach}
+                    </tbody>
+                </table>
+            </div>
+            <div role="tabpanel" class="tab-pane fade" id="orderRefund">
+                <table class="table v-table table-auto-center">
+                    <thead>
+                    <tr>
+                    	<th>商品名称</th>
+                        <th>操作类型</th>
+                        <th>操作人</th>
+                        <th>操作时间</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                        {if $order['order_refund']}
+                    {foreach name="order['order_refund']" item="goods"}
+	                    {foreach name="goods" item="refund"}
+	                    <tr>
+	                    	<td>{$refund['goods_name']}</td>
+	                        <td>{$refund['action']}  {if($refund['refund_status']==-3 && $refund['reason'])}({$refund['reason']}){/if}</td>
+	                        <td>{$refund['user_name']}</td>
+	                        <td>{:date('Y-m-d H:i:s', $refund['action_time'])}</td>
+	                    </tr>
+	                    {/foreach}
+                    {/foreach}
+                    {/if}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <div class="mb-20">
+            {if $shop_id == $order['shop_id']}
+            {foreach name="order['operation']" item="op"}
+            {if $op['no'] != 'update_address'}
+            <button class="btn btn-primary {$op['no']}">{$op['name']}</button>
+            {/if}
+            {/foreach}
+            {/if}
+            <a href="{$pre_url}" class="btn btn-default">返回</a>
+        </div>
+
+        <!-- page end -->
+{/block}
+{block name="script"}
+<script>
+    require(['util'], function (util) {
+        $(function () {
+            $('.editInfo').on('click', function () {
+                var html = '<form class="form-horizontal padding-15" id="">';
+                html += '<div class="form-group"><label class="col-md-3 control-label">收货人</label><div class="col-md-8"><input id="receiver_name" type="text" class="form-control"></div></div>';
+                html += '<div class="form-group"><label class="col-md-3 control-label">手机号码</label><div class="col-md-8"><input id="receiver_mobile" type="text" class="form-control"></div></div>';
+                html += '<div class="form-group"><label class="col-md-3 control-label">省</label><div class="col-md-8"><select id="receiver_province" class="form-control"></select></div></div>';
+                html += '<div class="form-group"><label class="col-md-3 control-label">市</label><div class="col-md-8"><select id="receiver_city" class="form-control"></select></div></div>';
+                html += '<div class="form-group"><label class="col-md-3 control-label">区</label><div class="col-md-8"><select id="receiver_district" class="form-control"></select></div></div>';
+                html += '<div class="form-group"><label class="col-md-3 control-label">收货地址</label><div class="col-md-8"><input id="receiver_address" type="text" class="form-control"></div></div>';
+                html += '</form>';
+                util.confirm('收货人信息', html, function () {
+                    updateAddressSubmit();
+                })
+                getReceiverAddress({$order['order_id']});
+            })
+
+            $('.pay').on('click', function () {
+                var html = '<form class="form-horizontal padding-15" id="">';
+                html += '<div class="form-group"><label class="col-md-3 control-label">支付方式</label><div class="col-md-8"><select class="form-control" id="modal_payment_type"><option value="">请选择</option><option value="1">微信</option><option value="2">支付宝</option></select></div></div>';
+                html += '<div class="form-group"><label class="col-md-3 control-label">备注</label><div class="col-md-8"><textarea class="form-control" id="pay_seller_memo" rows="4" placeholder="输入备注的内容"></textarea></div></div>';
+                html += '</form>';
+                var order_id = {$order['order_id']};
+                util.confirm('确认付款', html, function () {
+                    //执行确认后的逻辑
+                    var payment_type = $("#modal_payment_type").val();
+                    var seller_memo = $("#pay_seller_memo").val();
+                    $.ajax({
+                        type: "post",
+                        url: "{:__URL('PLATFORM_MAIN/order/orderofflinepay')}",
+                        data: {
+                            'order_id': order_id,
+                            'payment_type': payment_type,
+                            'seller_memo': seller_memo
+                        },
+                        success: function (data) {
+                            if (data["code"] > 0) {
+                                util.message(data["message"], 'success');
+                                location.href = location.href;
+                            } else {
+                                util.message(data["message"], 'error');
+                            }
+                        }
+                    });
+                })
+            })
+
+            $('.J-logistics-info').on('click', function () {
+                var com=$(this).attr('data-com');
+                getLogisticsInfo($(this).attr('data-express-code'),com);
+            })
+
+            $('.getdelivery').on('click', function () {
+                var order_id = {$order['order_id']};
+                util.alert('确认此订单已收货吗？', function () {
+                    $.ajax({
+                        type: "post",
+                        url: "{:__URL('PLATFORM_MAIN/order/orderTakeDelivery')}",
+                        async: true,
+                        data: {
+                            "order_id": order_id,
+                        },
+                        success: function (data) {
+                            if (data["code"] > 0) {
+                                util.message(data["message"], 'success', location.reload());
+                            } else {
+                                util.message(data["message"], 'error');
+                            }
+                        }
+                    })
+                })
+            })
+
+            $('.seller_memo').on('click', function () {
+                var html = '<form class="form-horizontal padding-15" id="">';
+                html += '<div class="form-group"><label class="col-md-3 control-label">备注</label><div class="col-md-8"><textarea id="note" class="form-control" rows="4" placeholder="输入备注的内容"></textarea></div></div>';
+                html += '</form>';
+                var order_id = {$order['order_id']};
+                util.confirm('订单备注', html, function () {
+                    var memo = $("#note").val();
+                    $.ajax({
+                        type: "post",
+                        url: "{:__URL('PLATFORM_MAIN/order/addMemo')}",
+                        async: true,
+                        data: {
+                            "order_id": order_id,
+                            "memo": memo
+                        },
+                        success: function (data) {
+                            if (data["code"] > 0) {
+                                util.message(data["message"], 'success');
+                            } else {
+                                util.message(data["message"], 'error');
+                            }
+                        }
+                    })
+                })
+            })
+
+            //修改价格
+            $('.edit').on('click', function () {
+                var order_id = {$order['order_id']};
+                util.confirm('修改价格', 'url:' + __URL(PLATFORMMAIN + '/order/getAdjustPriceModal?order_id=' + order_id), function () {
+                    // 执行确认后的逻辑
+                    var order_goods_id_adjust_array = '';
+                    var shipping_fee = $("#adjust_shipping_fee_modal").val();
+                    var memo = $("#modal_memo").val();
+                    $(".J-edit-price").each(function (i) {
+                        if (0 == i) {
+                            order_goods_id_adjust_array = $(this).attr('id') + ',' + $(this).val();
+                        } else {
+                            order_goods_id_adjust_array += ';' + $(this).attr('id') + ',' + $(this).val();
+                        }
+                    });
+                    $.ajax({
+                        type: "post",
+                        url: "{:__URL('PLATFORM_MAIN/order/orderadjustmoney')}",
+                        data: {
+                            "order_id": order_id,
+                            "order_goods_id_adjust_array": order_goods_id_adjust_array,
+                            "shipping_fee": shipping_fee,
+                            "memo": memo
+                        },
+                        dataType: "json",
+                        async: false,
+                        success: function (data) {
+                            if (data["code"] > 0) {
+                                util.message(data["message"], 'success',__URL(PLATFORMMAIN + '/order/orderdetail?order_id=' + order_id));
+                                location.reload();
+                            } else {
+                                util.message(data["message"], 'error');
+                            }
+                        }
+                    });
+                }, 'large')
+            })
+
+            $('.delivery').on('click', function () {
+                var order_id = {$order['order_id']};
+                util.confirm('订单发货', 'url:' + __URL(PLATFORMMAIN + '/order/orderDeliveryModal?order_id=' + order_id), function () {
+                    var order_goods_id_array = '';
+                    this.$content.find("tbody input[name = 'select_goods'][value = 0]:checked").each(function (i) {
+                        if (0 == i) {
+                            order_goods_id_array = $(this).attr('id');
+                        } else {
+                            order_goods_id_array += ("," + $(this).attr('id'));
+                        }
+                    });
+                    if (order_goods_id_array == '') {
+                        util.message("至少选择一个商品");
+                        return false;
+                    }
+                    var express_name = $("#delivery_express_company").find("option:selected").text();
+                    var shipping_type = 1;//有物流公司
+                    var express_company_id = $("#delivery_express_company").val();
+                    var express_no = $("#delivery_express_no").val();
+                    if (shipping_type == 1) {
+                        if (express_company_id == "0") {
+                            util.message("请选择物流公司");
+                            return false;
+                        }
+                        if (express_no == "") {
+                            util.message("请填写快递单号");
+                            $("#delivery_express_no").focus();
+                            return false;
+                        }
+                        var reg = /^[0-9a-zA-Z]+$/
+                        if (!reg.test(express_no)) {
+                            util.message("物流单号只能为数字字母组合");
+                            return false;
+                        }
+                    }
+
+                    $.ajax({
+                        type: "post",
+                        url: "{:__URL('PLATFORM_MAIN/order/orderdelivery')}",
+                        data: {
+                            'order_id': order_id,
+                            "order_goods_id_array": order_goods_id_array,
+                            "express_name": express_name,
+                            "shipping_type": shipping_type,
+                            "express_company_id": express_company_id,
+                            "express_no": express_no,
+                            'seller_memo': $("#delivery_seller_memo").val()
+                        },
+                        success: function (data) {
+                            if (data['code'] > 0) {
+                                util.message(data["message"], 'success', location.reload());
+                            } else {
+                                util.message(data["message"], 'danger');
+                            }
+                        }
+                    });
+                }, 'large')
+            })
+
+            //修改物流信息
+            $('.update_shipping').on('click', function () {
+                var order_id = {$order['order_id']};
+                util.confirm('订单发货','url:' + __URL(PLATFORMMAIN + '/order/orderUpdateShippingModal?order_id=' + order_id) , function () {
+                    var id = this.$content.find("li.active").attr('data-id');
+                    var express_name = $("#shipping_express_company").find("option:selected").text();
+                    var express_company = $("#shipping_express_company").find("option:selected").text();
+                    var express_company_id = $("#shipping_express_company").val();
+                    var express_no = $("#update_shipping_express_no").val();
+
+                    if (express_company_id == "0") {
+                        util.message("请选择物流公司");
+                        return false;
+                    }
+                    if (express_no == "") {
+                        util.message("请填写快递单号");
+                        $("#delivery_express_no").focus();
+                        return false;
+                    }
+
+                    $.ajax({
+                        type: "post",
+                        url: "{:__URL('PLATFORM_MAIN/order/updateOrderDelivery')}",
+                        data: {
+                            'order_id': order_id,
+                            'id': id,
+                            'express_name': express_name,
+                            'express_company': express_company,
+                            'express_company_id': express_company_id,
+                            'express_no': express_no,
+                            'seller_memo': $("#update_shipping_seller_memo").val()
+                        },
+                        success: function (data) {
+                            $("#update_shipping").modal('hide');
+                            if (data['code'] > 0) {
+                                util.message(data["message"], 'success', location.reload());
+                            } else {
+                                util.message(data["message"],'danger');
+                            }
+                        }
+                    });
+                }, 'large')
+            })
+
+
+            $("body").on('change','#receiver_province', function () {
+                $("#receiver_city option").remove();
+                $("#receiver_district option").remove();
+                getCity($(this).val());
+            })
+
+            $("body").on('change', '#receiver_city',function () {
+                $("#receiver_district option").remove();
+                getDistrict($(this).val());
+            })
+        })
+
+        //获取订单收货地址
+        function getReceiverAddress(order_id) {
+            $.ajax({
+                type: 'post',
+                url: "{:__URL('PLATFORM_MAIN/order/getOrderUpdateAddress')}",
+                data: {"order_id": order_id},
+                success: function (data) {
+                    $("#receiver_name").val(data['receiver_name']);
+                    $("#receiver_mobile").val(data['receiver_mobile']);
+                    $("#receiver_address").val(data['receiver_address']);
+                    $("#receiver_zip").val(data['receiver_zip']);
+                    var province_id = data['receiver_province'] > 0 ? data['receiver_province'] : -1;
+                    var city_id = data['receiver_city'] > 0 ? data['receiver_city'] : -1;
+                    var district_id = data['receiver_district'] > 0 ? data['receiver_district'] : -1;
+
+                    if ($("#receiver_province option").length == 0) {
+                        //$("#receiver_province option").remove();
+                        getProvince(province_id);
+                    }
+                    if ($("#receiver_city option").length == 0) {
+                        getCity(province_id, city_id);
+                    }
+                    if ($("#receiver_district option").length == 0) {
+                        getDistrict(city_id, district_id);
+                    }
+
+                    $("#province_id").val(province_id);
+                    $("#city_id").val(city_id);
+                    $("#district_id").val(district_id);
+                }
+            });
+        }
+
+        //获取省份信息
+        function getProvince(select_province_id) {
+            var province_obj = $("#receiver_province")[0];
+            $.ajax({
+                type: "post",
+                url: "{:__URL('PLATFORM_MAIN/order/getProvince')}",
+                dataType: "json",
+                success: function (data) {
+                    if (data != null && data.length > 0) {
+                        $.each(data, function (k, v) {
+                            if (select_province_id == v.province_id) {
+                                var opt = new Option(v.province_name, v.province_id, false, true);
+                            } else {
+                                var opt = new Option(v.province_name, v.province_id);
+                            }
+                            province_obj.options.add(opt);
+                        })
+                    }
+                }
+            });
+        }
+
+        //获取城市信息
+        function getCity(province_id, select_city_id) {
+            var city_obj = $("#receiver_city")[0];
+            $.ajax({
+                type: "post",
+                url: "{:__URL('PLATFORM_MAIN/order/getCity')}",
+                data: {'province_id': province_id},
+                dataType: "json",
+                success: function (data) {
+                    if (data != null && data.length > 0) {
+                        $.each(data, function (k, v) {
+                            if (select_city_id == v.city_id) {
+                                var opt = new Option(v.city_name, v.city_id, false, true);
+                            } else {
+                                var opt = new Option(v.city_name, v.city_id);
+                            }
+                            city_obj.options.add(opt);
+                        })
+                    }
+                }
+            });
+        }
+
+        //获取地区信息
+        function getDistrict(city_id, select_district_id) {
+            var district_obj = $("#receiver_district")[0];
+            $.ajax({
+                type: "post",
+                url: "{:__URL('PLATFORM_MAIN/order/getDistrict')}",
+                data: {'city_id': city_id},
+                dataType: "json",
+                success: function (data) {
+                    if (data != null && data.length > 0) {
+                        $.each(data, function (k, v) {
+                            if (select_district_id == v.district_id) {
+                                var opt = new Option(v.district_name, v.district_id, false, true);
+                            } else {
+                                var opt = new Option(v.district_name, v.district_id);
+                            }
+                            district_obj.options.add(opt);
+                        })
+                    }
+                }
+            });
+        }
+
+        //提交修改的收货地址
+        function updateAddressSubmit() {
+            var receiver_name = $("#receiver_name").val();
+            var receiver_mobile = $("#receiver_mobile").val();
+            var receiver_province = $("#receiver_province").val();
+            var receiver_city = $("#receiver_city").val();
+            var receiver_district = $("#receiver_district").val();
+            var address_detail = $("#receiver_address").val();
+            var order_id = {$order['order_id']};
+            if (receiver_name == '') {
+                util.message("请填写收货人姓名", 'error');
+                $("#receiver_name").focus();
+                return false;
+            }
+            if (!(/^1(3|4|5|7|8)\d{9}$/.test(receiver_mobile))) {
+                util.message("请填写正确格式的手机号", 'error');
+                $("#receiver_mobile").focus();
+                return false;
+            }
+            if (receiver_province <= 0) {
+                util.message("请选择省", 'error');
+                return false;
+            }
+            if (receiver_city <= 0) {
+                util.message("请选择市", 'error');
+                return false;
+            }
+
+            if ($("#seleAreaFouth option").length > 1) {
+                if (receiver_district <= 0) {
+                    util.message("请选择区/县", 'error');
+                    return false;
+                }
+            }
+            if (address_detail == '') {
+                util.message("请填写详细收货地址", 'error');
+                return false;
+            }
+
+            $.ajax({
+                type: 'post',
+                url: "{:__URL('PLATFORM_MAIN/order/updateOrderAddress')}",
+                data: {
+                    "order_id": order_id,
+                    "receiver_name": receiver_name,
+                    "receiver_mobile": receiver_mobile,
+                    "seleAreaNext": receiver_province,
+                    "seleAreaThird": receiver_city,
+                    "seleAreaFouth": receiver_district,
+                    "address_detail": address_detail
+                },
+                success: function (data) {
+                    if (data.code > 0) {
+                        util.message(data["message"], 'success');
+                    } else {
+                        util.message(data["message"], 'danger');
+                    }
+                }
+            });
+        }
+
+        // 获取物流信息
+        function getLogisticsInfo(no, com) {
+            // console.log(no);
+            $.ajax({
+                url: "{:__URL('PLATFORM_MAIN/order/logisticsInfo')}",
+                data: {"no": no, "com": com},
+                type: "post",
+                success: function (data) {
+                    if (data["code"] > 0) {
+                        var html = '<div class="modal_logistics_info"><ul>';
+                        $.each(data.data.data, function (k_ex, v_ex) {
+                            html +='<li><p class="line-1-ellipsis logistic_state">'+v_ex.context+'</p><p class="time">'+v_ex.time+'</li>';
+                        });
+                        html +='</ul></div>';
+                        util.confirm('物流跟踪', html, function () {})
+                    } else {
+                        util.message(data["message"], 'danger');
+                    }
+                }
+            });
+        }
+
+        /**
+         * 分红明细
+         */
+            $('.bonusDetail').on('click',function(){
+                var id = $(this).data('id');
+                var type = $(this).data('type');
+                var url = __URL('PLATFORM_MAIN/order/bonusMember')+'&order_id='+id+'&type='+type;
+                util.confirm('分红明细', 'url:'+url,function(){
+
+                })
+            });
+    })
+</script>
+{/block}

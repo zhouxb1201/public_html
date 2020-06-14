@@ -1,0 +1,223 @@
+{extend name="shop/new/Member/base" /}
+{block name="main"}
+    <div class="v-main-right fl">
+                    <div class="v-container">
+                        <!--page-->
+
+                        <div class="eGoods">
+                            <div class="eGoods-title"><span class="text">商品评价</span><span class="fr sells">卖家：<a href="javascript:void(0);">{if $shop_name}{$shop_name}{else}官方旗舰店{/if}</a></span></div>
+                            <input type="hidden" id="order_id" value="{$order_id}">
+                            <input type="hidden" id="order_no" value="{$order_no}">
+                            <input type="hidden" id="shop_id" value="{$shop_id}">
+                            {foreach $list as $k=>$vo}
+                            <div class="goodsEvaluations clearfix evaluate imgUpload{$k}" ogid="{$vo.order_goods_id}" oid="{$vo.order_id}">
+
+                                <div class="goodsEvaluations-left fl">
+                                    <div class="goodsEvaluations-img">
+                                        <img src="{:__IMG($vo['picture_info']['pic_cover_small'])}" alt="">
+                                    </div>
+                                    <div class="goodsEvaluations-title">
+                                        <a href="javascript:void(0);">{$vo.goods_name}</a>
+                                    </div>
+                                </div>
+
+                                <div class="goodsEvaluations-right fl">
+                                    <div class="radio">
+                                        <label class="radio-inline">
+                                             <input type="radio" name="EvalState{$k}"  value="5" checked="checked">好评
+                                        </label>
+                                        <label class="radio-inline">
+                                             <input type="radio" name="EvalState{$k}"  value="3">中评
+                                        </label>
+                                        <label class="radio-inline">
+                                             <input type="radio" name="EvalState{$k}"  value="1">差评
+                                        </label>
+                                    </div>
+                                    <div class="textarea">
+                                        <textarea name="" id="" cols="70" rows="10" placeholder="请输入评价内容，不超过150个字符"></textarea>
+                                        <div class="imgUpload">
+                                            <!--图片选择对话框-->
+                                            <div class="div_imgfile">晒图片</div>
+                                            <!--图片预览容器-->
+                                            <div class="evaluate_right_imgs div_imglook">
+                                                <div style="clear: both;"></div>
+                                            </div>
+                                        </div>
+                                        
+                                    </div>
+                                </div>
+
+                            </div>
+                            {/foreach}
+                            <!--店铺评分-->
+                            <div class="shopScore clearfix">
+                                <div class="fl shopScore-left">
+                                    <span>店铺评分</span>
+                                </div>
+                                <div class="fl shopScore-right">
+
+                                 <div class="clearfix mb20">
+                                   <div class="fl">宝贝与描述相符</div>
+                                   <div class="fl">
+                                        <div id="startone"  class="block clearfix" >
+                                            <div class="star_score"></div>
+                                            <p style="float:left;"><span class="fenshu shop_desc"></span> 分</p>
+                                        </div>
+                                   </div>
+                               </div>  
+
+                                 <div class="clearfix mb20">
+                                   <div class="fl">卖家的服务态度</div>
+                                   <div class="fl">
+                                        <div id="starttwo"  class="block clearfix" >
+                                            <div class="star_score"></div>
+                                            <p style="float:left;"><span class="fenshu shop_service"></span> 分</p>
+                                        </div>
+                                   </div>
+                               </div>  
+
+                                 <div class="clearfix">
+                                   <div class="fl">物流服务的质量</div>
+                                   <div class="fl">
+                                        <div id="startthree"  class="block clearfix" >
+                                            <div class="star_score"></div>
+                                            <p style="float:left;"><span class="fenshu shop_stic"></span> 分</p>
+                                        </div>
+                                   </div>
+                               </div>  
+
+                                </div>
+                            </div>
+                            {if $storeStatus && $store_id}
+                            <!--门店评分-->
+                            <div class="shopScore clearfix">
+                                <div class="fl shopScore-left" style="width:160px; padding-top: 16px;">
+                                    <span>门店评分</span>
+                                </div>
+                                <div class="fl shopScore-right">
+                                 <div class="clearfix mb20">
+                                   <div class="fl">卖家的服务态度</div>
+                                   <div class="fl">
+                                        <div id="startfour"  class="block clearfix" >
+                                            <div class="star_score"></div>
+                                            <p style="float:left;"><span class="fenshu store_service"></span> 分</p>
+                                        </div>
+                                   </div>
+                               </div>  
+                                </div>
+                            </div>
+                            {/if}
+                            <!--提交-->
+                            <div class="submit">
+                                <a href="javascript:void(0);" id="btn_ImgUpStart">提交</a>
+                            </div>
+                        </div>
+
+                        <!--page-->
+                    </div>
+                </div>
+<input type="hidden" id="list_num" value="{$list_num}">
+{/block}
+{block name="javascript"}
+<script>
+    require(['dialog','imgUp'], function (Dialog,imgUp) {
+         function filterHTMLTag(msg) {
+            var msg = msg.replace(/<\/?[^>]*>/g, '');
+            msg = msg.replace(/[|]*\n/, '');
+            msg = msg.replace(/&npsp;/ig, '');
+            return msg;
+        };
+        Dialog.scores();
+        var num = $("#list_num").val();
+        for(var i=0;i<num;i++){
+            imgUp.imgUpload(".imgUpload"+i,'5');
+        }
+        var flag = false;
+        $('#btn_ImgUpStart').on('click', function () {
+            // var ajaxUrl=__URL(SHOPMAIN+"/order/addgoodsevaluateagain");
+            var goodsEvaluateArr = new Array();
+            var hascontent = true;
+            $(".evaluate").each(function (obj) {
+                var order_id = $(this).attr("oid");
+                var order_goods_id = $(this).attr("ogid");
+                var explain_arr = new Array();
+                $(this).find('input[type="radio"]:checked').each(function () {
+                    var explain = $(this).val();
+                    explain_arr.push(explain);
+                });
+                var content_arr = new Array();
+                
+                $(this).find('textarea').each(function () {
+                    var content = filterHTMLTag($(this).val());
+                    content_arr.push(content);
+                    if(content==''){
+                        hascontent = false;
+                    }
+                });
+                var imgs_arr = new Array();
+                $(this).find('.evaluate_right_imgs').find('img').each(function () {
+                    var imgsrc = $(this).attr("src");
+                    imgs_arr.push(imgsrc);
+                });
+                var evaluateArr = new Object();
+                evaluateArr.explain_type = explain_arr.toString();
+                evaluateArr.content = content_arr.toString();
+                evaluateArr.order_id = order_id;
+                evaluateArr.order_goods_id = order_goods_id;
+                evaluateArr.imgs = imgs_arr;
+                goodsEvaluateArr.push(evaluateArr);
+            });
+            var shop_desc = $(".shop_desc").html();
+            var shop_service = $(".shop_service").html();
+            var shop_stic = $(".shop_stic").html();
+            var store_service = $(".store_service").html();
+            var order_id = $("#order_id").val();
+            var shop_id = $("#shop_id").val();
+            var order_no = $("#order_no").val();
+            if(shop_desc==''){
+                shop_desc = 0;
+            }
+            if(shop_service==''){
+                shop_service = 0;
+            }
+            if(shop_stic==''){
+                shop_stic = 0;
+            }
+            if(!hascontent){
+                layer.msg('评价内容不能为空');
+                return false;
+            }
+            if(flag){
+                layer.msg('请勿重复提交');
+                return false;
+            }
+            flag = true;
+            $.ajax({
+                url: __URL(SHOPMAIN + "/order/addGoodsEvaluate"),
+                type: 'post',
+                data: {
+                    "goodsEvaluate": goodsEvaluateArr,
+                    "order_id": order_id,
+                    "order_no": order_no,
+                    'shop_id': shop_id,
+                    'shop_service': shop_service,
+                    'shop_desc': shop_desc,
+                    'shop_stic': shop_stic,
+                    'store_service': store_service
+                },
+                dataType: 'json',
+                success: function (data) {
+                    if (data == 1) {
+                        layer.msg('评价成功');
+                        setTimeout(function () {
+                            location.href = __URL(SHOPMAIN + "/member/orderList")
+                        }, 1000);
+                    }else{
+                        flag = false;
+                    }
+                }
+            })
+        })
+    })
+</script>
+{/block}

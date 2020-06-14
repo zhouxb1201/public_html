@@ -1,0 +1,38 @@
+<view class='box'>
+  <view class="live_list" wx:if='{{history_list}}'>
+    <view class="live_item" wx:for="{{history_list}}" wx:key="index">
+      <view class="live_box">
+        <image class="live_img" src="/images/icon-bg-live.png"></image>
+        <view class="live_status">
+          <view class="status {{item.status == 2?'active':'alearly'}}">·{{item.status_name}}</view>
+          <view class="time" wx:if='{{item.status == 2}}'>999 观看</view>
+          <view class="time" wx:else>{{item.advance_date}}</view>
+        </view>
+        <view class="bottom">
+          <view class="title text-nowrap">{{item.live_title}}</view>
+          <view class="row">
+            <view class="anchor">
+              <view class="img">
+                <image src="{{item.user_headimg?item.user_headimg:'/images/no-user.png'}}"></image>
+              </view>
+              <view class="name text-nowrap">{{item.uname}}</view>
+            </view>
+            <view class="look">
+
+              <view>999想看</view>
+            </view>
+          </view>
+        </view>
+      </view>
+
+
+    </view>
+  </view>
+  <view class="no_data" wx:else>
+    <view class="content">
+      <image mode="widthFix" src="/images/empty-video.png"></image>
+      <view class="text">没有数据</view>
+    </view>
+  </view>
+
+</view>

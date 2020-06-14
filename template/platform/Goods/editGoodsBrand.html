@@ -1,0 +1,143 @@
+{extend name="platform/new_base" /}
+{block name="resource"}
+
+{/block}
+{block name="main"}
+<style>.sotr-selector .sotr-box{left:14px;}</style>
+
+<!-- page -->
+<form class="form-horizontal pt-15 widthFixedForm" id="goods_brand_form" name="form">
+
+    <input type="hidden" name="brand_id" id="brand_id" value="{$brand_info['brand_id']}">
+    <div class="form-group">
+        <label class="col-md-2 control-label"><span class="text-bright">*</span>品牌名称</label>
+        <div class="col-md-5">
+            <input type="text" class="form-control" id="brand_name" name="brand_name" value="{$brand_info['brand_name']}" autocomplete="off">
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="col-md-2 control-label"><span class="text-bright">*</span>首写字母</label>
+        <div class="col-md-5">
+            <input type="text" class="form-control" id="brand_initial" name="brand_initial" value="{$brand_info['brand_initial']}" required maxlength="1" autocomplete="off">
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="col-md-2 control-label">是否启用</label>
+        <div class="col-md-5">
+            <div class="switch-inline">
+                <input type="checkbox" id="brand_recommend" {if condition="$brand_info['brand_recommend'] eq 1"}checked{/if}>
+                       <label for="brand_recommend" class=""></label>
+            </div>
+        </div>
+    </div>
+    <input type="hidden" id="category_name" name="category_name" value="{$brand_info['category_name']}">
+    <div class="form-group">
+        <label class="col-md-2 control-label">品牌图片</label>
+        <div class="col-md-5">
+            <div class="picture-list">
+                <a href="javascript:void(0);" class="close-box">
+                    {if $brand_info['brand_pic']}
+                    <i class="icon icon-danger" title="删除"></i>
+                    <img src="{$brand_info['brand_pic']}">
+                    {else}
+                    <div class="picture-list">
+                        <a href="javascript:void(0);" class="plus-box" data-toggle="singlePicture"><i class="icon icon-plus brand_pic"></i></a>
+                    </div>
+                    {/if}
+                </a>
+            </div>
+            <p class="help-block mb-0">建议400*200，支持JPG/GIF/PNG格式，图片大小建议1M以内。</p>
+
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="col-md-2 control-label">排序</label>
+        <div class="col-md-5">
+            <input type="number" class="form-control" id="sort" name="sort" value="{$brand_info['sort']}">
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="col-md-2 control-label"></label>
+        <div class="col-md-8">
+            <a class="btn btn-primary add_brand" href="javascript:void(0)" >保存</a>
+            <a href="javascript:history.go(-1);" class="btn btn-default">返回</a>
+        </div>
+    </div>
+
+</form>
+
+<!-- page end -->
+
+{/block}
+
+
+{block name="script"}
+
+<script>
+//异步添加
+require(['util'], function (util) {
+    $("#brand_initial").on('blur', function () {
+        var value = $("#brand_initial").val();
+        var reg = /^[a-zA-Z]$/;
+        if (reg.test(value) === false) {
+            util.message("只能输入字母，请重新输入", 'danger');
+            $("#brand_initial").val('');
+            return false;
+        }
+    });
+    var commitStatus = false;
+    $(".add_brand").on('click', function () {
+        if(commitStatus){
+            return false;
+        }
+        var brand_id = $("#brand_id").val();
+        var brand_name = $("#brand_name").val();
+        var brand_initial = $("#brand_initial").val();
+        if ($("#brand_recommend").prop("checked")) {
+            var brand_recommend = 1;
+        } else {
+            var brand_recommend = 0;
+        }
+        var brand_pic = $('.picture-list img').attr("src");
+        var brand_ads = $("#Logo1").val();
+        var category_name = $("#category_name").val();
+        var sort = $("#sort").val();
+        commitStatus = true;
+        $.ajax({
+            type: "post",
+            url: "{:__URL('PLATFORM_MAIN/goods/updategoodsbrand')}",
+            data: {
+                'brand_id': brand_id,
+                'brand_name': brand_name,
+                'brand_initial': brand_initial,
+                'brand_recommend': brand_recommend,
+                'brand_pic': brand_pic,
+                'brand_ads': brand_ads,
+                'category_name': category_name,
+                'sort': sort,
+            },
+            async: true,
+            success: function (data) {
+                if (data["code"] > 0) {
+                    util.message('商品品牌修改成功', "success", "{:__URL('PLATFORM_MAIN/goods/goodsbrandlist')}");
+                } else {
+                    util.message('商品品牌修改失败', "error");
+                }
+            }
+        });
+    });
+
+    $('.multiPicture').on('click', function () {
+        util.confirm('图片空间', 'url:{:__URL(\'PLATFORM_MAIN/goods/pic_space\')}', function () {
+            var content = this.$content.find('#selectedData').data();
+            if (content.id) {
+                var img = "<img src=" + content.path[0] + " style='width:100px;height:100px;' class='multiPicture'>";
+                img += '<input type="hidden" name="upload_img_id" value="' + content.path + '">';
+                $(".picture-list").html(img);
+            }
+
+        }, 'xlarge');
+    });
+});
+</script>
+{/block}

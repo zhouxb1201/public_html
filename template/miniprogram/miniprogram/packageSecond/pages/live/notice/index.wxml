@@ -1,0 +1,66 @@
+<view class="notice_b">
+  <view class="content">
+    <view class="banner">
+      <image mode='widthFix' src="{{live_advance_info.live_img}}"></image>
+    </view>
+    <view class="notice_info">
+      <view class="title_b">
+        <view class="title_l">
+          <view class="live_title text-nowrap">{{live_advance_info.live_title}}</view>
+          <view class="name_b">
+            <view class="u_img">
+              <image src="{{live_advance_info.user_headimg}}"></image>
+            </view>
+            <view class="u_name text-nowrap">{{live_advance_info.uname}}</view>
+            <view class="u_btn {{is_focus == 1?'fous':''}}" bindtap="focus">{{is_focus == 1?'已关注':'关注'}}</view>
+          </view>
+        </view>
+        <view class="title_r">
+          <button open-type="share" class="icon_b">
+            <view class="iconfont v-icon-share-01 icon_share"></view>
+            <view class="txt">分享</view>
+          </button>
+        </view>
+      </view>
+      <view class="introduce">{{live_advance_info.live_introduce}}</view>
+    </view>
+    <view class="goods_b">
+      <view class="title">
+        <text>本场直播商品</text>
+      </view>
+      <view class="goods_list">
+        <view class='gooditem' wx:for="{{goodlist}}" wx:key='' data-id="{{item.goods_id}}">
+          <navigator url='/pages/goods/detail/index?goodsId={{item.goods_id}}'>
+            <view class='goodimg'>
+              <image mode='widthFix' src="{{item.pic_list[0].pic_cover}}"></image>
+            </view>
+            <view class='gooddetail'>
+              <view class='goodname'>{{item.goods_name}}</view>
+              <view>
+                <text class='goodprice'>¥{{item.price}}</text>
+              </view>
+            </view>
+          </navigator>
+        </view>
+      </view>
+    </view>
+
+  </view>
+  <view class="foot_b">
+    <view class="time_b">
+      <text class="time">{{d}}</text>
+      <text>天</text>
+      <text class="time">{{h}}</text>
+      <text>时</text>
+      <text class="time">{{minute}}</text>
+      <text>分</text>
+      <text class="time">{{second}}</text>
+      <text>秒</text>
+    </view>
+    <view class="btn_b">
+      <view class="want">{{live_advance_info.wantsee_num}}人想看</view>
+      <view class="tips" wx:if='{{is_remind == 0}}' bindtap="addLiveRemind">开播提醒</view>
+      <view class="cancel" wx:else bindtap="cancleLiveRemind">取消提醒</view>
+    </view>
+  </view>
+</view>

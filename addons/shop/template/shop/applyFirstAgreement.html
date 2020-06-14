@@ -1,0 +1,56 @@
+
+<!--头部-->
+<div class="header J-header" style='display:none'>
+    <div class="w w1200 clearfix">
+        <div class="fl oneItem">
+            <div class="logo">
+                <a href="{:__URL('SHOP_MAIN')}" class="logo_a"><img src="{if $pc_info['logo']}{$pc_info['logo']}{else}https://pic.vslai.com.cn/upload/default/20190404165128.png{/if}" alt=""></a>
+            </div>
+        </div>
+        <div class="fr join-progress">
+            <div class="step step1">
+                <span>入驻须知</span>
+                <span>公司信息认证</span>
+                <span>店铺信息认证</span>
+                <span>等待审核</span>
+            </div>
+        </div>
+    </div>
+</div>
+{block name="main"}
+        <div class="v-layout">
+
+            <div class="store-joinin-apply">
+                <div id="apply_agreement" class="apply-agreement">
+                    <h3>{$join['title']}</h3>
+                    <div class="apply-agreement-content">
+                        {$join['content']}
+                    </div>
+                    <div class="apple-agreement">
+                        <input id="input_apply_agreement" name="input_apply_agreement" checked="checked" type="checkbox" value="1">
+                        <label for="input_apply_agreement">我已阅读并同意以上协议</label>
+                    </div>
+                    <div class="bottom"><input type="button" value="下一步" class="btn nextStep"></div>
+                    <!--<input type="hidden" name="shownum" value="0">
+                    <input type="hidden" name="do" value="1">-->
+                </div>
+            </div>
+        </div>
+{/block}
+{block name="javascript"}
+<script>
+    require(['common','dialog'], function (common,dialog) {
+        dialog.applyOpration();
+        dialog.isLogin();
+        $(".nextStep").on("click", function () {
+            if ($("#input_apply_agreement").is(':checked')) {
+                var isread = '{$is_read}';
+                location.href="{:__URL('ADDONS_SHOP_MAIN','addons=applySecondCompanyInfo&is_read="+isread+"')}";
+            }else{
+                dialog.nextTips();
+            }
+        });
+    });
+</script>
+{/block}
+  

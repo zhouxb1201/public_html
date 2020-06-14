@@ -1,0 +1,65 @@
+page {
+  font-size: 24rpx;
+  background-color: #f8f8f8;
+}
+
+.van-cell {
+  position: relative;
+  display: flex;
+  width: 100%;
+  overflow: hidden;
+  box-sizing: border-box;
+  color: #323233;
+  font-size: 28rpx;
+  line-height: 48rpx;
+  background-color: #fff;
+  padding: 20rpx 30rpx;
+}
+
+.van-cell__title, .van-cell__value {
+  -ms-flex: 1;
+  flex: 1;
+}
+
+.text {
+  line-height: 1.2;
+}
+
+.positive {
+  color: #4b0;
+}
+
+.text-regular {
+  color: #606266;
+}
+
+.fs-12 {
+  font-size: 24rpx;
+}
+
+.van-cell__value {
+  color: #969799;
+  overflow: hidden;
+  text-align: right;
+  position: relative;
+  vertical-align: middle;
+}
+
+.van-cell:not(:last-child):after {
+  content: " ";
+  position: absolute;
+  pointer-events: none;
+  box-sizing: border-box;
+  left: 30rpx;
+  right: 0;
+  bottom: 0;
+  transform: scaleY(0.5);
+  border-bottom: 1px solid #ebedf0;
+}
+.no_gooddata {
+  margin: 0 20rpx;
+  height: 100rpx;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}

@@ -1,0 +1,180 @@
+page{
+  font-size:28rpx;
+}
+.head-wrap {
+  overflow: hidden;
+  position: relative;
+}
+
+.head {
+  position: relative;
+  overflow: hidden;
+  height: 260rpx;
+  background: rgba(255, 153, 0, 1);
+  margin: 20rpx;
+  border-radius: 20rpx;
+  -webkit-box-shadow: 0 0 20rpx 0 rgba(0, 0, 0, 0.05);
+  box-shadow: 0 0 20rpx 0 rgba(0, 0, 0, 0.05);
+  color: #fff;
+}
+
+.head .h4 {
+  font-size: 36rpx;
+  font-weight: normal;
+  margin: 40rpx;
+}
+
+.head view.time {
+  font-size: 24rpx;
+  margin-left: 40rpx;
+}
+
+.btn-wrap {
+  float: right;
+  margin-right: 20rpx;
+  margin-top: 20rpx;
+  position: relative;
+  display:flex;
+}
+
+.btn-wrap .btn {
+  color: #fff;
+  background-color: transparent;
+  margin-left: 10rpx;
+  height: 60rpx;
+  min-width: 120rpx;
+  font-size: 24rpx;
+  line-height: 56rpx;
+  padding: 0 40rpx;
+  border: 1px solid #ebedf0;
+  border-radius: 10em;
+  text-align: center;
+}
+
+.grade-introduce {
+  position: relative;
+}
+
+.grade-introduce .h4 {
+  font-size: 28rpx;
+  margin: 20rpx;
+}
+
+.grade-table {
+  -webkit-box-pack: center;
+  -ms-flex-pack: center;
+  justify-content: center;
+  position: relative;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+}
+.grade-th {
+  width: 25%;
+  position: relative;
+  overflow: hidden;
+  color: #cc6600;
+}
+.grade-table .grade-th:after {
+  content: "";
+  position: absolute;
+  right: 0;
+  top: 0;
+  height: 100%;
+  width: 1px;
+  background-color: #e4e4e4;
+  transform: scaleX(0.5);
+}
+
+.grade-table .table {
+  position: relative;
+  display: flex;
+  overflow-x: auto;
+  overflow-y: hidden;
+}
+.grade-table .table .ul {
+  position: relative;
+}
+.grade-table .table .li,
+.grade-th .li {
+  text-align: center;
+  height: 60rpx;
+  line-height: 60rpx;
+  position: relative;
+}
+
+.grade-table .table .ul .li:first-child,
+.grade-th .li:first-child {
+  color: #cc6600;
+  background-color: #ffcc99;
+}
+
+.grade-table .table .ul:after {
+  content: "";
+  position: absolute;
+  right: 0;
+  top: 0;
+  height: 100%;
+  width: 1px;
+  background-color: #e4e4e4;
+  transform: scaleX(0.5);
+}
+.grade-table .table .ul .li:first-child:before,
+.grade-th .li:first-child:before {
+  content: "";
+  position: absolute;
+  right: 0;
+  top: 0;
+  height: 100%;
+  width: 1px;
+  background-color: #cc6600;
+  transform: scaleX(0.5);
+  z-index: 99;
+}
+.grade-table .table .ul .li:after,
+.grade-th .li:after {
+  content: "";
+  position: absolute;
+  right: 0;
+  bottom: 0;
+  width: 100%;
+  height: 1px;
+  background-color: #e4e4e4;
+  -webkit-transform: scaleY(0.5);
+  transform: scaleY(0.5);
+}
+.grade-table .table .ul:before,
+.grade-th:before {
+  content: "";
+  position: absolute;
+  right: 0;
+  top: 0;
+  width: 100%;
+  height: 1px;
+  background-color: #cc6600;
+  -webkit-transform: scaleY(0.5);
+  transform: scaleY(0.5);
+  z-index: 99;
+}
+.bd-left {
+  position: absolute;
+  left: 0;
+  top: 0;
+  height: 100%;
+  width: 1px;
+  background-color: #cc6600;
+  transform: scaleX(0.5);
+  z-index: 99;
+}
+.grade-introduce .tips {
+  position: relative;
+  margin: 20rpx;
+  font-size: 24rpx;
+  color: #ed5565;
+  line-height: 36rpx;
+}
+/***grade table scroll***/
+.table-wrap {
+  width: 75%;
+  overflow-y: hidden;
+}

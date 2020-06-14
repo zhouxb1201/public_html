@@ -1,0 +1,114 @@
+page{
+  font-size: 28rpx;
+  background-color: #f8f8f8;
+}
+.top_type{
+  margin: 20rpx 0;
+}
+.cell_group .group_title{
+  color: #969799;
+  padding: 30rpx 30rpx 10rpx;
+  line-height: 30rpx;
+}
+.cell_group .cell_item{
+  background-color: #fff;
+  display: flex;
+  align-items: center;
+  padding: 20rpx 30rpx;
+  box-sizing: border-box;
+  color: #323233;
+  border-bottom: 1px solid #ebedf0;
+}
+.cell_item .cell_title{
+  max-width: 200rpx;
+  text-align: left;
+  flex: 1;  
+}
+.cell_item .cell_required{  
+  font-size: 24rpx;
+  color: #f44;
+}
+.cell_item .cell_value{
+  flex: 1;
+}
+.cell_item .cell_value label{
+  margin-left: 30rpx;
+}
+.cell_item .cell_value label radio .wx-radio-input{
+  height: 35rpx; 
+  width: 35rpx;
+}
+.cell_item .cell_value  .img_group{
+  position: relative
+}
+.cell_item .cell_value .img_group .uploader{
+  display: flex;
+  flex-direction: column;
+  width: 80rpx;
+  height: 80rpx;
+  text-align: center;
+  font-size: 24rpx;
+  color: #666;
+  border: 1px dashed #ddd;
+  line-height: 1.2
+}
+.cell_item .cell_value .img_group .uploader .upload_icon{
+  font-size: 40rpx;
+  padding: 5rpx 0;
+}
+.cell_item .cell_value .img_group .example{
+  position: absolute;
+  right: 0;
+  top: 0;
+  z-index: 10;
+  color: #008aff;
+}
+
+.cell_item .cell_value .img_list .item{
+  position: relative;
+  width: calc(20% - 16rpx);
+  float: left;
+  margin: 8rpx;
+}
+.cell_item .cell_value .img_list .item .box_img{
+  width: 80rpx;
+  height: 80rpx;
+  overflow: hidden;
+  background-color: #f9f9f9;
+  display: flex;
+  justify-content: flex-start;
+}
+.cell_item .cell_value .img_list .item .btn_delete{
+  position: absolute;
+  top: -10rpx;
+  right: -10rpx;
+  background-color: #fff;
+  z-index: 10;
+  border-radius: 50%;
+  border: 1px solid #969799;
+  font-size: 14rpx;
+  width: 24rpx;
+  height: 24rpx;
+  line-height: 24rpx;
+  text-align: center;
+}
+
+.example_img{
+  width: 600rpx;
+  display: block;
+  height: auto;
+}
+
+
+.foot_group{
+  padding: 30rpx;
+}
+.foot_group .btn{
+  width: 100%;
+  border-radius: 50rpx;
+  background-color: #f44;
+  color: #fff;
+  text-align: center;
+  height: 88rpx;
+  line-height: 88rpx;
+}

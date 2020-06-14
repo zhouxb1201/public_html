@@ -1,0 +1,100 @@
+page{
+  font-size: 28rpx;
+  background-color: #f8f8f8;
+}
+
+.header{
+  background-color: #fff;
+  position: fixed;
+  top: 0;
+  width: 100%;
+
+}
+.header .header_box{
+  position: relative;
+  color: #fff;
+}
+.header .header_box .bg{
+  max-height: 200rpx;
+  overflow: hidden;
+}
+.header .liver_info{
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 0;
+  bottom: 0;
+  display: flex;
+  padding: 50rpx;
+  align-items: center;
+}
+.header .liver_info .liver_img{
+  width: 100rpx;
+  height: 100rpx;
+  overflow: hidden;
+  border-radius: 50%;
+  margin-right: 20rpx;
+}
+.header .liver_info .liver_img image{
+  width: 100%;
+  height: 100%;
+}
+
+.header .title{
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 20rpx 30rpx;
+}
+.header .title .choose{
+  color: #f44
+}
+
+.goods_b{
+  padding: 10rpx;
+  margin-top: 290rpx;
+}
+.goods_list .gooditem{
+  box-sizing: border-box;
+  width: calc(50% - 16rpx);
+  float: left;
+  margin: 8rpx;
+  background-color: #fff;
+  border-radius: 20rpx;
+  overflow: hidden;
+}
+.goods_list .goodbox::after{
+  display:block;
+  clear:both;
+  content:"";
+  visibility:hidden;
+  height:0
+}
+.goods_list .gooditem .gooddetail{
+  padding: 10rpx;
+}
+.goods_list .gooditem .goodimg{
+  height: 360rpx;
+  overflow: hidden;  
+} 
+.goods_list .gooditem .goodname{
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.goods_list .gooditem .goodprice{
+  color: #ff454e;
+  font-size: 32rpx;
+  font-weight: 600;
+}
+.goods_list .gooditem .marketprice{
+  text-decoration:line-through;
+  font-size: 26rpx;
+  margin-left: 20rpx;
+  color: rgba(119, 116, 116, 0.829);
+}
+.no_more{
+  text-align: center;
+  padding: 50rpx;
+  clear: both;
+}

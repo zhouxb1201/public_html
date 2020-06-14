@@ -1,0 +1,319 @@
+<view class='apply' wx:if='{{pageShow}}'>
+
+  <view class='custom_group' wx:if='{{customformShow}}'>
+    <!-- 自定义表单    -->
+    <form-com customform='{{customform}}' bind:customformEven='customformData' ></form-com>
+  </view>
+  <view class='normal' wx:else>
+    <!-- 类型 -->
+    <view class='cell_group top_type'>
+      <view class='cell_item'>
+        <view class='cell_title'>身份类型</view>
+        <view class='cell_value'>
+          <radio-group class="radio-group" bindchange="typeRadioChange">
+            <label class="radio" wx:for="{{type_list}}" wx:key=''>
+              <radio value="{{item.name}}" color='#f44' checked="{{item.checked}}" />
+              {{item.value}}
+            </label>
+          </radio-group>
+        </view>
+      </view>
+    </view>
+
+    <!-- 基本信息 -->
+    <view class='cell_group'>
+      <view class='group_title'>基本信息</view>
+      <view class='cell_item'>
+        <view class='cell_title'>
+          <text class='cell_required'>*</text>
+          联系人
+        </view>
+        <view class='cell_value'>
+          <input placeholder='必填,请输入联系人' bindinput='contactsName'></input>
+        </view>
+      </view>
+
+      <view class='cell_item'>
+        <view class='cell_title'>
+          <text class='cell_required'>*</text>
+          联系电话
+        </view>
+        <view class='cell_value'>
+          <input placeholder='必填,请输入电话' bindblur='contactsPhone'></input>
+        </view>
+      </view>
+
+      <view class='cell_item'>
+        <view class='cell_title'>
+          <text class='cell_required'>*</text>
+          电子邮箱
+        </view>
+        <view class='cell_value'>
+          <input placeholder='必填,请输入电子邮箱' bindinput='contactsEmail'></input>
+        </view>
+      </view>
+
+      <view class='cell_item'>
+        <view class='cell_title'>
+          <text class='cell_required'>*</text>
+          联系地址
+        </view>
+        <view class='cell_value' bindtap='areaOnShow'>
+          <input value='{{areaText}}' placeholder='请选择地区' disabled='true'></input>
+        </view>
+      </view>
+
+      <view class='cell_item'>
+        <view class='cell_title'>
+          <text class='cell_required'>*</text>
+          详细地址
+        </view>
+        <view class='cell_value'>
+          <input placeholder='必填,请输入详细地址' bindinput='companyAddressDetail'></input>
+        </view>
+      </view>
+
+      <!-- 部分公司信息 -->
+      <view wx:if="{{apply_type == 2}}">
+        <view class='cell_item'>
+          <view class='cell_title'>
+            <text class='cell_required'>*</text>
+            公司名称
+          </view>
+          <view class='cell_value'>
+            <input placeholder='必填,请输入公司名称' bindinput='companyName'></input>
+          </view>
+        </view>
+
+        <view class='cell_item'>
+          <view class='cell_title'>
+            <text class='cell_required'>*</text>
+            公司类型
+          </view>
+          <view class='cell_value'>
+            <picker mode='selector' bindchange="companyTypeChange" value="{{companyTypeIndex}}" range="{{companyTypeArray}}" >
+              <view class="picker" wx:if='{{companyTypeIndex != -1}}'>{{companyTypeArray[companyTypeIndex]}}</view>            
+              <input placeholder='必填,请输入公司类型' disabled='true' wx:else></input>
+            </picker>
+          </view>
+        </view>
+
+        <view class='cell_item'>
+          <view class='cell_title'>
+            <text class='cell_required'>*</text>
+            公司电话
+          </view>
+          <view class='cell_value'>
+            <input placeholder='必填,请输入公司电话' bindinput='companyPhone'></input>
+          </view>
+        </view>
+
+        <view class='cell_item'>
+          <view class='cell_title'>
+            <text class='cell_required'>*</text>
+            员工人数
+          </view>
+          <view class='cell_value'>
+            <input type='number' placeholder='必填,请输入员工人数' bindinput='companyEmployeeCount'></input>
+          </view>
+        </view>
+
+        <view class='cell_item'>
+          <view class='cell_title'>
+            <text class='cell_required'>*</text>
+            注册资金（万元）
+          </view>
+          <view class='cell_value'>
+            <input type='number' placeholder='必填,请输入注册资金' bindinput='companyRegisteredCapital'></input>
+          </view>
+        </view>
+
+        <view class='cell_item'>
+          <view class='cell_title'>
+            <text class='cell_required'>*</text>
+            营业执照号
+          </view>
+          <view class='cell_value'>
+            <input placeholder='必填,请输入营业执照号' bindinput='businessLicenceNumber'></input>
+          </view>
+        </view>
+
+        <view class='cell_item'>
+          <view class='cell_title'>
+            <text class='cell_required'>*</text>
+            经营范围
+          </view>
+          <view class='cell_value'>            
+            <input placeholder='必填,请输入经营范围' bindinput='businessSphere'></input>
+          </view>
+        </view>
+
+        <view class='cell_item'>
+          <view class='cell_title'>
+            <text class='cell_required'>*</text>
+            经营执照
+          </view>
+          <view class='cell_value'>
+            <view class='img_list' wx:if='{{businessCardShow}}'>
+              <view class='item'>
+                <view class='btn_delete iconfont v-icon-close' data-imgtype='4' bindtap='deleteImg'></view>
+                <view class='box_img' data-imgsrc='{{businessCardImg}}' bindtap='previewImage'>
+                  <image mode='widthFix' src='{{businessCardImg}}'></image>
+                </view>
+              </view>
+            </view>
+            <view class='img_group' wx:else>
+              <view class='uploader' data-imgtype='4' bindtap='getImagesFun'>
+                <view class='upload_icon iconfont v-icon-camera'></view>
+                <view class='num'>0/1</view>
+              </view>              
+            </view>
+          </view>
+        </view>
+      </view>
+
+    </view>
+
+    <!-- 身份信息 -->
+    <view class='cell_group'>
+      <view class='group_title'>身份验证</view>
+      <view class='cell_item'>
+        <view class='cell_title'>
+          <text class='cell_required'>*</text>
+          身份证号
+        </view>
+        <view class='cell_value'>
+          <input placeholder='必填,请输入身份证号' bindblur='contactsCardNo'></input>
+        </view>
+      </view>     
+
+      <view class='cell_item'>
+        <view class='cell_title'>
+          <text class='cell_required'>*</text>
+          手持身份证照
+        </view>
+        <view class='cell_value'>
+          <view class='img_list' wx:if='{{idCardShow}}'>
+            <view class='item'>
+              <view class='btn_delete iconfont v-icon-close' data-imgtype='1' bindtap='deleteImg'></view>
+              <view class='box_img' data-imgsrc='{{idCardImg}}' bindtap='previewImage'>
+                <image mode='widthFix' src='{{idCardImg}}'></image>
+              </view>
+            </view>
+          </view>         
+          <view class='img_group' wx:else>
+            <view class='uploader' data-imgtype='1' bindtap='getImagesFun'>
+              <view class='upload_icon iconfont v-icon-camera'></view>
+              <view class='num'>0/1</view>
+            </view>
+            <view class='example' data-imgnum='1' bindtap='exampleImgOnShow'>示例</view>
+          </view>
+          
+        </view>
+      </view>
+
+      <view class='cell_item'>
+        <view class='cell_title'>
+          <text class='cell_required'>*</text>
+          身份证正照
+        </view>
+        <view class='cell_value'>
+          <view class='img_list' wx:if='{{idCardfrontShow}}'>
+            <view class='item'>
+              <view class='btn_delete iconfont v-icon-close' data-imgtype='2' bindtap='deleteImg'></view>
+              <view class='box_img' data-imgsrc='{{idCardfrontImg}}' bindtap='previewImage'>
+                <image mode='widthFix' src='{{idCardfrontImg}}'></image>
+              </view>
+            </view>
+          </view>
+          <view class='img_group' wx:else>
+            <view class='uploader' data-imgtype='2' bindtap='getImagesFun'>
+              <view class='upload_icon iconfont v-icon-camera'></view>
+              <view class='num'>0/1</view>
+            </view>
+            <view class='example' data-imgnum='2' bindtap='exampleImgOnShow'>示例</view>
+          </view>
+          
+        </view>
+      </view>
+
+      <view class='cell_item'>
+        <view class='cell_title'>
+          <text class='cell_required'>*</text>
+          身份证反照
+        </view>
+        <view class='cell_value'>
+          <view class='img_list' wx:if='{{idCardbehindShow}}'>
+            <view class='item'>
+              <view class='btn_delete iconfont v-icon-close' data-imgtype='3' bindtap='deleteImg'></view>
+              <view class='box_img' data-imgsrc='{{idCardbehindImg}}' bindtap='previewImage'>
+                <image mode='widthFix' src='{{idCardbehindImg}}'></image>
+              </view>
+            </view>
+          </view>
+          <view class='img_group' wx:else>
+            <view class='uploader' data-imgtype='3' bindtap='getImagesFun'>
+              <view class='upload_icon iconfont v-icon-camera'></view>
+              <view class='num'>0/1</view>
+            </view>
+            <view class='example' data-imgnum='3' bindtap='exampleImgOnShow'>示例</view>
+          </view>
+        </view>
+      </view>
+    </view>
+
+  </view>
+  
+
+  <view class='public'>
+    <view class='cell_group'>
+      <view class='group_title'>店铺信息</view>
+      <view class='cell_item'>
+        <view class='cell_title'>
+          <text class='cell_required'>*</text>
+          店铺名称
+        </view>
+        <view class='cell_value'>
+          <input placeholder='必填,请输入店铺名称' bindinput='shopName'></input>
+        </view>
+      </view>
+      <view class='cell_item'>
+        <view class='cell_title'>
+          <text class='cell_required'>*</text>
+          店铺类型
+        </view>
+        <view class='cell_value'>
+          <picker mode='selector' bindchange="shopTypeChange" value="{{shopTypeIndex}}" range="{{shopTypeArray}}" range-key='group_name'>
+            <view class="picker" wx:if='{{shopTypeIndex != -1}}'>{{shopTypeArray[shopTypeIndex].group_name}}</view>            
+            <input placeholder='请选择店铺类型' disabled='true' wx:else></input>
+          </picker>
+        </view>
+      </view>
+    </view>
+  </view>
+
+  <view class='foot_group'>
+    <view class='btn' bindtap='applyForWap'>申请</view>
+  </view>
+
+</view>
+
+<van-popup show="{{ popupShow }}" position="bottom" bind:close="areaOnClose">
+  <van-area area-list="{{ areaList }}" bind:confirm="changeArea" bind:cancel="areaOnClose"/>
+</van-popup>
+
+<van-popup show="{{ exampleShow }}" bind:close="exampleImgOnClose">
+  <view class='example_img' wx:if='{{example_img_num  == 1}}'>  
+    <image mode='widthFix' src='{{publicUrl}}/wap/static/images/identity-img-1.png'></image>
+  </view>
+
+  <view class='example_img' wx:if='{{example_img_num  == 2}}'>  
+    <image mode='widthFix' src='{{publicUrl}}/wap/static/images/identity-img-2.png'></image>
+  </view>
+
+  <view class='example_img' wx:if='{{example_img_num  == 3}}'>  
+    <image mode='widthFix' src='{{publicUrl}}/wap/static/images/identity-img-3.png'></image>
+  </view>  
+</van-popup>
+
+

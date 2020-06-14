@@ -1,0 +1,361 @@
+{extend name="platform/new_base" /}
+{block name="resources"/}
+{/block}
+{block name="main"}
+<div class="mb-20">
+    {if condition="$type eq 'platform'"}
+    {if per('system','addplatformmodule')}
+    <a href="{:__URL('PLATFORM_MAIN/System/addPlatformModule?pid=0')}" class="btn btn-primary"><i class="icon icon-add1"></i> 添加模块</a>
+    {/if}
+    {elseif condition="$type eq 'admin'"}
+    {if per('system','addshopmodule')}
+    <a href="{:__URL('PLATFORM_MAIN/System/addShopModule?pid=0')}" class="btn btn-primary"><i class="icon icon-add1"></i> 添加模块</a>
+    {/if}
+    {/if}
+</div>
+<table class="table v-table table-auto-center">
+    <thead>
+    <tr>
+        <th></th>
+        <th>排序</th>
+        <th>模块名</th>
+        <th>是否显示</th>
+        <th>操作</th>
+    </tr>
+    </thead>
+    <tbody>
+    {foreach name="list" item="v1"}
+    <tr class="pid_0" id="first_id_{$v1['module_id']}" isClick="false">
+        <td>
+            {if condition="$v1['sub_menu'] eq 1"}
+            <a href="javascript:void(0);" data-first_id="{$v1['module_id']}" class="tab_jia_{$v1['module_id']} btn-first" style="display: inline;"><i class="icon icon-add"></i></a>
+            <a href="javascript:void(0);" data-first_id="{$v1['module_id']}" class="tab_jian_{$v1['module_id']} btn-first" style="display: none;"><i class="icon icon-minus"></i></a>
+            {/if}
+        </td>
+        <td>
+            <input type="text" fieldid="{$v1['module_id']}" fieldname="sort" class="form-control" value="{$v1['sort']}">
+        </td>
+        <td>
+            <div class="col-md-1"></div>
+            <div class="col-md-11">
+                <input type="text" class="form-control" fieldid="{$v1['module_id']}" fieldname="module_name" value="{$v1['module_name']}">
+            </div>
+        </td>
+        <td class="center J-menu {$v1['is_menu'] ? 'isTrue' : 'isFalse'}"><a href="javascript:void(0)" class="changeField label {if $v1['is_menu']}label-success{else}label-default{/if}" data-id="{$v1['module_id']}" data-name="is_menu" data-menu="{if $v1['is_menu']}0{else}1{/if}" data-type="first">{$v1['is_menu'] ? '是' : '否'}</a></td>
+        <td class="center">
+            {if per('system','editmodule')}
+            <a href="{:__URL('PLATFORM_MAIN/System/editModule?module_id='.$v1['module_id'])}" class="btn-operation" data-toggle="tooltip" title="修改" data-trigger="hover" ><i class="icon icon-edit-l"></i></a>
+            {/if}
+            {if per('system','delmodule')}
+            <a href="javascript:void(0);" class="del delModule btn-operation" data-id = {$v1['module_id']} data-toggle="tooltip" title="删除" data-trigger="hover"><i class="icon icon-clean-l"></i></a>
+            {/if}
+        </td>
+    </tr>
+    {/foreach}
+    </tbody>
+</table>
+{/block}
+{block name="script"}
+<script>
+    require(['util'],function(util){
+        util.tips();
+        var per_edit = "{:per('system','editmodule');}";
+        var per_del = "{:per('system','delmodule');}";
+        $('body').on('click','.changeField',function(){
+            var fieldid = $(this).data('id');
+            var fieldname = $(this).data('name');
+            var fieldvalue = $(this).data('menu');
+            var atype = $(this).data('type');
+            $.ajax({
+                type:"post",
+                url:"{:__URL('PLATFORM_MAIN/system/modifyfield')}",
+                data:{'fieldid':fieldid,'fieldname':fieldname,'fieldvalue':fieldvalue},
+                async:true,
+                success: function (data) {
+                    if(data['code'] <= 0){
+                        util.message(data['message'],'danger');
+                        return false;
+                    }else{
+                        util.message('操作成功','success',function(){
+                            if(fieldname=='is_menu'){
+                                if(atype=='first'){
+                                    if(fieldvalue==1){
+                                        $('#first_id_'+fieldid+' .J-menu a').html('是');
+                                        $('#first_id_'+fieldid+' .J-menu a').data('id',fieldid);
+                                        $('#first_id_'+fieldid+' .J-menu a').data('name',"is_menu");
+                                        $('#first_id_'+fieldid+' .J-menu a').data('menu',0);
+                                        $('#first_id_'+fieldid+' .J-menu a').removeClass('label-default').addClass('label-success');
+                                        $('#first_id_'+fieldid+' .J-menu').removeClass('isFalse').addClass('isTrue');
+                                    }else{
+                                        $('#first_id_'+fieldid+' .J-menu').removeClass('isTrue').addClass('isFalse');
+                                        $('#first_id_'+fieldid+' .J-menu a').removeClass('label-success').addClass('label-default');
+                                        $('#first_id_'+fieldid+' .J-menu a').html('否');
+                                        $('#first_id_'+fieldid+' .J-menu a').data('id',fieldid);
+                                        $('#first_id_'+fieldid+' .J-menu a').data('name',"is_menu");
+                                        $('#first_id_'+fieldid+' .J-menu a').data('menu',1);
+                                    }
+
+                                }else{
+                                    if(fieldvalue==1){
+                                        $('tbody').find('.J-id_'+fieldid+' .J-menu a').html('是');
+                                        $('tbody').find('.J-id_'+fieldid+' .J-menu a').data('menu',0);
+                                        $('tbody').find('.J-id_'+fieldid+' .J-menu a').removeClass('label-default').addClass('label-success');
+                                        $('tbody').find('.J-id_'+fieldid+' .J-menu').removeClass('isFalse').addClass('isTrue');
+                                    }else{
+                                        $('tbody').find('.J-id_'+fieldid+' .J-menu').removeClass('isTrue').addClass('isFalse');
+                                        $('tbody').find('.J-id_'+fieldid+' .J-menu a').removeClass('label-success').addClass('label-default');
+                                        $('tbody').find('.J-id_'+fieldid+' .J-menu a').html('否');
+                                        $('tbody').find('.J-id_'+fieldid+' .J-menu a').data('menu',1);
+                                    }
+                                }
+                            }
+                        });
+                        location.reload();
+                    }
+                }
+            });
+        });
+
+        $("body").on('click',".delModule",function(){
+            var module_id= $(this).data('id');
+            util.alert('确定删除该模块？',
+                function () {
+                    $.ajax({
+                        type: "post",
+                        url: "{:__URL('PLATFORM_MAIN/system/delmodule')}",
+                        async: true,
+                        data: {
+                            'module_id':module_id
+                        },
+                        success: function (data) {
+                            if (data["code"] > 0) {
+                                util.message("操作成功！", 'success', function () {
+                                    $('.J-id_'+module_id).remove();
+                                });
+                                location.reload();
+                            } else {
+                                util.message(data['message'], 'danger');
+                                return false;
+                            }
+                        }
+                    })
+                });
+        });
+        $("tbody").on('change','input',function(){
+            var fieldid = $(this).attr('fieldid');
+            var fieldname = $(this).attr('fieldname');
+            var fieldvalue = $(this).val();
+            var atype = $(this).data('type');
+            $.ajax({
+                type:"post",
+                url:"{:__URL('PLATFORM_MAIN/system/modifyfield')}",
+                data:{'fieldid':fieldid,'fieldname':fieldname,'fieldvalue':fieldvalue},
+                async:true,
+                success: function (data) {
+                    if(data['code'] <= 0){
+                        util.message(data['message'],'danger');
+                        return false;
+                    }else{
+                        util.message('操作成功','success',function(){
+                            if(fieldname=='is_menu'){
+                                if(atype=='first'){
+                                    if(fieldvalue==1){
+                                        $('#first_id_'+fieldid+' .J-menu a').html('是');
+                                        $('#first_id_'+fieldid+' .J-menu a').data('id',fieldid);
+                                        $('#first_id_'+fieldid+' .J-menu a').data('name',"is_menu");
+                                        $('#first_id_'+fieldid+' .J-menu a').data('menu',0);
+                                        $('#first_id_'+fieldid+' .J-menu a').removeClass('label-default').addClass('label-success');
+                                        $('#first_id_'+fieldid+' .J-menu').removeClass('isFalse').addClass('isTrue');
+                                    }else{
+                                        $('#first_id_'+fieldid+' .J-menu').removeClass('isTrue').addClass('isFalse');
+                                        $('#first_id_'+fieldid+' .J-menu a').removeClass('label-success').addClass('label-default');
+                                        $('#first_id_'+fieldid+' .J-menu a').html('否');
+                                        $('#first_id_'+fieldid+' .J-menu a').data('id',fieldid);
+                                        $('#first_id_'+fieldid+' .J-menu a').data('name',"is_menu");
+                                        $('#first_id_'+fieldid+' .J-menu a').data('menu',1);
+                                    }
+
+                                }else{
+                                    if(fieldvalue==1){
+                                        $('tbody').find('.J-id_'+fieldid+' .J-menu a').html('是');
+                                        $('tbody').find('.J-id_'+fieldid+' .J-menu a').data('menu',0);
+                                        $('tbody').find('.J-id_'+fieldid+' .J-menu a').removeClass('label-default').addClass('label-success');
+                                        $('tbody').find('.J-id_'+fieldid+' .J-menu').removeClass('isFalse').addClass('isTrue');
+                                    }else{
+                                        $('tbody').find('.J-id_'+fieldid+' .J-menu').removeClass('isTrue').addClass('isFalse');
+                                        $('tbody').find('.J-id_'+fieldid+' .J-menu a').removeClass('label-success').addClass('label-default');
+                                        $('tbody').find('.J-id_'+fieldid+' .J-menu a').html('否');
+                                        $('tbody').find('.J-id_'+fieldid+' .J-menu a').data('menu',1);
+                                    }
+                                }
+                            }
+                        });
+                        location.reload();
+                    }
+                }
+            });
+        });
+        $('.btn-first').on('click',function(){
+            var first_id = $(this).data('first_id');
+            first_tab_switch(first_id)
+        })
+        $('tbody').delegate('.btn-second','click',function(){
+            var first_id = $(this).data('first_id');
+            var second_id = $(this).data('second_id');
+            second_tab_switch(first_id,second_id)
+        })
+        function first_tab_switch(module_id){
+            if($("#first_id_"+module_id).attr("isClick") == 'false'){
+                getSecondList(module_id);
+            }
+            if($(".second_pid_"+module_id).attr('isShow')== 'true'){
+                $(".tab_jian_"+module_id).hide();
+                $(".tab_jia_"+module_id).show();
+                $(".second_pid_"+module_id).fadeOut();
+                $(".js-third_pid_"+module_id).hide();
+                $(".second_pid_"+module_id).attr('isShow','false');
+            }else{
+                $(".tab_jian_"+module_id).show();
+                $(".tab_jia_"+module_id).hide();
+                $(".second_pid_"+module_id).fadeIn();
+                $(".second_pid_"+module_id).attr('isShow','true');
+                if($(".second_pid_"+module_id).attr('isShow')=='false'){
+                    closeSecond(module_id);
+                }
+            }
+        }
+        function getSecondList(module_id){
+            $.ajax({
+                type : "post",
+                url : "{:__URL('PLATFORM_MAIN/system/getModuleListByParentId')}",
+                data : {"pid" : module_id},
+                success : function(data){
+                    if(data.length > 0){
+                        var addInfo = '';
+                        for (var i = 0; i < data.length; i++) {
+                            var is_menu = '否';
+                            var change_menu = '1';
+                            var menu_class = 'isFalse';
+                            if(data[i]['is_menu'] === 1){
+                                is_menu = '是';
+                                change_menu = '0';
+                                menu_class = 'isTrue';
+                            }
+                            addInfo += '<tr class="second_pid_'+ module_id +' J-id_'+data[i]['module_id']+'" id="second_id_'+data[i]['module_id']+'" isClick="false" isShow="true">';
+                            addInfo += '<td>';
+                            if(data[i]['sub_menu'] === 1){
+                                addInfo += '<a href="javascript:void(0);" data-first_id="'+ module_id +'" data-second_id="'+data[i]['module_id']+'" class="tab_jia_'+data[i]['module_id']+' btn-second" style="display: inline;"><i class="icon icon-add"></i></a>';
+                                addInfo += '<a href="javascript:void(0);" data-first_id="'+ module_id +'" data-second_id="'+data[i]['module_id']+'" class="tab_jian_'+data[i]['module_id']+' btn-second" style="display: none;"><i class="icon icon-minus"></i></a>';
+                            }
+                            addInfo += '</td>';
+                            addInfo += '<td>';
+                            addInfo += '<input type="text" fieldid="'+data[i]['module_id']+'" fieldname="sort" class="form-control" value="'+data[i]['sort']+'">';
+                            addInfo += '</td>';
+                            addInfo += '<td>';
+                            addInfo += '<div class="col-md-2"></div>';
+                            addInfo += '<div class="col-md-10">';
+                            addInfo += '<input type="text" class="form-control" fieldid="'+data[i]['module_id']+'" fieldname="module_name" value="'+data[i]['module_name']+'">';
+                            addInfo += '</div>';
+                            addInfo += '</td>';
+                            if(data[i]['is_menu']==1){
+                                addInfo += '<td class="center J-menu '+menu_class+'"><a href="javascript:void(0)" class="changeField label label-success" data-id="'+data[i]['module_id']+'" data-menu="'+change_menu+'" data-name="is_menu">' + is_menu + '</a></td>';
+                            }else{
+                                addInfo += '<td class="center J-menu '+menu_class+'"><a href="javascript:void(0)" class="changeField label label-default" data-id="'+data[i]['module_id']+'" data-menu="'+change_menu+'" data-name="is_menu">' + is_menu + '</a></td>';
+                            }
+                            addInfo += '<td class="center">';
+                            if(per_edit){
+                                addInfo += '<a href="'+__URL('PLATFORM_MAIN/System/editModule?module_id=' + data[i]['module_id']) + '"  class="btn-operation" data-toggle="tooltip" title="修改" data-trigger="hover"><i class="icon icon-edit-l"></i></a>&nbsp;';
+                            }
+                            if(per_del){
+                                addInfo += '<a href="javascript:void(0);" class="del delModule btn-operation" data-id="'+data[i]['module_id']+'" data-toggle="tooltip" title="删除" data-trigger="hover"><i class="icon icon-clean-l"></i></a>';
+                            }
+                            addInfo += '</td>';
+                            addInfo += '</tr>';
+                        }
+                    }
+                    $("#first_id_"+module_id).after(addInfo);
+                    $("#first_id_"+module_id).attr("isClick", 'true');
+                }
+            });
+        }
+        function getThirdList(first_id,second_id){
+            $.ajax({
+                type : "post",
+                url : "{:__URL('PLATFORM_MAIN/system/getModuleListByParentId')}",
+                data : {"pid" : second_id},
+                success : function(data){
+                    if(data.length > 0){
+                        var addInfo = '';
+                        for (var i = 0; i < data.length; i++) {
+                            var is_menu = '否';
+                            var change_menu = '1';
+                            var menu_class = 'isFalse';
+                            if(data[i]['is_menu'] === 1){
+                                is_menu = '是';
+                                change_menu = '0';
+                                menu_class = 'isTrue';
+                            }
+                            addInfo += '<tr class="js-third_pid_'+first_id+' third_pid_'+ second_id +' J-id_'+data[i]['module_id']+'" id="third_id_'+data[i]['module_id']+'" isClick="false">';
+                            addInfo += '<td>';
+                            addInfo += '</td>';
+                            addInfo += '<td>';
+                            addInfo += '<input type="text" fieldid="'+data[i]['module_id']+'" fieldname="sort" class="form-control" value="'+data[i]['sort']+'">';
+                            addInfo += '</td>';
+                            addInfo += '<td>';
+                            addInfo += '<div class="col-md-3"></div>';
+                            addInfo += '<div class="col-md-9">';
+                            addInfo += '<input type="text" class="form-control" fieldid="'+data[i]['module_id']+'" fieldname="module_name" value="'+data[i]['module_name']+'">';
+                            addInfo += '</div>';
+                            addInfo += '</td>';
+                            addInfo += '<td class="center J-menu '+menu_class+'"><a href="javascript:void(0)" class="J-changemenu" data-id="'+data[i]['module_id']+'" data-menu="'+change_menu+'">' + is_menu + '</a></td>';
+                            addInfo += '<td class="center">';
+                            if(per_edit){
+                                addInfo += '<a href="'+__URL('PLATFORM_MAIN/System/editModule?module_id=' + data[i]['module_id']) + '"  class="btn-operation" data-toggle="tooltip" title="修改" data-trigger="hover"><i class="icon icon-edit-l"></i></a>&nbsp;';
+                            }
+                            if(per_del){
+                                addInfo += '<a href="javascript:void(0);" class="del delModule" data-id="'+data[i]['module_id']+'" data-toggle="tooltip" title="删除" data-trigger="hover"><i class="icon icon-clean-l"></i></a>';
+                            }
+                            addInfo += '</td>';
+                            addInfo += '</tr>';
+                        }
+                    }
+                    $("#second_id_"+second_id).after(addInfo);
+                    $("#second_id_"+second_id).attr("isClick", 'true');
+                }
+            });
+        }
+        function closeSecond(module_id){
+            $.ajax({
+                type : "post",
+                url : "{:__URL('PLATFORM_MAIN/system/getModuleListByParentId')}",
+                data : {"pid" : module_id},
+                success : function(data){
+                    if(data.length > 0){
+                        for (var i = 0; i < data.length; i++) {
+                            $(".tab_jian_"+data[i]['module_id']).hide();
+                            $(".tab_jia_"+data[i]['module_id']).show();
+                        }
+                    }
+                }
+            });
+        }
+        function second_tab_switch(first_id,second_id){
+            if($("#second_id_"+second_id).attr("isClick") == 'false'){
+                if(first_id == undefined){
+                    first_id = 0;
+                }
+                getThirdList(first_id,second_id);
+            }
+            if($(".tab_jia_"+second_id).css('display') != 'inline'){
+                $(".tab_jian_"+second_id).hide();
+                $(".tab_jia_"+second_id).show();
+                $(".third_pid_"+second_id).fadeOut();
+            }else{
+                $(".tab_jian_"+second_id).show();
+                $(".tab_jia_"+second_id).hide();
+                $(".third_pid_"+second_id).fadeIn();
+            }
+        }
+    });
+</script>
+{/block}

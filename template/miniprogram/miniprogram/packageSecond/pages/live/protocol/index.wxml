@@ -1,0 +1,4 @@
+<!--miniprogram/packageSecond/pages/live/protocol/index.wxml-->
+<view>
+<rich-text nodes="{{nodes}}"></rich-text>
+</view>

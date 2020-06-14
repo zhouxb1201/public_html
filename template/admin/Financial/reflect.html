@@ -1,0 +1,102 @@
+{extend name="admin/base" /}
+{block name="main"}
+<form class="form-horizontal widthFixedForm" role="form">
+    {if $is_use==1}
+    <!--提现金额-->
+    <div class="form-group">
+        <label for="cash" class="col-sm-2 control-label">提现金额</label>
+        <input type="hidden" id="withdraw_cash_min" value="{$withdraw_cash_min}">
+        <input type="hidden" id="shop_total_money" value="{$shop_account_info.shop_total_money}">
+        <div class="col-sm-8">
+            <input type="text" class="form-control" id="cash"  name="cash">
+            <div class="help-block mb-0">可提现金额为：{$shop_account_info.shop_total_money}，本次提现平台抽成{$shop_rate}%,收取{$poundage}%的手续费，最小提现金额{$withdraw_cash_min}</div>
+        </div>
+    </div>
+    <!--角色下拉框-->
+    <div class="form-group">
+        <label for="name" class="col-sm-2 control-label">提现账户</label>
+        <div class="col-sm-8">
+            <select class="form-control" name="role" id='banklist'>
+                {foreach name="bank_list" item="bank_info"}
+                {if $bank_info["type"]==3 && $ali_type==3}
+                <option value="{$bank_info.id}" account="3">【支付宝】{$bank_info["realname"]}|{$bank_info["account_number"]}</option>
+                {/if}
+                {if $bank_info["type"]==2  && $wx_type==2}
+                <option value="{$bank_info.id}" account="2">【微信】{$bank_info["realname"]}</option>
+                {/if}
+                {if $bank_type==1 || $bank_type==4}
+                {if $bank_info["type"]==1}
+                <option value="{$bank_info.id}" account="1">【银行卡】{$bank_info["realname"]}|{$bank_info["account_number"]}</option>
+                {/if}
+                {if $bank_info["type"]==4 }
+                <option value="{$bank_info.id}" account="4">【银行卡】{$bank_info["realname"]}|{$bank_info["account_number"]}</option>
+                {/if}
+                {/if}
+                {/foreach}
+            </select>
+            <div class="help-block mb-0 manageAccount">
+                <a href="{:__URL('ADMIN_MAIN/financial/shopaccountlist')}">管理账户</a>
+            </div>
+        </div>
+
+    </div>
+    <!--添加返回-->
+    <div class="form-group add_back">
+        <div class="col-sm-2"></div>
+        <div class="col-sm-8">
+            <button type="button" class="btn add J-submit">确定</button>
+            <a href="{:__URL('ADMIN_MAIN/financial/shopaccount')}" class="btn back">返回</a>
+        </div>
+    </div>
+    {else}
+    <p>商城未开启提现配置！</p>
+    {/if}
+</form>
+<!-- page end -->
+<script>
+require(['util','utilAdmin'], function (util,utilAdmin) {
+    function applyShopAccountWithdraw() {
+        var cash = $("#cash").val();
+        if (cash === "") {
+            utilAdmin.message('请输入提现金额！');
+            
+            return false;
+        }
+        if (Number(cash) < Number($("#withdraw_cash_min").val())) {
+            utilAdmin.message('提现金额不能少于'+$("#withdraw_cash_min").val());
+            return false;
+        }
+        if (Number(cash) > Number($("#shop_total_money").val())) {
+            utilAdmin.message('提现金额不能大于'+$("#shop_total_money").val());
+            return false;
+        }
+        var bank_account_id = $('#banklist').val();
+        $('.J-submit').attr({disabled: "disabled"}).html('提交中...');
+        $.ajax({
+            type: "post",
+            url: "{:__URL('ADMIN_MAIN/financial/applyshopaccountwithdraw')}",
+            data: {
+                'cash': cash,
+                "bank_account_id": bank_account_id,
+            },
+            async: true,
+            dataType: "json",
+            success: function (data) {
+                if (data["code"] > 0) {
+                    utilAdmin.message(data["message"], 'success', function () {
+                        location.href = "{:__URL('ADMIN_MAIN/financial/shopaccount')}";
+                    });
+                } else {
+                    utilAdmin.message(data["message"],'danger',function(){
+                        $('.J-submit').removeAttr('disabled').html('保存');
+                    });
+                }
+            }
+        });
+    }
+    $('.add').on('click',function(){
+        applyShopAccountWithdraw();
+    })
+})
+</script>
+{/block}

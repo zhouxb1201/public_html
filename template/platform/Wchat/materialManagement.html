@@ -1,0 +1,692 @@
+{extend name="platform/new_base" /}
+{block name="resources"/}
+<style>
+    .panel .btn-group{width:100%}
+    .panel-image .btn-group .btn{width:33.333%}
+    .panel-voice .btn-group .btn{width:33.333%}
+    .panel-video .btn-group .btn{width:25%}
+    .panel-news .btn-group .btn{width:33.333%}
+
+    .panel .panel-body .content{position: relative; margin-bottom: 10px}
+    .panel .panel-body .content span{overflow:hidden; display:block; width:100%; padding-right:10px; position:absolute; bottom:0; left:0; line-height:25px; background:rgba(0,0,0,0.5); color:#fff; text-align:right;}
+
+    .panel .panel-body .audio-msg{position:relative; padding-left:65px; height:70px;}
+    .panel .panel-body .audio-msg .icon span{position:absolute; left:0; top:0; background:#ccc; width:60px; height:60px; line-height:60px; vertical-align:middle; display:inline-block; cursor:pointer; font-size: 25px; text-align: center;}
+    .panel .panel-body .audio-msg .audio-content .audio-title{ width:100%; margin-bottom:10px; overflow:hidden; white-space:nowrap; text-overflow:ellipsis;}
+
+    .panel .panel-body .video-content{margin-bottom:10px;}
+    .panel .panel-body .video-content .title,.panel .panel-body .video-content .abstract{white-space:nowrap; word-break:break-all; overflow:hidden; text-overflow:ellipsis;}
+    .panel .panel-body .video-content img{max-width:100%; height:140px;}
+    .panel .panel-body .video-content .video{position:relative; margin:10px 0;}
+    .panel .panel-body .video-content .video .video-length{display:block; width:100%; padding-right:10px; position:absolute; bottom:0; left:0; line-height:25px; background:rgba(0,0,0,0.5); color:#fff; text-align:right;}
+    .reply .panel-group {
+        clear: both;
+        margin-bottom: 20px;
+        position: relative;
+    }
+    .reply .panel-group .panel:first-child {
+        margin: 0;
+        border-bottom-left-radius: 0;
+        border-bottom-right-radius: 0;
+    }
+    .reply .panel-group .panel:first-child .img {
+        overflow: hidden;
+        position: relative;
+        height: 160px;
+        background-color: #ececec;
+        color: #c0c0c0;
+        text-align: center;
+        line-height: 132px;
+    }
+    .reply .panel-group .panel-body .default {
+        font-style: normal;
+        font-size: 16px;
+    }
+    .reply .panel-group .panel:first-child .img span {
+        display: block;
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        height: 28px;
+        line-height: 28px;
+        width: 100%;
+        background: rgba(0,0,0,0.7);
+        color: #fff;
+        padding: 0 10px;
+    }
+    .reply .panel-group .panel+.panel {
+        border-radius: 0;
+        margin-top: 0;
+        border-top: 0;
+    }
+    .reply .panel-group .panel+.panel .panel-body {
+        height: 104px;
+        padding-right: 105px;
+        position: relative;
+        overflow: hidden;
+    }
+    .reply .panel-group .panel+.panel .img {
+        float: right;
+        position: absolute;
+        right: 15px;
+        top: 12px;
+        height: 80px;
+        width: 80px;
+        background-color: #ececec;
+        color: #c0c0c0;
+        line-height: 80px;
+        text-align: center;
+        overflow: hidden;
+    }
+    .reply .panel-group img {
+        position: absolute;
+        left: 0;
+        top: 0;
+        display: inline-block;
+        width: 100%;
+        height: 100%;
+    }
+    .reply .panel-group .panel+.panel .img img {
+        max-width: 80px;
+        max-height: 80px;
+        vertical-align: middle;
+        border: 0;
+    }
+    .reply .panel-group .panel:last-child {
+        margin-bottom: 0px;
+        border-bottom-left-radius: 4px;
+        border-bottom-right-radius: 4px;
+    }
+    .reply .panel-group .panel:last-child .panel-body {
+        padding: 7px 15px 40px 15px;
+        height: 20px;
+    }
+    .panel .btn-group {
+        width: 100%;
+    }
+</style>
+{/block}
+{block name="main"}
+            <!-- page -->
+            <ul class="nav nav-tabs v-nav-tabs" role="tablist">
+                <li role="presentation" class="active"><a href="#news" aria-controls="news" data-type="news" role="tab" data-toggle="tab" class="flex-auto-center material">图文</a></li>
+                <li role="presentation"><a href="#image" aria-controls="image" data-type="image" role="tab" data-toggle="tab" class="flex-auto-center material">图片</a></li>
+                <li role="presentation"><a href="#voice" aria-controls="voice" data-type="voice" role="tab" data-toggle="tab" class="flex-auto-center material">语音</a></li>
+                <li role="presentation"><a href="#video" aria-controls="video" data-type="video" role="tab" data-toggle="tab" class="flex-auto-center material">视频</a></li>
+                <!--<li role="presentation"><a href="#text" aria-controls="text" data-type="text" role="tab" id="add_text" data-toggle="tab" class="flex-auto-center">文本</a></li>-->
+            </ul>
+            <div class="flex mb-10 PAmaterial" id="mat_type1">
+                <a href="javascript:void(0)"; class="btn btn-primary uploadMaterial">同步微信素材</a>
+            </div>
+            <!--<div class="flex mb-10 PAmaterial" id="mat_type2" style="display: none">-->
+                <!--<a href="javascript:void(0)"; class="btn btn-primary addText">添加文本消息</a>-->
+            <!--</div>-->
+            <div id="myTabContent" class="tab-content">
+                <div class="tab-pane fade in active" id="news">
+                    <div class="panel panel-default clearfix">
+                        <div class="panel-body">
+                            <div class="reply"  style="position: relative" id="list">
+
+                            </div>
+                        </div>
+                        <nav aria-label="Page navigation" class="clearfix">
+                            <ul id="page" class="pagination pull-right"></ul>
+                        </nav>
+                    </div>
+                </div>
+                <div class="tab-pane fade" id="image">
+                    <div class="panel panel-default clearfix">
+                        <div class="panel-body" id="list1">
+
+                        </div>
+                    </div>
+                    <nav aria-label="Page navigation" class="clearfix">
+                        <ul id="page1" class="pagination pull-right"></ul>
+                    </nav>
+                </div>
+                <div class="tab-pane fade" id="voice">
+
+                    <div class="panel panel-default">
+                        <div class="panel-body" id="list2">
+
+                        </div>
+                    </div>
+                    <nav aria-label="Page navigation" class="clearfix">
+                        <ul id="page2" class="pagination pull-right"></ul>
+                    </nav>
+
+                </div>
+                <div class="tab-pane fade" id="video">
+
+                    <div class="panel panel-default">
+                        <div class="panel-body" id="list3">
+
+                        </div>
+                    </div>
+                    <nav aria-label="Page navigation" class="clearfix">
+                        <ul id="page3" class="pagination pull-right"></ul>
+                    </nav>
+                </div>
+                <!--<div class="tab-pane fade" id="text">-->
+
+                    <!--<div class="panel panel-default">-->
+                        <!--<div class="panel-body" id="list4">-->
+
+                        <!--</div>-->
+                    <!--</div>-->
+                    <!--<nav aria-label="Page navigation" class="clearfix">-->
+                        <!--<ul id="page4" class="pagination pull-right"></ul>-->
+                    <!--</nav>-->
+                <!--</div>-->
+            </div>
+            <!-- page end -->
+<input type="hidden" id="mater_type" value="news">
+<input type="hidden" id="page_index1" value="">
+<input type="hidden" id="page_index2" value="">
+<input type="hidden" id="page_index3" value="">
+<input type="hidden" id="page_index4" value="">
+<input type="hidden" id="page_index5" value="">
+<div id="saveTips" style="display: none">
+    <div class="saving"></div>
+    <div class="saveing-box">
+        <div><img src="/public/platform/images/loading.svg" alt="" style="width: 80px;height: 80px"></div>
+        <p>同步微信公众号平台素材中</p>
+    </div>
+</div>
+{/block}
+{block name="script"}
+<script>
+    require(['util'],function(util){
+        $("#add_text").on('click',function(){
+            $("#mat_type1").hide();
+            $("#mat_type2").show();
+        });
+        $(".material").on('click',function(){
+            $("#mat_type1").show();
+            $("#mat_type2").hide();
+        });
+        util.initPage(getList,"page");
+        util.initPage(getList1,"page1");
+        util.initPage(getList2,"page2");
+        util.initPage(getList3,"page3");
+        // util.initPage(getList4,"page4");
+        function getList(page_index){
+            $("#page_index1").val(page_index);
+            $.ajax({
+                type : "post",
+                url : "{:__URL('PLATFORM_MAIN/wchat/materialManagement')}",
+                async : true,
+                data : {
+                    "page_index" : page_index,"type":'news'
+                },
+                success : function(data) {
+                       var html = '';
+                        if (data["data"].length > 0) {
+                            for (var i = 0; i < data["data"].length; i++) {
+                                if (data["data"][i]['items']['data'].length != 0) {
+                                    html += '<div class="col-xs-12 col-sm-12 col-md-6 col-lg-3 water">';
+                                    html += '<div class="panel-group">';
+                                    for (var j = 0; j < data["data"][i]['items']['data'].length; j++) {
+                                            if (j == 0) {
+                                                html += '<div class="panel panel-default">';
+                                                html += '<div class="panel-body">';
+                                                html += '<div class="img">';
+                                                html += '<i class="default"></i>';
+                                                html += '<a href="' + data['data'][i]['items']['data'][j]['url'] + '" target="_blank"><img src="' + data["data"][i]['items']['data'][j]['thumb_url'] + '"></a>';
+                                                html += '<span class="text-left">' + data['data'][i]['items']['data'][j]['title'] + '</span>';
+                                                html += '</div></div></div>';
+                                            } else {
+                                                html += '<div class="panel panel-default">';
+                                                html += '<div class="panel-body">';
+                                                html += '<a href="' + data['data'][i]['items']['data'][j]['url'] + '" target="_blank">';
+                                                html += '<div class="text">';
+                                                html += '<h4>' + data['data'][i]['items']['data'][j]['title'] + '</h4>';
+                                                html += '</div>';
+                                                html += '<div class="img">';
+                                                html += '<img src="' + data["data"][i]['items']['data'][j]['thumb_url'] + '">';
+                                                html += '<i class="default">缩略图</i>';
+                                                html += '</div>';
+                                                html += '</a>';
+                                                html += '</div>';
+                                                html += '</div>';
+                                            }
+                                    }
+                                    html += '<div class="panel panel-default">';
+                                    html += '<div class="panel-body" style="height:20px; padding-bottom:40px; padding-top:7px">';
+                                    html += '<div class="btn-group">';
+                                    html += '<a href="javascript:;" class="btn btn-default btn-sm btn-send" data-mediaid="' + data["data"][i]['media_id'] + '" data-type="news">群发</a>';
+                                    html += '<a href="javascript:;" class="btn btn-default btn-sm btn-view" data-mediaid="' + data["data"][i]['media_id'] + '" data-type="news">预览</a>';
+                                    html += '<a href="javascript:;" class="btn btn-default btn-sm btn-del" data-id="' + data["data"][i]['id'] + '" data-type="news">删除</a>';
+                                    html += '</div></div></div>';
+                                    html += '</div>';
+                                    html += '</div>';
+                                }
+                            }
+                        }else{
+                        html += '<div class="flex-auto-center h-300 empty-box">暂无微信素材，可以点击同步微信素材</div>';
+                        }
+                        $('#page').paginator('option', {
+                            totalCounts: data['total_count']  // 动态修改总数
+                        });
+                        $("#list").html(html);
+                    }
+                });
+        }
+        function getList1(page_index){
+            $("#page_index2").val(page_index);
+            $.ajax({
+                type : "post",
+                url : "{:__URL('PLATFORM_MAIN/wchat/materialManagement')}",
+                async : true,
+                data : {
+                    "page_index" : page_index,"type":'image'
+                },
+                success : function(data) {
+
+                    var html = '';
+                    if (data["data"].length > 0) {
+                            for (var i = 0; i < data["data"].length; i++) {
+                                html += '<div class="col-md-3">';
+                                html += '<div class="panel panel-default panel-image">';
+                                html += '<div class="panel-body">';
+                                html += '<div class="content">';
+                                html += '<img src="'+data["data"][i]['attachment']+'" width="100%" height="160" alt="'+data["data"][i]['filename']+'">';
+                                html += '<span>'+data["data"][i]['filename']+'</span>';
+                                html += '</div>';
+                                html += '<div class="btn-group">';
+                                html += '<a href="javascript:;" class="btn btn-default btn-sm btn-send" data-mediaid="'+data["data"][i]['media_id']+'" data-type="image">群发</a>';
+                                html += '<a href="javascript:;" class="btn btn-default btn-sm btn-view" data-mediaid="'+data["data"][i]['media_id']+'" data-type="image">预览</a>';
+                                html += '<a href="javascript:;" class="btn btn-default btn-sm btn-del" data-id="'+data["data"][i]['id']+'" data-type="image">删除</a>';
+                                html += '</div></div></div></div>';
+                            }
+                        }else{
+                        html += '<div class="flex-auto-center h-300 empty-box">暂无微信素材，可以点击同步微信素材</div>';
+                    }
+                    $('#page1').paginator('option', {
+                        totalCounts: data['total_count']  // 动态修改总数
+                    });
+                    $("#list1").html(html);
+                }
+            });
+        }
+        function getList2(page_index){
+            $("#page_index3").val(page_index);
+            $.ajax({
+                type : "post",
+                url : "{:__URL('PLATFORM_MAIN/wchat/materialManagement')}",
+                async : true,
+                data : {
+                    "page_index" : page_index,"type":'voice'
+                },
+                success : function(data) {
+                        var html = '';
+                        if (data["data"].length > 0) {
+                            for (var i = 0; i < data["data"].length; i++) {
+                                html += '<div class="col-md-3">';
+                                html += '<div class="panel panel-default panel-voice">';
+                                html += '<div class="panel-body">';
+                                html += '<div class="audio-msg">';
+                                html += '<div class="icon audio-player-play" data-attach="'+data["data"][i]['attachment']+'"><span><i class="fa fa-play"></i></span></div>';
+                                html += '<div class="audio-content">';
+                                html += '<div class="audio-title">'+data["data"][i]['filename']+'</div>';
+                                html += '<div class="audio-date text-muted">创建于：'+data["data"][i]['createtime']+'</div>';
+                                html += '</div>';
+                                html += '</div>';
+                                html += '<div class="btn-group">';
+                                html += '<a href="javascript:;" class="btn btn-default btn-sm btn-send" data-mediaid="'+data["data"][i]['media_id']+'" data-type="voice">群发</a>';
+                                html += '<a href="javascript:;" class="btn btn-default btn-sm btn-view" data-mediaid="'+data["data"][i]['media_id']+'" data-type="voice">预览</a>';
+                                html += '<a href="javascript:;" class="btn btn-default btn-sm btn-del" data-id="'+data["data"][i]['id']+'" data-type="voice">删除</a>';
+                                html += '</div></div></div></div>';
+                            }
+                        }else{
+                            html += '<div class="flex-auto-center h-300 empty-box">暂无微信素材，可以点击同步微信素材</div>';
+                        }
+                        $('#page2').paginator('option', {
+                            totalCounts: data['total_count']  // 动态修改总数
+                        });
+                        $("#list2").html(html);
+                }
+            });
+        }
+        function getList3(page_index){
+            $("#page_index4").val(page_index);
+            $.ajax({
+                type : "post",
+                url : "{:__URL('PLATFORM_MAIN/wchat/materialManagement')}",
+                async : true,
+                data : {
+                    "page_index" : page_index,"type":'video'
+                },
+                success : function(data) {
+                        var html = '';
+                        if (data["data"].length > 0) {
+                            for (var i = 0; i < data["data"].length; i++) {
+                                html += '<div class="col-md-3">';
+                                html += ' <div class="panel panel-default panel-video">';
+                                html += '<div class="panel-body">';
+                                html += '<div class="video-content">';
+                                html += '<h4 class="title text-muted">'+data["data"][i]['tag']['title']+'</h4>';
+                                html += '<div class="date text-muted">创建于：'+data["data"][i]['createtime']+'</div>';
+                                html += '<div class="video">';
+                                html += '<img src="PLATFORM_STATIC//images/banner-bg.png" alt="" />';
+                                html += '</div>';
+                                html += ' <div class="abstract text-muted" style="overflow:hidden">'+data["data"][i]['tag']['description']+'</div></div>';
+                                html += '<div class="btn-group">';
+                                html += '<a href="javascript:;" class="btn btn-default btn-sm btn-send" data-mediaid="'+data["data"][i]['media_id']+'" data-type="video">群发</a>';
+                                html += '<a href="javascript:;" class="btn btn-default btn-sm btn-view" data-mediaid="'+data["data"][i]['media_id']+'" data-type="video">预览</a>';
+                                html += '<a href="javascript:;" class="btn btn-default btn-sm btn-del" data-id="'+data["data"][i]['id']+'" data-type="video">删除</a>';
+                                html += '</div></div></div></div>';
+                            }
+                        }else{
+                            html += '<div class="flex-auto-center h-300 empty-box">暂无微信素材，可以点击同步微信素材</div>';
+                        }
+                        $('#page3').paginator('option', {
+                            totalCounts: data['total_count']  // 动态修改总数
+                        });
+                        $("#list3").html(html);
+                }
+            });
+        }
+        // function getList4(page_index){
+        //     $("#page_index5").val(page_index);
+        //     $.ajax({
+        //         type : "post",
+        //         url : "{:__URL('PLATFORM_MAIN/wchat/materialManagements')}",
+        //         async : true,
+        //         data : {
+        //             "page_index" : page_index,"type":'text'
+        //         },
+        //         success : function(data) {
+        //
+        //             var html = '';
+        //             if (data["data"].length > 0) {
+        //                 for (var i = 0; i < data["data"].length; i++) {
+        //                     html += '<div class="col-md-3">';
+        //                     html += '<div class="panel panel-default panel-image">';
+        //                     html += '<div class="panel-body">';
+        //                     html += '<div class="content">'+data["data"][i]['attachment']+'</div>';
+        //                     html += '<div class="btn-group">';
+        //                     html += '<a href="javascript:;" class="btn btn-default btn-sm btn-views" data-mediaid="'+data["data"][i]['id']+'" data-type="text"  >修改</a>';
+        //                     html += '<a href="javascript:;" class="btn btn-default btn-sm btn-dels" data-id="'+data["data"][i]['id']+'" data-type="text">删除</a>';
+        //                     html += '</div></div></div></div>';
+        //                 }
+        //             }else{
+        //                 html += '<div class="flex-auto-center h-300 empty-box">暂无文本消息</div>';
+        //             }
+        //             $('#page4').paginator('option', {
+        //                 totalCounts: data['total_count']  // 动态修改总数
+        //             });
+        //             $("#list4").html(html);
+        //         }
+        //     });
+        // }
+        $('.nav-tabs a').on('click',function(){
+            var type = $(this).data('type');
+            $("#mater_type").val(type)
+        })
+        /**
+         * 预览
+         */
+        $('body').on('click','.btn-view',function(){
+                var url = __URL('PLATFORM_MAIN/wchat/purview');
+                var id = $(this).data('mediaid');
+                var type = $(this).data('type');
+                util.confirm('预览', 'url:'+url,function(){
+                    var  wxname = this.$content.find('#wxname').val();
+                    if(wxname==''){
+                        util.message('微信号不能为空','danger');
+                        return false;
+                    }
+                    $.ajax({
+                        url: __URL(PLATFORMMAIN + "/Wchat/purview"),
+                        type: "post",
+                        data: {  "media_id": id,"type":type, "wxname": wxname},
+                        success: function (data) {
+                            if (data["errcode"]  == 0) {
+                                if(type=='news'){
+                                    util.message('发送成功','success',getList($("#page_index1").val()));
+                                }
+                                if(type=='image'){
+                                    util.message('发送成功','success',getList1($("#page_index2").val()));
+                                }
+                                if(type=='voice'){
+                                    util.message('发送成功','success',getList2($("#page_index3").val()));
+                                }
+                                if(type=='video') {
+                                    util.message('发送成功', 'success', getList3($("#page_index4").val()));
+                                }
+                            } else {
+                                util.message(data["errmsg"],'danger');
+                            }
+                        }
+                    })
+                })
+            })
+        /**
+         * 群发
+         */
+        $('body').on('click','.btn-send',function(){
+            var url = __URL('PLATFORM_MAIN/Wchat/groupList');
+            var id = $(this).data('mediaid');
+            var type = $(this).data('type');
+            util.confirm('选择分组', 'url:'+url,function(){
+                var  group_id = this.$content.find('#select_group_id').val();
+                var  group_from = this.$content.find('#select_group_from').val();
+                $.ajax({
+                    url: __URL(PLATFORMMAIN + "/Wchat/sendAll"),
+                    type: "post",
+                    data: { "media_id": id, "groupid": group_id ,"group_from":group_from},
+                    success: function (data) {
+                        if (data["errcode"]  == 0) {
+                            if(type=='news'){
+                                util.message('发送成功','success',getList($("#page_index1").val()));
+                            }
+                            if(type=='image'){
+                                util.message('发送成功','success',getList1($("#page_index2").val()));
+                            }
+                            if(type=='voice'){
+                                util.message('发送成功','success',getList2($("#page_index3").val()));
+                            }
+                            if(type=='video') {
+                                util.message('发送成功', 'success', getList3($("#page_index4").val()));
+                            }
+                        } else {
+                            util.message(data["errmsg"],'danger');
+                        }
+                    }
+                })
+            })
+        })
+        // 删除
+        $('body').on('click','.btn-del',function(){
+                var id = $(this).data('id');
+                var type = $(this).data('type');
+                util.alert('确定删除？',function(){
+                    $.ajax({
+                        type : "post",
+                        url : "{:__URL('PLATFORM_MAIN/wchat/deleteWeixinMedia')}",
+                        async : true,
+                        data : {
+                            "media_id" : id,"type":type
+                        },
+                        success : function(data) {
+                            if (data["code"] > 0) {
+                                if(type=='news'){
+                                    util.message('删除成功','success',getList($("#page_index1").val()));
+                                }
+                                if(type=='image'){
+                                    util.message('删除成功','success',getList1($("#page_index2").val()));
+                                }
+                                if(type=='voice'){
+                                    util.message('删除成功','success',getList2($("#page_index3").val()));
+                                }
+                                if(type=='video'){
+                                    util.message('删除成功','success',getList3($("#page_index4").val()));
+                                }
+                            }else{
+                                util.message(data["message"],'danger');
+                            }
+                        }
+                    });
+                })
+            })
+
+        //同步
+        $('.uploadMaterial').on('click',function(){
+           var type = $("#mater_type").val();
+            var page_index = 1;
+            if(type=='news'){
+                  page_index = $("#page_index1").val();
+            }
+            if(type=='image'){
+                  page_index =  $("#page_index2").val();
+            }
+            if(type=='voice'){
+                  page_index = $("#page_index3").val();
+            }
+            if(type=='video'){
+                  page_index = $("#page_index4").val();
+            }
+            $(this).attr({disabled: "disabled"}).html('获取中...');
+            $('#saveTips').show();
+            $.ajax({
+                type: "post",
+                url: __URL(PLATFORMMAIN + "/wchat/getMaterial"),
+                async: true,
+                data: {
+                    "type":type,'page_index':page_index
+                },
+                success: function (data) {
+                    if (data["fail"]['message'] && data["fail"]['code']!=3) {
+                        if(type=='image'){
+                            util.message(data["fail"]['message'],'danger',getList1(page_index));
+                        }else if(type=='voice'){
+                            util.message(data["fail"]['message'],'danger',getList2(page_index));
+                        }else if(type=='video'){
+                            util.message(data["fail"]['message'],'danger',getList3(page_index));
+                        }else{
+                            util.message(data["fail"]['message'],'danger')
+                        }
+                    }else if(data["fail"]['message'] && data["fail"]['code']==3){
+                        $('#saveTips').hide();
+                        $('.uploadMaterial').removeAttr('disabled').html('同步微信素材');
+                        util.message(data["fail"]['message'],'success');
+                    }else{
+                        $('#saveTips').hide();
+                        $('.uploadMaterial').removeAttr('disabled').html('同步微信素材');
+                        if(type=='news'){
+                            util.message('同步素材成功','success',getList(page_index));
+                        }
+                        if(type=='image'){
+                            util.message('同步素材成功','success',getList1(page_index));
+                        }
+                        if(type=='voice'){
+                            util.message('同步素材成功','success',getList2(page_index));
+                        }
+                        if(type=='video'){
+                            util.message('同步素材成功','success',getList3(page_index));
+                        }
+                    }
+                }
+            })
+        });
+        //添加文本
+        // $('body').on('click','.addText',function(){
+        //     var html = '<form class="form-horizontal padding-15" id="">';
+        //     html += '<div class="form-group"><label class="col-md-3 control-label"><span class="text-bright">*</span>文本内容：</label><div class="col-md-8"><textarea  class="form-control" id="content_text"></textarea></div></div>';
+        //     html += '<div class="form-group"><label class="col-md-3 control-label">表情Emoji：</label><div class="col-md-8"><a class="select_emoji btn btn-primary search">选择表情</a></div></div>';
+        //     html += '</form>';
+        //     util.confirm('添加文本',html,function(){
+        //         var content = this.$content.find('#content_text').val();
+        //         if(content==''){
+        //             util.message('请填写文本内容','danger');
+        //             this.$content.find('#content_text').focus();
+        //             return false;
+        //         }
+        //         $.ajax({
+        //             type : "post",
+        //             url : "{:__URL('PLATFORM_MAIN/wchat/addText')}",
+        //             async : true,
+        //             data : {
+        //                 "content" : content
+        //             },
+        //             success : function(data) {
+        //                 if (data["code"] > 0) {
+        //                     util.message('添加成功','success',getList4());
+        //
+        //                 }else{
+        //                     util.message(data["message"],'danger');
+        //                 }
+        //             }
+        //         });
+        //     })
+        // })
+        //修改文本
+        // $('body').on('click','.btn-views',function() {
+        //     var id = $(this).data('mediaid');
+        //     var html = '<form class="form-horizontal padding-15" id="">';
+        //     html += '<div class="form-group"><label class="col-md-3 control-label"><span class="text-bright">*</span>文本内容：</label><div class="col-md-8"><textarea  class="form-control" id="content_text"></textarea></div></div>';
+        //     html += '<div class="form-group"><label class="col-md-3 control-label">表情Emoji：</label><div class="col-md-8"><a class="select_emoji btn btn-primary search">选择表情</a></div></div>';
+        //     html += '</form>';
+        //     $.ajax({
+        //         type: "post",
+        //         url: "{:__URL('PLATFORM_MAIN/wchat/getText')}",
+        //         async: true,
+        //         data: {
+        //             "id": id
+        //         },
+        //         success: function (data) {
+        //             $("#content_text").val(data.attachment);
+        //         }
+        //     });
+        //     util.confirm('修改文本', html, function () {
+        //         $.ajax({
+        //             type: "post",
+        //             url: "{:__URL('PLATFORM_MAIN/wchat/updateText')}",
+        //             async: true,
+        //             data: {
+        //                 "id": id,
+        //                 "content":$("#content_text").val()
+        //             },
+        //             success: function (data) {
+        //                 if (data["code"] > 0) {
+        //                     util.message('修改成功', 'success', getList4($("#page_index5").val()));
+        //                 } else {
+        //                     util.message(data["message"], 'danger');
+        //                 }
+        //             }
+        //         });
+        //     })
+        // });
+        //删除文本
+        // $('body').on('click','.btn-dels',function(){
+        //     var id = $(this).data('id');
+        //     util.alert('确定删除？',function(){
+        //         $.ajax({
+        //             type : "post",
+        //             url : "{:__URL('PLATFORM_MAIN/wchat/delText')}",
+        //             async : true,
+        //             data : {
+        //                 "id" : id
+        //             },
+        //             success : function(data) {
+        //                 if (data["code"] > 0) {
+        //                     util.message('删除成功','success',getList4($("#page_index5").val()));
+        //
+        //                 }else{
+        //                     util.message(data["message"],'danger');
+        //                 }
+        //             }
+        //         });
+        //     })
+        // })
+        //选择表情
+        // $('body').on('click','.select_emoji',function(){
+        //     var em=$("#content_text").val();
+        //     util.emojiDialog(function(data){
+        //         $("#content_text").val(em+data.emoji);
+        //     })
+        // })
+    })
+</script>
+{/block}

@@ -1,0 +1,28 @@
+<view class="van-cell van-cell--clickable" bindtap="toInfo">
+  <view class="van-cell__title">
+    <text>微店信息</text>
+  </view>
+  <view class='icon iconfont v-icon-arrow-right'></view>
+</view>
+<view class="avatar-cell van-cell van-cell--clickable" bindtap="toShopLogo">
+  <view class="van-cell__title">
+    <text>微店Logo</text>
+  </view>
+  <view class="van-cell__value">
+    <view class="img">
+      <image mode='widthFix' src="{{microshop_logo ? microshop_logo : '/images/no-avatar.png'}}"></image>
+    </view>
+  </view>
+  <view class='icon iconfont v-icon-arrow-right'></view>
+</view>
+<view class="avatar-cell van-cell van-cell--clickable" bindtap="toRecLogo">
+  <view class="van-cell__title">
+    <text>店招Logo</text>
+  </view>
+  <view class="van-cell__value">
+    <view class="img">
+      <image mode='widthFix' src="{{shopRecruitment_logo ? shopRecruitment_logo : '/images/no-avatar.png'}}"></image>
+    </view>
+  </view>
+  <view class='icon iconfont v-icon-arrow-right'></view>
+</view>

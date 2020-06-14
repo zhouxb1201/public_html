@@ -1,0 +1,27 @@
+<view class='collection'>
+  <view class='list'>
+    <navigator wx:for='{{goods_list}}' wx:key='' url='../detail/index?goodsId={{item.goods_id}}'>
+      <view class='item'>
+        <view class='good_img'>
+          <image src="{{item.pic_cover != ''?item.pic_cover:'../../../images/rectangle-error.png'}}"></image>
+        </view>
+        <view class='good_info'>
+          <view class='good_name'>{{item.goods_name}}</view>
+          <view class='price_like'>
+            <view>
+              <text class='price_num'>  ¥ {{item.price}} </text>
+              <van-icon class='icon' name="like" color='#f44' size='34rpx' />
+            </view>          
+          </view>
+        </view>
+      </view>
+    </navigator>    
+  </view>
+
+  <view class='no_more'>
+   <view>没有更多了</view>
+  </view>
+</view>
+
+<!-- 登录组件 -->
+<login-component loginShow='{{loginShow}}' bind:request='requestLogin'></login-component>

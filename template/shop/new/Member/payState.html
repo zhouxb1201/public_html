@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>充值状态</title>
+    <link rel="stylesheet" href="../../public/css/common.css">
+    <!--<link rel="stylesheet" href="../../public/css/pagination.css">-->
+    <link rel="stylesheet" href="../../public/css/shop.css">
+
+</head>
+
+<body>
+    <div class="v-layout">
+        <!--导航栏-->
+        <div class="site-nav">
+            <div class="w w1200 clearfix">
+                <div class="fl">欢迎来到团大人
+                    <a href="javascript:void(0);" class="red login">登录</a>
+                    <a href="javascript:void(0);" class="red">注册</a>
+                </div>
+                <div class="fr">
+                    <a href="javascript:void(0);">购物车</a>
+                    <a href="javascript:void(0);">个人中心</a>
+                    <a href="javascript:void(0);">商家中心</a>
+                    <a href="javascript:void(0);">移动商城</a>
+                    {if $hasHelpcenter}<a href="javascript:void(0);">帮助中心</a>{/if}
+                </div>
+            </div>
+        </div>
+
+        <!--头部-->
+        <div class="header">
+            <div class="w w1200 clearfix">
+                <div class="fl">
+                    <div class="logo">
+                        <a href="javascript:void(0);"><img src="../../public/image/LOGO.png" alt=""></a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!--导航-->
+        <div class="navs" style="min-height: 10px;"></div>
+
+        <div class="v-main" style=" background-color: #eee;padding-bottom: 26px;">
+            <div class="v-main-content  w1200 payStates">
+
+                <!--充值成功-->
+                <!--<div class="return-step3">
+                    <div><i class="icon-success icon"></i></div>
+                    <div class="agreeReturn">充值成功</div>
+                    <div class="payStateCan">你还可以 <a href="javascript:void(0);" class="blue">前往购物</a> 或查看 <a href="javascript:void(0);" class="blue">账户余额</a></div>
+                </div>-->
+
+                <!--充值失败-->
+                <!--<div class="return-step3_1">
+                    <div><i class="icon-danger icon"></i></div>
+                    <div class="refuseReturn">充值失败</div>
+                    <div class="refuseReason" style="padding-top: 4px">您可以 <a href="javascript:void(0);" class="blue">重新支付</a> 或更换 <a href="javascript:void(0);" class="blue">支付方式</a></div>
+                </div>-->
+
+                <!--提现成功-->
+                <div class="return-step3">
+                    <div><i class="icon-success icon"></i></div>
+                    <div class="agreeReturn">提现成功</div>
+                    <div class="payState-message">您的提现请求已成功，具体到账期间取决于相关提现账号的处理时间</div>
+                    <div class="payStateCan">你还可以 <a href="javascript:void(0);" class="blue">前往购物</a> 或查看 <a href="javascript:void(0);" class="blue">账户余额</a></div>
+                </div>
+            </div>
+        </div>
+
+<div class="footers">123</div>
+
+    </div>
+    <script src="../../public/scripts/lib/require.js" data-main="../../public/scripts/app/main"></script>
+    <!--<script>
+        require(['common'], function (common) {
+            common.tabToggle();
+        });
+    </script>-->
+</body>
+
+</html>

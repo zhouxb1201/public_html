@@ -1,0 +1,286 @@
+{block name="main"}
+<!--好物圈干货详情-->
+<div class="goods-circle-detail">
+	<div class="gcd-use">
+		<div class="mb-10 flex flex-pack-justify">
+			<div class="fs-16"><span class="text-primary">#{$thing_info['topic_title']}#</span> {$thing_info['title']}</div>
+			<div>
+				<a href="javascript:void(0);" class="text-primary gcd-shu tj-goods">推荐的商品</a>
+				<a href="javascript:void(0);" class="text-primary gcd-shu del-thing" data-id="{$thing_info['id']}">删除干货</a>
+			</div>
+		</div>
+		<div class="flex mb-10">
+			<div class="gcd-avatar1">
+				<img src="{$thing_info['user_headimg']}" alt="" width="50" height="50">
+			</div>
+			<div class="" style="width: 100%">
+				<div class="mb-10 flex flex-pack-justify">
+					<div>
+						<span href="javascript:void(0);" class="text-primary">{$thing_info['thing_user_name']}</span>
+						<span href="javascript:void(0);" class="text-primary ml-10"><i class="icon icon-region"></i>{$thing_info['location']?$thing_info['location']:'未定位'}</span>
+					</div>
+					<div>
+						<span class="gcd-shu">阅读：<b class="text-red1">{$thing_info['reading_volumes']}</b></span>
+						<span class="gcd-shu">收藏：<b class="text-red1">{$thing_info['collects']}</b></span>
+						<span class="gcd-shu">点赞：<b class="text-red1">{$thing_info['likes']}</b></span>
+						<span class="gcd-shu">评论：<b class="text-red1">{$thing_info['evaluates']}</b></span>
+					</div>
+				</div>
+				<div>发布于{$thing_info['create_time']}</div>
+			</div>
+		</div>
+		<div class="gcd-content">
+            {$thing_info['content']}
+		</div>
+        {if condition="$thing_info['thing_type'] eq 1" }
+		<div class="gcd-preview-list" id="pic-preview">
+			{volist name="thing_info['img_temp_array']" id="pic_info"}
+			<div class="cover"><img  src="{:__IMG($pic_info['pic_cover'])}" onerror="this.src='http://iph.href.lu/60x60';" width="60" height="60"></div>
+            {/volist}
+		</div>
+        {elseif condition="$thing_info['thing_type'] eq 2" }
+		<div class="gcd-preview-list" id="video-preview">
+			{volist name="thing_info['img_temp_array']" id="pic_info"}
+			<div class="cover">
+				<video src="{:__IMG($pic_info['pic_cover'])}"></video>
+			</div>
+            {/volist}
+		</div>
+        {/if}
+	</div>
+	<div class="gcd-praise" id="comment_list">
+	</div>
+    <nav aria-label="Page navigation" class="clearfix">
+        <ul id="page" class="pagination pull-right"></ul>
+    </nav>
+    <input type="hidden" id="page_index">
+</div>
+{/block}
+{block name="script"}
+<script id="comment_html" type="text/html">
+	<%each data as item index%>
+	<div class="flex mb-10">
+		<div class="gcd-avatar2">
+			<%if item.user_headimg%>
+			<img src="<%item.user_headimg%>" alt="" width="50" height="50">
+			<%else%>
+			<img src="/public/static/images/headimg.png" alt="" width="50" height="50">
+			<%/if%>
+		</div>
+		<div class="" style="width: 100%">
+			<div class="flex flex-pack-justify mb-10">
+				<div>
+					<span class="text-primary"><%item.thing_user_name%></span>
+					<span class="ml-10">点赞：<b class="text-red1"><%item.comment_likes%></b></span>
+				</div>
+				<div>
+					<a href="javascript:void(0);" class="text-primary del" data-id="<%item.id%>">删除评论</a>
+				</div>
+			</div>
+			<div>
+				<div class="mb-10"><%item.content%></div>
+				<%if item.reply_list.total_count > 0%>
+				<div id="reply_list_<%item.id%>">
+				<%each item.reply_list.data as item2 index2%>
+					<div class="gcd-reply">
+						<div class="flex mb-10">
+							<div class="gcd-avatar2">
+								<%if item2.user_headimg%>
+								<img src="<%item2.user_headimg%>" alt="" width="50" height="50">
+								<%else%>
+								<img src="/public/static/images/headimg.png" alt="" width="50" height="50">
+								<%/if%>
+							</div>
+							<div style="width: 100%">
+								<div class="flex flex-pack-justify mb-10">
+									<div>
+										<span class="text-primary"><%item2.thing_user_name%></span>
+										<%if item2.to_thing_user_name%>
+										<span class="mr-04 ml-04">回复</span><span class="text-primary"><%item2.to_thing_user_name%></span>
+										<%/if%>
+										<span class="ml-10">点赞：<b class="text-red1"><%item2.comment_likes%></b></span>
+									</div>
+									<div>
+										<a href="javascript:void(0);" class="text-primary del" data-id="<%item2.id%>">删除评论</a>
+									</div>
+								</div>
+								<div><%item2.content%></div>
+							</div>
+						</div>
+					</div>
+				<%/each%>
+				<%if item.reply_list.total_count > 1%>
+				<div class="gcd-reply"><a href="javascript:void(0);" class="text-primary more-reply" data-id="<%item.id%>">展开更多回复</a></div>
+				<%/if%>
+				</div>
+				<%/if%>
+			</div>
+		</div>
+	</div>
+	<%/each%>
+</script>
+<script>
+    require(['utilAdmin', 'tpl', 'mousewheel', 'pictureViewer', 'videoViewer'], function (utilAdmin, tpl, mousewheel, pictureViewer, videoViewer) {
+    	utilAdmin.initPage(LoadingList);
+    	//评论列表
+    	function LoadingList(page_index) {
+            $("#page_index").val(page_index);
+            var id = "{$thing_info['id']}";
+            $.ajax({
+                type: "post",
+                url: "{$getCommentListUrl}",
+                data: {
+                	"id": id,
+                    "page_index": page_index
+                },
+                success: function (data) {
+                    html ='';
+                    html += '<div>暂无评论</div>';
+                    if(tpl('comment_html', data)){
+                        $("#comment_list").html(tpl('comment_html', data));
+                        $('#page').paginator('option', {
+                            totalCounts: data['total_count']  // 动态修改总数
+                        });
+                    }else{
+                        $("#comment_list").html(html);
+                    }
+                }
+            });
+        }
+    	//更多回复
+        $('body').on('click', '.more-reply', function () {
+        	var id = $(this).data('id');
+            $.ajax({
+                type: "post",
+                url: "{$getReplyListUrl}",
+                data: {
+                	"id": id
+                },
+                success: function (data) {
+                	if(data.data.length>0){
+                        html = '';
+                		for(var i=0;i<data.data.length;i++){
+                            html +='<div class="gcd-reply">';
+                            html +='<div class="flex mb-10">';
+                            html +='<div class="gcd-avatar2">';
+                            if(data.data[i]['user_headimg']){
+                                html +='<img src="'+ data.data[i]['user_headimg'] +'" alt="" width="50" height="50">';
+                            }else{
+                                html +='<img src="/public/static/images/headimg.png" alt="" width="50" height="50">';
+                            }
+                            html +='</div>';
+                            html +='<div style="width: 100%">';
+                            html +='<div class="flex flex-pack-justify mb-10">';
+                            html +='<div><span class="text-primary">'+ data.data[i]['thing_user_name'] +' </span>';
+                            if(data.data[i]['to_thing_user_name']){
+                            	html +='<span class="mr-04 ml-04">回复</span><span class="text-primary">'+ data.data[i]['to_thing_user_name'] +'</span>';
+                            }
+                            html +='<span class="ml-10"> 点赞：<b class="text-red1">'+ data.data[i]['comment_likes'] +'</b></span></div>';
+                            html +='<div><a href="javascript:void(0);" class="text-primary del" data-id="'+ data.data[i]['id'] +'">删除评论</a></div>';
+                            html +='</div>';
+                            html +='<div>'+ data.data[i]['content'] +'</div>';
+        					html +='</div>';
+        					html +='</div>';
+        					html +='</div>';
+                		}
+                		$('#reply_list_' + id).html(html);
+                	}
+                }
+            });
+        });
+        // 好物圈详情
+        // 预览图片插件
+        $('#pic-preview').on('click', '.cover', function () {
+            var this_ = $(this);
+            var images = this_.parents('#pic-preview').find('.cover');
+            var imagesArr = new Array();
+            $.each(images, function (i, image) {
+                imagesArr.push($(image).children('img').attr('src'));
+            });
+            $.pictureViewer({
+                images: imagesArr, //需要查看的图片，数据类型为数组
+                initImageIndex: this_.index() + 1, //初始查看第几张图片，默认1
+                scrollSwitch: true //是否使用鼠标滚轮切换图片，默认false
+            });
+        });
+        // 预览视频插件
+        $('#video-preview').on('click', '.cover', function () {
+            var this_ = $(this);
+            var images = this_.parents('#video-preview').find('.cover');
+            var imagesArr = new Array();
+            $.each(images, function (i, image) {
+                imagesArr.push($(image).children('video').attr('src'));
+            });
+            $.pictureViewer1({
+                images: imagesArr, //需要查看的图片，数据类型为数组
+                initImageIndex: this_.index() + 1, //初始查看第几张图片，默认1
+                scrollSwitch: true //是否使用鼠标滚轮切换图片，默认false
+            });
+        });
+        $('.tj-goods').on('click', function () {
+			var goods_list = {$goods_info};
+
+            var html = '';
+            html += '<div class="mb-10 flex flex-pack-justify">'+
+                    '<div></div>'+
+                    '<div class="input-group search-input-group">'+
+                    '</div>'+
+                    '</div>';
+            html += '<table class="table v-table table-auto-center" id="selfGoodsList"><thead><tr><th>商品信息</th></tr></thead><tbody>';
+
+			if (goods_list.length>0) {
+				for(var i=0;i<goods_list.length;i++){
+					html += '<tr><td>';
+					html += '<div class="media text-left"><div class="media-left"><img src="'+ goods_list[i]['pic'] +'" style="width: 60px;height: 60px;" class="mw-none"></div>';
+					html += '<div class="media-body break-word"><div class="line-2-ellipsis">'+ goods_list[i]['goods_name'] +'</div><div class="line-1-ellipsis text-red">'+ goods_list[i]['price'] +'</div>';
+					html += '</div></div></td></tr>';
+				}
+			} else {
+				html += '<tr><td class="h-200" colspan="1">暂无符合条件的数据记录</td></tr>';
+			}
+
+            html += '</tbody></table>';
+
+			utilAdmin.confirm2('推荐的商品', html);
+        });
+		$('body').on('click','.del',function(){
+			var id = $(this).data('id');
+			utilAdmin.alert('是否删除该评论？',function(){
+				$.ajax({
+					type : "post",
+					url : "{$delThingcircleCommentUrl}",
+					data:{'comment_ids':id},
+					async : true,
+					success : function(data) {
+						if(data["code"] > 0 ){
+							utilAdmin.message(data["message"], 'success', window.location.href=window.location.href);
+						}else{
+							utilAdmin.message(data["message"], 'danger');
+						}
+					}
+				});
+			})
+		});
+		$('body').on('click','.del-thing',function(){
+			var id = $(this).data('id');
+			utilAdmin.alert('是否删除该干货？',function(){
+				$.ajax({
+					type : "post",
+					url : "{$delThingcircleUrl}",
+					data:{'id':id},
+					async : true,
+					success : function(data) {
+						if(data["code"] > 0 ){
+							utilAdmin.message(data["message"], 'success', "{:__URL('admin/Menu/addonmenu?addons=thingcircleList')}");
+						}else{
+							utilAdmin.message(data["message"], 'danger');
+						}
+					}
+				});
+			})
+		});
+
+        // 好物圈详情
+    })
+</script>
+{/block}

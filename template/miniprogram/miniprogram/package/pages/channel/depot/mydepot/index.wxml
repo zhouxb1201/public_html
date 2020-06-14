@@ -1,0 +1,22 @@
+<view class='mydepot_box'>
+  <view class='cell_group'>
+    <navigator class='cell_item line' url='../list/index' hover-class='none'>
+      <view class='item_l'>
+        <view class='iconfont v-icon-menu'></view>
+        <view>云仓库</view>
+      </view>
+      <view class='item_r'>
+         <van-icon name="arrow" class='r_icon' size="14px"/>
+      </view>
+    </navigator>
+    <navigator class='cell_item' url='../log/index' hover-class='none'>
+      <view class='item_l'>
+        <view class='iconfont v-icon-text'></view>
+        <view>云仓库日志</view>
+      </view>
+      <view class='item_r'>
+         <van-icon name="arrow" class='r_icon' size="14px"/>
+      </view>
+    </navigator>
+  </view>
+</view>

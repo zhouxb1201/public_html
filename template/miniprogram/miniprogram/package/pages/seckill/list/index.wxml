@@ -1,0 +1,74 @@
+<view class='seckill_list' wx:if='{{isOpen == 1}}'>
+  <view class='head'>
+    <view>
+      <scroll-view scroll-x style='width:750rpx'>
+        <view class='tabs'>
+          <view class="tab_cell {{currentIndex == index ? 'tab_active' : ''}} " wx:for='{{allSecTime}}' wx:key='' data-index='{{index}}' data-conditiontime='{{item.condition_time}}' data-conditionday='{{item.condition_day}}' data-tagstatus='{{item.tag_status}}'  bindtap='onTapFun'>
+            <view class='tab_item'>
+              <view class='secTime'>{{item.tag_name}}</view>
+              <view class='condition_day' wx:if="{{item.condition_day == 'good_rushed' && item.tag_status == 'started'}}">已开抢</view>
+              <view class='condition_day' wx:if="{{item.condition_day == 'today' && item.tag_status == 'going'}}">抢购中</view>
+              <view class='condition_day' wx:if="{{item.condition_day == 'today' && item.tag_status == 'unstart'}}">即将开抢</view>
+              <view class='condition_day' wx:if="{{item.condition_day == 'tomorrow' && item.tag_status == 'tomorrow_start'}}">明日开抢</view>
+            </view>            
+          </view>
+        </view>        
+      </scroll-view>
+    </view>    
+  </view>
+
+  <view class='content_list'>
+    <view class='good_cell' wx:for='{{goods_list}}' wx:key=''>
+      <view class='good_img'>
+        <image src="{{item.goods_img != ''? item.goods_img :'/images/rectangle-error.png'}}"></image>
+      </view>
+      <view class='good_info'>
+        <view class='good_name'>{{item.goods_name}}</view>
+        <view class='seckill_num'>
+          <view class='progress_tag' wx:if="{{item.tag_status == 'started' || item.tag_status == 'going'}}">
+            <view class='progress_outer'>
+              <view class='progress'>
+                <progress percent="{{item.robbed_percent}}" stroke-width="24"  backgroundColor='#ff454e47' activeColor='#ff454e'/>
+                <view class='num'>已抢{{item.robbed_num}}件</view>
+                <view class='percent'>{{item.robbed_percent}}%</view>
+              </view>
+            </view>
+          </view>
+          <view class='seckill_time_num' wx:if="{{item.tag_status == 'unstart' || item.tag_status == 'tomorrow_start'}}">
+            <view class='seckillnum'>{{item.seckill_num}}件</view>
+            <view class='space'> | </view>
+            <view class='seckill_time'>
+              <text wx:if="{{item.condition_day == 'today'}}">{{item.rob_time}}</text>
+              <text wx:else="{{item.condition_day == 'tomorrow'}}">明日{{item.rob_time}}</text>
+            </view>
+          </view>
+        </view>
+        <view class='good_price'>
+          <view class='price'>
+            <text class="{{item.tag_status == 'started' || item.tag_status == 'going'?'seckill_price':'seckill_price_green'}}">¥ {{item.seckill_price}}</text>
+            <text class='normal_price'>¥ {{item.price}}</text>
+          </view>
+          <view class='good_btn'>
+            <view class='seckill_btn' wx:if="{{item.tag_status == 'started' || item.tag_status == 'going'}}" data-goodsid='{{item.goods_id}}' bindtap='onGoodDetail'>马上抢</view>
+            <view class='collect_btn' wx:if="{{item.tag_status == 'unstart' || item.tag_status == 'tomorrow_start'}}" data-goodsid='{{item.goods_id}}' data-seckillid='{{item.seckill_id}}' data-iscollection='{{item.is_collection}}' bindtap='collectionGood'>
+              <text wx:if="{{item.is_collection == false}}">收藏</text>
+              <text wx:elif="{{item.is_collection == true}}">取消收藏</text>            
+            </view>
+          </view>
+        </view>
+      </view>
+    </view>
+  </view>
+
+  <view class='foot'>
+    <view class='noMore'>没有更多了</view>
+  </view>
+</view>
+<view class="no_open" wx:else>
+  <view class="box">
+    <view class="img">
+      <image mode="widthFix" src="/images/error-fail.png"></image>
+    </view>
+    <view class="text">未开启秒杀应用</view>
+  </view>
+</view>

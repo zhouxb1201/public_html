@@ -1,0 +1,67 @@
+/* 商品组 */
+.goods{
+  position: relative;
+  overflow: hidden;
+}
+.goods .row-1 .item{
+  width: calc(100% - 2rpx);
+}
+.goods .row-3 .item{
+  width: calc(33.33334% - 2rpx);
+}
+.goods .row-2 .item{
+  width: calc(50% - 2rpx);
+}
+.goods .item{
+  display: block;
+  float: left;
+  height: auto;  
+}
+.goods .row-1 .item .goodsImg{
+  height: 718rpx;
+  overflow: hidden;
+}
+.goods .row-2 .item .goodsImg{
+  height: 351rpx;
+  overflow: hidden;
+}
+.goods .row-3 .item .goodsImg{
+  height: 228rpx;
+  overflow: hidden;
+}
+.goods .item .goodsImg .image{
+  width: 100%;
+}
+.goods .itemBox{
+  box-sizing: border-box;
+  margin: 10rpx;
+  background:#fff;
+  border-radius: 20rpx;
+  overflow: hidden;
+  box-shadow:0 0 10px 0 rgba(0,0,0,.05);
+  
+}
+.goods .item .detail{
+  display: flex;
+  justify-content: space-between;
+  padding: 10rpx;
+  font-size: 14px;
+  color: #555;
+}
+.goods .item .detail .goodsPrice{
+  font-weight: 800;
+  color: #f44;
+}
+.goods .item .goodsName{
+  padding: 10rpx;
+  text-overflow: -o-ellipsis-lastline;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  line-clamp: 2;
+  -webkit-box-orient: vertical;
+  font-size: 28rpx;
+  height: 70rpx;
+  color: #555;
+}

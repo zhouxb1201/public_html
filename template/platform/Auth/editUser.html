@@ -1,0 +1,81 @@
+{extend name="platform/new_base" /}
+{block name="resources"/}
+{/block}
+{block name="main"}
+                <!-- page -->
+                <form class="form-horizontal form-validate pt-15 widthFixedForm">
+                    <div class="form-group">
+                        <label class="col-md-2 control-label"><span class="text-bright">*</span>手机号</label>
+                        <div class="col-md-5">
+                            <input type="number" required class="form-control"  id="mobile"  value="{$user_info['mobile']}" autocomplete="off">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-md-2 control-label">使用人</label>
+                        <div class="col-md-5">
+                            <input type="text" class="form-control" id="user" value="{$user_info['user']}" autocomplete="off">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-md-2 control-label"><span class="text-bright">*</span>角色</label>
+                        <div class="col-md-5">
+                            <select class="form-control" id="group_id">
+                                {foreach name="auth_group" item="v1"}
+                                <option value="{$v1['group_id']}" {if condition="$v1['group_id'] eq $user_info['group_id_array']"}selected{/if}>&nbsp;&nbsp;{$v1['group_name']}</option>
+                                {/foreach}
+                            </select>
+                        </div>
+                    </div>
+
+                    <input type="hidden" id="uid" value="{$user_info['uid']}">
+                    <div class="form-group"></div>
+                    <div class="form-group">
+                        <label class="col-md-2 control-label"></label>
+                        <div class="col-md-8">
+                            <button class="btn btn-primary J-submit" type="submit">修改</button>
+                            <a href="javascript:history.go(-1);" class="btn btn-default">返回</a>
+                        </div>
+                    </div>
+
+                </form>
+                
+                <!-- page end -->
+{/block}
+{block name="script"}
+<script>
+require(['util'],function(util){
+    util.validate($('.form-validate'),function(form){
+        var uid = $("#uid").val();
+        var group_id = $("#group_id").val();
+        var user = $("#user").val();
+        var mobile = $("#mobile").val();
+        $('.J-submit').attr({disabled: "disabled"}).html('提交中...');
+        $.ajax({
+            type : "post",
+            url : "{:__URL('PLATFORM_MAIN/auth/editUser')}",
+            data : {
+                'uid' : uid,
+                'group_id' : group_id,
+                'user': user,
+                'mobile': mobile
+            },
+            async : true,
+            success : function(data) {
+                if (data['code'] > 0) {
+                    util.message(data["message"],'success',"{:__URL('PLATFORM_MAIN/Auth/userList')}");
+                }else{
+                    if(data['code'] ==-2){
+                        util.message('该手机号已存在','danger');
+                    }else if(data["code"] ==-3){
+                        util.message( '该手机已经在团大人使用','danger');
+                    }else{
+                        util.message(data["message"],'danger');
+                    }
+                    $('.J-submit').removeAttr('disabled').html('修改');
+                }
+            }
+        });
+    });
+})
+</script>
+{/block}

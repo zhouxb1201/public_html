@@ -1,0 +1,40 @@
+{extend name="shop/new/base" /}
+{block name="head"}
+<!--头部-->
+<div class="header shopHeader">
+    <div class="w w1200 clearfix">
+
+        <div class="fl oneItem">
+            <div class="logo">
+                <a href="{:__URL('SHOP_MAIN')}" class="logo_a"><img src="{$pc_info['logo']}" alt=""></a>
+            </div>
+        </div>
+
+        <div class="stepbar-box step4"></div>
+
+    </div>
+</div>
+<!--分隔线-->
+<div class="sc-hr"></div>
+{/block}
+{block name="main"}
+<div class="cps-main">
+    <div class="cps-main-content w1200">
+        {if condition="$status==1"}
+        <!--支付成功-->
+        <div class="pay-state">
+            <div><i class="icon-success icon"></i></div>
+            <div class="pay-state-success">支付成功</div>
+            <div class="pay-state-Can">你还可以 <a href="{:__URL('SHOP_MAIN')}" class="blue">前往购物</a> 或查看 <a href="{:__URL('SHOP_MAIN/member/orderlist')}" class="blue">订单列表</a></div>
+        </div>
+        {else/}
+        <!--支付失败-->
+        <div class="pay-state">
+            <div><i class="icon-danger icon"></i></div>
+            <div class="pay-state-failure">支付失败</div>
+            <!--<div class="pay-state-Can" style="padding-top: 4px">您可以 <a href="javascript:void(0);" class="blue">重新支付</a> 或更换 <a href="javascript:void(0);" class="blue">支付方式</a></div>-->
+        </div>
+        {/if}
+    </div>
+</div>
+{/block}

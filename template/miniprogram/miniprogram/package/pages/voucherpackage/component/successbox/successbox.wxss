@@ -1,0 +1,91 @@
+page {
+  font-size: 28rpx;
+}
+
+.success-box {
+  width: 84%;
+  margin: 60rpx auto;
+}
+
+.success-box .text {
+  display: flex;
+  flex-direction: column;
+  line-height: 1.6;
+  text-align: center;
+  color: #fff;
+}
+
+.success-box .text .name {
+  font-weight: 800;
+  font-size: 40rpx;
+  color: #feda6f;
+}
+
+.list-box {
+  min-height: 400rpx;
+  max-height: 800rpx;
+  overflow-y: auto;
+  margin: 60rpx 0;
+  background: #f8f8f8;
+}
+
+.list-group {
+  border-radius: 12rpx;
+  overflow: hidden;
+}
+
+.item {
+  display: flex;
+  align-items: center;
+  background: #fff;
+  border-radius: 8rpx;
+  margin: 30rpx;
+  padding: 20rpx 30rpx;
+  position: relative;
+  overflow: hidden;
+}
+
+.item::after, .item::before {
+  content: "";
+  display: block;
+  position: absolute;
+  width: 32rpx;
+  height: 32rpx;
+  background: #f8f8f8;
+  border-radius: 50%;
+  top: 50%;
+  margin-top: -16rpx;
+}
+
+.item::after {
+  right: -16rpx;
+}
+
+.item::before {
+  left: -16rpx;
+}
+
+.item .info {
+  line-height: 1.6;
+}
+
+.item .title {
+  color: #f54244;
+}
+
+.item .title .price {
+  font-weight: 800;
+  font-size: 32rpx;
+  padding-right: 8rpx;
+}
+
+.item .time {
+  font-size: 24rpx;
+  color: #909399;
+  display: flex;
+  margin: 0 -8rpx;
+}
+
+.item .time text {
+  padding: 0 8rpx;
+}

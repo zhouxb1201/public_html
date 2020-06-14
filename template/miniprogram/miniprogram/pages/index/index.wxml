@@ -1,0 +1,20 @@
+<view class='cotent' wx:if='boxShow'>
+  <tem-component wx:if="{{temData != ''}}" temData='{{temData}}'></tem-component>
+  <copyright-component wx:if="{{copyData != ''}}" copyData='{{copyData}}'></copyright-component> 
+</view>
+
+<!-- 登录组件 -->
+<!-- <login-component loginShow='{{loginShow}}' bind:request='requestLogin'></login-component> -->
+
+<view class="popup-customer" wx:if="{{customerImgUrl}}">
+  <button open-type="contact" class="btn-customer">
+    <image mode="widthFix" src="{{publicUrl}}{{customerImgUrl}}"></image>
+  </button>
+</view>
+
+<!-- 滚动条返回到顶部 -->
+<backtop-component backTopValue='{{backTopValue}}'></backtop-component>
+
+
+
+

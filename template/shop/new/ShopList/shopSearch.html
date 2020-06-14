@@ -1,0 +1,450 @@
+{extend name="shop/new/base" /}
+{block name="resources"}
+<style type="text/css">
+    body{background: #fff;}
+</style>
+{/block}
+{block name="main"}
+<!--面包屑导航-->
+<div class="Breadcrumb">
+    <div class="w1200">
+        <a href="{:__URL('SHOP_MAIN')}" class="index">首页</a>
+        {if condition="is_array($category_name)"}
+        {foreach $category_name as $vo}
+        &nbsp;<span>></span>
+        <a href="{:__URL('SHOP_MAIN/goods/goodslist','category_id='.$vo['category_id'])}">{$vo.category_name}</a>
+        {/foreach}
+        {else /}
+        &nbsp;<span class="crumbs-arrow">></span>&nbsp;{$category_name}
+        {/if}
+    </div>
+</div>
+<!--面包屑导航-->
+
+{if condition="$category_id!=0"}
+<!--分类选择-->
+<div class="attrs ">
+    <div class="selected-attr w1200 clearfix">
+        {if condition="$brand_name!='' || $min_price!=''|| count($attr_array) gt 0  || count($spec_array) gt 0 " }
+        <dl class="selected-attr-dl">
+            <dt>已选条件：</dt>
+            <dd class="moredd">
+                <a href="{:__URL('SHOP_MAIN/goods/goodslist','category_id='.$category_id)}">全部撤销</a>
+            </dd>
+            <dd>
+                <ul class="selected-attr">
+                    <!-- 以选择的筛选属性、品牌、价格 -->
+                    {if condition="$brand_name!='' "}
+                    <li><a href="{:__URL('SHOP_MAIN/goods/goodslist',$url_parameter_not_brand)}" >品牌：<b class="blue">{$brand_name}</b><i>×</i></a></li>
+                    {/if}
+                    {if condition="$max_price!='' "}
+                    <li><a href="{:__URL('SHOP_MAIN/goods/goodslist',$url_parameter_not_price)}" >价格：<b class="blue">{$min_price}-{$max_price}</b><i>×</i></a></li>
+                    {/if}
+                    <!-- 取消属性 -->
+                    {foreach name="attr_array" item="attr_item_vo"}
+                    <li><a class="J-removeAttr" href="javascript:void(0)" data-attr-value="{$attr_item_vo[0]}" data-attr-value-name="{$attr_item_vo[1]}" data-attr-value-id="{$attr_item_vo[2]}">{$attr_item_vo[0]}：<b class="blue">{$attr_item_vo[1]}</b><i>×</i></a></li>
+                    {/foreach}
+                    <!-- 取消规格 -->
+                    {foreach name="spec_array" item="spec_item_vo"}
+                    <li><a class="J-removeSpec" href="javascript:void(0)" data-spec_id="{$spec_item_vo[0]}" data-spec_value_id="{$spec_item_vo[1]}">{$spec_item_vo[2]}：<b class="blue">{$spec_item_vo[3]}</b><i>×</i></a></li>
+                    {/foreach}
+                </ul>
+            </dd>
+        </dl>
+        {/if}
+    </div>
+    <div class="w1200">
+        {if condition="$brand_name==''&& $category_count>0  && count($category_brands) gt 0"}
+        <div class="brandAttr">
+            <div class="j_Cate attr clearfix">
+                <!--multiple-->
+                <div class="attrKey">品牌</div>
+                <div class="attrValues">
+                    <ul class="av-collapse clearfix av-state" id="brand-abox">
+                        <!--av-expand av-collapse-->
+                        {foreach name="category_brands" item="brand" key="k"}
+                        <li title="{$brand.brand_name}"><a href="javascript:void(0);" class="J-brand" data-brand_id="{$brand.brand_id}" data-brand_name="{$brand.brand_name}"> <i class="iBorders"></i> {$brand.brand_name}</a></li>
+                        {/foreach}
+                    </ul>
+
+                    <div class="sl-btns hovers">
+
+                        <a class="sj-btns btn-primary disabled J_btnsConfirm J-brandMore" href="javascript:void(0);">确定</a>
+                        <a class="sj-btns btn-default J_btnsCancel" href="javascript:void(0);">取消</a>
+                    </div>
+
+                    <div class="av-options">
+                        <a class="j_Multiple avo-multiple" href="javascript:void(0);" style=""><i class="icon-add icon"></i>多选</a>
+                        {if condition = "count($vo['values']) >11"}
+                        <a class="j_More avo-more ui-more-drop-l fr" href="javascript:void(0);" style="display: inline;">更多<i class="icon-dir-down"></i></a>
+                        {/if}
+                    </div>
+                </div>
+            </div>
+        </div>
+        {/if}
+        {if condition="count($goods_spec_array) gt 0 "}
+        {foreach name="goods_spec_array" item="vo" key="key"}
+        {if condition="$vo.values neq array() and $vo.spec_name neq ''"}
+        <div class="brandAttr">
+            <div class="j_Cate attr clearfix">
+                <!--multiple-->
+                <div class="attrKey">{$vo.spec_name}：</div>
+                <div class="attrValues">
+                    <ul class="av-collapse clearfix av-state">
+                        <!--av-expand av-collapse-->
+                        {foreach name="vo.values" item="value" key="k"}
+                        <li title="{$value.spec_value_name}"><a class="J-spec" data-spec = "spec{$key}" data-spec_value_id="{$value.spec_value_id}" data-spec_id="{$value.spec_id}" href="javascript:void(0);"> <i class="iBorders"></i> {$value.spec_value_name}</a></li>
+                        {/foreach}
+                    </ul>
+
+                    <div class="sl-btns hovers">
+                        <a class="sj-btns btn-primary disabled J_btnsConfirm" href="javascript:void(0);">确定</a>
+                        <a class="sj-btns btn-default J_btnsCancel" href="javascript:void(0);">取消</a>
+                    </div>
+
+                    <div class="av-options">
+                        <!--<a class="j_Multiple avo-multiple" href="javascript:void(0);" style=""><i class="icon-add icon"></i>多选</a>-->
+                        {if condition = "count($vo['values']) >11"}
+                        <a class="j_More avo-more ui-more-drop-l fr" href="javascript:void(0);" style="display: inline;">更多<i class="icon-dir-down"></i></a>
+                        {/if}
+                    </div>
+                </div>
+            </div>
+        </div>
+        {/if}
+        {/foreach}
+        {/if}
+
+        {if condition="count($attr_or_spec) gt 0 "}
+        {foreach name="attr_or_spec" item="vo" key="key"}
+        {if condition="$vo.type neq 1 and $vo.value neq ''"}
+        {if condition="$vo.is_search eq '1'"}
+        <div class="brandAttr">
+            <div class="j_Cate attr clearfix">
+                <!--multiple-->
+                <div class="attrKey">{$vo.attr_value_name}：</div>
+                <div class="attrValues">
+                    <ul class="av-collapse clearfix av-state">
+                        <!--av-expand av-collapse-->
+                        {foreach name="vo.value_items" item="value" key="k"}
+                        <li title="{$value}"><a class="J-attr" href="javascript:void(0);" data-attr = "attr{$key}" data-attr_value_id ="{$vo.attr_value_id}" data-attr-value="{$vo.attr_value_name}" data-attr-value-name="{$value}" > <i class="iBorders"></i> {$value}</a></li>
+                        {/foreach}
+                    </ul>
+
+                    <div class="sl-btns hovers">
+                        <a class="sj-btns btn-primary disabled J_btnsConfirm" href="javascript:void(0);">确定</a>
+                        <a class="sj-btns btn-default J_btnsCancel" href="javascript:void(0);">取消</a>
+                    </div>
+
+                    <div class="av-options">
+                        <!--<a class="j_Multiple avo-multiple" href="javascript:void(0);" style=""><i class="icon-add icon"></i>多选</a>-->
+                        {if condition = "count($vo['value_items']) >11"}
+                        <a class="j_More avo-more ui-more-drop-l fr" href="javascript:void(0);" style="display: inline;">更多<i class="icon-dir-down"></i></a>
+                        {/if}
+                    </div>
+                </div>
+            </div>
+        </div>
+        {/if}
+        {/if}
+        {/foreach}
+        {/if}
+        {if condition="$max_price==''&& $category_count>0 "}
+        <div class="brandAttr">
+            <div class="j_Cate attr clearfix">
+                <!--multiple-->
+                <div class="attrKey">价格区间：</div>
+                <div class="attrValues">
+                    <ul class="av-collapse clearfix av-state">
+                        {foreach name="$category_price_grades" item="price_grades" key="k"}
+                        {if condition="$price_grades[1] != 0"}
+                        <li><a href="{:__URL('SHOP_MAIN/goods/goodslist?'.$url_parameter.'&min_price='.$price_grades[0].'&max_price='.$price_grades[1].$attr_url)}">{$price_grades[0]}&nbsp;-&nbsp;{$price_grades[1]}</a></li>
+                        {/if}
+                        {/foreach}
+                    </ul>
+                </div>
+            </div>
+        </div>
+        {/if}
+    </div>
+</div>
+<!--分类选择-->
+{/if}
+<!--搜索结果-->
+<div class="search-results w1200 clearfix">
+    <!--左侧搜索结果-->
+    <div class="results-rblock">
+        <div class="second-filter clearfix">
+            <div class="filterSort fl">
+                <a href="{:__URL('SHOP_MAIN/goods/goodslist',$url_parameter_not_order)}" class="nofollow{if condition=" $order=='' "} active {/if}">综合</a>
+                         {if condition = " $order=='ng.create_time' "}
+                         {if condition = " $sort=='asc' "}
+                         <a href="{:__URL('SHOP_MAIN/goods/goodslist?'.$url_parameter_not_order.'&order=ng.create_time&sort=desc'.$attr_url)}" class="nofollow active">新品 <i class="icon-dowm rotate"></i></a>
+                         {else/}
+                         <a href="{:__URL('SHOP_MAIN/goods/goodslist?'.$url_parameter_not_order.'&order=ng.create_time&sort=asc'.$attr_url)}" class="nofollow active">新品 <i class="icon-dowm"></i></a>
+                         {/if}
+                         {else/}
+                         <a href="{:__URL('SHOP_MAIN/goods/goodslist?'.$url_parameter_not_order.'&order=ng.create_time&sort=desc'.$attr_url)}" class="nofollow">新品 <i class="icon-dowm"></i></a>
+                         {/if}
+                         {if condition = " $order=='ng.sales' "}
+                         {if condition = " $sort=='asc' "}
+                         <a href="{:__URL('SHOP_MAIN/goods/goodslist?'.$url_parameter_not_order.'&order=ng.sales&sort=desc'.$attr_url)}" class="nofollow active">销量 <i class="icon-dowm rotate"></i></a>
+                         {else/}
+                         <a href="{:__URL('SHOP_MAIN/goods/goodslist?'.$url_parameter_not_order.'&order=ng.sales&sort=asc'.$attr_url)}" class="nofollow active">销量 <i class="icon-dowm"></i></a>
+                         {/if}
+                         {else/}
+                         <a href="{:__URL('SHOP_MAIN/goods/goodslist?'.$url_parameter_not_order.'&order=ng.sales&sort=desc'.$attr_url)}" class="nofollow">销量 <i class="icon-dowm"></i></a>
+                         {/if}
+                         {if condition = " $order=='ng.price' "}
+                         {if condition = " $sort=='asc' && $order=='ng.price' "}
+                         <a href="{:__URL('SHOP_MAIN/goods/goodslist?'.$url_parameter_not_order.'&order=ng.price&sort=desc'.$attr_url)}" class="nofollow active">价格 <i class="icon-dowm rotate"></i></a>
+                         {else/}
+                         <a href="{:__URL('SHOP_MAIN/goods/goodslist?'.$url_parameter_not_order.'&order=ng.price&sort=asc'.$attr_url)}" class="nofollow active">价格 <i class="icon-dowm"></i></a>
+                         {/if}
+                         {else/}
+                         <a href="{:__URL('SHOP_MAIN/goods/goodslist?'.$url_parameter_not_order.'&order=ng.price&sort=desc'.$attr_url)}" class="nofollow">价格 <i class="icon-dowm"></i></a>
+                         {/if}
+                </div>
+                <input type="hidden" id="hidden_category_id" value="{$category_id}"/>
+                <input type="hidden" id="hidden_brand_id" value="{$brand_id}"/>
+                <input type="hidden" id="hidden_brand_name" value="{$brand_name}"/>
+                <input type="hidden" id="hidden_min_price" value="{$min_price}"/>
+                <input type="hidden" id="hidden_max_price" value="{$max_price}"/>
+                <input type="hidden" id="hidden_url_parameter" value="{$url_parameter}"/>
+                <div class="second-box fr clearfix">
+                    {if condition="$max_price==''&& $category_count>0 "}
+                    <div class="price-section-box fl">
+                        <div class="price-input fl">
+                            <div class="fl">
+                                <input type="number" name="price_min" id="min_price" class="input-l" value="{$min_price}">
+                            </div>
+                            <em class="fl">-</em>
+                            <div class="fl">
+                                <input type="number" name="price_max" id="max_price" class="input-r" value="{$max_price}">
+                            </div>
+                        </div>
+                        <div class="price-sure fl">
+                            <a class="sure" id="search_sure" href="javascript:void(0);">确定</a>
+
+                        </div>
+                    </div>
+                    {/if}
+                    <div class="little-page fr">
+                        {if condition="$page>1"}
+                        <a href="{:__URL('SHOP_MAIN/'.$path_info,'page='.($page-1).$query_string)}"><i class="icon-dir-left2"></i></a>
+                        {else/}
+                        <a href="javascript:void(0);"><i class="icon-dir-left2"></i></a>
+                        {/if}
+                        <span>{$page}/{$page_count}</span>
+                        {if condition="$page neq $page_count"}
+                        <a href="{:__URL('SHOP_MAIN/'.$path_info,'page='.($page+1).$query_string)}"><i class="icon-dir-right"></i></a>
+                        {else /}
+                        <a href="javascript:void(0);"><i class="icon-dir-right3"></i></a>
+                        {/if}
+                    </div>
+
+                    <div class="showStyle fr">
+                        <ul class="showStyle-ul">
+                            <li data-type="grid" class="active"><a href="javascript:void(0);" class="links"><i class="icon-screen"></i></a></li>
+                            <li data-type="list"><a href="javascript:void(0);" class="links"><i class="icon-stretch"></i></a></li>
+                        </ul>
+
+                    </div>
+
+                </div>
+            </div>
+            <div class="filter-row">
+                {if condition = "$shipping_fee !='' && $shipping_fee ==0"}
+                <a href="{:__URL('SHOP_MAIN/goods/goodslist?'.$url_parameter_not_shipping.$attr_url)}" class="filter-tag"><i class="icon-selected blue"></i>包邮</a>
+                {else/}
+                <a href="{:__URL('SHOP_MAIN/goods/goodslist?'.$url_parameter.'&shipping_fee=0'.$attr_url)}" class="filter-tag "><i class="icon-checkbox"></i>包邮</a>
+                {/if}
+                {if condition = "$stock !='' && $stock>=0"}
+                <a href="{:__URL('SHOP_MAIN/goods/goodslist?'.$url_parameter_not_stock.$attr_url)}" class="filter-tag"><i class="icon-selected blue"></i>仅显示有货</a>
+                {else/}
+                <a href="{:__URL('SHOP_MAIN/goods/goodslist?'.$url_parameter.'&stock=0'.$attr_url)}" class="filter-tag "><i class="icon-checkbox"></i>仅显示有货</a>
+                {/if}
+            </div>
+            <div class="filter-results" style="display: block">
+                    <ul class="clearfix wrap-ul">
+                        {foreach name="goods_list['data']" item="goods" key="k"}
+                        <li>
+                            <div class="wrap-box">
+                                <div class="wrap-img pr">
+                                    <a href="{:__URL('SHOP_MAIN/goods/goodsinfo','goodsid='.$goods['goods_id'])}" class="wrap-img-a" target="_blank" title="{$goods.goods_name}">
+                                        <img data-original="{:__IMG($goods['pic_cover'])}">
+                                    </a>
+                                    <div class="wrap-img-tips">
+                                    	{if($goods.goods_type==1)}
+                                        <a href="javascript:void(0);" class="add-cart" data-id="{$goods['goods_id']}" data-name="{$goods['goods_name']}" data-pic="{$goods['pic_id']}" data-max_buy="{if condition='$goods.max_buy==0' }{$goods.stock}{else/}{$goods.max_buy}{/if}" data-state="{$goods['state']}">加入购物车</a>
+                                        {else}
+                                        <a href="javascript:void(0);" class="buy-now" data-id="{$goods['goods_id']}" data-skuid = "{$goods['sku_list'][0]['sku_id']}" data-state="{$goods['state']}">立即购买</a>
+                                        {/if}
+                                        <a href="javascript:void(0);" class="collect-goods J-collect-{$k}"  data-key="{$k}" data-id="{$goods['goods_id']}" data-collect="{$goods.is_favorite}">{if condition="$goods.is_favorite>0"}已收藏{else}收藏商品{/if}</a>
+                                    </div>
+                                </div>
+                                <div class="wrap-info">
+                                    <div class="wrap-title"><a class="pName" href="{:__URL('SHOP_MAIN/goods/goodsinfo','goodsid='.$goods['goods_id'])}" target="_blank" title="{$goods.goods_name}">{$goods.goods_name}</a></div>
+                                    {if $shopStatus}
+                                    <div class="wrap-shop clearfix">
+                                        <div class="fl"><a href="{:__URL('ADDONS_SHOP_MAIN','addons=shopIndex&shop_id='.$goods['shop_id'])}"><i class="icon-stretch2"></i>{$goods.shop_name}</a></div>
+                                    </div>
+                                    {/if}
+                                    <div class="wrap-sell clearfix">
+                                        <div class="fl red">￥{$goods.price}</div>
+                                        <div class="fr">销量：{$goods.sales + $goods.real_sales}</div>
+                                    </div>
+                                </div>
+                            </div>
+                            {foreach name="goods['sku_list']" item="pro_skus" key="k"}
+                            <input type="hidden" name="goods_sku{$goods.goods_id}" value="{$pro_skus.attr_value_items};" stock="{$pro_skus.stock}"   price="{$pro_skus.price}" skuid="{$pro_skus.sku_id}" skuname="{$pro_skus.sku_name}">
+                                   {/foreach}
+                        </li>
+
+                        {/foreach}
+                    </ul>
+                </div>
+
+                <div class="filter-results2" style="display: none">
+                    <div class="list-box">
+                        {foreach name="goods_list['data']" item="goods" key="k"}
+                        <div class="list-box-item clearfix">
+                            <div class="fl col1">
+                                <div class="pic-box-inner">
+                                    <a href="{:__URL('SHOP_MAIN/goods/goodsinfo','goodsid='.$goods['goods_id'])}" class="pic-link" target="_blank" title="{$goods.goods_name}">
+                                        <img alt="" data-original="{:__IMG($goods['pic_cover'])}">
+                                    </a>
+                                </div>
+                            </div>
+                            <div class="fl col2">
+                                <p class="list-box-item-name">
+                                    <a href="{:__URL('SHOP_MAIN/goods/goodsinfo','goodsid='.$goods['goods_id'])}" class="J_ClickStat" target="_blank" title="{$goods.goods_name}">{$goods.goods_name}</a>
+                                </p>
+                                <p><a href="{:__URL('ADDONS_SHOP_MAIN','addons=shopIndex&shop_id='.$goods['shop_id'])}"><i class="icon-stretch2"></i>{$goods.shop_name}</a></p>
+                            </div>
+                            <div class="fl col3 red">￥{$goods.price}</div>
+                            <div class="fl col4">销量：{$goods.sales + $goods.real_sales}</div>
+                            <div class="fl col5">
+                            	{if($goods.goods_type==1)}
+                                <a href="javascript:void(0);" class="add-cart" data-id="{$goods['goods_id']}" data-name="{$goods['goods_name']}" data-pic="{$goods['pic_id']}" data-max_buy="{if condition='$goods.max_buy==0' }{$goods.stock}{else/}{$goods.max_buy}{/if}" data-state="{$goods['state']}">加入购物车</a>
+                                {else}
+                                <a href="javascript:void(0);" class="buy-now" data-id="{$goods['goods_id']}" data-skuid = "{$goods['sku_list'][0]['sku_id']}" data-state="{$goods['state']}">立即购买</a>
+                                {/if}
+                                <a href="javascript:void(0);" class="collect-goods J-collect-{$k}"  data-key="{$k}" data-id="{$goods['goods_id']}" data-collect="{$goods.is_favorite}">{if condition="$goods.is_favorite>0"}已收藏{else}收藏商品{/if}</a>
+                            </div>
+                        </div>
+                        {/foreach}
+                    </div>
+                </div>
+                <div class="js-show-page">
+                    {include file='shop/new/controlCommonPage'/}
+                </div>
+            </div>
+            <!--右侧推荐-->
+            <div class="results-lblock">
+                {if condition="[is_new_recommend] neq '0'"}
+                <div class="trade-item-title"><span class="text">新品推荐</span></div>
+                <ul class="lblock-ul">
+                    {foreach name="goods_new_list" item="goodsinfo" key="k"}
+                    <li>
+                        <div class="lblock-ul-box">
+                            <div class="lblock-img pr">
+                                <a target="_blank" title="{$goodsinfo.goods_name}" href="{:__URL('SHOP_MAIN/goods/goodsinfo','goodsid='.$goodsinfo['goods_id'])}">
+                                    <img alt="" data-original="{:__IMG($goodsinfo['picture_info']['pic_cover'])}" width="100%" height="100%">
+                                </a>
+                                <div class="lblock-img-tips">
+                                    {$goodsinfo.goods_name}
+                                </div>
+                            </div>
+                            <div class="clearfix lblock-sells">
+                                <div class="fl red">￥{$goodsinfo.price}</div>
+                                <div class="fr">销量：{$goodsinfo.sales + $goodsinfo.real_sales}</div>
+                            </div>
+                        </div>
+                    </li>
+                    {/foreach}
+                </ul>
+            </div>
+            {/if}
+        </div>
+<!--猜你喜欢部分-->
+<div class="guessBuy w1200">
+    <ul class="clearfix guessBuy-ul">
+        <li class="active" data-type='guess'>猜你喜欢</li>
+        <li data-type='history'>浏览历史</li>
+        <div class="fr J-changeLike">
+            <a href="javascript:void(0);">换一批</a>
+        </div>
+        <div class="fr J-del" style='display:none;'>
+        <a href="javascript:void(0);">清空</a>
+    </div>
+</ul>
+<div class="browse-history-con">
+    <div class="browse-history-inner">
+        <ul id="user_like" class="recommend-panel">
+        </ul>
+    </div>
+</div>
+</div>
+<!--加入购物车弹窗-->
+<div id="speDiv" style="display: none;">
+    <div class="pop-header">
+        <span>请选择商品属性</span> <a href="javascript:void(0)" title="加入购物车" class="spe-close J-closespe"></a>
+    </div>
+    <div class="attr-list js-sku-list" style="margin: 0;"><!-- ajax 加载sku属性--></div>
+    <div class="spe-btn">
+        <a href="javascript:void(0)" class="sure-btn J-addfromlist">加入购物车</a>
+        <a href="javascript:void(0)" class="cancel-btn J-closespe">取消</a>
+    </div>
+    <input type="hidden" id="hidden_goodsid" />
+    <input type="hidden" id="hidden_goods_name" />
+    <input type="hidden" id="hidden_skuid" />
+    <input type="hidden" id="hidden_skuname" />
+    <input type="hidden" id="hidden_sku_price" />
+    <input type="hidden" id="hidden_default_img_id" />
+    <input type="hidden" id="hidden_max_buy" />
+    <input type="hidden" id="hidden_attr_item" value="{$attr_str}"/>
+    <input type="hidden" id="hidden_spec_item" value="{$spec_str}"/>
+</div>
+<div id="mask"></div>
+<!-- page end -->
+{/block}
+{block name="javascript"}
+<script>
+    require(['dialog', 'goodslist'], function (Dialog, GoodsList) {
+        Dialog.withAccount(".search-tabs", "li", "active");
+        Dialog.withAccount(".sortSearch-tab", "li", "active");
+        Dialog.withAccount(".sort-tab", "li", "active");
+        GoodsList.operation();
+        $(".j_More").on("click", function () {
+            $(this).parent().siblings("ul").toggleClass("av-expand");
+            $(this).parent().siblings("ul").toggleClass("av-collapse");
+        });
+
+        // 点击选中框
+        $(".av-state").on("click", "li", function () {
+            if ($(this).parents(".j_Cate").hasClass("multiple")) {
+                $(this).children("a").children("i").toggleClass("icon-selected").toggleClass("iBorders");
+            }
+
+        });
+        // 点击多选确定
+        $(".J_btnsConfirm").on("click", function () {
+            var isSelected = $(this).parent(".sl-btns").siblings("ul").find("i").hasClass("icon-selected");
+            if (!isSelected) {
+                layer.msg("请选择", {
+                    icon: 2,
+                    time: 1000
+                });
+            } else {
+                $(this).parents(".sl-btns").siblings(".av-options").show();
+                $(this).parents(".sl-btns").siblings(".av-state").toggleClass("av-expand av-collapse");
+                $(this).parents(".sl-btns").toggleClass("hovers");
+                $(this).parents(".j_Cate").toggleClass("multiple");
+                $(this).parents(".sl-btns").siblings(".av-state").find("i").removeClass("icon-selected");
+            }
+        });
+    })
+</script>
+{/block}

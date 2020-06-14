@@ -1,0 +1,8 @@
+<view class='copyright' wx:if='{{copyData.params.is_show != 0}}'>
+  <view class='crstyle-{{copyData.style.showtype}}'>
+    <view class=''>
+      <image class='image' mode='aspectFit' wx:if='{{copyData.params.showlogo == 1}}' src='{{img_src}}'></image>
+    </view>    
+    <view class='copytext'>{{copyData.params.text}}</view>
+  </view>  
+</view>

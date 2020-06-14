@@ -1,0 +1,70 @@
+<div class="goods-dialog">
+    <div class="dialog-box">
+        <table class="table v-table table-auto-center">
+            <thead>
+            <tr>
+                <th>分组名称</th>
+                <th>操作</th>
+            </tr>
+            </thead>
+            <tbody id="j-list">
+
+            </tbody>
+        </table>
+    </div>
+    <div>
+        <span class="user_name_span J-user_name">选中的分组：</span>
+        <input type="text" class="form-control cms_val J-admin_name group_val"  name="group_val" disabled>
+        <input type="hidden" id="select_group_id">
+        <input type="hidden" id="select_group_from">
+    </div>
+    <input type="hidden" id="page_index">
+    <nav aria-label="Page navigation" class="clearfix">
+        <ul id="page" class="pagination pull-right"></ul>
+    </nav>
+</div>
+<script>
+    require(['util'],function(util) {
+        $(document).ready(function(){
+            var width = $(".J-user_name").innerWidth();
+            $('.J-admin_name').css('padding-left',width);
+        });
+        util.initPage(getList);
+        function getList(page_index) {
+            $("#page_index").val(page_index);
+            $.ajax({
+                type: "post",
+                url: "{:__URL('PLATFORM_MAIN/wchat/groupList')}",
+                async: true,
+                data: {
+                    "page_index": page_index,
+                },
+                success: function (data) {
+                    var html = '';
+                    html += '<tr><td>所有粉丝</td><td><a href="javascript:void(0);" class="text-primary selectedGroup" data-id = "-3" data-name="所有粉丝" >选择</a></td></tr>';
+                    if (data["data"].length > 0) {
+                        for (var i = 0; i < data["data"].length; i++) {
+                            html += '<tr>';
+                            html += '<td>' + data["data"][i]['group_name'] + '</td>';
+                            html += '<td><a href="javascript:void(0);" class="text-primary selectedGroup" data-id = "' + data["data"][i]['group_id'] + '" data-group = "' + data["data"][i]['from'] + '" data-name="' + data["data"][i]['group_name'] + '" >选择</a></td>';
+                            html += '</tr>';
+                        }
+                    }
+                    $('#page').paginator('option', {
+                        totalCounts: data['total_count']  // 动态修改总数
+                    });
+                    $("#j-list").html(html);
+                }
+            });
+        }
+        $('body').on('click','.selectedGroup', function () {
+                var id = $(this).data('id');
+                var group = $(this).data('group');
+                var name = $(this).data('name');
+                $("#select_group_id").val(id);
+                $("#select_group_from").val(group);
+                $(".group_val").val(name);
+            })
+
+    })
+</script>

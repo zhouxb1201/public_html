@@ -1,0 +1,258 @@
+@import "/css/iconfont.wxss";
+
+.head {
+  position: relative;
+}
+
+.head .bg {
+  display: block;
+  width: 100%;
+  min-height: 240rpx;
+  background: #fff;
+}
+
+.boxes {
+  display: flex;
+  align-items: center;
+}
+
+.box {
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.box-info {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  z-index: 10;
+}
+
+.logo {
+  width: 13.334%;
+}
+
+.logo.two, .logo.five {
+  margin-left: 40rpx;
+}
+
+.logo .img {
+  border-radius: 50%;
+  position: relative;
+  height: 0;
+  width: 100%;
+  padding: 50% 0;
+  overflow: hidden;
+  background: #fff;
+}
+
+.logo .img image {
+  width: 100%;
+  height: 100%;
+  position: absolute;
+  top: 0;
+  left: 0;
+}
+
+.info {
+  color: #fff3d1;
+  margin-top: 20rpx;
+}
+
+.info.two {
+  color: #a97835 !important;
+  margin-left: 20rpx !important;
+  margin-top: 0rpx !important;
+}
+
+.info.three, .info.five {
+  color: #fff !important;
+  margin-left: 20rpx !important;
+  margin-bottom: 44rpx;
+}
+
+.info.four {
+  color: #393c47 !important;
+  margin-bottom: 44rpx;
+}
+
+.info .content {
+  display: flex;
+  justify-content: center;
+  -ms-flex-align: center;
+  align-items: center;
+  font-size: 24rpx;
+  line-height: 1.8;
+}
+
+.info .content.two, .info .content.five {
+  align-items: flex-start !important;
+}
+
+.info .name {
+  max-width: 200rpx;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.info .name.two {
+  color: #664630;
+  font-size: 28rpx;
+}
+
+.info .name.five, .info .name.six {
+  color: #c5a570;
+  font-size: 28rpx;
+}
+
+.info .name.three {
+  font-size: 28rpx;
+}
+
+.van-tag {
+  color: #fff;
+  font-size: 20rpx;
+  padding: 4rpx 10rpx;
+  line-height: normal;
+  border-radius: 8rpx;
+  display: inline-block;
+}
+
+.van-tag--round {
+  border-radius: 16rpx;
+}
+
+.info .tag {
+  color: #323232;
+  margin-left: 16rpx;
+}
+
+.info .tag.two {
+  color: #664630;
+  font-size: 28rpx;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  overflow: hidden;
+  max-width: 240rpx;
+  margin-left: 16rpx;
+}
+
+.info .tag.five, .info .tag.six {
+  color: #c5a570;
+  font-size: 28rpx;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  overflow: hidden;
+  max-width: 240rpx;
+  margin-left: 16rpx;
+}
+
+.info .tag.three {
+  color: #fff;
+  font-size: 24rpx;
+}
+
+.info .sup {
+  margin-right: 16rpx;
+}
+
+.info .sup text {
+  display: inline-block;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  max-width: 180rpx;
+  vertical-align: middle;
+}
+
+.span {
+  display: inline-block;
+}
+
+.sup-time {
+  flex-direction: column;
+}
+
+.foot {
+  position: absolute;
+  bottom: 0;
+  display: flex;
+  width: 100%;
+  font-size: 24rpx;
+  text-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  height: 65rpx;
+}
+
+.foot.three {
+  background: rgba(0, 0, 0, 0.2);
+  color: #fff;
+}
+
+.foot.four {
+  color: #393c47;
+}
+
+.foot .sup {
+  flex: 1;
+}
+
+.foot .sup.three {
+  border-right: 1px solid #fff;
+}
+
+.foot .sup text {
+  display: inline-block;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  max-width: 180rpx;
+  vertical-align: middle;
+}
+
+.foot .time {
+  flex: 1;
+}
+
+/*****six*****/
+
+.logo-info {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+}
+
+.info.six {
+  color: #fff;
+  margin-left: 20rpx !important;
+}
+
+.sup-time-six {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #caa763;
+  font-size: 12px;
+  margin-top: 10px;
+}
+
+.sup-time-six .sup {
+  margin: 0 30rpx;
+}
+
+.sup-time-six .sup text {
+  display: inline-block;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  max-width: 180rpx;
+  vertical-align: middle;
+  line-height: 1.2;
+}

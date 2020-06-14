@@ -1,0 +1,17 @@
+<view class='logistics'>
+  <view class='logistics_header'>
+    <view class='logistics_logo'>
+      <image mode='widthFix' src="{{goods_packet_list.length > 0 ? goods_packet_list[index].express_company_logo : '../../../images/rectangle-error.png'}}"></image>
+    </view>
+    <view class='logistics_group'>
+      <view class='logistics_cell'>订单编号：{{order_no}}</view>
+      <view class='logistics_cell'>快递公司：{{goods_packet_list[index].shipping_info.expTextName}}</view>
+      <view class='logistics_cell'>快递单号：{{goods_packet_list[index].shipping_info.mailNo}}</view>
+    </view>
+  </view>
+  <view class='packet'>
+    <view class='packet_name' wx:if="{{goods_packet_list.length > 1}}" wx:for='{{goods_packet_list}}' wx:key='' wx:for-index='packetIndex' data-index='{{packetIndex}}' bindtap='packetIndex'>{{item.packet_name}}</view>
+  </view>
+  <van-steps steps="{{ goods_packet_list[index].shipping_info.data}}" active="{{ active }}" direction="vertical"  active-color="#f44" />
+  
+</view>

@@ -1,0 +1,147 @@
+{block name="main"}
+<!-- page -->
+<form class="form-horizontal form-validate pt-15 widthFixedForm">
+    <input type="hidden" class="form-control"  id="assistant_id" name="assistant_id" value="{$assistant_info.assistant_id}">
+    <div class="form-group">
+        <label class="col-md-2 control-label"><span class="text-bright">*</span>店员名称</label>
+        <div class="col-md-5">
+            <input type="text" class="form-control"  id="assistant_name" name="assistant_name" required value="{$assistant_info.assistant_name}">
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="col-md-2 control-label"><span class="text-bright">*</span>所属门店</label>
+        <div class="col-md-5">
+            <div class=" checkbox">
+                <!--复选框-->
+                {volist name="store_list" id="vo"}
+                <label>
+                    <input type="checkbox"  name="store_id" value="{$vo.store_id}" {in name="$vo.store_id" value="$assistant_info.store_id"} checked {/in} > {$vo.store_name}
+                </label>
+                {/volist}
+            </div>
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="col-md-2 control-label"><span class="text-bright">*</span>岗位</label>
+        <div class="col-md-5">
+            <select class="form-control" name="jobs_id" id="jobs_id" required>
+                <option value="">请选择</option>
+                {volist name="jobs_list" id="vo"}
+                <option value="{$vo.jobs_id}" {if $assistant_info.jobs_id == $vo.jobs_id} selected {/if}>{$vo.jobs_name}</option>
+                {/volist}
+            </select>
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="col-md-2 control-label"><span class="text-bright">*</span>手机号码</label>
+        <div class="col-md-5">
+            <input type="text" class="form-control"  id="assistant_tel" name="assistant_tel" required value="{$assistant_info.assistant_tel}">
+        </div>
+    </div>
+    {if !$assistant_info}
+    <div class="form-group">
+        <label class="col-md-2 control-label"><span class="text-bright">*</span>登录密码</label>
+        <div class="col-md-5">
+            <input type="text" class="form-control"  id="password" name="password" required value="">
+        </div>
+    </div>
+    {/if}
+    {if $assistant_info}
+    <div class="form-group">
+            <label class="col-md-2 control-label">是否启用</label>
+            <div class="col-md-5">
+                <!--<label class="radio-inline">
+                    <input type="radio" name="status" value="1" {if $assistant_info.status} checked {/if}> 是
+                </label>
+                <label class="radio-inline">
+                    <input type="radio" name="status" value="0" {if !$assistant_info.status} checked {/if}> 否
+                </label>-->
+                <div class="switch-inline">
+                    <input type="checkbox" name="status" id="status" {if $assistant_info.status} checked {/if}>
+                    <label for="status" class=""></label>
+                </div>
+            </div>
+        </div>
+    {else}
+    <div class="form-group">
+            <label class="col-md-2 control-label">是否启用</label>
+            <div class="col-md-5">
+                <!--<label class="radio-inline">
+                    <input type="radio" name="status" value="1" checked> 是
+                </label>
+                <label class="radio-inline">
+                    <input type="radio" name="status" value="0" > 否
+                </label>-->
+                <div class="switch-inline">
+                    <input type="checkbox" name="status" id="status" checked>
+                    <label for="status" class=""></label>
+                </div>
+            </div>
+        </div>
+    {/if}
+    <div class="form-group"></div>
+    <div class="form-group">
+        <label class="col-md-2 control-label"></label>
+        <div class="col-md-8">
+            <button class="btn btn-primary J-submit" type="submit">{if $assistant_info}保存{else}添加{/if}</button>
+            <a href="javascript:history.go(-1);" class="btn btn-default">返回</a>
+        </div>
+    </div>
+
+</form>
+
+<!-- page end -->
+{/block}
+{block name="script"}
+<script>
+    require(['util'], function (util) {
+        util.validate($('.form-validate'), function (form) {
+            var btnHtml = $('.J-submit').html();
+            if($('.J-submit').attr('disabled')==='disabled'){
+                return false;
+            }
+            var assistant_id = $("#assistant_id").val();
+            var assistant_name = $("#assistant_name").val();
+            var assistant_tel = $("#assistant_tel").val();
+            var password = $("#password").val();
+            var store_id = '';
+            $("input[name='store_id']:checked").each(function(){
+                    store_id = store_id + ',' + $(this).val();
+            });
+            store_id = store_id.substring(1);
+            if(store_id===''){
+                util.message('请选择门店', 'danger');
+                return;
+            }
+            var jobs_id = $("#jobs_id").val();
+            var status = $('input[name=status]').is(':checked')?1:0;
+            $('.J-submit').attr({disabled: "disabled"}).html('提交中...');
+            $.ajax({
+                type: "post",
+                url: "{$addOrUpdateAssistantUrl}",
+                data: {
+                    'assistant_id': assistant_id,
+                    'assistant_name': assistant_name,
+                    'assistant_tel': assistant_tel,
+                    'password': password,
+                    'store_id': store_id,
+                    'jobs_id': jobs_id,
+                    'status': status
+                },
+                async: true,
+                success: function (data) {
+                    if (data["code"] > 0) {
+                        util.message(data["message"], 'success', function () {
+                            window.location.href = "{:__URL('ADDONS_MAINassistantList')}";
+                        });
+                    } else {
+                        $('.J-submit').removeAttr('disabled').html(btnHtml);
+                        util.message(data["message"], 'danger');
+                    }
+                }
+
+            });
+        });
+    });
+</script>
+{/block}

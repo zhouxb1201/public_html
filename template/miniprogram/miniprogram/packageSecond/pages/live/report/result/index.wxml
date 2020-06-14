@@ -1,0 +1,9 @@
+<view class='report_result'>
+  <view class="content">
+    <view class="img">
+      <van-icon class='icon' name="underway" size='6em' color='rgb(25, 137, 250)' />
+    </view>
+    <view class="txt">举报成功</view>
+    <view class="txt_tips">受理结果将会在消息通知中告知</view>
+  </view>
+</view>

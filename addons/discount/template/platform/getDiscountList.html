@@ -1,0 +1,161 @@
+{block name="resources"}
+<style>
+</style>
+{/block}
+{block name="main"}
+<!-- page -->
+<div class="mb-20">
+    <a href="{:__URL('PLATFORM_MAIN/addonslist/menu_addonslist?addons=addDiscount')}" class="btn btn-primary"><i class="icon icon-add1"></i> 添加活动</a>
+</div>
+<table class="table v-table table-auto-center">
+    <thead>
+        <tr>
+            <th>活动名称</th>
+            <th>适用范围</th>
+            <th>生效时间</th>
+            <th>状态</th>
+            <th class="col-md-2 pr-14 operationLeft">操作</th>
+        </tr>
+    </thead>
+    <tbody id="list">
+
+    </tbody>
+</table>
+<input type="hidden" id="page_index">
+<nav aria-label="Page navigation" class="clearfix">
+    <ul id="page" class="pagination pull-right"></ul>
+</nav>
+
+<!-- page end -->
+{/block}
+
+{block name="script"}
+<script>
+    require(['util'], function (util) {
+
+        util.initPage(LoadingInfo);
+
+        function LoadingInfo(page_index) {
+            $("#page_index").val(page_index);
+            var search_text = $("#search_text").val();
+            var status = {$status};
+            $.ajax({
+                type: "post",
+                url: "{$discountList}",
+                data: {
+                    "page_index": page_index, "search_text": search_text, "status": status
+                },
+                success: function (data) {
+                    var html = '';
+                    if (data["data"].length > 0) {
+                        for (var i = 0; i < data["data"].length; i++) {
+                            html += '<tr>';
+                            html += '<td>';
+                            html += data["data"][i]["discount_name"];
+                            html += '</td>';
+                            if (data['data'][i]['range_type'] == '1') {
+                                html += '<td>自营店</td>';
+                            } else if (data['data'][i]['range_type'] == '2') {
+                                html += '<td>全平台</td>';
+                            } else {
+                                html += '<td>店铺端</td>';
+                            }
+                            html += '<td>';
+                            html += timeStampTurnTime(data["data"][i]["start_time"]) + ' 至 ' + timeStampTurnTime(data["data"][i]["end_time"]);
+                            html += '</td>';
+                            html += '<td>';
+                            switch (data['data'][i]['status']) {
+                                case 0:
+                                    var status_name = '<span class="label label-warning">待开始</span>';
+                                    break;
+                                case 1:
+                                    var status_name = '<span class="label label-success">进行中</span>';
+                                    break;
+                                case 3:
+                                    var status_name = '<span class="label label-danger">已关闭</span>';
+                                    break;
+                                case 4:
+                                    var status_name = '<span class="label label-danger">已结束</span>';
+                                    break;
+                            }
+                            html += status_name;
+                            html += '</td>';
+                            html += '<td class="operationLeft fs-0">';
+                            html += '<input type="hidden" name="id" value="' + data["data"][i]["discount_id"] + '">';
+                            if (!data['data'][i]['status']) {
+                                html += '<a href="' + __URL('PLATFORM_MAIN/Menu/addonmenu&addons=editdiscount?discount_id=' + data["data"][i]["discount_id"]) + '" class="btn-operation">编辑</a>';
+                            }
+                            if (data['data'][i]['status'] == 1) {
+                                html += '<a href="javascript:void(0);" class="btn-operation close_discount" data-id="' + data["data"][i]["discount_id"] + '">关闭</a>';
+                            }
+                            html += '<a href="' + __URL('PLATFORM_MAIN/Menu/addonmenu&addons=discountDetail?discount_id=' + data["data"][i]["discount_id"]) + '" class="btn-operation">详情</a>';
+                            if(data['data'][i]['status'] != 1){
+                                html += '<a href="javascript:void(0);" class="btn-operation del text-red1" data-id="' + data["data"][i]["discount_id"] + '">删除</a>';
+                            }
+                            
+
+                            html += '</td>';
+                            html += '</tr>';
+
+                        }
+                    } else {
+                        html += '<tr align="center"><td class="h-200" colspan="5">暂无符合条件的数据记录</td></tr>';
+                    }
+                    $("#list").html(html);
+                    util.tips();
+                    $('#page').paginator('option', {
+                        totalCounts: data['total_count']  // 动态修改总数
+                    });
+                }
+            });
+        }
+        $('body').on('click', '.del', function () {
+            var id = $(this).data('id');
+            util.alert('确定删除吗 ？', function () {
+                $.ajax({
+                    type: "post",
+                    url: "{$delDiscount}",
+                    data: {
+                        'discount_id': id
+                    },
+                    success: function (data) {
+
+                        if (data["code"] > 0) {
+                            util.message(data["message"], 'success', LoadingInfo($('#page_index').val()));
+                        } else if (data["code"] == -1) {
+                            util.message('正在进行中的活动不可删除！', 'error');
+                        } else {
+                            util.message(data['message'], 'error');
+                        }
+
+                    }
+                });
+            });
+        });
+        $('body').on('click', '.close_discount' ,function () {
+            var id = $(this).data('id');
+            util.alert('确定关闭吗 ？', function () {
+                $.ajax({
+                    type: "post",
+                    url: "{$closediscount}",
+                    data: {
+                        'discount_id': id
+                    },
+                    success: function (data) {
+
+                        if (data["code"] > 0) {
+                            util.message(data["message"], 'success',  LoadingInfo($('#page_index').val()));
+                        } else if (data["code"] == -1) {
+                            util.message('正在进行中的活动不可删除！', 'danger');
+                        } else {
+                            util.message(data['message'], 'danger');
+                        }
+
+                    }
+                });
+            });
+        });
+    });
+</script>
+{/block}
+

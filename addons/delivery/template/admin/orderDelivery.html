@@ -1,0 +1,62 @@
+{block name="main"}
+<table class="table v-table table-auto-center mb-10">
+    <thead>
+    <tr>
+        <th>序号</th>
+        <th>订单号</th>
+        <th>订单状态</th>
+        <th>快递公司</th>
+        <th>快递单号</th>
+        <th><a class="text-primary J-auto" href="javascript:;">自动填充</a></th>
+    </tr>
+    </thead>
+    <tbody id="order_list">
+    </tbody>
+</table>
+{/block}
+{block name="script"}
+<script id="tpl_express_order_list" type="text/html">
+    <%each data.list as item index%>
+    <tr>
+        <td><%i%></td>
+        <td><%item.order_no%></td>
+        <td><%item.order_status_name%></td>
+        <td>
+            <%if item.company_name%>
+            <%item.company_name%>
+            <%else%>
+            <%data.default_company_name%>
+            <%/if%>
+        </td>
+        <td colspan="2"><input data-order-id="<%item.order_id%>" class="J-input form-control" value="<%item.express_no%>"></td>
+    </tr>
+    <%i = i+1%>
+    <%/each%>
+</script>
+
+<script>
+    require(['util', 'tpl'], function (util, tpl) {
+        window.express_order_list = {}
+
+        $.ajax({
+            url: '{$orderDeliveryModal}',
+            type: 'post',
+            data: {
+                'data': true
+            },
+            success: function (data) {
+                $("#order_list").html(tpl('tpl_express_order_list', {data: data, i: 1}))
+                express_order_list = data.list
+            }
+        })
+
+        $(".J-auto").on('click', function () {
+            var num = parseInt($("#order_list").find('.J-input:first').val())
+            $("#order_list").find('.J-input').not(':first').each(function (k, v) {
+                num = num + 1
+                $(this).val(num);
+            })
+        })
+    });
+</script>
+{/block}

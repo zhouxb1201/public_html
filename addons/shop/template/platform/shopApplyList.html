@@ -1,0 +1,153 @@
+{block name="resources"}
+
+{/block}
+
+{block name="main"}
+        <!-- page -->
+
+        <!--<div class="v-form-inline v-form-inline-auto">
+            <div class="form-group">
+                <label class="control-label">店铺名称</label>
+                <input type="text" class="form-control"  id="search_text" placeholder="请输入店铺名称">
+            </div>
+            <div class="form-group">
+                <button type="button" id="search" class="btn btn-primary"><i class="icon icon-search"></i> 搜索</button></div>
+        </div>-->
+        <form class="v-filter-container">
+            <div class="filter-fields-wrap">
+                <div class="filter-item clearfix">
+                    <div class="filter-item__field">
+                        <div class="v__control-group">
+                            <label class="v__control-label">店铺名称</label>
+                            <div class="v__controls">
+                                <input type="text" id="search_text" class="v__control_input" placeholder="请输入店铺名称" autocomplete="off" onkeydown="if(event.keyCode==13){event.keyCode=0;event.returnValue=false;}">
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+                <div class="filter-item clearfix">
+                    <div class="filter-item__field">
+                        <div class="v__control-group">
+                            <label class="v__control-label"></label>
+                            <div class="v__controls">
+                                <a class="btn btn-primary search" id="search"><i class="icon icon-search"></i> 搜索</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </form>
+
+        <div class="screen-title"><span class="text">审核店铺</span></div>
+        <table class="table v-table table-auto-center">
+            <thead>
+                <tr>
+                    <th>用户名</th>
+                    <th>店铺名称</th>
+                    <th>店铺版本</th>
+                    <th>状态</th>
+                    <th class="col-md-2 pr-14 operationLeft">操作</th>
+                </tr>
+            </thead>
+            <tbody id="list">
+            </tbody>
+        </table>
+        <input type="hidden" id="page_index">
+        <nav aria-label="Page navigation" class="clearfix">
+            <ul id="page" class="pagination pull-right"></ul>
+        </nav>
+        <!-- page end -->
+
+{/block}
+{block name="script"}
+
+<script>
+    require(['util'], function (util) {
+        util.initPage(LoadingInfo);
+        function LoadingInfo(page_index) {
+            $("#page_index").val(page_index);
+            var search_text = $("#search_text").val();
+            $.ajax({
+                type: "post",
+                url: "{$shopApplyListUrl}",
+                async: true,
+                data: {
+                    "page_index": page_index, "search_text": search_text, "website_id": '{$website_id}'
+                },
+                success: function (data) {
+                    var html = '';
+                    if (data["data"].length > 0) {
+                        for (var i = 0; i < data["data"].length; i++) {
+                            html += '<tr>';
+                            html += '<td>' + data["data"][i]["real_name"] + '</td>';
+                            html += '<td>' + data["data"][i]["shop_name"] + '</td>';
+                            html += '<td>' + data["data"][i]["shop_type_name"] + '</td>';
+                            if (data["data"][i]['apply_state'] === '1') {
+                                html += '<td><span class="label label-danger">待审核</span></td>';
+                            } else if (data["data"][i]['apply_state'] === '2') {
+                                html += '<td><span class="label label-success">审核通过</span></td>';
+                            } else if (data["data"][i]['apply_state'] === '-1') {
+                                html += '<td><span class="label label-danger">审核失败</span></td>';
+                            }
+                            if (data["data"][i]['apply_state'] === '1' || data["data"][i]['apply_state'] === '-1') {
+                                html += '<td class="fs-0 operationLeft"><a class="btn-operation" href="' + __URL('ADDONS_MAINshopVerify&id=' + data["data"][i]['apply_id']) + '">查看</a><a href="javascript:void(0);" class="J-verify btn-operation"  data-id="' + data["data"][i]["apply_id"] + '">审核</a></td>';
+                            } else {
+                                html += '<td class="fs-0 operationLeft"><a class="btn-operation" href="' + __URL('ADDONS_MAINshopVerify&id=' + data["data"][i]['apply_id']) + '">查看</a></td>';
+                            }
+                            html += '</tr>';
+                        }
+                    } else {
+                        html += '<tr><td colspan="5" class="h-200">暂无符合条件的数据记录</td></tr>';
+                    }
+                    $('#page').paginator('option', {
+                        totalCounts: data['total_count']  // 动态修改总数
+                    });
+                    $("#list").html(html);
+                    util.tips();
+                }
+            });
+        }
+        
+        //审核弹窗 
+        $('#list').on('click', '.J-verify', function () {
+            var apply_id = $(this).data('id');
+            util.confirm('审核店铺','url:{$shopApplyModalUrl}'+'?id=' + apply_id , function () {
+                var apply_state = this.$content.find("input[name='apply_state']:checked").val();
+                var shop_audit = 0;
+                var shop_platform_commission_rate = this.$content.find('#shop_platform_commission_rate').val();
+                var margin = this.$content.find('#margin').val();
+                var refuse_reason = this.$content.find('#refuse_reason').val();
+                if(this.$content.find("#shop_audit").is(":checked")){
+                    shop_audit = 1;
+                }
+                var type = 'agree';
+                if(apply_state == '-1'){
+                    type = 'disagree';
+                }
+                $.ajax({
+                    type: "post",
+                    url: "{$ajax_shopVerifyUrl}",
+                    data: {'apply_id': apply_id, 'type': type, 'shop_platform_commission_rate' :shop_platform_commission_rate,'shop_audit' :shop_audit,'margin' :margin, 'refuse_reason':refuse_reason},
+                    async: true,
+                    success: function (data) {
+                        if (data["code"] > 0) {
+                            util.message(data["message"], 'success', LoadingInfo($('#page_index').val()));
+                        } else {
+                            util.message(data["message"], 'danger');
+                        }
+                    }
+                });
+            }, 'large')
+        })
+        $('#search').on('click', function () {
+            LoadingInfo(1);
+        });
+        $("#search_text").keypress(function (e) {
+            if (e.keyCode === 13) {
+                LoadingInfo(1);
+            }
+        });
+    });
+</script>
+{/block}

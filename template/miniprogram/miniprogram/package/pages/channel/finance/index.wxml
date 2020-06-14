@@ -1,0 +1,52 @@
+<view class='balance_box'>
+  <view class='can_use_balance cell_group'>
+    <view class='can_use_balance_title'>可用余额</view>
+    <view class='can_use_balance_detail'>
+      <view class='can_use_balance_value'>¥ {{balanceData.can_use_money}}</view>
+      <navigator url='/package/pages/property/log/index'>
+        <view class='ondetail'>查看明细</view>
+      </navigator>
+    </view>
+  </view>
+
+  <view class='cell_group'>
+    <view class='cell bottomLine'>
+      <view class='cell_title'>
+        <view>总余额</view>
+        <view class='cell_label'>余额总数</view>
+      </view>
+      <view class='cell_value'>¥ {{filters.toFix(balanceData.balance)}}</view>
+    </view>
+    <view class='cell bottomLine'>
+      <view class='cell_title'>
+        <view>冻结余额</view>
+        <view class='cell_label'>已经冻结余额</view>
+      </view>
+      <view class='cell_value'>¥ {{filters.toFix(balanceData.freezing_balance)}}</view>
+    </view>
+    <view class='cell bottomLine'>
+      <view class='cell_title'>
+        <view>我的利润</view>
+        <view class='cell_label'>全部利润收入</view>
+      </view>
+      <view class='cell_value'>¥ {{filters.toFix(balanceData.my_profit)}}</view>
+    </view>
+    <view class='cell'>
+      <view class='cell_title'>
+        <view>我的奖金</view>
+        <view class='cell_label'>全部奖金收入</view>
+      </view>
+      <view class='cell_value'>¥ {{filters.toFix(balanceData.my_bonus)}}</view>
+    </view>
+  </view>
+
+  <view class='foot_group'>
+    <button class='btn recharge' bindtap='onRechargePage'>充值</button>
+    <button class='btn' disabled="{{balanceData.is_use == 0?true:''}}" bindtap='onWithdrawPage'>
+      {{balanceData.is_use == 0?'提现未开启':'提现'}}
+    </button>
+  </view>
+</view>
+
+<!-- 保留2小数 -->
+<wxs module="filters" src="../../../../utils/addmul.wxs"></wxs>

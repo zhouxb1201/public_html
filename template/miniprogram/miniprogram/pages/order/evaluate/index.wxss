@@ -1,0 +1,140 @@
+page{
+  font-size: 28rpx;
+  background-color: #f8f8f8;
+}
+
+.evaluate_context{
+  background-color: #fff;
+  margin-bottom: 20rpx;
+}
+.shop_name{
+  display: flex;  
+  align-items: center;  
+}
+.icon{
+  margin-right: 10rpx;
+}
+.pb{
+  padding: 20rpx 30rpx;
+  border-bottom: 1px solid #ebedf0
+}
+
+.explain_type{
+  display: flex;
+}
+.explain_type .shop_img{
+  width: 100rpx;
+  height: 100rpx;
+  margin-right: 20rpx;
+}
+.explain_type .shop_img image{
+  width: 100%;
+  height: 100%;
+}
+.explain_type_list{
+  align-items: center;
+  justify-content: center;
+  flex: 1;
+  display: flex;
+}
+.explain_type_list .type_item{
+  flex: 1;
+  text-align: center;
+  color: #909399;
+}
+.explain_type_list .type_item.active{
+  color: #f44;
+}
+.goods_evaluate textarea{
+  width: 100%;
+}
+
+.evaluate_img{
+  display: flex;
+}
+.evaluate_img .img_group{
+  flex: 1;
+  margin-right: 20rpx;
+}
+.evaluate_img .img_btn{
+  width: 80rpx;
+  height: 80rpx;
+  border: 1px dashed #ddd;
+  display: flex;  
+  text-align: center;
+  flex-direction:column;
+}
+.evaluate_img .img_btn .img_num{
+  font-size: 24rpx;
+}
+
+.img_group{
+  display: flex;
+}
+.img_group .img_item{
+  
+  background-color: #f8f8f8;
+  margin: 8rpx;
+  position: relative;
+}
+.img_group .img_item .btn_delete{
+  position: absolute;
+  top: -10rpx;
+  right: -10rpx;
+  background-color: #fff;
+  z-index: 10;
+  border-radius: 50%;
+  border: 1px solid #969799;
+  font-size: 14rpx;
+  width: 24rpx;
+  height: 24rpx;
+  line-height: 24rpx;
+  text-align: center;
+}
+.img_group .img_item .box_img{
+  width: 96rpx;
+  height: 96rpx;
+  overflow: hidden;
+  background-color: #f9f9f9;
+  display: flex;
+  justify-content: flex-start;
+}
+.img_group .img_item .box_img image{
+  width: 100%;
+  height: 100%;
+}
+
+.shop_evaluate{
+  background-color: #fff;
+  margin-top: 30rpx;
+}
+.shop_evaluate .shop_title{
+  display: flex;
+  align-items: center;
+}
+.shop_evaluate_group .shop_item{
+  display: flex;
+  line-height: 48rpx;
+  margin: 10rpx 0;
+}
+.shop_evaluate_group .shop_item text{
+  margin-right: 20rpx;
+}
+
+.foot_btn{
+  padding: 60rpx 30rpx;
+}
+.sub_btn{
+  border: 1rpx solid #f44;
+  height: 88rpx;
+  text-align: center;
+  line-height: 88rpx;
+  background-color: #f44;
+  color: #fff;
+  border-radius: 50rpx;
+}
+.def{
+  border: 1rpx solid #909399;  
+  background-color: #909399;
+  color: #fff;
+}

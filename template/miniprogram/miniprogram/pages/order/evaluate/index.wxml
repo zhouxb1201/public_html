@@ -1,0 +1,75 @@
+<view class='evaluate'>
+  <view class='evaluate_context' wx:for='{{good_list}}' wx:key=''>
+    <view class='shop_name pb'>
+      <view class='icon iconfont v-icon-shop2'></view>
+      <text>{{shop_name}}</text>
+    </view>
+    <view class='explain_type pb'>
+      <view class='shop_img'>
+        <image src="{{item.img != '' ? item.img : '../../../images/rectangle-error.png'}}"></image>
+      </view>
+      <view class='explain_type_list' wx:if="{{sign == 'begin'}}">
+        <view class="type_item {{item.type == 5 ? 'active':''}}" data-type='5' data-ordergoodid='{{item.order_goods_id}}' bindtap='typeSelectFun'>
+          <view class='iconfont v-icon-praise'></view>
+          <view>好评</view>
+        </view>
+        <view class="type_item {{item.type == 3 ? 'active':''}}" data-type='3' data-ordergoodid='{{item.order_goods_id}}' bindtap='typeSelectFun'>
+          <view class='iconfont v-icon-review'></view>
+          <view>中评</view>
+        </view>
+        <view class="type_item {{item.type == 1 ? 'active':''}}" data-type='1' data-ordergoodid='{{item.order_goods_id}}' bindtap='typeSelectFun'>
+          <view class='iconfont v-icon-review'></view>
+          <view>差评</view>
+        </view>
+      </view>
+      <view class='good_name' wx:if="{{sign == 'again'}}">{{item.name}}</view>          
+    </view>
+    <view class='goods_evaluate pb'>
+      <textarea maxlength='-1' placeholder='分享你购买此商品的想法与心情' data-ordergoodid='{{item.order_goods_id}}' bindinput='goodSContextFun'></textarea>
+    </view>
+    <view class='evaluate_img pb'>
+      <view class='img_group'>
+        <view class='img_list' wx:for='{{item.uploadImg}}' wx:key='' wx:for-item='imgitem'>
+          <view class='img_item'>
+            <view class='btn_delete iconfont v-icon-close' data-ordergoodid='{{item.order_goods_id}}' data-imgid='{{imgitem.id}}'  bindtap='deleteImg'></view>
+            <view class='box_img' data-imgsrc='{{imgitem.src}}' bindtap='previewImage'>
+              <image mode='widthFix' src='{{imgitem.src}}'></image>
+            </view>
+            
+          </view>
+        </view>
+                
+      </view>
+      <view class='img_btn' data-ordergoodid='{{item.order_goods_id}}' bindtap='getImagesFun'>
+        <van-icon name="photograph" size='20px'/>
+        <text class='img_num'>{{item.uploadImg.length}}/5</text>
+      </view>      
+    </view>  
+  </view>
+  
+  <view class='shop_evaluate' wx:if="{{sign == 'begin'}}">
+    <view class='shop_title pb'>
+      <view class='icon iconfont v-icon-shop2'></view>
+      <text>店铺评价</text>
+    </view>
+    <view class='shop_evaluate_group pb'>
+      <view class='shop_item'>
+        <text>描述相符</text>
+        <van-rate value="{{ shop_desc }}" size='16' bind:change="onDescChange" />
+      </view>
+      <view class='shop_item'>
+        <text>物流服务</text>
+        <van-rate value="{{ shop_service }}" size='16' bind:change="onServiceChange" />
+      </view>
+      <view class='shop_item'>
+        <text>服务态度</text>
+        <van-rate value="{{ shop_stic }}" size='16' bind:change="onSticChange" />
+      </view>
+    </view>
+  </view>
+
+  <view class='foot_btn'>
+    <view class="sub_btn" bindtap='addOrderEvaluate' wx:if='{{eva_btn_show == true}}'>提交</view>
+    <view class="sub_btn def" wx:else>提交</view>
+  </view>
+</view>

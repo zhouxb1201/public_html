@@ -1,0 +1,30 @@
+<view class="popup" style="transform:{{isShow ? 'scale(1)' : 'scale(0)'}};transition: all 0.2s;">
+  <view class="popup-win-prize-wrap">
+    <view class="prize">
+      <image mode='widthFix' src="{{publicUrl}}/wap/static/images/win_prize_01.png"></image>
+    </view>
+    <view class="prize">
+      <image mode='widthFix' src="{{publicUrl}}/wap/static/images/win_prize_02.png"></image>
+      <view class="prize-info">
+        <view wx:if="{{termname}}" class='h3'>{{termname}}</view>
+        <view wx:if="{{prizename}}">{{prizename}}</view>
+      </view>
+    </view>
+    <view class="prize">
+      <image mode='widthFix' src="{{publicUrl}}/wap/static/images/win_prize_03.png"></image>
+      <view class="prize-win-txt">
+        <view>运气简直太好了，快去分享吧！</view>
+      </view>
+    </view>
+    <view class="prize">
+      <image mode='widthFix' src="{{publicUrl}}/wap/static/images/win_prize_04.png"></image>
+      <view class="prize-win-txt">
+        <view class="btn-wrap">
+          <button class="btn" open-type='share' hover-class='none'>立即分享</button>
+          <button class="btn" hover-class='none' bindtap="toPrize">去领奖</button>
+        </view>
+      </view>
+    </view>
+    <view class="close" bindtap='onClose'></view>
+  </view>
+</view>

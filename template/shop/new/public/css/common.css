@@ -1,0 +1,577 @@
+article,
+aside,
+details,
+figcaption,
+figure,
+footer,
+header,
+hgroup,
+menu,
+nav,
+section,
+summary {
+  display: block;
+}
+
+body,
+div,
+dl,
+dt,
+dd,
+ul,
+ol,
+li,
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+pre,
+code,
+form,
+fieldset,
+legend,
+input,
+button,
+textarea,
+p,
+blockquote,
+th,
+td {
+  margin: 0;
+  padding: 0;
+}
+input,button,textarea{
+    outline: none;
+}
+body {
+  color: #555;
+  font-size: 12px;
+  font-family: "Microsoft yahei";
+  min-width: 1200px;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  font-weight: normal;
+  font-size: 100%;
+}
+
+address,
+caption,
+cite,
+code,
+dfn,
+th,
+var {
+  font-style: normal;
+  font-weight: normal;
+}
+
+a {
+  color: #444;
+  text-decoration: none;
+}
+
+a:hover,
+a:active {
+  text-decoration: none;
+  color: #2c9cf0;
+}
+
+img {
+  border: none;
+  vertical-align: middle;
+}
+
+ol,
+ul,
+li {
+  list-style: none;
+}
+
+.clearfix:after {
+  visibility: hidden;
+  display: block;
+  font-size: 0;
+  content: " ";
+  clear: both;
+  height: 0;
+}
+.fl{
+    float: left;
+}
+.fr{
+    float: right;
+}
+.w1200 {
+  width: 1200px;
+  margin: 0 auto;
+}
+td{
+    vertical-align: middle;
+    text-align: center; 
+    padding-top: 10px;
+    padding-bottom: 10px;
+    border-left: 1px solid #f2f2f2;
+    border-top: 1px solid #f2f2f2;
+}
+.pr{
+  position: relative;
+}
+input[type=radio]:checked {
+    border: 2px solid #2c9cf0;
+    background: #fff;
+}
+input[type=checkbox]:checked{
+    border: 2px solid #2c9cf0;
+    background: #2c9cf0;
+}
+
+input[type=checkbox]:checked:before {
+    content: " ";
+    display: inline-block;
+    -webkit-transform: rotate(135deg);
+    -ms-transform: rotate(135deg);
+    -moz-transform: rotate(135deg);
+    transform: rotate(135deg);
+    height: 4px;
+    width: 9px;
+    border-width: 2px 2px 0 0;
+    border-color: #fff;
+    border-style: solid;
+    position: absolute;
+    top: 2px;
+    margin-left: 1px;
+}
+
+.radio input[type="radio"], .radio-inline input[type="radio"], .checkbox input[type="checkbox"], .checkbox-inline input[type="checkbox"] {
+    position: absolute;
+    margin-left: -24px;
+    cursor: pointer;
+}
+input[type=radio]:checked:before {
+    content: " ";
+    display: inline-block;
+    height: 8px;
+    width: 8px;
+    background: #2c9cf0;
+    border-radius: 50%;
+    position: absolute;
+    top: 2px;
+    margin-left: 2px;
+}
+input[type=radio],input[type=checkbox] {
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+    position: relative;
+    width: 16px;
+    height: 16px;
+    border: 1px solid #ccc;
+    outline: none !important;
+    border-radius: 18px;
+    box-sizing: border-box;
+    -webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    background: #fff;
+    vertical-align: middle;
+    -moz-transition-duration: 300ms;
+    -webkit-transition-duration: 300ms;
+    transition-duration: 300ms;
+    -webkit-transition-property: border-color;
+    transition-property: border-color;
+    margin-top: 2px;
+}
+.radio label, .checkbox label, .checkbox-inline, .radio-inline {
+    position: relative;
+    color: #666;
+    padding-left: 24px;
+}
+input[type=checkbox], input[type=checkbox].large {
+    -webkit-border-radius: 0px;
+    -moz-border-radius: 0px;
+    border-radius: 0px;
+}
+
+/*去掉input自动补全后的黄色样式*/
+input:-webkit-autofill, input:-webkit-autofill:hover, input:-webkit-autofill:focus, input:-webkit-autofill:active {
+-webkit-transition-delay: 99999s;
+-webkit-transition: color 99999s ease-out, background-color 99999s ease-out;
+}
+
+/*iconfont样式*/
+@font-face {
+  font-family: 'icomoon';
+  src:  url('fonts/icomoon.eot?tn6beo');
+  src:  url('fonts/icomoon.eot?tn6beo#iefix') format('embedded-opentype'),
+    url('fonts/icomoon.ttf?tn6beo') format('truetype'),
+    url('fonts/icomoon.woff?tn6beo') format('woff'),
+    url('fonts/icomoon.svg?tn6beo#icomoon') format('svg');
+  font-weight: normal;
+  font-style: normal;
+}
+
+[class^="icon-"], [class*=" icon-"] {
+  /* use !important to prevent issues with browser extensions that change fonts */
+  font-family: 'icomoon' !important;
+  speak: none;
+  font-style: normal;
+  font-weight: normal;
+  font-variant: normal;
+  text-transform: none;
+  line-height: 1;
+
+  /* Better Font Rendering =========== */
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+.icon-accountclose:before {
+  content: "\e96e";
+}
+.icon-accountopen:before {
+  content: "\e96f";
+}
+.icon-add:before {
+  content: "\e900";
+}
+.icon-add2:before {
+  content: "\e901";
+}
+.icon-add3:before {
+  content: "\e902";
+}
+.icon-after-sale:before {
+  content: "\e903";
+}
+.icon-auth:before {
+  content: "\e904";
+}
+.icon-avatar:before {
+  content: "\e905";
+}
+.icon-bind-email:before {
+  content: "\e906";
+}
+.icon-bind-phone:before {
+  content: "\e907";
+}
+.icon-cart:before {
+  content: "\e908";
+}
+.icon-cart2:before {
+  content: "\e909";
+}
+.icon-checkbox:before {
+  content: "\e90a";
+}
+.icon-clock:before {
+  content: "\e90b";
+}
+.icon-close:before {
+  content: "\e90c";
+}
+.icon-close2:before {
+  content: "\e90d";
+}
+.icon-collection:before {
+  content: "\e90e";
+}
+.icon-collectioned:before {
+  content: "\e90f";
+}
+.icon-collection-empty:before {
+  content: "\e910";
+}
+.icon-comment-none:before {
+  content: "\e911";
+}
+.icon-Coupon1:before {
+  content: "\e912";
+}
+.icon-Coupon2:before {
+  content: "\e913";
+}
+.icon-danger:before {
+  content: "\e914";
+}
+.icon-day:before {
+  content: "\e915";
+}
+.icon-delete:before {
+  content: "\e916";
+}
+.icon-deliver:before {
+  content: "\e917";
+}
+.icon-diamond:before {
+  content: "\e918";
+}
+.icon-dir-down:before {
+  content: "\e919";
+}
+.icon-dir-left:before {
+  content: "\e91a";
+}
+.icon-dir-left2:before {
+  content: "\e91b";
+}
+.icon-dir-left3:before {
+  content: "\e91c";
+}
+.icon-dir-right:before {
+  content: "\e91d";
+}
+.icon-dir-right2:before {
+  content: "\e91e";
+}
+.icon-dir-right3:before {
+  content: "\e91f";
+}
+.icon-dir-right4:before {
+  content: "\e920";
+}
+.icon-dir-top:before {
+  content: "\e921";
+}
+.icon-dotted-line:before {
+  content: "\e922";
+}
+.icon-dowm:before {
+  content: "\e923";
+  display: inline-block;
+}
+.icon-dowm2:before {
+  content: "\e924";
+}
+.icon-dowm3:before {
+  content: "\e925";
+}
+.icon-down1:before {
+  content: "\e926";
+}
+.icon-edit:before {
+  content: "\e927";
+}
+.icon-evaluate:before {
+  content: "\e928";
+}
+.icon-exchange:before {
+  content: "\e929";
+}
+.icon-fast:before {
+  content: "\e92a";
+}
+.icon-financial:before {
+  content: "\e92b";
+}
+.icon-follow:before {
+  content: "\e92c";
+}
+.icon-form:before {
+  content: "\e92d";
+}
+.icon-gift:before {
+  content: "\e92e";
+}
+.icon-goods-none:before {
+  content: "\e92f";
+}
+.icon-help:before {
+  content: "\e930";
+}
+.icon-home:before {
+  content: "\e931";
+}
+.icon-icon-vip2:before {
+  content: "\e932";
+}
+.icon-Invite:before {
+  content: "\e933";
+}
+.icon-kf:before {
+  content: "\e934";
+}
+.icon-links:before {
+  content: "\e935";
+}
+.icon-location:before {
+  content: "\e936";
+}
+.icon-location2:before {
+  content: "\e937";
+}
+.icon-lock-up:before {
+  content: "\e938";
+}
+.icon-logistics:before {
+  content: "\e939";
+}
+.icon-logout:before {
+  content: "\e93a";
+}
+.icon-mailbox:before {
+  content: "\e93b";
+}
+.icon-message:before {
+  content: "\e93c";
+}
+.icon-money:before {
+  content: "\e93d";
+}
+.icon-order2:before {
+  content: "\e93e";
+}
+.icon-order-no:before {
+  content: "\e93f";
+}
+.icon-paying:before {
+  content: "\e940";
+}
+.icon-phone:before {
+  content: "\e941";
+}
+.icon-profit:before {
+  content: "\e942";
+}
+.icon-property:before {
+  content: "\e943";
+}
+.icon-purse:before {
+  content: "\e944";
+}
+.icon-qq:before {
+  content: "\e945";
+}
+.icon-qr:before {
+  content: "\e946";
+}
+.icon-qr2:before {
+  content: "\e947";
+}
+.icon-recycling:before {
+  content: "\e948";
+}
+.icon-screen:before {
+  content: "\e949";
+}
+.icon-search:before {
+  content: "\e94a";
+}
+.icon-selected:before {
+  content: "\e94b";
+}
+.icon-selected-bottom:before {
+  content: "\e94c";
+}
+.icon-selected-top:before {
+  content: "\e94d";
+}
+.icon-set:before {
+  content: "\e94e";
+}
+.icon-share:before {
+  content: "\e94f";
+}
+.icon-sharing:before {
+  content: "\e950";
+}
+.icon-shopping:before {
+  content: "\e951";
+}
+.icon-shouhou:before {
+  content: "\e952";
+}
+.icon-sort:before {
+  content: "\e953";
+}
+.icon-stars:before {
+  content: "\e954";
+}
+.icon-stretch:before {
+  content: "\e955";
+}
+.icon-stretch2:before {
+  content: "\e956";
+}
+.icon-sub:before {
+  content: "\e957";
+}
+.icon-sub-top:before {
+  content: "\e958";
+}
+.icon-success:before {
+  content: "\e959";
+}
+.icon-take:before {
+  content: "\e95a";
+}
+.icon-tel:before {
+  content: "\e95b";
+}
+.icon-thumbnail:before {
+  content: "\e95c";
+}
+.icon-thumbnail2:before {
+  content: "\e95d";
+}
+.icon-time:before {
+  content: "\e95e";
+}
+.icon-tips:before {
+  content: "\e95f";
+}
+.icon-top:before {
+  content: "\e960";
+}
+.icon-top2:before {
+  content: "\e961";
+}
+.icon-top3:before {
+  content: "\e962";
+}
+.icon-top4:before {
+  content: "\e963";
+}
+.icon-to-pay:before {
+  content: "\e964";
+}
+.icon-tuan:before {
+  content: "\e965";
+}
+.icon-tuihuo:before {
+  content: "\e966";
+}
+.icon-user1:before {
+  content: "\e967";
+}
+.icon-user2:before {
+  content: "\e968";
+}
+.icon-user3:before {
+  content: "\e969";
+}
+.icon-vip1:before {
+  content: "\e96a";
+}
+.icon-vip3:before {
+  content: "\e96b";
+}
+.icon-wchat:before {
+  content: "\e96c";
+}
+.icon-zheng:before {
+  content: "\e96d";
+}
+
+/*iconfont样式*/
+.rotate.icon-dowm:before {
+   transform: rotate(180deg);
+}
+
+

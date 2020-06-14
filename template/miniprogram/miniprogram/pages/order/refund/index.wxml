@@ -1,0 +1,53 @@
+<form class='refund'>
+  <view class='refund_header' wx:for='{{goodData}}' wx:key='' wx:for-item='goodsItem'>
+    <view class='good_img'>
+      <image src="{{goodsItem.pic_cover != '' ? goodsItem.pic_cover : '/images/rectangle-error.png'}}"></image>
+    </view>
+    <view class='refund_info'>
+      <view class='good_name'>{{goodsItem.goods_name}}</view>
+      <view class='good_num'>
+        <view class='num'>X {{goodsItem.num}}</view>
+      </view>
+    </view>
+  </view>
+
+  <view class='refund_group'>
+    <view class='cell'>
+      <view class='title'>处理方式</view>
+      <view class='value'>
+        <radio-group class="radio-group" bindchange="radioChange">
+          <label class="radio" wx:for="{{items}}" wx:key=''>
+            <radio value="{{item.name}}" color='#f44' checked="{{item.checked}}" />
+            {{item.value}}
+          </label>
+        </radio-group>
+      </view>
+    </view>
+    <view class='cell'>
+      <view class='title'>退款原因</view>
+      <view class='value'>
+        <picker value='{{index}}' range='{{refundReason}}' bindchange='pickReasonChage'>
+          <view>{{refundReason[index]}}</view>
+        </picker>
+      </view>
+    </view>
+    <view class='cell' wx:if='{{refund_detail.refund_max_money != 0}}'>
+      <view class='title'>退款金额</view>
+      <view class='value'>
+        <input type='text' placeholder='最多退款¥{{refund_detail.refund_max_money}}' bindinput='refundMoneyFun'></input>
+      </view>
+    </view>
+    <view class='cell' wx:if='{{refund_detail.refund_point != 0}}'>
+      <view class='title'>退积分</view>
+      <view class='value'>
+        <input type='text' class='disabled_point' value='{{refund_detail.refund_point}}' disabled='disabled'></input>
+      </view>
+    </view>
+  </view>
+
+  <view class='foot_btn'>
+    <button class='sub_btn' bindtap="subscribeMessage">提交</button>
+  </view>
+
+  
+</form>

@@ -1,0 +1,98 @@
+{block name="main"}
+<!-- page -->
+<form class="form-horizontal form-validate pt-15 widthFixedForm">
+    <input type="hidden" class="form-control"  id="jobs_id" name="jobs_id" value="{$jobs_info.jobs_id}">
+    <div class="form-group">
+        <label class="col-md-2 control-label"><span class="text-bright">*</span>岗位名称</label>
+        <div class="col-md-5">
+            <input type="text" class="form-control"  id="jobs_name" name="jobs_name" required value="{$jobs_info.jobs_name}">
+        </div>
+    </div>
+    <div class="form-group">
+            <label class="col-md-2 control-label">岗位权限</label>
+            <div class="col-md-9 checkbox">
+                <!--复选框-->
+                <label>
+                    <input type="checkbox"  name="module_id_array" value="1" {in name="1" value="$jobs_info.module_id_array"} checked {/in} > 扫码核销
+                </label>
+                <label>
+                    <input type="checkbox"  name="module_id_array" value="4" {in name="4" value="$jobs_info.module_id_array"} checked {/in} > 门店订单
+                </label>
+                <label>
+                    <input type="checkbox"  name="module_id_array" value="5" {in name="5" value="$jobs_info.module_id_array"} checked {/in} > 销售统计
+                </label>
+                <label>
+                    <input type="checkbox"  name="module_id_array" value="6" {in name="6" value="$jobs_info.module_id_array"} checked {/in} > 店员管理
+                </label>
+                <label>
+                    <input type="checkbox"  name="module_id_array" value="7" {in name="7" value="$jobs_info.module_id_array"} checked {/in} > 商品管理
+                </label>
+                <label>
+                    <input type="checkbox"  name="module_id_array" value="8" {in name="8" value="$jobs_info.module_id_array"} checked {/in} > 售后订单
+                </label>
+                <label>
+                    <input type="checkbox"  name="module_id_array" value="9" {in name="9" value="$jobs_info.module_id_array"} checked {/in} > 核销记录
+                </label>
+                <label>
+                    <input type="checkbox"  name="module_id_array" value="10" {in name="10" value="$jobs_info.module_id_array"} checked {/in} > 门店收银
+                </label>
+            </div>
+        </div>
+    <div class="form-group"></div>
+    <div class="form-group">
+        <label class="col-md-2 control-label"></label>
+        <div class="col-md-8">
+            <button class="btn btn-primary J-submit" type="submit">{if $jobs_info}保存{else}添加{/if}</button>
+            <a href="javascript:history.go(-1);" class="btn btn-default">返回</a>
+        </div>
+    </div>
+
+</form>
+
+<!-- page end -->
+{/block}
+{block name="script"}
+<script>
+    require(['util'], function (util) {
+        util.validate($('.form-validate'), function (form) {
+            var btnHtml = $('.J-submit').html();
+            if($('.J-submit').attr('disabled')==='disabled'){
+                return false;
+            }
+            var jobs_id = $("#jobs_id").val();
+            var jobs_name = $("#jobs_name").val();
+            var select_box = '';
+            $("input[name='module_id_array']:checked").each(function(){
+                    select_box = select_box + ',' + $(this).val();
+            });
+            select_box = select_box.substring(1);
+            if(select_box===''){
+                util.message('请选择岗位权限', 'danger');
+                return;
+            }
+            $('.J-submit').attr({disabled: "disabled"}).html('提交中...');
+            $.ajax({
+                type: "post",
+                url: "{$addOrUpdateJobsUrl}",
+                data: {
+                    'jobs_id': jobs_id,
+                    'jobs_name': jobs_name,
+                    'module_id_array': select_box
+                },
+                async: true,
+                success: function (data) {
+                    if (data["code"] > 0) {
+                        util.message(data["message"], 'success',function(){
+                            window.location.href="{:__URL('ADDONS_MAINjobsList')}";
+                        });
+                    } else {
+                        util.message(data["message"], 'danger');
+                        $('.J-submit').removeAttr('disabled').html(btnHtml);
+                    }
+                }
+
+            });
+        });
+    });
+</script>
+{/block}

@@ -1,0 +1,139 @@
+<view class='open_live'>
+  <!-- 填写直播资料 -->
+  <view class="check_box" wx:if="{{pageStatus == 1}}">
+    <view class="tips" wx:if="{{is_play_checked == 1}}">
+      <van-notice-bar scrollable="false" speed='10' text="{{tips_txt}}" />
+    </view>
+
+    <view class="group">
+      <view class="row">
+        <view class="lable">房号</view>
+        <view class="value">{{room_no}}</view>
+      </view>
+      <view class="row">
+        <view class="lable">直播时段</view>
+        <view class="value">
+          <view class="time">
+            <view data-timesign="0" bindtap="changeTime">
+              <input class="set start" value="{{startTime}}" placeholder="直播开始时间" disabled="true"></input>
+            </view>
+            <view>~</view>
+            <view data-timesign="1" bindtap="changeTime">
+              <input class="set end" value="{{endTime}}" placeholder="直播结束时间" disabled="true"></input>
+            </view>
+          </view>
+        </view>
+      </view>
+      <view class="row">
+        <view class="lable">直播分类</view>
+        <view class="value">
+          <picker bindchange="bindCateNameChange" value="{{index}}" range="{{cate_name}}">
+            <view class="picker">
+              <input type='text' value='{{cate_name[index]}}' placeholder='请选择分类' disabled='true'></input>
+            </view>
+          </picker>
+        </view>
+      </view>
+    </view>
+
+    <view class="bottom_box">
+      <view class="box">
+        <view class="btn" bindtap="applyPlay">提交申请</view>
+      </view>
+    </view>
+  </view>
+  <!-- 审核 -->
+  <view class="checking" wx:elif="{{pageStatus == 2 || pageStatus == 3 || pageStatus == 5}}">
+    <view class="user_img">
+      <van-icon class='icon' name="underway" size='6em' color='rgb(25, 137, 250)'/>
+    </view>
+    <view class="info">
+      <view class="title">亲爱的主播</view>
+      <view class="txt">{{txt}}</view>
+    </view>
+
+    <view class="bottom_box" wx:if="{{pageStatus == 5}}">
+      <view class="box">
+        <view wx:if="{{openLiveShow}}">
+          <view class="btn" data-livesign="open_live" bindtap="goToLive">前往直播</view>
+        </view>
+        <view wx:else class="btn_group">
+          <view class="btn gray">前往直播</view>
+          <view class="btn green" data-livesign="open_notice" bindtap="goToLive">直播预告</view>
+        </view>
+      </view>
+    </view>
+    <view class="bottom_box" wx:if="{{pageStatus == 3}}">
+      <view class="box">
+        <view class="btn" bindtap="resetApply">重新申请</view>
+      </view>
+    </view>
+
+  </view>
+  <!-- 开播或预告 -->
+  <view class="live_info" wx:elif="{{pageStatus == 4}}">
+    <view class="content_group">
+      <view class="row head bottom_line">
+        <view class="img_group" bindtap="getImagesFun">
+          <view class="img_box" wx:if="{{live_img == ''}}">
+            <view class="iconfont v-icon-add-04 add_icon"></view>
+            <view class="text">直播封面</view>
+          </view>
+          <view class="live_img" wx:else>
+            <image src="{{live_img}}"></image>
+          </view>
+        </view>
+
+        <view class="title_box">
+          <view>直播标题</view>
+          <input value="{{live_title}}" placeholder="给直播写个标题吧~" placeholder-class="phClass" bindinput="liveTitle"></input>
+        </view>
+      </view>
+      <view class="row_item {{live_sign == 'open_notice'?'bottom_line':''}}">
+        <view>
+          <picker bindchange="bindCateNameChange" value="{{index}}" range="{{cate_name}}">
+            <view class="picker">
+              <input type='text' value='{{cate_name[index]}}' placeholder='选择一个直播分类吧' placeholder-class="inplaClass" disabled='true'></input>
+            </view>
+          </picker>
+        </view>
+        <view class="iconfont v-icon-arrow-right2"></view>
+      </view>
+      <view wx:if="{{live_sign == 'open_notice'}}">
+        <view class="row_item bottom_line" data-timesign="2" bindtap="changeTime">          
+          <input value="{{notice_time}}" placeholder="选择一个预告开播时间" placeholder-class="inplaClass" disabled='true'></input>
+          <view class="iconfont v-icon-arrow-right2"></view>
+        </view>
+        <view class="row_item">
+          <textarea placeholder="填写直播介绍，让大家更清楚该场主播的主要内容吧~" placeholder-class="texphClass" bindinput="liveIntroduce"></textarea>
+        </view>
+      </view>
+
+    </view>
+
+    <view class="bottom_box">
+      <view class="bottom_group">
+        <view class="notice_btn_box" wx:if="{{live_sign == 'open_notice'}}">
+          <view class="btn notice_green" bindtap="applyPlay">确认</view>
+        </view>
+        <view class="notice_btn_box" wx:else>
+          <view class="btn" bindtap="applyPlay" wx:if='{{startShow == true}}'>开始直播</view>
+          <view class="btn gray" wx:else>还未到开播时间</view>
+        </view>
+      </view>
+
+
+    </view>
+
+  </view>
+
+
+
+
+</view>
+
+<!-- 日期弹出框 -->
+<van-popup show="{{dateShow}}" position="bottom" bind:click-overlay="onDateClose">
+  <van-datetime-picker type="datetime" value="{{ currentDate }}" min-date="{{ minDate }}" max-date="{{ maxDate }}" bind:confirm="onDateChange" />
+</van-popup>
+

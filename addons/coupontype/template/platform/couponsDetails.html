@@ -1,0 +1,251 @@
+{block name="resources"}
+{/block}
+{block name="main"}
+<!-- page -->
+<form class="form-horizontal">
+    <div class="screen-title">
+        <span class="text">活动信息</span>
+    </div>
+    <div class="col-md-10">
+        <table class="table v-table table-auto-center table-bordered">
+            <tbody>
+            <tr>
+                <td class="col-md-3 bg-f5">
+                    <div class="padding-15">
+                        <p>适用范围</p>
+                    </div>
+                </td>
+                <td class="text-left">
+                    <p id="shop_range_type"></p>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-3 bg-f5">
+                    <div class="padding-15">
+                        <p>优惠券名称</p>
+                    </div>
+                </td>
+                <td class="text-left">
+                    <p id="coupon_name"></p>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-3 bg-f5">
+                    <div class="padding-15">
+                        <p>优惠券类型</p>
+                    </div>
+                </td>
+                <td class="text-left">
+                    <p id="coupon_genre"></p>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-3 bg-f5">
+                    <div class="padding-15">
+                        <p>面值</p>
+                    </div>
+                </td>
+                <td class="text-left">
+                    <p id="money"></p>
+                </td>
+            </tr>
+            <tr class="no_sku">
+                <td class="col-md-3 bg-f5">
+                    <div class="padding-15">
+                        <p>发放数量</p>
+                    </div>
+                </td>
+                <td class="text-left">
+                    <p id="count"></p>
+                </td>
+            </tr>
+            <tr class="no_sku">
+                <td class="col-md-3 bg-f5">
+                    <div class="padding-15">
+                        <p>每人限领</p>
+                    </div>
+                </td>
+                <td class="text-left">
+                    <p id="max_fetch"></p>
+                </td>
+            </tr>
+            <tr class="no_sku">
+                <td class="col-md-3 bg-f5">
+                    <div class="padding-15">
+                        <p>领券时间</p>
+                    </div>
+                </td>
+                <td class="text-left">
+                    <p id="receive_time"></p>
+                </td>
+            </tr>
+            <tr class="no_sku">
+                <td class="col-md-3 bg-f5">
+                    <div class="padding-15">
+                        <p>生效时间</p>
+                    </div>
+                </td>
+                <td class="text-left">
+                    <p id="time"></p>
+                </td>
+            </tr>
+            <tr class="no_sku">
+                <td class="col-md-3 bg-f5">
+                    <div class="padding-15">
+                        <p>优惠券说明</p>
+                    </div>
+                </td>
+                <td class="text-left">
+                    <p id="desc"></p>
+                </td>
+            </tr>
+            <tr class="no_sku">
+                <td class="col-md-3 bg-f5">
+                    <div class="padding-15">
+                        <p>已领取优惠券</p>
+                    </div>
+                </td>
+                <td class="text-left">
+                    <p id="received"></p>
+                </td>
+            </tr>
+            <tr class="no_sku">
+                <td class="col-md-3 bg-f5">
+                    <div class="padding-15">
+                        <p>已使用优惠券</p>
+                    </div>
+                </td>
+                <td class="text-left">
+                    <p id="used"></p>
+                </td>
+            </tr>
+            <tr class="no_sku">
+                <td class="col-md-3 bg-f5">
+                    <div class="padding-15">
+                        <p>冻结优惠券</p>
+                    </div>
+                </td>
+                <td class="text-left">
+                    <p id="frozen"></p>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <div class="form-group"></div>
+    <div class="screen-title">
+        <span class="text">活动商品</span>
+    </div>
+    <table class="table v-table table-auto-center">
+        <thead>
+        <tr>
+            <th>商品信息</th>
+            <th>库存</th>
+            <th>价格</th>
+            <th>店铺</th>
+        </tr>
+        </thead>
+        <tbody id="goods_list">
+        </tbody>
+    </table>
+    <div class="form-group">
+        <label class="col-md-2 control-label"></label>
+        <div class="col-md-8">
+            <a href="javascript:history.go(-1);" class="btn btn-default">返回</a>
+        </div>
+    </div>
+</form>
+
+<!-- page end -->
+{/block}
+{block name="script"}
+<script id="tpl_goods_list" type="text/html">
+    <%each data as item index%>
+    <%if item.goods_name%>
+    <tr>
+        <td>
+            <div class="media text-left">
+                <div class="media-left">
+                    <%if item.picture_info != null%>
+                    <img src="<%item.picture_info.pic_cover_micro%>" alt="" width="60" height="60">
+                    <%else%>
+                    <img src="" alt="" width="60" height="60">
+                    <%/if%>
+                </div>
+                <div class="media-body max-w-300">
+                    <div class="line-2-ellipsis"><%item.goods_name%></div>
+                </div>
+            </div>
+        </td>
+        <td>
+            <%item.price%>元
+        </td>
+        <td>
+            <%item.stock%>
+        </td>
+        <td>
+            <%item.shop_name%>
+        </td>
+    </tr>
+    <%/if%>
+    <%/each%>
+</script>
+<script>
+    require(['util', 'tpl'], function (util, tpl) {
+        couponTypeInfo({$coupon_type_id})
+
+        function couponTypeInfo(coupon_type_id) {
+            $.ajax({
+                type: "post",
+                url: "{$getCouponTypeInfo}",
+                data: {"coupon_type_id": coupon_type_id},
+                success: function (data) {
+                    if (data['shop_range_type'] == 1) {
+                        $("#shop_range_type").text('本店');
+                    } else if (data['shop_range_type'] == 2) {
+                        $("#shop_range_type").text('全平台');
+                    }
+
+                    if (data['coupon_genre'] == 1) {
+                        $("#coupon_genre").text('无门槛');
+                        $("#money").text(data["money"] + "元");
+                        //$("#at_least").text('无限制');
+                    } else if (data['coupon_genre'] == 2) {
+                        $("#coupon_genre").text('满减');
+                        $("#money").text(data["money"] + "元");
+                        //$("#at_least").text(data['at_least'] + '元');
+                    } else if (data['coupon_genre'] == 3) {
+                        $("#coupon_genre").text('折扣');
+                        $("#money").text(data['discount'] + '折');
+                        //$("#at_least").text('无限制');
+                    }
+                    $("#coupon_name").text(data["coupon_name"]);
+
+                    $("#count").text(data["count"] + '张');
+                    if (data["max_fetch"] == 0) {
+                        $("#max_fetch").text('不限');
+                    } else {
+                        $("#max_fetch").text(data["max_fetch"] + "次");
+                    }
+                    $("#receive_time").text(timeStampTurnTime(data["start_receive_time"]) + "~" + timeStampTurnTime(data["end_receive_time"]));
+                    $("#time").text(timeStampTurnTime(data["start_time"]) + "~" + timeStampTurnTime(data["end_time"]));
+                    $("#desc").text(data['desc']);
+                    $("#received").text(data['coupon']['received']);
+                    $("#used").text(data['coupon']['used']);
+                    $("#frozen").text(data['coupon']['frozen']);
+                    if (data['range_type'] == 1) {
+                        $("#range_type").text('全部商品')
+                    } else if (data['range_type'] == 0) {
+                        $("#range_type").text('部分商品')
+                    }
+
+                    if (data['goods_list']) {
+                        $("#goods_list").html(tpl('tpl_goods_list', {data: data['goods_list']}))
+                    }
+                }
+            });
+        }
+    })
+</script>
+{/block}

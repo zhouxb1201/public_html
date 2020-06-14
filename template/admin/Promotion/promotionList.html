@@ -1,0 +1,97 @@
+{extend name="admin/base" /}
+{block name="resources"/}
+{/block}
+{block name="menu"}
+{/block}
+{block name="main"}
+        <div class="flex flex-pack-center mb-20">
+            <div class="input-group search-input-group">
+                <input type="text" class="form-control" id="search_text" placeholder="营销名称">
+                <span class="input-group-btn">
+                    <button class="btn btn-primary J-search" type="button">搜索</button>
+                </span>
+            </div>
+        </div>
+
+        <div class="plugin" id="list">
+            
+        </div>
+        <!-- page end -->
+
+{/block}
+{block name="script"}
+<script>
+    require(['util'], function (util) {
+        getAddonsList();
+        function getAddonsList() {
+            var search_text = $("#search_text").val();
+            $.ajax({
+                type: "post",
+                url: "{:__URL('ADMIN_MAIN/promotion/promotionlist')}",
+                async: true,
+                data: {
+                     "search_text": search_text
+                },
+                success: function (data) {
+                    var html = '';
+                    if (data.length > 0) {
+                        for (var i = 0; i < data.length; i++) {
+                            html += '<div class="mb-20">';
+                            html += '<div class="plugin-title">' + data[i]['category_name'] + '</div>';
+                            html += '<ul class="plugin-list clearfix">';
+                            var addons = data[i].addons;
+                            if(addons.length > 0){
+                                for(var j = 0; j < addons.length; j++){
+                                    var logo = '/public/platform/images/addonDefault.png';
+                                    if(addons[j]['logo']){
+                                        logo = __IMG(addons[j]['logo']);
+                                    }
+                                    if(addons[j]['permission'] && addons[j]['up_status']!=2) {
+                                        html += '<li>';
+                                        html += '<a href="' + __URL('ADMIN_MAIN/' + addons[j]['url']) + '" class="item">';
+                                        html += '<div class="media">';
+                                        html += '<div class="media-left">';
+                                        html += '<img src="' + logo + '" width="48" height="48">';
+                                        html += '</div>';
+                                        html += '<div class="media-body">';
+                                        html += '<h3 class="strong">' + addons[j]['module_name'] + '</h3>';
+                                        html += '<p class="small-muted line-1-ellipsis" title="' + addons[j]['desc'] + '" style="max-width:150px">' + addons[j]['desc'] + '</p>';
+                                        html += '</div>';
+                                        html += '</div>';
+                                        html += '</a>';
+                                        html += '</li>';
+                                    }
+                                    // }else{
+                                    //     html += '<li>';
+                                    //     html += '<a href="'+__URL('ADMIN_MAIN/'+ addons[j]['url'])+'" class="item">';
+                                    //     html += '<div class="media">';
+                                    //     html += '<div class="media-left">';
+                                    //     html += '<img src="' + logo + '" width="48" height="48">';
+                                    //     html += '</div>';
+                                    //     html += '<div class="media-body">';
+                                    //     html += '<h3 class="strong red">'+ addons[j]['module_name'] +'<span style="color:red">(未授权)</span></h3>';
+                                    //     html += '<p class="small-muted line-1-ellipsis">'+ addons[j]['desc'] +'</p>';
+                                    //     html += '</div>';
+                                    //     html += '</div>';
+                                    //     html += '</a>';
+                                    //     html += '</li>';
+                                    // }
+                                }
+                            }
+                            html += '</ul>';
+                            html += '</div>';
+                        }
+                    }
+                    $("#list").html(html);
+                }
+            });
+        }
+        $('.J-search').on('click', function () {
+            getAddonsList();
+        });
+        $(document).ready(function(){
+            $('.v-layout').addClass('nosubnav');
+        });
+    })
+</script>
+{/block}

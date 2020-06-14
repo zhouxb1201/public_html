@@ -1,0 +1,88 @@
+page{
+  font-size: 28rpx;
+  background-color: #f8f8f8;
+}
+.addresslist{
+  padding-bottom: 160rpx;
+}
+.addressitem{
+  padding: 20rpx 30rpx;
+  background-color: #fff;
+  margin: 20rpx;
+  border-radius: 20rpx;
+  overflow: hidden;
+  box-shadow: 0 0 10px 0 rgba(0,0,0,.05);
+}
+.addresscell{
+  padding-bottom: 20rpx;
+  border-bottom: 1px solid #ebedf0;
+}
+.addresscell .row{
+  display: flex;
+}
+.addresscell .row .title{
+  min-width: 140rpx;
+  text-align: left;
+  font-weight: 600;
+}
+.addresscell .row .area{
+  font-size: 24rpx;
+  color: #666;
+}
+.itemtop{
+  flex:1; 
+  display: flex;
+  padding-bottom: 10rpx;
+}
+.itemtop .name{
+  width: 50%;
+}
+.itemtop .phone{
+  width: 50%;
+  display: flex;
+  justify-content: flex-end;
+}
+
+.foot{
+  position: fixed;
+  left: 0;
+  bottom: 0;
+  width: 100%;
+  padding: 30rpx;
+  box-sizing: border-box;
+}
+.addAddressBtn{ 
+  border-radius: 50rpx;
+  background: #f44;
+  color: #fff;
+}
+.addAddressBtn::after{
+  border: none;
+}
+
+.set{
+  display: flex;
+  margin-top: 20rpx;
+}
+.set .setup{
+  width: 50%;
+  position: relative;
+}
+.set .setup icon{
+  position: absolute;
+  left: 0;
+  bottom: 0;
+}
+.set .setup text{
+  margin-left: 50rpx;
+}
+.set .set_r{
+  width: 50%;
+  display: flex;
+  justify-content: flex-end;
+  color: #323233;
+}
+
+.set .set_r .edit{
+  margin-right: 40rpx;
+}

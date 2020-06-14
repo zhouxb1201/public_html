@@ -1,0 +1,82 @@
+<div class="goods-dialog" id="goods-dialog">
+    <div class="dialog-box tab-content">
+        <div role="tabpanel" class="tab-pane fade in active" id="list">
+            <div id="product_sku" class="">
+                <div class="form-group">
+                    <label class="col-md-2 control-label">活动库存 / 价格</label>
+                    <div class="col-md-10">
+                        <table class="table table-bordered table-auto-center" id="stock_table" style="display: table;">
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+require(['util'],function(util){
+    var seckill_goods_sku_list = '{$seckill_goods_sku_list}';
+    var seckill_goods_sku_list_obj = JSON.parse(seckill_goods_sku_list); //由JSON字符串转换为JSON对象
+    var sku_list = seckill_goods_sku_list_obj['sku_list'];
+    var html = '<thead>\n';
+    for(sku_ids in sku_list){
+        if(sku_ids == 0){
+            var th_name_str = sku_list[sku_ids]['th_name_str'];
+            th_name_str_arr = th_name_str.split(' ');
+            for(th_id in th_name_str_arr){
+                html += '<th class="vertical-middle">'+th_name_str_arr[th_id]+'</th>\n';
+            }
+            html += ' <th class="vertical-middle">活动库存</th>\n' +
+                '<th class="vertical-middle">价格</th>\n' +
+                '<th class="vertical-middle th-price">限购</th>\n';
+            html += '</thead>\n';
+            html += '<tbody>\n';
+        }
+        //处理规格
+        var spec_val = sku_list[sku_ids]['new_im_str'];
+        var spec_show_type = sku_list[sku_ids]['show_type_str'];
+        var spec_arr = spec_val.split('§');
+        var spec_show_arr = spec_show_type.split(' ');
+        html += '<tr skuid="'+sku_list[sku_ids]['attr_value_items']+'" id="">\n';
+        for(spec_id in spec_arr){
+            //判断展示类型是不是图片
+            if(spec_show_arr[spec_id] == '3'){
+                spec_val_arr = spec_arr[spec_id].split('=');
+                // html +='<td skuchild="'+spec_val_arr[0]+'"><img src="'+spec_val_arr[1]+'"></td>\n';
+                //暂时显示文字
+                html +='<td skuchild="'+spec_val_arr[0]+'">'+spec_val_arr[1]+'</td>\n';
+            }else{
+                spec_val_arr = spec_arr[spec_id].split('=');
+                html +='<td skuchild="'+spec_val_arr[0]+'">'+spec_val_arr[1]+'</td>\n';
+            }
+
+        }
+        html += '<td>'+sku_list[sku_ids]['remain_num']+'</td>\n' +
+            '<td>'+sku_list[sku_ids]['seckill_price']+'</td>\n' +
+            '<td>'+sku_list[sku_ids]['seckill_limit_buy']+'</td>\n';
+            '<input type="hidden" name="sku_id" class="form-control" value="'+ sku_list[sku_ids]['sku_id'] +'">\n' +
+            '</tr>\n'
+    }
+    html += '<tbody>\n';
+    $('#stock_table').html(html);
+    merge_cell();
+
+    //合并单元格
+    function merge_cell(){
+        var td = $(' #stock_table td');
+        for(var i=0;i<td.length;i++){
+            var td_skuchild = $(td[i]).attr('skuchild');
+            if(td_skuchild != undefined){
+                 var td_box = $('td[skuchild="'+td_skuchild+'"]');
+                 if(td_box.length>1){
+                     $(td_box[0]).attr('rowspan',td_box.length);
+                     for(var j=1;j<td_box.length;j++){
+                         td_box[j].remove();
+                     }
+                 }
+            }
+        }
+    }
+})
+</script>

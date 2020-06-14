@@ -1,0 +1,24 @@
+<view class='commission_qrcode' wx:if='{{pageShow}}'>
+  <view class='cell_group_box'>
+    <view class='van_cell_box'>
+      <view class='content' bindlongpress='saveCanvasShareImg'>
+        <view class='content_img' id='canvas-container'>
+          <image mode='widthFix' src='{{poster_img}}' bindtap='saveCode' wx:if='{{config_poster == 1 && posterImgType != 0}}'></image>
+          <canvas canvas-id="myCanvas" wx:else style="width:100%;height:{{imgHeight}}px;" />
+        </view>
+      </view>
+      <!-- <view class='foot_text'>(长按保存海报分享)</view> -->
+    </view>
+  </view>
+
+  <view class='cell_group'>
+    <view class='van_cell'>      
+      <view class='text'>
+        {{txt_distribution_tips}}
+      </view>
+    </view>
+  </view>
+</view>
+
+<!-- 登录组件 -->
+<login-component loginShow='{{loginShow}}' bind:request='requestLogin'></login-component>

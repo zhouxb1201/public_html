@@ -1,0 +1,15 @@
+<view class='log'>
+  <view class='log_box'>
+    <view class='log_list'>
+      <view class='log_cell' wx:for='{{bonuslist}}' wx:key=''>
+        <view class='order'>
+          <view class="{{item.bonus > 0 ? 'order_money_green' : 'order_money_red'}}">{{item.bonus}}</view>        
+          <view class='order_time'>{{item.create_time}}</view>
+        </view>
+        <view class='log_type'>{{item.text}}</view>
+      </view>
+    </view>
+  </view>
+  
+  <view class='noMore' hidden='{{noMore}}'>没有更多了</view>
+</view>

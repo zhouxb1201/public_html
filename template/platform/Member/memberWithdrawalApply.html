@@ -1,0 +1,504 @@
+{extend name="platform/new_base" /}
+{block name="resources"/}
+{/block}
+{block name="main"}
+                <!-- page -->
+                <form class="v-filter-container">
+                    <div class="filter-fields-wrap">
+                        <div class="filter-item clearfix">
+                            <div class="filter-item__field">
+                                <div class="v__control-group">
+                                    <label class="v__control-label">会员信息</label>
+                                    <div class="v__controls">
+                                        <input type="text" id="userName" class="v__control_input" placeholder="手机号码/会员ID/用户名/昵称" autocomplete="off">
+                                    </div>
+                                </div>
+
+                                <div class="v__control-group">
+                                    <label class="v__control-label">流水单号</label>
+                                    <div class="v__controls">
+                                        <input type="text" id="withdraw_no" class="v__control_input" autocomplete="off">
+                                    </div>
+                                </div>
+
+                                <div class="v__control-group">
+                                    <label class="v__control-label">申请时间</label>
+                                    <div class="v__controls v-date-input-control">
+                                        <label for="orderTime">
+                                            <input type="text" class="v__control_input pr-30" id="orderTime" placeholder="请选择时间" autocomplete="off" data-types="datetime">
+                                            <i class="icon icon-calendar"></i>
+                                            <input type="hidden" id="orderStartDate">
+                                            <input type="hidden" id="orderEndDate">
+                                        </label>
+                                    </div>
+                                </div>
+
+                            </div>
+                        </div>
+                        <div class="filter-item clearfix">
+                            <div class="filter-item__field">
+                                <div class="v__control-group">
+                                    <label class="v__control-label"></label>
+                                    <div class="v__controls">
+                                        <a class="btn btn-primary search"><i class="icon icon-search"></i> 搜索</a>
+                                        <a class="btn btn-success ml-15 dataExcel">导出明细表</a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+
+                <div class="screen-title">
+                    <span class="text">提现列表</span>
+                </div>
+                <ul class="nav nav-tabs v-nav-tabs fs-12">
+                    <li role="presentation" class="active"><a href="javascript:void(0);" class="flex-auto-center withdrawal_list" data-status="9">全部<br><span class='order-count J-all'>(0)</span></a></li>
+                    <li role="presentation"><a href="javascript:void(0);" class="flex-auto-center withdrawal_list" data-status="1">待审核<br><span class='order-count J-waitcheck'>(0)</span></a></li>
+                    <li role="presentation"><a href="javascript:void(0);" class="flex-auto-center withdrawal_list" data-status="2">待打款<br><span class='order-count J-waitmake'>(0)</span></a></li>
+                    <li role="presentation"><a href="javascript:void(0);" class="flex-auto-center withdrawal_list" data-status="3">已打款<br><span class='order-count J-make'>(0)</span></a></li>
+                    <li role="presentation"><a href="javascript:void(0);" class="flex-auto-center withdrawal_list" data-status="5">打款失败<br><span class='order-count J-makefail'>(0)</span></a></li>
+                    <li role="presentation"><a href="javascript:void(0);" class="flex-auto-center withdrawal_list" data-status="4">已拒绝<br><span class='order-count J-nomake'>(0)</span></a></li>
+                    <li role="presentation"><a href="javascript:void(0);" class="flex-auto-center withdrawal_list" data-status="-1">审核不通过<br><span class='order-count J-nocheck'>(0)</span></a></li>
+                </ul>
+                <div class="mb-10 flex flex-pack-justify">
+                    <div class="select_type" style="display: none">
+                        <a class="btn btn-default" href="javascript:void(0);">
+                            <label class="checkbox-inline">
+                                <input type="checkbox" id="checkAll">全选
+                            </label>
+                        </a>
+                        <span class="updatetype">
+
+                        </span>
+
+                    </div>
+                </div>
+                <table class="table v-table table-auto-center">
+                    <thead>
+                        <tr>
+                            <th></th>
+                            <th>流水号</th>
+                            <th>会员信息</th>
+                            <th>提现类型</th>
+                            <th>提现金额</th>
+                            <th>手续费</th>
+                            <th>申请时间</th>
+                            <th>状态</th>
+                            <th class="col-md-2 operationLeft pr-14">操作</th>
+                        </tr>
+                    </thead>
+                    <tbody id="list">
+
+                    </tbody>
+                </table>
+                <input type="hidden" id="page_index">
+                <nav aria-label="Page navigation" class="clearfix">
+                    <ul id="page" class="pagination pull-right"></ul>
+                </nav>
+<input type="hidden" id="status" value="9">
+{/block}
+{block name="script"}
+<script>
+require(['util'],function(util){
+    var status = 9;
+    util.initPage(getWithdrawList);
+    // util.layDate('#startDate');
+    // util.layDate('#endDate');
+    util.layDate('#orderTime',true,function(value, date, endDate){
+        var h=date.hours<10 ?"0"+date.hours : date.hours;
+        var m=date.minutes<10 ?"0"+date.minutes : date.minutes;
+        var s=date.seconds<10 ?"0"+date.seconds : date.seconds;
+        var h1=endDate.hours<10 ?"0"+endDate.hours : endDate.hours;
+        var m1=endDate.minutes<10 ?"0"+endDate.minutes : endDate.minutes;
+        var s1=endDate.seconds<10 ?"0"+endDate.seconds : endDate.seconds;
+        var date1=date.year+'-'+date.month+'-'+date.date+' '+h+":"+m+":"+s;
+        var date2=endDate.year+'-'+endDate.month+'-'+endDate.date+' '+h1+":"+m1+":"+s1;
+
+        if(value){
+            $('#orderStartDate').val(date1);
+            $('#orderEndDate').val(date2);
+        }
+        else{
+            $('#orderStartDate').val('');
+            $('#orderEndDate').val('');
+        }
+
+    });
+    
+    //点击全选
+    $("#checkAll").on('click',function(){
+        $(".v-table input[type = 'checkbox']").prop("checked", this.checked);
+    })
+    function getWithdrawList(page_index){
+        $("#page_index").val(page_index);
+        var user_name = $("#userName").val();
+        var end_date = $("#orderEndDate").val();
+        var start_date = $("#orderStartDate").val();
+        var withdraw_no = $("#withdraw_no").val();
+        $.ajax({
+            type: "post",
+            url: "{:__URL('PLATFORM_MAIN/member/getWithdrawCount')}",
+            success: function (data) {
+                $('.J-all').html('(' + data.countall + ')');
+                $('.J-waitcheck').html('(' + data.waitcheck + ')');
+                $('.J-waitmake').html('(' + data.waitmake + ')');
+                $('.J-make').html('(' + data.make + ')');
+                $('.J-makefail').html('(' + data.makefail + ')');
+                $('.J-nomake').html('(' + data.nomake + ')');
+                $('.J-nocheck').html('(' + data.nocheck + ')');
+            }
+        });
+        $.ajax({
+            type : "post",
+            url : "{:__URL('PLATFORM_MAIN/member/userCommissionWithdrawList')}",
+            async : true,
+            data : {
+                "withdraw_no":withdraw_no,
+                "page_index" : page_index,
+                "user_name":user_name,
+                "start_date":start_date,
+                "end_date":end_date,
+                "status" : status
+            },
+            success : function(data) {
+                var html = '';
+                if (data["data"].length > 0) {
+                    for (var i = 0; i < data["data"].length; i++) {
+                        if(data["data"][i]["type"] == 1 || data["data"][i]["type"] == 4){
+                            type = "银行卡";
+                        }else if(data["data"][i]["type"] == 2){
+                            type = "微信";
+                        }else if(data["data"][i]["type"] == 3){
+                            type = "支付宝";
+                        }
+                        html += '<tr>';
+                        html +='<td><input type="checkbox" name="check_id" value='+ data["data"][i]["id"]+'></td>';
+                        html += '<td>' + data["data"][i]["withdraw_no"] + '</td>';
+                        html += '<td><a href="' + __URL('PLATFORM_MAIN/member/memberDetail?member_id=' + data["data"][i]["uid"]) + '" class="text-primary block mt-04">' + data["data"][i]["user_info"]+ '</a></td>';
+                        html += '<td>' + type + '</td>';
+                        html += '<td>' + data["data"][i]["cash"] + '</td>';
+                        html += '<td>' + data["data"][i]["charge"] + '</td>';
+                        html += '<td>' + data["data"][i]["ask_for_date"] + '</td>';
+                        html += '<td>';
+                        if(data["data"][i]["status"] == 1){
+                            html += '<span class="label label-danger">待审核</span>';
+                        }else if(data["data"][i]["status"] == 2){
+                            html += '<span class="label label-danger">待打款</span>';
+                        }else if(data["data"][i]["status"] == -1){
+                            html += '<span class="label label-danger">审核不通过</span>';
+                        }else if(data["data"][i]["status"] == 3){
+                            html += '<span class="label label-success">已打款</span>';
+                        }else if(data["data"][i]["status"] == 4){
+                            html += '<span class="label label-danger">拒绝打款</span>';
+                        }else if(data["data"][i]["status"] == 5){
+                            html += '<span class="label label-danger">打款失败</span>';
+                        }
+                        html += '</td>';
+                        html += '<td class="operationLeft">';
+                        if(data["data"][i]["status"] == 1){
+                            html += '<a href="javascript:void(0);" class="btn-operation audit" data-id="' + data["data"][i]["id"]+ '">审核通过</a>';
+                            html += '<a href="javascript:void(0);" class="btn-operation refuse" data-id="' + data["data"][i]["id"]+ '">审核不通过</a>';
+                        }else if(data["data"][i]["status"] == 2){
+                            html += '<a href="javascript:void(0);" class="btn-operation make_money" data-id="' + data["data"][i]["id"]+ '">同意打款</a>';
+                            html += '<a href="javascript:void(0);" class="btn-operation refuse_money" data-id="' + data["data"][i]["id"]+ '">拒绝打款</a>';
+                        }else if(data["data"][i]["status"] == 5){
+                            html += '<a href="javascript:void(0);" class="btn-operation reason" data-id="' + data["data"][i]["id"]+ '">原因</a>';
+                            html += '<a href="javascript:void(0);" class="btn-operation make_money" data-id="' + data["data"][i]["id"]+ '">重新打款</a>';
+                            html += '<a href="javascript:void(0);" class="btn-operation refuse_money" data-id="' + data["data"][i]["id"]+ '">拒绝打款</a>';
+                        }else{
+                            html += '<a href="javascript:void(0);" class="btn-operation details" data-id="' + data["data"][i]["id"]+ '">详情</a>';
+                        }
+                        html += '</td>';
+                        html += '</tr>';
+                    }
+                } else {
+                    html += '<tr><td colspan="8" class="h-200">暂无符合条件的数据记录</td></tr>';
+                }
+                $('#page').paginator('option', {
+                    totalCounts: data['total_count']  // 动态修改总数
+                });
+                $("#list").html(html);
+                util.tips();
+                details();audit();refuse();make_money();refuse_money();
+            }
+        });
+    }
+    $('.withdrawal_list').on('click',function(){
+        status = $(this).data('status');
+        if(status!=9){
+            $('.select_type').show();
+        }else{
+            $('.select_type').hide();
+        }
+        if(status==1){
+               var str= "<a class=\"btn btn-default check_all\" href=\"javascript:void(0);\" data-status=\"1\">审核通过</a> ";
+                   str += "<a class=\"btn btn-default check_all\" href=\"javascript:void(0);\" data-status=\"-1\">审核不通过</a>";
+               $(".updatetype").html(str);
+        }
+        if(status==2){
+            var str1= "<a class=\"btn btn-default check_all\" href=\"javascript:void(0);\" data-status=\"3\">同意打款</a> ";
+                str1 += "<a class=\"btn btn-default check_all\" href=\"javascript:void(0);\" data-status=\"4\">拒绝打款</a>";
+            $(".updatetype").html(str1);
+        }
+        if(status==5){
+            var str2= "<a class=\"btn btn-default check_all\" href=\"javascript:void(0);\" data-status=\"3\">重新打款</a> ";
+            $(".updatetype").html(str2);
+        }
+        if(status==4 || status==3 || status==-1){
+            $('.select_type').hide();
+        }
+        $('#status').val(status);
+        $(this).parent('li').addClass('active').siblings().removeClass('active');
+        util.initPage(getWithdrawList);
+    });
+    $('.search').on('click',function(){
+        status = $('.nav-tabs').find('li.active').find('a').data('status');
+        util.initPage(getWithdrawList);
+    });
+    $('body').on('click','.check_all',function(){
+        var check_id = $("input:checkbox[name='check_id']:checked").map(function (index, elem) {
+            return $(elem).val();
+        }).get().join(',');
+        if(check_id==''){
+            util.message('请先选择用户','danger');
+            return false;
+        }
+        status = $(this).data('status');
+        if(status==1 || status==-1){
+            if(status==1){
+                var title = '确认全部审核通过吗？';
+                var memo = '后台审核通过';
+            }
+            if(status==-1){
+                var title = '确认审核不通过吗？';
+                var memo = '后台审核不通过';
+            }
+            util.alert(title, function () {
+                $.ajax({
+                    type: "post",
+                    url: "{:__URL('PLATFORM_MAIN/member/userCommissionWithdraw')}",
+                    data: {
+                        "id": check_id,
+                        "status": status,
+                        "memo":memo
+                    },
+                    success: function (data) {
+                        status = $('#status').val();
+                        if (data["code"] > 0) {
+                            util.message(data["message"], 'success', getWithdrawList($('#page_index').val()));
+                        } else {
+                            util.message(data["message"], 'danger');
+                        }
+                    }
+                });
+            })
+        }
+        if(status==3 || status==4){
+            if(status==3){
+                var title = '确认全部同意打款吗？';
+                var memo = '后台同意打款';
+            }
+            if(status==4){
+                var title = '确认全部拒绝打款吗？';
+                var memo = '后台拒绝打款';
+            }
+            util.alert(title, function () {
+                $.ajax({
+                    type: "post",
+                    url: "{:__URL('PLATFORM_MAIN/member/userWithdrawMake')}",
+                    async: true,
+                    data: {
+                        "id": check_id,
+                        "status": status,
+                        "memo": memo
+                    },
+                    success: function (data) {
+                        status = $('#status').val();
+                        if (data["code"] > 0) {
+                            util.message(data["message"], 'success', getWithdrawList($('#page_index').val()));
+                        } else  if (data["code"] == -9000){
+                            util.message(data["data"], 'danger');
+                        } else {
+                            util.message(data["message"], 'danger');
+                        }
+                    }
+                })
+            })
+        }
+    });
+    /**
+     * 提现流水详情
+     */
+    function details(){
+        $('.details').on('click',function(){
+            var id = $(this).data('id');
+            var url = __URL('PLATFORM_MAIN/Member/getWithdrawalsInfo')+'&id='+id;
+            util.confirm('流水详情', 'url:'+url,function(){
+
+            })
+        });
+    }
+    /**
+     * 通过提现申请
+     */
+    function audit(){
+        $('.audit').on('click',function(){
+            var status = $('.nav-tabs').find('li.active').find('a').data('status');
+            var id = $(this).data('id');
+            var url = __URL('PLATFORM_MAIN/Member/withdrawAudit')+'&id='+id;
+            util.confirm('审核通过', 'url:'+url,function(){
+                $.ajax({
+                    type : "post",
+                    url : "{:__URL('PLATFORM_MAIN/member/userCommissionWithdraw')}",
+                    async : true,
+                    data : {
+                        "id" : id,
+                        "status":1
+                    },
+                    success : function(data) {
+                        status = $('#status').val();
+                        if (data["code"] > 0) {
+                            util.message(data["message"],'success',getWithdrawList($('#page_index').val()));
+                        }else  if (data["code"] == -9000){
+                            util.message(data["data"], 'danger',getWithdrawList($('#page_index').val()));
+                        }else{
+                            util.message(data["message"],'danger',getWithdrawList($('#page_index').val()));
+                        }
+                    }
+                })
+            })
+        });
+    }
+    /**
+     * 拒绝提现申请
+     */
+    function refuse(){
+        $('.refuse').on('click',function(){
+            var id = $(this).data('id');
+            var status = $('.nav-tabs').find('li.active').find('a').data('status');
+            var html = "<div class='form-group'>" ;
+                html +="<label class='col-md-3 control-label'>备注</label>";
+                html +="<div class='col-md-8'>";
+                html +="<textarea class='form-control' id='refuse_memo' rows='4' placeholder='输入备注的内容'></textarea>";
+                html +="</div></div>";
+            util.confirm('审核不通过', html,function(){
+                var memo = this.$content.find('#refuse_memo').val();
+                $.ajax({
+                    type : "post",
+                    url : "{:__URL('PLATFORM_MAIN/member/userCommissionWithdraw')}",
+                    async : true,
+                    data : {
+                        "id" : id,
+                        "status":-1,
+                        "memo":memo
+                    },
+                    success : function(data) {
+                        status = $('#status').val();
+                        if (data["code"] > 0) {
+                            util.message(data["message"],'success',getWithdrawList($('#page_index').val()));
+                        }else{
+                            util.message(data["message"],'danger',getWithdrawList($('#page_index').val()));
+                        }
+                    }
+                })
+            })
+        });
+    }
+    /**
+     * 同意打款
+     */
+    function make_money(){
+        $('.make_money').on('click',function(){
+            // var status = $('.nav-tabs').find('li.active').find('a').data('status');
+            var id = $(this).data('id');
+            var url = __URL('PLATFORM_MAIN/Member/withdrawMakeMoney')+'&id='+id;
+            util.confirm('确认打款', 'url:'+url,function(){
+                var memo = this.$content.find('#make_money_memo').val();
+                var withdraw_method = $('input[name=withdraw_method]:checked').val();
+                var status;
+                if(withdraw_method == '1'){
+                    status = 3;
+                }else{
+                    status = 5;//手动线下转账
+                }
+                $.ajax({
+                    type : "post",
+                    url : "{:__URL('PLATFORM_MAIN/member/userWithdrawMake')}",
+                    async : true,
+                    data : {
+                        "id" : id,
+                        "status":status,
+                        "memo":memo
+                    },
+                    success : function(data) {
+                        status = $('#status').val();
+                        if (data["code"] > 0) {
+                            util.message(data["message"],'success',getWithdrawList($('#page_index').val()));
+                        }else  if (data["code"] == -9000){
+                            util.message(data["data"], 'danger',getWithdrawList($('#page_index').val()));
+                        }else{
+                            util.message(data["message"],'danger',getWithdrawList($('#page_index').val()));
+                        }
+                    }
+                })
+            })
+        });
+    }
+    //展示原因
+    $('body').on('click','.reason', function(){
+        var id = $(this).data('id');
+        var url = __URL('PLATFORM_MAIN/Member/withdrawFailReason')+'&id='+id;
+        util.confirm('原因', 'url:'+url,function(){
+        })
+    });
+    /**
+     * 拒绝打款
+     */
+    function refuse_money(){
+        $('.refuse_money').on('click',function(){
+            var status = $('.nav-tabs').find('li.active').find('a').data('status');
+            var id = $(this).data('id');
+            var html = "<div class='form-group'>" ;
+                html +="<label class='col-md-3 control-label'>备注</label>";
+                html +="<div class='col-md-8'>";
+                html +="<textarea id='refuse_money_memo' class='form-control' rows='4' placeholder='输入备注的内容'></textarea>";
+                html +="</div></div>";
+            util.confirm('拒绝打款', html,function(){
+                var memo = this.$content.find('#refuse_money_memo').val();
+                $.ajax({
+                    type : "post",
+                    url : "{:__URL('PLATFORM_MAIN/member/userWithdrawMake')}",
+                    async : true,
+                    data : {
+                        "id" : id,
+                        "status":4,
+                        "memo":memo
+                    },
+                    success : function(data) {
+                        status = $('#status').val();
+                        if (data["code"] > 0) {
+                            util.message(data["message"],'success',getWithdrawList($('#page_index').val()));
+                        }else{
+                            util.message(data["message"],'danger',getWithdrawList($('#page_index').val()));
+                        }
+                    }
+                })
+            })
+        });
+    }
+
+    /**
+     * 提现流水数据导出
+     */
+    $('.dataExcel').on('click',function(){
+        var withdraw_no = $("#withdraw_no").val();
+        var user_name = $("#userName").val();
+        status = $("#status").val();
+        var end_date = $("#orderEndDate").val();
+        var start_date = $("#orderStartDate").val();
+        window.location.href=__URL("PLATFORM_MAIN/member/userCommissionWithdrawListDataExcel?status="+status+"&start_date="+start_date+"&end_date="+end_date+"&user_name="+user_name+"&withdraw_no="+withdraw_no);
+    })
+})
+</script>
+{/block}

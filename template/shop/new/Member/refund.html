@@ -1,0 +1,192 @@
+{extend name="shop/new/Member/base" /}
+{block name="main"}
+<div class="v-main-right fl">
+                    <div class="v-container">
+                        <!--page-->
+                        <div class="search clearfix">
+                            <div class="searchs fr">
+                                <input type="text" class="searchs-ipt search_text" placeholder="订单号">
+                                <button class="search_to">搜索</button>
+                            </div>
+                        </div>
+
+                        <div class="cart-wrapper">
+                            <div class="cart-header">
+                                <div class="cart-table-header">
+                                    <div class="inner-box c6">
+                                        <div class="th th-item">商品信息</div>
+                                        <div class="th th-receive">收货人</div>
+                                        <div class="th th-money">金额</div>
+                                        <div class="th th-state">订单状态</div>
+                                        <div class="th th-op">操作</div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="cart-list" id="list">
+
+                            </div>
+                        </div>
+
+                        <div class="page clearfix">
+                            <div class="M-box3 m-style fr"></div>
+                        </div>
+                        <!--page-->
+                    </div>
+                </div>
+<input type="hidden" id="page_index">
+{/block}
+{block name="javascript"}
+<script>
+    require(['common','dialog'], function (common,Dialog) {
+        Dialog.withAccount(".myOrder-ul","li","active");
+        LoadingInfo(1);
+        function LoadingInfo(page_index) {
+            $("#page_index").val(page_index);
+            var search_text = $(".search_text").val();
+            $.ajax({
+                    type: "post",
+                    url:  __URL(SHOPMAIN + "/member/backList"),
+                    data: {
+                        "search_text":search_text,
+                        "page_index": page_index
+                    },
+                    success: function (data) {
+                        var html = '';
+                        if (data["data"].length > 0) {
+                            for (var i = 0; i < data["data"].length; i++) {
+                                html += '<div class="cart-item">';
+                                html += '<div class="item-info">';
+                                if(data["data"][i]['shop_name']){
+                                    html += '<span class="storeName">'+data["data"][i]['shop_name']+'</span>';
+                                }else{
+                                    html += '<span class="storeName">官方旗舰店</span>';
+                                }
+                                html += '<span>订单号：<i class="orderNum">'+data["data"][i]['order_no']+'</i></span>';
+                                html += '<span class="times">'+data["data"][i]['create_time']+'</span>';
+                                html += '</div>';
+                                for (var j = 0; j < data["data"][i]["order_item_list"].length; j++) {
+                                    var pic_cover_micro = __IMG(data["data"][i]["order_item_list"][j]["picture"]['pic_cover_micro']);//商品图
+                                    var goods_id = data["data"][i]["order_item_list"][j]["goods_id"];//商品id
+                                    var goods_name = data["data"][i]["order_item_list"][j]["goods_name"];//商品名称
+                                    var sku_name = data["data"][i]["order_item_list"][j]["sku_name"];//sku名称
+                                    var price = data["data"][i]["order_item_list"][j]["price"];//价格
+                                    var num = data["data"][i]["order_item_list"][j]["num"];//购买数量
+                                    var spec_info = data["data"][i]["order_item_list"][j]["spec"];
+                                    var order_id = data["data"][i]["order_item_list"][j]["order_id"];//订单id
+                                    var order_goods_id = data["data"][i]["order_item_list"][j]["order_goods_id"];//订单id
+                                    html += '<div class="item-main clearfix">';
+                                    html += '<div class="td td-item clearfix">';
+                                    html += '<div class="item-pic">';
+                                    html += '<a href="' + __URL('SHOP_MAIN/goods/goodsinfo?goodsid=' + goods_id) + '" class="item-img-box">';
+                                    html += '<img src="' + pic_cover_micro + '" width="60px" height="60px" alt="">';
+                                    html += '</a>';
+                                    html += '</div>';
+                                    html += '<div class="item-desc">';
+                                    html += '<a href="' + __URL('SHOP_MAIN/goods/goodsinfo?goodsid=' + goods_id) + '" class="item-title">' + goods_name + '</a>';
+                                    html += '<p class="colors">';
+                                    $.each(spec_info, function (spec_k, spec_v) {
+                                        html += spec_v['spec_name'] + ':' + spec_v['spec_value_name'] + ' ';
+                                    });
+                                    html += '</p>';
+                                    html += '</div>';
+                                    html += '<div class="item-cancel" style="text-align: right">';
+                                    html += '<p class="colors">*<span>' + num + '</span></p>';
+                                    if (data["data"][i]["order_item_list"][j]['refund_status'] == 1 && data["data"][i]['promotion_status'] == 0 && data["data"][i]["order_item_list"][j]['refund_type'] == 1){
+                                        html += '<a href="javascript:void(0);" class="item-return cancelReturn" data-id="'+order_id+'" data-goodsid="'+order_goods_id+'">取消退款</a>';
+                                    }else if (data["data"][i]["order_item_list"][j]['refund_status'] == 1 && data["data"][i]['promotion_status'] == 0 && data["data"][i]["order_item_list"][j]['refund_type'] == 2){
+                                        html += '<a href="javascript:void(0);" class="item-return cancelReturn" data-id="'+order_id+'" data-goodsid="'+order_goods_id+'">取消退货</a>';
+                                    }
+                                    html += '</div>';
+                                    html += '</div>';
+                                    if(j ==0){
+                                        html += '<div class="td td-receive">'+data["data"][i]['receiver_name']+'</div>';
+                                        html += '<div class="td td-money">';
+                                        html += '<div>';
+                                        html += '<p>￥'+data["data"][i]['order_money']+'</p>';
+                                        html += '<p>'+data["data"][i]['pay_type_name']+'</p>';
+                                        html += '</div>';
+                                        html += '</div>';
+                                        if(data["data"][i]["order_item_list"][j]['refund_status']==1) {
+                                            html += '<div class="td td-state"><a href="javascript:void(0);">退款申请中</a></div>';
+                                        }
+                                        if(data["data"][i]["order_item_list"][j]['refund_status']==4) {
+                                            html += '<div class="td td-state"><a href="javascript:void(0);">等待商家打款</a></div>';
+                                        }
+                                        if(data["data"][i]["order_item_list"][j]['refund_status']==-3) {
+                                            html += '<div class="td td-state"><a href="javascript:void(0);">申请已拒绝</a></div>';
+                                        }
+                                        if(data["data"][i]["order_item_list"][j]['refund_status']==5) {
+                                            html += '<div class="td td-state"><a href="javascript:void(0);">打款成功</a></div>';
+                                        }
+                                        if(data["data"][i]["order_item_list"][j]['refund_status']==-1) {
+                                            html += '<div class="td td-state"><a href="javascript:void(0);">拒绝打款</a></div>';
+                                        }
+                                        html += '<div class="td td-op">' ;
+                                        if (data["data"][i]["order_item_list"][j]['refund_status'] == 1  && data["data"][i]['promotion_status'] == 1 && data["data"][i]["order_item_list"][j]['refund_type'] == 1){
+                                            html += '<a href="javascript:void(0);" class="item-return cancelReturn" data-id="'+order_id+'" data-goodsid="'+order_goods_id+'">取消退款</a>';
+                                        }else if (data["data"][i]["order_item_list"][j]['refund_status'] == 1  && data["data"][i]["order_item_list"][j]['refund_type'] == 2 && data["data"][i]['promotion_status'] == 1){
+                                            html += '<a href="javascript:void(0);" class="item-return cancelReturn" data-id="'+order_id+'" data-goodsid="'+order_goods_id+'">取消退货</a>';
+                                        }
+                                        html += '<a href="' + __URL('SHOP_MAIN/member/orderDetail?order_id=' + data["data"][i]["order_id"]) + '">订单详情</a>';
+                                        html += '</div>';
+                                    }else{
+                                        html += '<div class="td td-receive"></div>';
+                                        html += '<div class="td td-money">';
+                                        html += '<div>';
+                                        html += '<p></p>';
+                                        html += '<p></p>';
+                                        html += '</div>';
+                                        html += '</div>';
+                                        html += '<div class="td td-state"><a href="javascript:void(0);"></a></div>';
+                                        html += '<div class="td td-op"><a href="javascript:void(0);"></a></div>';
+                                    }
+
+                                    html += '</div>';
+                                }
+                                html += '</div>';
+                            }
+                        }else{
+                            html += '<div style="text-align:center">暂无相关订单！</div>';
+                        }
+                        $("#list").html(html);
+                        common.Pages('.M-box3', data['total_count'], data["page_count"], page_index, LoadingInfo);
+                    }
+                }
+            )
+            ;
+        }
+        $('.search_to').on('click',function(){
+            LoadingInfo(1);
+        });
+        $('body').on('click',".cancelReturn",function(){
+            var order_goods_id = $(this).data('goodsid');
+            var order_id = $(this).data('id');
+            layer.confirm('确认取消退款？', {
+                btn: ['确定','取消'] //按钮
+            }, function(){
+                $.ajax({
+                    type: "post",
+                    url: __URL(SHOPMAIN + "/member/cancelOrderRefund"),
+                    data: {
+                        "order_goods_id": order_goods_id,
+                        "order_id":order_id
+                    },
+                    success: function (data) {
+                        if(data['code']>0){
+                            layer.msg('取消退款成功');
+                            function load(){
+                                location.href=__URL(SHOPMAIN + "/member/orderlist");
+                            }
+                            setTimeout(load(),1500);
+                        }else{
+                            layer.msg(data['message']);
+                        }
+                    }
+                })
+            });
+
+        })
+    });
+</script>
+{/block}

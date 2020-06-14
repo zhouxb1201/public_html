@@ -1,0 +1,20 @@
+{
+  "component": true,
+  "usingComponents": {
+    "tpl-banner-component": "/pages/component/template/tpl-banner/index",
+    "tpl-search-component": "/pages/component/template/tpl-search/index",
+    "tpl-picturew-component": "/pages/component/template/tpl-picturew/index",
+    "tpl-picture-component": "/pages/component/template/tpl-picture/index",
+    "tpl-blank-component": "/pages/component/template/tpl-blank/index",
+    "tpl-title-component": "/pages/component/template/tpl-title/index",
+    "tpl-goods-component": "/pages/component/template/tpl-goods/index",
+    "tpl-menu-component": "/pages/component/template/tpl-menu/index",
+    "tpl-shop-component": "/pages/component/template/tpl-shop/index",
+    "tpl-line-component": "/pages/component/template/tpl-line/index",
+    "tpl-richtext-component": "/pages/component/template/tpl-richtext/index",
+    "tpl-notice-component": "/pages/component/template/tpl-notice/index",
+    "tpl-listmenu-component": "/pages/component/template/tpl-listmenu/index",
+    "tpl-shophead-component": "/pages/component/template/tpl-shophead/index",
+    "tpl-goodsIntegral-component": "/pages/component/template/tpl-goodsIntegral/index"
+  }
+}

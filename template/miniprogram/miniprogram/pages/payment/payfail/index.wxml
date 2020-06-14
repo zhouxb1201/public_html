@@ -1,0 +1,12 @@
+<view class='pay_success'> 
+  <view class='success_top'>
+    <view class='success_img'>
+        <image mode='widthFix' src='/images/result-pay-fail.png'></image>
+      </view>      
+      <view>支付失败</view>
+  </view>
+  <view class='btn_group'>
+    <text bindtap='onPageOrder'>重新支付</text>
+    <text bindtap='onPageOrder'>查看订单</text>
+  </view>
+</view>

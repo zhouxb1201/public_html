@@ -1,0 +1,61 @@
+
+.vertical{
+  padding: 0 0 0 70rpx;
+}
+.van_steps{
+  overflow: hidden;
+  background-color: #fff;
+}
+.step_wrap{
+  flex: 1;
+  position: relative;
+  color: #969799;
+}
+.step_wrap .step_title .head{
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.step_wrap .step_title .step_content{
+  color: #999999;
+  padding-top: 40rpx;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp:3; 
+}
+.step_wrap .step_title .step_img{
+  display: flex;
+  align-items: center;  
+  padding: 20rpx 0;
+}
+.step_wrap .step_title .step_img .img_item{
+  width: 160rpx;
+  height: 160rpx;
+  margin-right:16rpx; 
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.step_vertical{
+  float: none;
+  font-size: 28rpx;
+  line-height: 36rpx;
+  padding: 20rpx 20rpx 20rpx 0;
+}
+ .step_vertical .step__circle_container{
+   position: absolute;
+   z-index: 2;
+   display: inline-block;
+   top: 11px;
+   left: -22px;
+}
+.step_vertical .step_line{
+  position: absolute;
+  top: 16px;
+  left: -15px;
+  width: 1px;
+  height: 100%;
+  background-color: #ebedf0;
+}

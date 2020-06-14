@@ -1,0 +1,65 @@
+page{
+  font-size: 28rpx;
+  background-color: #f8f8f8;
+}
+.cell_group{
+  margin: 30rpx; 
+  background-color: #fff;
+}
+.can_use_balance{
+  padding: 20rpx 30rpx;
+}
+.can_use_balance_detail{
+  display: flex;
+  justify-content: space-between;
+  padding: 20rpx 0;
+  border-bottom: 1px solid #eee;
+}
+.can_use_balance_value{
+  font-size: 20px;
+  color: #ff454e;
+}
+.ondetail{
+  height: 60rpx;
+  padding: 0 16rpx;
+  min-width: 120rpx;
+  line-height: 56rpx;
+  border:1px solid #ebedf0;
+}
+.cell{
+  width: 100%;
+  display: flex;
+  padding: 20rpx 30rpx;
+  box-sizing: border-box;
+  color: #323233;
+  justify-content: space-between;
+}
+.cell .cell_label{
+  font-size: 24rpx;
+  color: #969799;
+  margin-top: 5rpx;
+}
+.cell .cell_value{
+  font-size: 20px;
+  color: #ff454e;
+}
+.bottomLine{
+  border-bottom: 1px solid #ebedf0
+}
+.foot_group{
+  margin: 60rpx 30rpx;
+}
+.foot_group .btn{
+  margin-bottom: 30rpx;
+  font-size: 28rpx;
+  height: 88rpx;
+  line-height: 84rpx;
+  border-radius: 50rpx;
+  border: 1rpx solid #f44;
+  background-color: #fff;
+  color: #f44;
+}
+.foot_group .btn.recharge{
+  background-color: #f44;
+  color: #fff;
+}

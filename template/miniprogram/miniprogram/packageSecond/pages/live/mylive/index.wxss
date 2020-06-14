@@ -1,0 +1,79 @@
+page{
+  font-size: 28rpx;
+  background-color: #f8f8f8;
+}
+.header{
+  background: #fff;
+}
+.header .header_box{
+  display: flex;
+  align-items: center;
+  padding: 20rpx 30rpx;
+}
+.header .header_box .user_img{
+  width: 100rpx;
+  height: 100rpx;
+  overflow: hidden;
+  border-radius: 50%;
+}
+.header .header_box .user_img image{
+  width: 100%;
+  height: 100%;
+}
+.header .header_box .user_info{
+  margin-left: 20rpx;
+  line-height: 40rpx;
+}
+.header .header_box .user_info .home_box .home_no{
+  background: #f44;
+  color: #fff;
+  padding: 8rpx 15rpx;
+  border-radius: 50rpx;
+}
+.header_row{
+  display: flex;
+  align-items: center;
+  padding: 20rpx 30rpx;  
+}
+.header_row .fans{
+  margin-left: 100rpx;
+}
+.strong{
+  font-weight: 700;
+}
+
+.profit_box{
+  background: #fff;
+  margin: 50rpx 0;
+}
+.profit_box .title{
+  padding: 20rpx 30rpx;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border-bottom: 1px solid #ebedf0;
+}
+.profit_list{
+  padding: 20rpx 30rpx;
+  display: flex;
+  align-items: center;
+  justify-content: space-around;
+}
+.profit_list .item{
+  text-align: center;
+  line-height: 40rpx;
+}
+
+.van_group{
+  background-color: #fff;
+}
+.van_group .row{
+  padding: 20rpx 30rpx;
+  border-bottom: 1px solid #ebedf0;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.van_group .row .icon_r{
+  color: #b7b7b7;
+}

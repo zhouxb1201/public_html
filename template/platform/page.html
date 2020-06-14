@@ -1,0 +1,125 @@
+<script src="PLATFORM_JS/page.js"></script>
+<footer class="panel-footer">
+	<div class="row" id="page">
+		<div class="col-sm-5" >
+<!--                     <select class="input-sm form-control input-s-sm inline"> -->
+<!--                       <option value="0">Bulk action</option> -->
+<!--                       <option value="1">Delete selected</option> -->
+<!--                       <option value="2">Bulk edit</option> -->
+<!--                       <option value="3">Export</option> -->
+<!--                     </select> -->
+<!--                     <button class="btn btn-sm btn-default">Apply</button> -->
+        </div>
+		<div class="col-sm-2 text-center"> 
+			<small class="text-muted inline m-tb-8">总计 <span id="total_count_num"></span>个记录 分为<span id="page_count_num"></span>页</small> 
+		</div>
+		<div class="col-sm-5 text-right text-center-xs">
+			<ul class="pagination pagination-sm m-t-none m-b-none">
+				<li><a id="beginPage" class="btn btn-sm btn-default disabled">首页</a></li>
+				<li><a id="prevPage" class="btn btn-sm btn-default disabled">上一页</a></li>
+				<li id="pageNumber"></li>
+				<li><a id="nextPage" class="btn btn-sm btn-default">下一页</a></li>
+				<li><a id="lastPage" class="btn btn-sm btn-default">末页</a></li>
+			</ul>
+		</div>
+		<input type="hidden" id="page_count" />
+	</div>
+</footer>
+<script>
+$(function() {
+	$("#page").show();//显示分页z
+});
+function JumpForPage(obj) {
+	jumpNumber = $(obj).text();
+	LoadingInfo($(obj).text());
+	$("#page ul li a.active").removeClass("active");
+	$(obj).addClass("active");
+	if (jumpNumber == 1) {
+		changeClass("prev");
+	} else if (jumpNumber < parseInt($("#page_count").val())) {
+		changeClass();
+	} else if (jumpNumber == parseInt($("#page_count").val())) {
+		changeClass("next");
+	}
+}
+$("#beginPage").click(function() {
+	if(jumpNumber!=1){
+		jumpNumber = 1;
+		LoadingInfo(1);
+		changeClass("begin");
+	}
+});
+//上一页
+$("#prevPage").click(function() {
+	var obj = $("#pageNumber .active");
+	var index = parseInt(obj.text()) - 1;
+	if (index > 0) {
+		obj.removeClass("active");
+		obj.prev().addClass("active");
+		jumpNumber = index;
+		LoadingInfo(index);
+		//判断是否是第一页
+		if (index == 1) {
+			changeClass("prev");
+		} else {
+			changeClass();
+		}
+	}
+});
+//下一页
+$("#nextPage").click(function() {
+	var obj = $("#pageNumber .active");
+	//当前页加一（下一页）
+	var index = parseInt(obj.text()) + 1;
+	if (index <= $("#page_count").val()) {
+		jumpNumber = index;
+		LoadingInfo(index);
+		obj.removeClass("active");
+		obj.next().addClass("active");
+		//判断是否是最后一页
+		if (index == $("#page_count").val()) {
+			changeClass("next");
+		} else {
+			changeClass();
+		}
+	}
+});
+//末页
+$("#lastPage").click(
+		function() {
+			jumpNumber = $("#page_count").val();
+			if(jumpNumber>1){
+				LoadingInfo(jumpNumber);
+				$("#pageNumber a:eq("+ (parseInt($("#page_count").val()) - 1) + ")").text($("#page_count").val());
+				changeClass("next");
+			}
+		});
+                function getCurrentIndex(operationId,currentObj,conditions){
+	if(conditions == undefined){
+		conditions = "";
+	}
+	var currentPage = $("#pageNumber a[class='currentPage']").text();//当前页
+	var currentDataLength = $(currentObj).children(conditions).length;//当前页共显示多少条数据
+	var currentIndex = currentPage;//查询当前第几页
+
+	//单个删除
+	if(operationId.toString().indexOf(",") == -1){
+		if(currentDataLength == 1 && parseInt(currentPage) == parseInt($("#page_count").val()) ){
+			//当前页只有一个,并且是最后一页
+			currentIndex--;
+		}
+	}else{
+		var currentSelectLength = $(currentObj).children(conditions).find("input:checked").length;;//当前页选择的数据
+		//批量删除
+		//如果是最后一页，并且数据等于一个
+		if(parseInt(currentPage) == parseInt($("#page_count").val()) && currentDataLength == currentSelectLength){
+			currentIndex--;
+		}
+	}
+	if(currentIndex == 0){
+		currentIndex = 1;
+	}
+//	alert(currentIndex+","+currentPage+","+currentDataLength);
+	return currentIndex;
+}
+</script>

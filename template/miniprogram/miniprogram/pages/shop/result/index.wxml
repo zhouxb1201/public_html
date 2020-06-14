@@ -1,0 +1,29 @@
+<view class='apply_result'>
+  <view class='cell'>
+    <view class='status' wx:if="{{statusData.status == 'is_apply'}}">
+      <view class='icon'>
+        <van-icon name="clock" size='60px'/>
+      </view>
+      <view>店铺入驻审核中</view>
+    </view>
+
+    <view class='status' wx:if="{{statusData.status == 'refuse_apply'}}">
+      <view class='icon'>
+        <van-icon name="clear" size='60px'/>
+      </view>
+      <view>商家拒绝您的入驻申请</view>
+      <view class='foot_group'>
+        <view class='reset_btn' bindtap='onApplyPage'>重新申请</view>
+      </view>
+    </view>
+
+    <view class='status' wx:if="{{statusData.status == 'is_system'}}">
+      <view class='icon'>
+        <van-icon name="shop" size='60px'/>
+      </view>
+      <view>您已经是店铺卖家，请用电脑浏览器访问卖家后台管理你的店铺。</view>
+      <view class='url' bindtap='copyText'>{{statusData.url}}</view>
+    </view>
+
+  </view>
+</view>

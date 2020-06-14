@@ -1,0 +1,125 @@
+{extend name="admin/base" /}
+{block name="main"}
+<!-- page -->
+<form class="form-horizontal widthFixedForm" role="form" id="addUser" autocomplete="off">
+    <input type="password" name="user_password" style="height:0px; border:none;">
+    <div class="form-group">
+        <label for="mobile" class="col-md-2 control-label"><span class="red">*</span>手机号</label>
+        <div class="col-md-8">
+            <input type="text" class="form-control" id="mobile" name="mobile" required title="请输入手机号">
+        </div>
+    </div>
+    <!--密码-->
+    <div class="form-group">
+        <label for="user_password" class="col-md-2 control-label"><span class="red">*</span>密码</label>
+        <div class="col-md-8">
+            <input type="password" class="form-control" id="user_password" name="user_password" required title="请输入密码" placeholder="请输入密码" autocomplete="off">
+        </div>
+    </div>
+    
+    <!--使用人-->
+    <div class="form-group">
+        <label for="user" class="col-md-2 control-label"><span class="red">*</span>使用人</label>
+        <div class="col-md-8">
+            <input type="text" class="form-control" id="user" name="user" required title="请输入使用人">
+        </div>
+    </div>
+    <!--角色下拉框-->
+    <div class="form-group">
+        <label for="group_id" class="col-md-2 control-label"><span class="red">*</span>角色</label>
+        <div class="col-md-8">
+            <select class="form-control" name="group_id" id="group_id" required title="请选择角色">
+                <option value="">请选择角色</option>
+                {foreach name="auth_group" item="v1"}
+                <option value="{$v1['group_id']}">&nbsp;&nbsp;{$v1['group_name']}</option>
+                {/foreach}
+            </select>
+        </div>
+    </div>
+    <!--添加返回-->
+    <div class="form-group add_back">
+        <div class="col-md-2"></div>
+        <div class="col-md-7">
+            <button type="button" class="btn add">添加</button>
+            <a href="{:__URL('ADMIN_MAIN/auth/userlist')}" class="btn back">返回</a>
+        </div>
+    </div>
+</form>
+<!-- page end -->
+{/block}
+{block name="script"}
+<script>
+      require(['utilAdmin'], function (utilAdmin) {
+     $(function(){
+        $('#user_password').val('');
+     });
+    var flag = false;//防止重复提交
+//添加用户
+    function addUserAjax() {
+        var group_id = $("#group_id").val();
+        var user_password = $("#user_password").val();
+        var user = $("#user").val();
+        var mobile = $("#mobile").val();
+        if(mobile==''){
+            utilAdmin.message('手机号不能为空！','info', function () {
+                $('#mobile').focus();
+            });
+            return false;
+        }
+        if (user_password === '') {
+            utilAdmin.message('请输入密码！','info', function () {
+                $('#user_password').focus();
+            });
+            return false;
+        }
+
+        if (user === '') {
+            utilAdmin.message('请输入使用人！', 'info', function () {
+                $('#user').focus();
+            });
+            return false;
+        }
+
+        if (group_id === '') {
+            utilAdmin.message('请选择角色！','info', function () {
+                $('#group_id').focus();
+            });
+            return false;
+        }
+       
+        if (!flag) {
+            flag = true;
+            $.ajax({
+                type: "post",
+                url: "{:__URL('ADMIN_MAIN/auth/adduser')}",
+                data: {
+                    'group_id': group_id,
+                    'user_password': user_password,
+                    'user': user,
+                    'mobile':mobile
+                },
+                success: function (data) {
+                    if (data['code'] > 0) {
+                        utilAdmin.message(data["message"],'success', function () {
+                            flag = false;
+                            location.href = "{:__URL('ADMIN_MAIN/auth/userlist')}";
+                        });
+                    } else {
+                        if(data['code'] ==-2){
+                            flag = false;
+                            utilAdmin.message('该手机号已存在','danger');
+                        }else{
+                            flag = false;
+                            utilAdmin.message(data['message'],'danger');
+                        }
+                    }
+                }
+            });
+        }
+    }
+    $("body").on("click",'.add',function(){
+        addUserAjax();
+    })
+      })
+</script>
+{/block}

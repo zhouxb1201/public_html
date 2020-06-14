@@ -1,0 +1,148 @@
+/* miniprogram/package/pages/scratchcard/scratchcard.wxss */
+
+page {
+  background: linear-gradient(linear, left top, left bottom, from(#e4421f), to(#e4233e));
+  background: -webkit-gradient(linear, left top, left bottom, from(#e4421f), to(#e4233e));
+  position: relative;
+  padding-bottom: 40rpx;
+  /*background: #e41b47;*/
+}
+
+.banner {
+  width: 100%;
+  overflow: hidden;
+  min-height: 112rpx;
+}
+
+.banner image {
+  max-width: 100%;
+  width: 100%;
+  height: auto;
+  display: block;
+}
+
+.right-tag {
+  position: absolute;
+  z-index: 10;
+  top: 160rpx;
+  right: 0;
+}
+
+.right-tag .menu {
+  color: #f44;
+  background-color: #fff;
+  padding: 12rpx 20rpx;
+  border-bottom-left-radius: 40rpx;
+  border-top-left-radius: 40rpx;
+  font-size: 28rpx;
+  margin-top: 40rpx;
+  display: block;
+}
+
+.scratchcard-main {
+  position: relative;
+  background-color: #fff;
+  border-radius: 5px;
+  height: 140px;
+  width: 320px;
+  margin: auto;
+  overflow: hidden;
+  margin-top: -160rpx;
+}
+
+.scratchcard-main-wrap {
+  margin: 10px;
+  height: 120px;
+  position: relative;
+}
+
+.scratchcard-main-box {
+  width: 100%;
+  height: 100%;
+  position: relative;
+  text-align: center;
+  line-height:120px;
+  font-size: 20px;
+  overflow: hidden;
+}
+.scratchcard-main-box canvas{
+  width:300px;
+  height:120px;
+  margin:auto;
+  position:absolute;
+  top:0;
+  left:0;
+}
+.scratchcard-chance{
+  text-align: center;
+  color: #fff;
+  font-size: 28rpx;
+  margin-top: 20rpx;
+}
+.scratchcard-chance text {
+  color: #ffff00;
+}
+.btn-continue button {
+  background-color: #fff55a;
+  border: 0;
+  color: #a50000;
+  margin: 30rpx auto;
+  display: block;
+  height: 72rpx;
+  line-height: 72rpx;
+  border-radius: 40rpx;
+  box-sizing: border-box;
+  width: 60%;
+  text-align: center;
+  font-size: 28rpx;
+  -webkit-appearance:none;
+  appearance:none;  
+}
+.btn-continue button.boxColor_yellow{
+  box-shadow: 0px 8rpx 2rpx #fec201;
+}
+.btn-continue button.boxColor_gray{
+  box-shadow: 0px 8rpx 2rpx #ccc;
+}
+.prize-wrap{
+  margin: 40rpx 40rpx 0 40rpx;
+  background-color: #fff;
+  border-radius: 20rpx;
+  display: block;
+}
+
+.prize-title {
+  text-align: center;
+  font-size: 28rpx;
+  color: #e84d2f;
+  padding: 36rpx;
+  display: block;
+}
+
+.prize-list-wrap {
+  overflow: hidden;
+  padding: 12rpx 40rpx;
+  color: #666;
+  height: 356rpx;
+}
+
+.prize-list-wrap .item-ul {
+  position: relative;
+  display: block;
+  overflow: hidden;
+}
+
+.prize-list-wrap .item-ul .item-li {
+  height: 56rpx;
+  line-height: 56rpx;
+  font-size: 26rpx;
+  display: flex;
+}
+
+.prize-list-wrap .item-ul .item-li text {
+  flex: 1;
+}
+
+.prize-list-wrap .item-ul .item-li text:last-child {
+  text-align: right;
+}

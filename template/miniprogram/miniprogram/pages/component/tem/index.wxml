@@ -1,0 +1,83 @@
+<view>
+ <block wx:for="{{temData.items}}" wx:for-index="temDataid" wx:for-item="temDataitem" wx:key="">
+
+  <tpl-banner-component
+    wx:if="{{temDataitem.id=='banner'}}"
+    temDataitem='{{temDataitem}}'>
+  </tpl-banner-component>
+
+  <tpl-search-component
+    wx:if="{{temDataitem.id=='search'}}"
+    type="{{temData.page.type}}"
+    temDataitem='{{temDataitem}}'>
+  </tpl-search-component>
+
+  <tpl-picturew-component
+    wx:if="{{temDataitem.id=='picturew'}}"
+    temDataitem='{{temDataitem}}'>
+  </tpl-picturew-component>
+
+  <tpl-picture-component
+    wx:if="{{temDataitem.id=='picture'}}"
+    temDataitem='{{temDataitem}}'>
+  </tpl-picture-component>
+
+  <tpl-blank-component
+    wx:if="{{temDataitem.id=='blank'}}"
+    temDataitem='{{temDataitem}}'>
+  </tpl-blank-component>
+
+  <tpl-title-component
+    wx:if="{{temDataitem.id=='title'}}"
+    temDataitem='{{temDataitem}}'>
+  </tpl-title-component>
+
+  <tpl-goods-component
+    wx:if="{{temDataitem.id=='goods'}}"
+    temDataitem='{{temDataitem}}'>
+  </tpl-goods-component>
+
+  <tpl-menu-component
+    wx:if="{{temDataitem.id=='menu'}}"
+    temDataitem='{{temDataitem}}'>
+  </tpl-menu-component>
+
+  <tpl-shop-component
+    wx:if="{{temDataitem.id=='shop'}}"
+    temDataitem='{{temDataitem}}'>
+  </tpl-shop-component>
+
+  <tpl-line-component
+    wx:if="{{temDataitem.id=='line'}}"
+    temDataitem='{{temDataitem}}'>
+  </tpl-line-component>
+
+  <tpl-richtext-component
+    wx:if="{{temDataitem.id=='richtext'}}"
+    temDataitem='{{temDataitem}}'>
+  </tpl-richtext-component>
+
+  <tpl-notice-component
+    wx:if="{{temDataitem.id=='notice'}}"
+    temDataitem='{{temDataitem}}'>
+  </tpl-notice-component>
+
+  <tpl-listmenu-component
+    wx:if="{{temDataitem.id=='listmenu'}}"
+    temDataitem='{{temDataitem}}'>
+  </tpl-listmenu-component>
+
+  <tpl-shophead-component
+    wx:if="{{temDataitem.id=='shop_head'}}"
+    temDataitem='{{temDataitem}}'>
+
+  </tpl-shophead-component>
+
+  <tpl-goodsIntegral-component
+    wx:if="{{temDataitem.id=='goodsIntegral'}}"
+    temDataitem='{{temDataitem}}'
+  >
+  </tpl-goodsIntegral-component>
+  
+ </block>
+</view>

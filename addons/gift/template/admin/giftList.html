@@ -1,0 +1,144 @@
+{block name="main"}
+<!-- page -->
+<!--<div class="mb-20">
+    <a href="{:__URL('ADDONS_ADMIN_MAINaddGift')}" class="btn btn-primary"><i class="icon icon-add1"></i> 添加赠品</a>
+    <div class="input-group search-input-group pull-right">
+        <div style="margin-right: 20%;">
+            <input type="text" class="form-control" id="search_text" name="search_text" placeholder="赠品名称">
+        </div>
+        <div>
+            <button type="button" class="btn btn-primary search J-search">搜索</button>
+        </div>
+    </div>
+</div>-->
+<div class="mb-20">
+    <a href="{:__URL('ADDONS_ADMIN_MAINaddGift')}" class="btn btn-primary"><i class="icon icon-add1"></i> 添加赠品</a>
+    <div class="input-group search-input-group ml-10" style="float:right">
+        <input type="text" class="form-control" id="search_text" name="search_text" placeholder="赠品名称">
+        <span class="input-group-btn">
+            <button class="btn btn-primary search J-search" type="button">搜索</button>
+        </span>
+    </div>
+</div>
+<table class="table v-table table-auto-center">
+    <thead>
+        <tr>
+            <th>赠品信息</th>
+            <th>已赠/剩余库存</th>
+            <th class="col-md-2 pr-14 operationLeft">操作</th>
+        </tr>
+    </thead>
+    <tbody id="gift_list">
+    </tbody>
+
+</table>
+<input type="hidden" id="page_index">
+<nav aria-label="Page navigation" class="clearfix">
+    <ul id="page" class="pagination pull-right"></ul>
+</nav>
+<!-- page end -->
+{/block}
+{block name="script"}
+<script id="shop_curr_list" type="text/html">
+    <%each data as item index%>
+    <tr>
+        <td>
+            <div class="media text-left ">
+                <div class="media-left">
+                    <p><img src="<%item.pic_cover_mid%>" style="width:60px;height:60px;"></p>
+                </div>
+                <div class="media-body max-w-300 ">
+                    <div class="line-2-ellipsis line-title">
+                        <%item.gift_name%>
+                    </div>
+                    <div class="line-2-ellipsis line-title">
+                        ￥<%item.price%>
+                    </div>
+                </div>
+            </div>
+        </td>
+        <td>
+            <%item.sended%>/<%item.stock%>
+        </td>
+        <td class="fs-0 operationLeft">
+            <a href="javascript:void(0);" class="btn-operation" data-type="edit" data-gift_id="<%item.promotion_gift_id%>">编辑</a>
+            <a href="javascript:void(0);" class="btn-operation" data-type="record" data-gift_id="<%item.promotion_gift_id%>">记录</a>
+            <a href="javascript:void(0);" class="btn-operation text-red1 del" data-gift_id="<%item.promotion_gift_id%>" data-prompt="<%item.prompt%>">删除</a>
+        </td>
+    </tr>
+    <%/each%>
+</script>
+
+<script>
+    require(['util', 'tpl'], function (util, tpl) {
+        util.initPage(LoadingInfo);
+        //搜索
+        $('.J-search').on('click', function () {
+            util.initPage(LoadingInfo);
+        });
+        function LoadingInfo(page_index) {
+            $("#page_index").val(page_index);
+            $.ajax({
+                type: "post",
+                url: "{$giftListUrl}",
+                data: {
+                    "page_index": page_index,
+                    "search_text": $("#search_text").val(),
+
+                },
+                success: function (data) {
+                    var html = '<tr><td class="h-200" colspan="3">暂无符合条件的数据记录</td></tr>';
+                    if (data.data) {
+                        if (tpl('shop_curr_list', data)) {
+                            for(var i = 0;i < data.data.length; i++){
+                                data.data[i]['pic_cover_mid'] = __IMG( data.data[i]['pic_cover_mid']);
+                            }
+                            $("#gift_list").html(tpl('shop_curr_list', data));
+                            util.tips();
+                        } else {
+                            $("#gift_list").html(html);
+                        }
+                        $('#page').paginator('option', {
+                            totalCounts: data['total_count']  // 动态修改总数
+                        });
+                    } else {
+                        $("#gift_list").html(html);
+                    }
+                }
+            });
+        }
+        $('#gift_list').on('click', '.del', function () {
+            var gift_id = $(this).attr('data-gift_id');
+            var prompt = $(this).attr('data-prompt');
+            util.alert((prompt)?prompt:'删除赠品？', function () {
+                $.ajax({
+                    type: "post",
+                    url: "{$deleteGiftUrl}",
+                    data: {"gift_id": gift_id},
+                    dataType: "json",
+                    success: function (data) {
+                        if (data["code"] > 0) {
+                            util.message(data["message"], 'success', LoadingInfo($('#page_index').val()));
+                        } else {
+                            util.message(data['message'], 'danger');
+                        }
+                    }
+                });
+            });
+        });
+        $('#gift_list').on('click', '.btn-operation', function () {
+            var type = $(this).attr('data-type');
+            var gift_id = $(this).attr('data-gift_id');
+            switch (type) {
+                case 'edit':
+                    location.href = __URL('ADDONS_ADMIN_MAINupdateGift&gift_id=' + gift_id);
+                    break;
+                case 'record':
+                    location.href = __URL('ADDONS_ADMIN_MAINgiftRecord&gift_id=' + gift_id);
+                    break;
+            }
+        });
+    });
+
+</script>
+{/block}

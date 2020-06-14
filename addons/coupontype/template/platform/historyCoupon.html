@@ -1,0 +1,100 @@
+{block name="main"}
+<!-- page -->
+<div class="mb-20 flex flex-pack-end">
+    <div class="input-group search-input-group">
+        <input type="text" id="search_text" class="form-control" placeholder="优惠券名称/券号/订单号">
+        <span class="input-group-btn"><button class="btn btn-primary" id="search">搜索</button></span>
+    </div>
+</div>
+<table class="table v-table table-auto-center">
+    <thead>
+    <tr>
+        <th>使用店铺</th>
+        <th>订单号</th>
+        <th>使用帐号</th>
+        <th>优惠券号码</th>
+        <th>优惠金额</th>
+        <th>使用时间</th>
+    </tr>
+    </thead>
+    <tbody id="coupon_used_list">
+    </tbody>
+</table>
+<nav aria-label="Page navigation" class="clearfix">
+    <ul id="page" class="pagination pull-right"></ul>
+</nav>
+
+<!-- page end -->
+
+{/block}
+{block name="script"}
+<script id="tpl_coupon_used_list" type="text/html">
+    <%each data as item index%>
+    <tr>
+        <%if item.shop_id == 0%>
+        <td>自营店</td>
+        <%else%>
+        <td><%item.shop_name%></td>
+        <%/if%>
+        <td><%item.order_no%></td>
+        <td><%item.user_tel%></td>
+        <td><%item.coupon_code%></td>
+        <%if item.money != 0%>
+        <td><%item.money%>元</td>
+        <%else%>
+        <td><%item.discount%>折</td>
+        <%/if%>
+        <td><%timeStamp(item.use_time)%></td>
+    </tr>
+    <%/each%>
+</script>
+<script>
+    require(['util', 'tpl'], function (util, tpl) {
+        util.initPage(LoadingInfo);
+        tpl.helper("timeStamp", function (timeStamp) {
+            if (timeStamp > 0) {
+                var date = new Date();
+                date.setTime(timeStamp * 1000);
+                var y = date.getFullYear();
+                var m = date.getMonth() + 1;
+                m = m < 10 ? ('0' + m) : m;
+                var d = date.getDate();
+                d = d < 10 ? ('0' + d) : d;
+                var h = date.getHours();
+                h = h < 10 ? ('0' + h) : h;
+                var minute = date.getMinutes();
+                var second = date.getSeconds();
+                minute = minute < 10 ? ('0' + minute) : minute;
+                second = second < 10 ? ('0' + second) : second;
+                return y + '-' + m + '-' + d + ' ' + h + ':' + minute + ':' + second;
+            } else {
+                return "";
+            }
+        });
+
+        $("#search").on('click', function () {
+            LoadingInfo(1);
+        });
+
+        function LoadingInfo(page_index) {
+            $('#page_index').val(page_index ? page_index : 1);
+            $.ajax({
+                type: "post",
+                url: '{$historyCouponUrl}' + '&coupon_type_id=' + {$coupon_type_id},
+                data: {
+                    'search_text': $("#search_text").val(),
+                    'page_index': page_index,
+                    'website_id': '{$website_id}',
+                    'instance_id': '{$instance_id}'
+                },
+                success: function (data) {
+                    $("#coupon_used_list").html(tpl('tpl_coupon_used_list', data))
+                    $('#page').paginator('option', {
+                        totalCounts: data['total_count']  // 动态修改总数
+                    });
+                }
+            });
+        }
+    })
+</script>
+{/block}

@@ -1,0 +1,152 @@
+{block name="main"}
+		<!--<form action="" class="form">
+			<div class="v-form-inline ">
+				<div class="form-group">
+					<label class="control-label">队长名称</label>
+					<input type="text" class="form-control" id="member_name" >
+				</div>
+
+				<div class="form-group">
+					<label class="control-label">手机号</label>
+					<input type="text" class="form-control" id="mobile" >
+				</div>
+			</div>
+			<div class="v-form-inline ">
+				<div class="form-group">
+					<label class="control-label">队长等级</label>
+					<select class="form-control" id="level_id">
+						<option value="">全部</option>
+						{foreach name="agent_level" item="value"}
+						<option value="{$value.id}">{$value.level_name}</option>
+						{/foreach}
+					</select>
+				</div>
+				<div class="form-group">
+					<a href="javascript:;" class="btn btn-primary search"><i class="icon icon-search"></i> 搜索</a>
+				</div>
+			</div>
+		</form>-->
+		<form class="v-filter-container">
+			<div class="filter-fields-wrap">
+				<div class="filter-item clearfix">
+					<div class="filter-item__field">
+						<div class="v__control-group">
+							<label class="v__control-label">队长名称</label>
+							<div class="v__controls">
+								<input type="text" id="member_name" class="v__control_input" autocomplete="off">
+							</div>
+						</div>
+
+						<div class="v__control-group">
+							<label class="v__control-label">手机号</label>
+							<div class="v__controls">
+								<input type="text" id="mobile" class="v__control_input" autocomplete="off">
+							</div>
+						</div>
+
+						<div class="v__control-group">
+							<label class="v__control-label">队长等级</label>
+							<div class="v__controls">
+								<select class="v__control_input" id="level_id" >
+									<option value="">全部</option>
+									{foreach name="agent_level" item="value"}
+									<option value="{$value.id}">{$value.level_name}</option>
+									{/foreach}
+								</select>
+							</div>
+						</div>
+
+
+
+					</div>
+				</div>
+				<div class="filter-item clearfix">
+					<div class="filter-item__field">
+						<div class="v__control-group">
+							<label class="v__control-label"></label>
+							<div class="v__controls">
+								<a class="btn btn-primary search"><i class="icon icon-search"></i> 搜索</a>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</form>
+
+		<div class="screen-title"><span class="text">信息列表</span></div>
+		<table class="table v-table table-auto-center">
+			<thead>
+			<tr>
+				<th>队长</th>
+				<th>手机</th>
+				<th>队长等级</th>
+				<th>分红金额</th>
+				<th>打款方式</th>
+				<th>分红时间</th>
+			</tr>
+			</thead>
+			<tbody id="list">
+
+			</tbody>
+		</table>
+
+		<input type="hidden" id="page_index">
+		<nav aria-label="Page navigation" class="clearfix">
+			<ul id="page" class="pagination pull-right"></ul>
+		</nav>
+
+		<!-- page end -->
+
+{/block}
+{block name="script"}
+<script>
+    require(['util'],function(util){
+        util.initPage(getList);
+        function getList(page_index) {
+            member_name = $("#member_name").val();
+            mobile = $("#mobile").val();
+            level_id = $("#level_id").val();
+            $("#page_index").val(page_index);
+            $.ajax({
+                type : "post",
+                url : "{$teamBonusInfoUrl}",
+                async : true,
+                data : {
+                    "website_id" :{$website_id},"sn":'{$sn}',"page_index":page_index,"member_name":member_name,"mobile":mobile,"level_id":level_id
+                },
+                success : function(data) {
+                    var html = '';
+                    if (data["data"].length > 0) {
+                        for (var i = 0; i < data["data"].length; i++) {
+                            html += '<tr>';
+                            html += '<td>';
+                            if(data["data"][i]["user_headimg"]){
+                                html +='<img src="'+__IMG(data["data"][i]["user_headimg"])+'" width="50" height="50">';
+                            }else{
+                                html +='<img src="/public/static/images/headimg.png" width="50" height="50">';
+                            }
+                            html +='<span class="block">' + data['data'][i]["user_name"] + '</span>';
+                            html += '</td>';
+                            html += '<td><span class="block">' + data['data'][i]["mobile"] +'</span></td>';
+                            html += '<td>' + data['data'][i]["level_name"] +'</td>';
+                            html += '<td>' + data['data'][i]["bonus"] +'</td>';
+                            html += '<td>账户余额</td>';
+                            html += '<td>' +data['data'][i]["grant_time"] +'</td>';
+                            html += '</tr>';
+                        }
+                    } else {
+                        html += '<tr><td class="h-200" colspan="6">暂无符合条件的数据记录</td></tr>';
+                    }
+                    $('#page').paginator('option', {
+                        totalCounts: data['total_count']  // 动态修改总数
+                    });
+                    $("#list").html(html);
+                }
+            });
+        }
+        $('.search').on('click',function(){
+            util.initPage(getList);
+        });
+    })
+</script>
+{/block}

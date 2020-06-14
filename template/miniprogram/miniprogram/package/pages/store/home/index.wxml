@@ -1,0 +1,209 @@
+<view class='store_home'>
+  <view class="head">
+    <view class="background">
+      <image src="{{storeData.store_img[0]}}"></image>
+    </view>
+    <view class="cell_group">
+      <view class="cell_item">
+        <view class="store_title">{{storeData.shop_name}} ({{storeData.store_name}})</view>
+      </view>
+      <view class="cell_item">
+        <view class="info_box">
+          <view class="img_box">
+            <view class="img">
+              <image src="{{storeData.store_img[0]}}"></image>
+            </view>
+            <view class="num">{{storeData.store_img.length}}</view>
+          </view>
+          <view class="store_box">
+            <view class='score'>
+              <van-rate readonly value="{{ storeData.score }}" size='12' />
+            </view>
+            <view class='location' data-lat='{{storeData.lat}}' data-lng='{{storeData.lng}}' bindtap='openLocation'>
+              <view class='icon iconfont v-icon-location'></view>
+              <view>{{storeData.province_name}}{{storeData.city_name}}{{storeData.dictrict_name}}{{storeData.address}}(距您{{storeData.distance}}km)</view>
+            </view>
+          </view>
+        </view>
+      </view>
+      <view class="cell_item">
+        <view class="time_box">
+          <view>营业时段{{storeData.start_time}}-{{storeData.finish_time}}</view>
+          <view class="iconfont v-icon-phone"></view>
+        </view>
+      </view>
+    </view>
+  </view>
+  <view class="main_box">
+    <view class="category">
+      <view class='category_list'>
+        <view class='r_first_category' style='width:160rpx'>
+          <scroll-view scroll-y style='height:{{clientHeight}}px;'>
+            <view class="r_item {{itemIndex === index ? 'item_active':'' }}" wx:for="{{category_list}}" wx:key="" data-id="{{item.category_id}}" data-index="{{index}}" bindtap='navChange'>
+              {{item.short_name =='' ? item.category_name:item.short_name}}
+            </view>
+          </scroll-view>
+        </view>
+        <view style='width:590rpx;background:#fff;'>
+          <scroll-view scroll-y style='height:{{clientHeight}}px;'>
+            <view class='list' wx:for="{{goods_list}}" wx:key="" wx:for-item="goodItem">
+              <view class='item'>
+                <view class='img'>
+                  <image src='{{goodItem.goods_detail.goods_img}}'></image>
+                </view>
+                <view class='info'>
+                  <view class='good_name'>{{goodItem.goods_detail.goods_name}}</view>
+                  <view class='cell_price'>
+                    <view class='price'>¥ {{goodItem.goods_detail.min_price}}</view>
+                    <van-icon name="add" color='#1989fa' size='40rpx' data-gooditem='{{goodItem}}' bindtap='goodsSkuShowFun' />
+                  </view>
+                </view>
+              </view>
+            </view>
+            <view class='no_more'>没有更多了</view>
+          </scroll-view>
+        </view>
+      </view>
+      <!-- 底部 -->
+      <view class='foot_submit_bar'>
+        <view class='btn_cart' bindtap='cartOnShow'>
+          <view class='iconfont v-icon-cart2'></view>
+          <view class='cart_num'>{{cart_goods_num}}</view>
+        </view>
+        <view class='price_box'>
+          <view class='price_text'>
+            合计：
+            <text class='price_num'>¥{{cart_total_money}}</text>
+          </view>          
+          <view class="submit_btn {{cart_goods_num == 0? 'no_goods_btn' :'active_goods_btn' }}" bindtap="{{cart_goods_num == 0?'':'orderConfirm'}}">
+            结算
+          </view>
+        </view>
+      </view>
+    </view>
+  </view>
+</view>
+
+
+<!-- 规格弹出框 -->
+<van-popup show="{{ skuShow }}" position="bottom" custom-style="border-radius:30rpx 30rpx 0 0;" bind:click-overlay="skuOnclose">
+  <view class='goods_sku'>
+    <view class='goodHeader'>
+      <view class='goodHeaderImg'>
+        <image src='{{goodsImg}}'></image>
+      </view>
+      <view class='goodHeaderTop'>
+        <view class='goodTitle'>
+          <view class='goods_name'>{{goodsName}}</view>
+          <view class='price'>¥{{sku_good_price}}</view>
+        </view>
+        <view class='icon_closeBtn'>
+          <van-icon name='close' color='#969799' size='20px' bindtap='skuOnclose' />
+        </view>
+      </view>
+    </view>
+    <view class="{{sku.tree.length != 0 ? 'goods_sku_tree' :''}} ">
+      <view class='goods_sku_tree_item' wx:for="{{sku.tree}}" wx:key='' wx:for-index='group_idx'>
+        <view class='goods_sku_tree_key'>{{item.k}}:</view>
+        <view wx:for="{{item.v}}" class="goods_sku_tree_value {{i.isDefault ? i.isSelect == 'true' ? 'active_value':'' : 'default_btn'}}" wx:for-item='i' wx:for-index='index' data-attr-index="{{index}}" data-select-index="{{group_idx}}" data-attr-id="{{i.id}}"
+          wx:key='item' catchtap="{{i.isDefault ? 'clickMenu' : ''}}" data-isSelect="{{i.isSelect}}">
+          <text>{{i.name}}</text>
+        </view>
+      </view>
+    </view>
+    <view class='stock_num'>
+      <view class='buy_num'>
+        <view>购买数量：</view>
+        <van-stepper v-model="value" class='v_stepper' value="{{buyNum}}" max="{{sku_stock_num}}" bind:change="changeBuynum" />
+      </view>
+      <view class='surplus_num'>剩余{{sku_stock_num}}件</view>
+    </view>
+  </view>
+
+  <!-- 没有该商品的购买权限 -->
+  <view wx:if='{{is_allow_buy == false}}'>
+    <view class='nocartbtn'>无权限购买</view>
+  </view>
+  <view wx:else>
+    <view class='bottomBtn' wx:if="{{sku_stock_num != 0}}">
+      <view>
+        <!-- 预售 -->
+        <view wx:if='{{is_presell == 1}}'>
+          <view class='buyOn' wx:if='{{presell_list.presellnum != 0}}' bindtap='buyNowOrder'>立即购买</view>
+          <view class='nocartbtn' wx:else>商品已售罄</view>
+        </view>
+        <!-- 秒杀 -->
+        <view wx:elif="{{seckill_list.seckill_status == 'going' || seckill_list.seckill_status == 'unstart'}}">
+          <view class='buyOn' wx:if="{{seckill_list.seckill_status == 'going'}}" bindtap='buyNowOrder'>马上抢</view>
+          <view class='nocartbtn' wx:else>未开始</view>
+        </view>
+        <!-- 拼团 -->
+        <view wx:elif="{{groupStatus == 'groupStart'}}" class="group_box">
+          <view class='addCart group_btn' data-grouptype="1" bindtap='onGroupbuybtn'>
+            <text>¥{{sku_good_price}}</text>
+            <text>单独购买</text>
+          </view>
+          <view class='buyOn group_btn' data-grouptype="2" bindtap='onGroupbuybtn'>
+            <text>¥{{groupPrice}}</text>
+            <text>发起拼团</text>
+          </view>
+        </view>
+        <!-- 砍价 -->
+        <view wx:elif="{{bargain_list.status == 1 || bargain_list.status == 0}}">
+          <view class='buyOn' bindtap='buyNowOrder'>立即购买</view>
+        </view>
+        <!--goods_type 计时计次或虚拟商品标志 0计时计次商品 3虚拟商品 -->
+        <view wx:elif='{{goods_type == 0 ||goods_type == 3}}'>
+          <view class='buyOn' bindtap='buyNowOrder'>立即购买</view>
+        </view>
+        <view class='sku_btn' wx:else>
+          <view class='addCart' bindtap='addCart'>加入购物车</view>
+          <view class='buyOn' bindtap='buyNowOrder'>立即购买</view>
+        </view>
+      </view>
+    </view>
+    <view class='nocartbottom' wx:else>
+      <view class='nocartbtn'>商品已售罄</view>
+    </view>
+  </view>
+</van-popup>
+
+
+<!-- 购物车 -->
+<van-popup show="{{ cartShow }}" position="bottom" custom-style="border-radius:30rpx 30rpx 0 0;" bind:click-overlay="cartOnclose">
+  <view class='cart_box'>
+    <!-- 购物车标题 -->
+    <view class='title'>
+      <view class='title_text'>已选商品</view>
+      <view class='icon_closeBtn'>
+        <van-icon name='close' color='#969799' size='20px' bindtap='cartOnclose' />
+      </view>
+    </view>
+    <!-- 购物车商品列表 -->
+    <view class='cart_list'>
+      <view class='cell' wx:for='{{cart_list}}' wx:key='' wx:for-item='goodItem'>
+        <view class='goodIcon' data-cartid='{{goodItem.cart_id}}' bindtap="{{goodItem.promotion_type == 3 || goodItem.promotion_type == 1 || goodItem.promotion_type == 2 ||goodItem.promotion_type == 4 ?'':'selectCartGood'}}">
+          <van-checkbox value="{{goodItem.selected}}" checked-color="#f44" disabled="{{goodItem.promotion_type == 3 || goodItem.promotion_type == 1 || goodItem.promotion_type == 2 ||goodItem.promotion_type == 4?true:''}}"></van-checkbox>
+        </view>
+        <view class='good_img'>
+          <image mode='widthFix' src='{{goodItem.goods_img}}'></image>
+        </view>
+        <view class='good_info'>
+          <view class='info_head'>
+            <view class='good_name'>{{goodItem.goods_name}}</view>
+          </view>
+          <view class='ellipsis'>{{goodItem.sku_name}}</view>
+          <view class='bottom'>
+            <van-stepper v-model="value" class='v_stepper' value="{{goodItem.num}}" data-cartid="{{goodItem.cart_id}}" bind:change="getEditCartNum" />
+            <van-icon class='del_icon' name="delete" data-cartid="{{goodItem.cart_id}}" bindtap='deleteCartGoods' />
+          </view>
+        </view>
+      </view>
+    </view>
+    <!-- 购物车结算按钮 -->
+    <view class='settlement_btn' bindtap='orderConfirm'>
+      <view class='text'>结算（合计：¥{{cart_total_money}}）</view>
+    </view>
+
+  </view>
+</van-popup>

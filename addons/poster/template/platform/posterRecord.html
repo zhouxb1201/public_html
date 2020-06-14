@@ -1,0 +1,172 @@
+{block name="main"}
+<form class="v-filter-container">
+    <div class="filter-fields-wrap">
+        <div class="filter-item clearfix">
+            <div class="filter-item__field">
+                <div class="v__control-group">
+                    {if $type eq '3'}
+                        <label class="v__control-label">推荐人</label>
+                    {else}
+                        <label class="v__control-label">扫码人</label>
+                    {/if}
+                    <div class="v__controls">
+                        <input type="text" id="reco" class="v__control_input" placeholder="" autocomplete="off">
+                    </div>
+                </div>
+                <div class="v__control-group">
+                    {if $type eq '3'}
+                    <label class="v__control-label">被推荐人</label>
+                    {else}
+                    <label class="v__control-label">被扫码人</label>
+                    {/if}
+                    <div class="v__controls">
+                        <input type="text" id="be_reco" class="v__control_input" placeholder="" autocomplete="off">
+                    </div>
+                </div>
+                <div class="v__control-group">
+                    <label class="v__control-label">扫描时间</label>
+                    <div class="v__controls v-date-input-control">
+                        <label for="scan_time">
+                            <input type="text" class="v__control_input pr-30" id="scan_time" placeholder="请选择时间"
+                                   autocomplete="off" data-types="datetime">
+                            <i class="icon icon-calendar"></i>
+                            <input type="hidden" id="start_date">
+                            <input type="hidden" id="end_date">
+                        </label>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="filter-item clearfix">
+            <div class="filter-item__field">
+                <div class="v__control-group">
+                    <label class="v__control-label"></label>
+                    <div class="v__controls">
+                        <a class="btn btn-primary search J-search"><i class="icon icon-search"></i> 搜索</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</form>
+
+<div class="screen-title">
+    <span class="text">推荐列表</span>
+</div>
+<table class="table v-table table-auto-center" style="font-size:14px;">
+    <thead>
+    <tr>
+        {if $type eq '3'}
+            <th>推荐人</th>
+            <th>被推荐人</th>
+        {else}
+            <th>扫码人</th>
+            <th>被扫码人</th>
+        {/if}
+
+        <th>扫描时间</th>
+    </tr>
+    </thead>
+    <tbody id="list">
+    </tbody>
+</table>
+<input type="hidden" id="page_index">
+<nav aria-label="Page navigation" class="clearfix">
+    <ul id="page" class="pagination pull-right"></ul>
+</nav>
+{/block}
+
+{block name="script"}
+<script id="tpl_record_list" type="text/html">
+    <%each data as item item_id%>
+    <tr>
+        <td>
+            <div class="media">
+                <div class="media-left">
+                    <img src="<%__IMG(item.reco_user_headimg)%>" height="60" width="60" alt="">
+                </div>
+                <div class="media-body text-left">
+                    <div class="line-1-ellipsis"><%item.reco_user_name%></div>
+                    <div><%item.reco_user_tel%></div>
+                </div>
+            </div>
+        </td>
+        <td>
+            <div class="media">
+                <div class="media-left">
+                    <img src="<%__IMG(item.b_reco_user_headimg)%>" height="60" width="60" alt="">
+                </div>
+                <div class="media-body text-left">
+                    <div class="line-1-ellipsis"><%item.b_reco_user_name%></div>
+                    <div><%item.b_reco_user_tel%></div>
+                </div>
+            </div>
+        </td>
+        <td><%timeStampTurnTime(item.scan_time)%></td>
+    </tr>
+    <%/each%>
+</script>
+
+<script>
+    require(['util', 'tpl'], function (util, tpl) {
+
+        tpl.helper("timeStampTurnTime", function (value) {
+            return timeStampTurnTime(value)
+        });
+        tpl.helper("__IMG", function (src) {
+            return __IMG(src)
+        });
+
+        util.layDate('#scan_time', true, function (value, date, endDate) {
+            var h = date.hours < 10 ? "0" + date.hours : date.hours;
+            var m = date.minutes < 10 ? "0" + date.minutes : date.minutes;
+            var s = date.seconds < 10 ? "0" + date.seconds : date.seconds;
+            var h1 = endDate.hours < 10 ? "0" + endDate.hours : endDate.hours;
+            var m1 = endDate.minutes < 10 ? "0" + endDate.minutes : endDate.minutes;
+            var s1 = endDate.seconds < 10 ? "0" + endDate.seconds : endDate.seconds;
+            var date1 = date.year + '-' + date.month + '-' + date.date + ' ' + h + ":" + m + ":" + s;
+            var date2 = endDate.year + '-' + endDate.month + '-' + endDate.date + ' ' + h1 + ":" + m1 + ":" + s1;
+            if (value) {
+                $('#start_date').val(date1);
+                $('#end_date').val(date2);
+            } else {
+                $('#start_date').val('');
+                $('#end_date').val('');
+            }
+
+        });
+        util.initPage(LoadingInfo);
+
+        $(".J-search").on('click', function () {
+            LoadingInfo(1)
+        })
+
+        function LoadingInfo(page_index) {
+            $("#page_index").val(page_index);
+            $.ajax({
+                type: "post",
+                url: "{$recordListUrl}",
+                data: {
+                    "page_index": page_index,
+                    "start_date": $('#start_date').val(),
+                    "end_date": $('#end_date').val(),
+                    "page_size": $("#showNumber").val(),
+                    "poster_id": '{$poster_id}',
+                    "reco": $("#reco").val(),
+                    "be_reco": $("#be_reco").val()
+                },
+                success: function (data) {
+                    if (data.total_count == 0) {
+                        $("#list").html('<tr align="center"><td colspan="3">暂无符合条件的记录</td></tr>')
+                        return true;
+                    }
+                    $("#list").html(tpl('tpl_record_list', data))
+                    $('#page').paginator('option', {
+                        totalCounts: data.total_count
+                    });
+                }
+            });
+        }
+    })
+</script>
+{/block}

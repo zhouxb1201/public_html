@@ -1,0 +1,6 @@
+{
+  "usingComponents": {
+    "areaCode-compoent": "/pages/component/areaCode/areaCode"
+  },
+  "navigationBarTitleText": "修改信息"
+}

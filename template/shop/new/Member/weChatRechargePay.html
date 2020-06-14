@@ -1,0 +1,77 @@
+{extend name="shop/new/base" /}
+{block name="head"}
+<!--头部-->
+<div class="header shopHeader">
+    <div class="w w1200 clearfix">
+
+        <div class="fl oneItem">
+            <div class="logo">
+                <a href="{:__URL('SHOP_MAIN')}" class="logo_a"><img src="{$pc_info['logo']}" alt=""></a>
+            </div>
+        </div>
+
+
+    </div>
+</div>
+<!--分隔线-->
+<div class="sc-hr"></div>
+{/block}
+{block name="main"}
+<!--订单提示-->
+<div class="order-init w1000 clearfix">
+    <div class="fl o-left">支付订单号：{$out_trade_no}</div>
+    <div class="fr o-right">待支付：<span class="red">￥{$pay_value.pay_money}</span></div>
+</div>
+<!--微信支付-->
+<div class="w1000 pay-weixin">
+    <div class="p-w-hd">微信支付</div>
+    <div class="p-w-bd clearfix">
+        <div class="p-w-box">
+            <div class="pw-box-hd" id="J-wechatUrl">
+                <img src="{:__IMG($path)}" alt="">
+            </div>
+            <div class="pw-box-ft">
+                <p>请使用微信扫一扫</p>
+                <p>扫描二维码支付</p>
+            </div>
+            <div class="p-w-message J-weixinInfo">
+                （二维码将在<span class="red J-qrCodeTime">45</span>秒后刷新）
+            </div>
+        </div>
+        <div class="p-w-sidebar"></div>
+    </div>
+    <!--<div class="p-w-hd"><a href="javascript:void(0);" class="blue">>选择其他支付</a></div>-->
+</div>
+{/block}
+{block name="javascript"}
+<script>
+    require(['pay'], function (pay) {
+        pay.wechat();
+    });
+    var payStatus = window.setInterval("payStatu()", 2000);
+    function wchatOverdue() {
+            var time = parseInt($(".J-qrCodeTime").text());
+            if (time != 0) {
+                    $(".J-qrCodeTime").text(--time);
+            } else {
+                    $(".J-weixinInfo").html("<span class='red'>二维码已过期</span>，请刷新页面重新获取二维码。");
+                    $("#J-wechatUrl").attr("src","");
+            }
+    }
+    function payStatu(){
+            $.ajax({
+                    type : "post",
+                    url : "{:__URL('SHOP_MAIN/pay/wchatQrcodePay')}",
+                    data : {
+                            out_trade_no : "{$pay_value.out_trade_no}"
+                    },
+                    success : function(data){
+                            if(data['code'] > 0){
+                                    location.href="{:__URL('SHOP_MAIN/pay/wchatPayResult?out_trade_no='.$pay_value['out_trade_no'].'&msg=1')}";
+                                    clearInterval(payStatus);
+                            }
+                    }
+            })
+    }
+</script>
+{/block}

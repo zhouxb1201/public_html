@@ -1,0 +1,371 @@
+{block name="main"}
+<!-- page -->
+<!--好物圈发布干货模板-->
+<form class="form-horizontal widthFixedForm" role="form" id="form1">
+	<div class="form-group">
+		<label class="col-md-2 control-label"><span class="text-bright">*</span>干货类型</label>
+		<div class="col-md-8">
+			<div>
+				<label class="radio-inline"><input type="radio" name="thing_type" value="1" {if($thing_info['thing_type'] == 1 || empty($thing_info['id']))}checked{/if}> 图文</label>
+				<label class="radio-inline"><input type="radio" name="thing_type" value="2" {if($thing_info['thing_type'] == 2)}checked{/if}> 视频</label>
+			</div>
+		</div>
+	</div>
+
+	<div class="form-group">
+		<label class="col-md-2 control-label">干货标题</label>
+		<div class="col-md-8">
+			<input type="text" class="form-control" name="thing_title" id="thing_title" autocomplete="off" value="{$thing_info['title']}">
+			<div class="mb-0 help-block">干货标题最多输入20字，输入标题增加曝光率</div>
+		</div>
+	</div>
+
+	<div class="form-group">
+		<label class="col-md-2 control-label"><span class="text-bright">*</span>干货内容</label>
+		<div class="col-md-8">
+			<textarea class="form-control" name="content" id="content" rows="5" required>{$thing_info['content']}</textarea>
+		</div>
+	</div>
+	
+	<div class="form-group pic-group {if($thing_info['thing_type'] == 2)}hide{/if}">
+		<label class="col-md-2 control-label"><span class="text-bright">*</span>图片</label>
+		<div class="col-md-8">
+			<div id="J-goodspic" data-max="9">
+				<div class="picture-list" id="J-pic">
+					{if($thing_info['img_temp_array'] && $thing_info['thing_type'] == 1)}
+					{foreach $thing_info["img_temp_array"] as $vo}
+					<a href="javascript:void(0);" id="thing_pic_list" style="margin-right:10px;">
+						<i class="icon icon-danger" style="right:-15px;" title="删除"></i>
+						<img src="{:__IMG($vo['pic_cover'])}" />
+					</a>
+					<input type="hidden" id="upload_img_id" name="upload_img_id" value="{$vo['pic_id']}" />
+					{/foreach}
+					{/if}
+					<a href="javascript:void(0);" class="plus-box" data-toggle="multiPicture"><i class="icon icon-plus"></i></a>
+				</div>
+				<p class="small-muted">最多上传9张，建议9张图片尺寸保持一致以免手机预览效果不佳，支持JPG/GIF/PNG格式，图片大小建议1M以内。</p>
+			</div>
+			<input type="text" class="visibility" id="visibility1" name="picture" data-visi-type="multiPicture" {if(empty($thing_info['id']) || ($thing_info['thing_type'] == 1 && empty($thing_info['img_temp_array'])))}required{/if}>
+		</div>
+	</div>
+
+	<div class="form-group video-group {if($thing_info['thing_type'] == 1 || empty($thing_info['id']))}hide{/if}">
+		<label class="col-md-2 control-label"><span class="text-bright">*</span>视频</label>
+		<div class="col-md-8">
+			<div class="picture-list" id="pc_video_adv">
+        		{if($thing_info['img_temp_array'] && $thing_info['thing_type'] == 2)}
+                   <a href="javascript:void(0);" class="close-box" style="margin-right:10px;">
+                       <i class="icon icon-danger" style="right:-15px;" title="删除"></i>
+                       <video width="80px" height="80px" src="{:__IMG($thing_info['img_temp_array'][0]['pic_cover'])}"></video>
+                   </a>
+                {else}
+                   <a href="javascript:void(0);" class="plus-box" data-toggle="singleVideo"><i class="icon icon-plus"></i></a>
+                {/if}
+                <input type="hidden" id="visibility2" name="upload_video_id" value="{$thing_info['media_val']}" {if($thing_info['thing_type'] == 2 && empty($thing_info['img_temp_array']))}}required{/if}/>
+			</div>
+			<p class="help-block">视频建议控制在15s以内，支持MP4格式。</p>
+		</div>
+	</div>
+
+	<div class="form-group">
+		<label class="col-md-2 control-label">推荐商品</label>
+		<div class="col-md-5" id="selectGoods">
+			<a class="btn btn-primary search_goods" href="javascript:void(0);"> 挑选商品</a>
+		</div>
+	</div>
+
+	<div class="form-group">
+		<label class="col-md-2 control-label"></label>
+		<div class="col-md-8">
+			<div class="border-default padding-15">
+				<div class="mb-20">
+					<div class="picture-list1">
+						{if $recommend_goods_list}
+						{foreach $recommend_goods_list as $v}
+						<a href="javascript:;" class="fl picture-list1-pic" data-id="{$v['goods_id']}">
+							<i class="icon icon-danger" style="right:10px;" title="删除"></i>
+							<div><img src="{:__IMG($v['pic'])}" style="width: 80px;height: 80px"></div>
+							<div class="line-1-ellipsis">{$v['goods_name']}</div>
+						</a>
+						{/foreach}
+						{/if}
+					</div>
+				</div>
+
+			</div>
+		</div>
+	</div>
+
+	<div class="form-group">
+		<label class="col-md-2 control-label">参与话题</label>
+		<div class="col-md-5" id="selectTopic">
+			<div class="input-group">
+				<input type="text" class="form-control" id="topic" value="{$thing_info['topic_title']}" disabled>
+				<span class="input-group-btn"><a href="javascript:void(0);" class="btn btn-primary select_topic">选择话题</a></span>
+			</div>
+		</div>
+	</div>
+
+	<div class="form-group">
+		<label class="col-md-2 control-label">定位</label>
+		<div class="col-md-5">
+			<div class="input-group">
+				<div class="input-group-addon">lat(纬度)</div>
+				<input type="text" class="form-control w-200 inline-block" id="store_lat" name="store_lat" value="{$thing_info['lat']}">
+				<div class="input-group-addon">lng(经度)</div>
+				<input type="text" class="form-control w-200 inline-block" id="store_lng" name="store_lng" value="{$thing_info['lng']}">
+			</div>
+		</div>
+	</div>
+	<div class="form-group mb-0">
+		<label class="col-md-2 control-label" style="width: 204px"></label>
+
+		<div class="col-md-8" style="width: 592px;border: 1px solid #ddd;border-bottom: none">
+			<div class="input-group search-input-group" style="margin: 10px 0;width: auto">
+				<input type="text" class="form-control" id="search_text" name="search_text">
+				<span class="input-group-btn "><a class="btn btn-primary search J-search">搜索</a></span>
+			</div>
+		</div>
+	</div>
+	<div class="form-group mb-0">
+		<label class="col-md-2 control-label" style="width: 204px"></label>
+		<div class="col-md-8 map_div" id="map" style="width: 592px;">
+
+		</div>
+
+
+	</div>
+	<div class="form-group">
+		<label class="col-md-2 control-label" style="width: 204px"></label>
+		<div class="col-md-8 plpr-0" style="border:1px solid #ddd;width: 592px;">
+			<div class="map_location"></div>
+		</div>
+
+
+	</div>
+
+	<div class="form-group">
+		<label class="col-md-2 control-label"></label>
+		<div class="col-md-8">
+			<button class="btn btn-primary" type="submit" id="submitsData">{if($thing_info['id']>0)}保存{else}添加{/if}</button>
+			<a href="javascript:history.go(-1);" class="btn btn-default">返回</a>
+		</div>
+	</div>
+	<input id="goodsid" name="goodsid" type="hidden" value="{$thing_info['recommend_goods']}">
+	<input type="hidden" id="id" name="id" value="{$thing_info['id']}">
+	<input type="hidden" id="topic_id" name="topic_id" value="{$thing_info['topic_id']}">
+</form>
+<!--好物圈发布干货模板-->
+
+<!-- page end -->
+<!--{/block} {block name="script"}-->
+
+<script type="text/javascript" src="https://api.map.baidu.com/api?v=2.0&ak=t16W0CsDyfV8QjlSgS17lgsI"></script>
+<script>
+	// 好物圈发布干货模板
+	require(['utilAdmin'], function (utilAdmin) {
+            Array.prototype.remove = function(val) {
+            var index = this.indexOf(val);
+            if (index > -1) {
+                this.splice(index, 1);
+            }
+        };
+		// 百度地图
+		var map = new BMap.Map("map");
+		map.centerAndZoom("广州", 12);
+		map.enableScrollWheelZoom(); //启用滚轮放大缩小，默认禁用
+		map.enableContinuousZoom(); //启用地图惯性拖拽，默认禁用
+
+		map.addControl(new BMap.NavigationControl()); //添加默认缩放平移控件
+		map.addControl(new BMap.OverviewMapControl()); //添加默认缩略地图控件
+		map.addControl(new BMap.OverviewMapControl({
+			isOpen: true,
+			anchor: BMAP_ANCHOR_BOTTOM_RIGHT
+		})); //右下角，打开
+		var localSearch = new BMap.LocalSearch(map);
+		localSearch.enableAutoViewport(); //允许自动调节窗体大小
+
+		$('.J-search').click(function () {
+			map.clearOverlays(); //清空原来的标注
+			var keyword = $('#search_text').val();
+			localSearch.setSearchCompleteCallback(function (searchResult) {
+				console.log(searchResult);
+				var html = '';
+				for (var i = 0; i < searchResult.getCurrentNumPois(); i++) {
+					// s.push(searchResult.getPoi(i).title + ", " + searchResult.getPoi(i).address)
+					html += '<div class="map_location_box" data-lat=" ' + searchResult.getPoi(i).point.lat + ' " data-lng="' +
+							searchResult.getPoi(i).point.lng + '" data-title="' + searchResult.getPoi(i).title + '"><p>' + searchResult
+									.getPoi(i).title + '</p><p>' + searchResult.getPoi(i).address + '</p></div>';
+				}
+				$('.map_location').html(html);
+
+				var poi = searchResult.getPoi(0);
+				$('#store_lat').val(poi.point.lat);
+				$('#store_lng').val(poi.point.lng);
+				map.centerAndZoom(poi.point, 13);
+				var marker = new BMap.Marker(new BMap.Point(poi.point.lng, poi.point.lat)); // 创建标注，为要查询的地方对应的经纬度
+				map.addOverlay(marker);
+				var content = $('#search_text').val() + "<br/><br/>经度：" + poi.point.lng + "<br/>纬度：" + poi.point.lat;
+				var infoWindow = new BMap.InfoWindow("<p style='font-size:14px;'>" + content + "</p>");
+				marker.addEventListener("click", function () {
+					this.openInfoWindow(infoWindow);
+				});
+				// marker.setAnimation(BMAP_ANIMATION_BOUNCE); //跳动的动画
+			});
+			localSearch.search(keyword);
+		});
+
+		$('body').on('click', '.map_location_box', function () {
+			var lng = $(this).attr('data-lng');
+			var lat = $(this).attr('data-lat');
+			var title = $(this).attr('data-title');
+			$('#store_lat').val(lat);
+			$('#store_lng').val(lng);
+			$('#search_text').val(title);
+		})
+		//有图片则开启验证
+		$('#J-pic').bind('DOMNodeInserted', function (e) {
+			var lengths = $(this).find("input[name='upload_img_id']").length;
+			if (lengths > 0) {
+				$('#visibility1').removeAttr('required');
+			}
+			if (lengths > 8) {
+				$(this).find(".plus-box").fadeOut();
+			}
+		});
+		$('#J-pic').bind('DOMNodeRemoved', function (e) {
+			var lengths = $(this).find("input[name='upload_img_id']").length;
+			if (lengths < 1) {
+				$('#visibility1').attr('required', 'required');
+			}
+			if (lengths < 9) {
+				$(this).find(".plus-box").show();
+			}
+		});
+		if ($('#J-pic').find("input[name='upload_img_id']").length > 8) {
+			$('#J-pic').find(".plus-box").hide();
+		}
+		// 干货类型切换
+		$('input[name="thing_type"]').on('change',function(){
+			var val = $('input[name="thing_type"]:checked').val();
+			if(val == 1){
+				$('.pic-group').removeClass('hide');
+				$('#visibility1').attr('required', 'required');
+				$('.video-group').addClass('hide');
+				$('#visibility2').removeAttr('required');
+
+			}else{
+				$('.pic-group').addClass('hide');
+				$('#visibility1').removeAttr('required');
+				$('.video-group').removeClass('hide');
+				$('#visibility2').attr('required', 'required');
+			}
+		})
+		$('.picture-list1').on('click','.icon-danger',function(e){
+            e && e.stopPropagation ? e.stopPropagation() : window.event.cancelBubble = true;
+            var id=$(this).parents('.picture-list1-pic').attr('data-id');
+            $(this).parents('.picture-list1-pic').remove();
+            var str=$("#goodsid").val();
+            var str1 = str.split(',');
+            str1.remove(id);
+            var str2 = str1.join(',');
+            $("#goodsid").val(str2);
+        })
+		$('#selectGoods').on('click', function () {
+			var url = "{$selectGoodsUrl}";
+			utilAdmin.confirm('选择商品','url:'+url, function () {
+				var goods_id = this.$content.find('#goods_id').val();
+				$("#goodsid").val(goods_id);
+				$.ajax({
+					type:"post",
+					url:" {:__URL('ADMIN_MAIN/goods/selectNumGoodsInfo')}",
+					data:{
+						'goods_id':goods_id,
+					},
+					async:true,
+					success:function (data) {
+						if (data) {
+							var html='';
+							for(var i=0;i<data.length;i++){
+								html+='<a href="javascript:;" class="picture-list1-pic" data-id='+data[i]['goods_id']+'>';
+								html+='<i class="icon icon-danger" style="right:10px;" title="删除"></i>';
+								html+='<div><img style=\'width: 80px;height: 80px\' src='+__IMG(data[i]['pic_cover_mid'])+' ></div>';
+								html+='<div class="line-1-ellipsis">'+data[i]['goods_name']+'</div>';
+								html+='</a>';
+							}
+							$(".picture-list1").html(html);
+						}
+					}
+				});
+			},'large')
+		})
+		
+		$('body').on('click', '.map_location_box', function () {
+			var lng = $(this).attr('data-lng');
+			var lat = $(this).attr('data-lat');
+			var title = $(this).attr('data-title');
+			$('#store_lat').val(lat);
+			$('#store_lng').val(lng);
+			$('#search_text').val(title);
+		})
+		
+		$('#selectTopic').click(function () {
+			utilAdmin.goodsDialog('url:'+'{$selectTopicList}',function(data){
+			});
+		});
+        var flag = false;
+		utilAdmin.validate($('#form1'), function (form) {
+			var data = {};
+			var id = $("#id").val();
+			if(id>0){
+				data.id = id;
+			}
+			var thing_type = $("input[name='thing_type']:checked").val();
+			data.thing_type = thing_type;
+			var thing_title = $("#thing_title").val();
+			data.thing_title = thing_title;
+			var content = $("#content").val();
+			data.content = content;
+            if (flag)return;
+			if(thing_type == 2){
+				var video = $("input[name='upload_video_id']").val();
+				data.img_id = video;
+			}else{
+				var img_id =[];
+				$("input[name='upload_img_id']").each(function(){
+					img_id.push($(this).val());
+				});
+				var pic_length = $(".picture-list #thing_pic_list");
+				var length = pic_length.size();
+				if(length>9){
+					utilAdmin.message("图片不能超过9张");
+					return false;
+				}
+				data.img_id = img_id;
+			}
+			var goods_array = $('#goodsid').val();
+			data.goods_array = goods_array;
+			var topic_id = $('#topic_id').val();
+			data.topic_id = topic_id;
+			var lat = $('#store_lat').val();
+			data.lat = lat;
+			var lng = $('#store_lng ').val();
+			data.lng = lng;
+			var location = $('#search_text').val();
+			data.location = location;
+            flag = true;
+			$.post((id>0?'{$updateThingcircleUrl}':'{$addThingcircleUrl}'),data,
+			function(res){
+				if (res["code"] > 0) {
+					utilAdmin.message((id>0?'保存成功':'添加成功'), 'success', "{:__URL('ADDONS_ADMIN_MAINthingcircleList')}");
+				} else {
+					utilAdmin.message(res["message"], 'danger');
+					flag = false;
+				}
+			});
+		})
+
+	})
+	// 好物圈发布干货模板
+</script>
+{/block}

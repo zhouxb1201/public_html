@@ -1,0 +1,59 @@
+<div class="goods-dialog">
+    <div class="dialog-box">
+        <table class="table v-table table-auto-center">
+            <thead>
+            <tr>
+                <th>等级列表</th>
+                <th>操作</th>
+            </tr>
+            </thead>
+            <tbody id="group_list">
+
+            </tbody>
+        </table>
+    </div>
+    <div>
+        <span class="user_name_span J-user_name">选中的等级：</span>
+        <input type="text" class="form-control goods_val J-admin_name"  name="goods_val" disabled>
+    </div>
+    <input type="hidden" id="level_id">
+</div>
+<script>
+    require(['util'],function(util){
+        $(document).ready(function(){
+            var width = $(".J-user_name").innerWidth();
+            $('.J-admin_name').css('padding-left',width);
+        });
+        getList();
+        function getList(){
+            $.ajax({
+                type : "POST",
+                url : "{:__URL('PLATFORM_MAIN/member/memberLevelLists')}",
+                data : {
+                    "page_index" : 1,
+                    "page_size" : 0
+                },
+                success : function(data) {
+                    var html="";
+                    if (data["data"].length>0){
+                        for (var i = 0; i < data["data"].length; i++) {
+                            html += '<tr>';
+                            html += '<td>' + data['data'][i]["level_name"] + '</td>';
+                            html += '<td><a href="javascript:;" class="text-primary select_group" data-id="' + data['data'][i]['level_id'] +'" data-name="' + data["data"][i]['level_name'] + '">选择等级</a></td>';
+                            html += '</tr>';
+                        }
+                    }else{
+                        html += '<tr><th colspan="5">暂无符合条件的等级</th></tr>';
+                    }
+                    $("#group_list").html(html);
+                }
+            });
+        }
+        $('body').on('click','.select_group',function(){
+                var group_id = $(this).data('id');
+                var group_name= $(this).data('name');
+                $("#level_id").val(group_id);
+                $(".goods_val").val(group_name);
+            });
+    })
+</script>

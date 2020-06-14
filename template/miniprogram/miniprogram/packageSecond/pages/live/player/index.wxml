@@ -1,0 +1,108 @@
+<view class="push_home">
+  <view class="push_b" style="width:100%; height: 100%;">
+    <!-- 底层直播间 -->
+    <live-player id="player" style="width:100%; height: 100%;" mode="{{mode}}" orientation="{{orientation}}" muted="{{muted}}" background-mute="{{backgroundMute}}" object-fit="{{objectFit}}" autoplay='true' src="{{playUrl}}" min-cache="1" max-cache="3" bindstatechange="statechange">
+      <!-- 中间层聊天与功能 -->
+      <cover-view class="middle">
+        <cover-view class="live_header" style="top:{{(headerHeight + statusBarHeight) - 26}}rpx">
+          <cover-image src="/images/back.png" class="black_img" bindtap="backPage"></cover-image>
+          <cover-view class="liver_b">
+            <cover-image class="img" src="{{user_headimg?user_headimg:'/images/no-user.png'}}"></cover-image>
+            <cover-view class="liver_group">
+              <cover-view class="liver_name text-nowrap">{{liver_name?liver_name:'主播名称'}}</cover-view>
+              <cover-view class="text">{{memberNum}}人在观看</cover-view>
+            </cover-view>
+            <cover-view class="follow" bindtap="focus">{{follow_sign == 0?'关注':'已关注'}}</cover-view>
+          </cover-view>
+        </cover-view>
+        <cover-view class="live_bottom">
+
+          <cover-view class="live_chat" style="overflow-y: scroll" id='chat' scroll-top='{{scrollTop}}'>
+            <cover-view class="live_notice" id="aaa">
+              <cover-view class="live_item" wx:for='{{message_list}}' wx:key='index'>
+                <cover-view class="label">{{item.name}}</cover-view>
+                <cover-view class="value text-wrap">{{item.txt}}</cover-view>
+              </cover-view>
+            </cover-view>
+          </cover-view>
+
+            <!-- 推荐商品 -->
+          <cover-view class="rem_goods_list_b">
+            <scroll-view scroll-x>
+              <cover-view class="rem_goods_list">
+                <cover-view class="rem_item" wx:for='{{rem_goods_list}}' bindtap="recommendGoods" data-goods_id="{{remItem.goods_id}}"  wx:key='index' wx:for-item='remItem'>
+                  <cover-image class="rem_good_img" src="{{remItem.pic_cover}}"></cover-image>
+                  <cover-view class="group_info">
+                    <cover-view class='name text-nowrap'>{{remItem.goods_name}}</cover-view>
+                    <cover-view class="price">¥{{remItem.price}}</cover-view>
+                  </cover-view>
+                </cover-view>
+              </cover-view>
+            </scroll-view>
+      </cover-view>
+
+          <cover-view class="live_menu">
+            <cover-view class="menu" wx:if='{{!inputShow}}'>
+              <cover-image class="live_goods_img" src="../images/live_goods.png" bindtap="liveGoodShow"></cover-image>
+              <cover-view class="input_icon" bindtap="inputShow">
+                <cover-view class="input_txt">说点什么吧.....</cover-view>
+              </cover-view>
+              <cover-view class="group">
+                <cover-image class="more_img icon_img" src="../images/more.png" bindtap="onReportPage"></cover-image>
+                <cover-image class="discount_img icon_img" src="../images/discount.png"></cover-image>
+                <cover-view class="group_item">
+                  <cover-view class="num">{{like_num}}</cover-view>
+                  <cover-image class="like_normal_img icon_img" data-likesign="{{like_sign}}" src="{{like_sign == 0?'../images/like_normal.png':'../images/like_act.png'}}" bindtouchstart="likeStart" bindtouchend="likeEnd"></cover-image>
+                </cover-view>
+
+              </cover-view>
+            </cover-view>
+            <cover-view class="input_b" wx:else>
+              <cover-view class="input_row">
+                <cover-view class="input_item">
+                  <cover-image class="menu_img txt_img" src="/images/icon_text.png" bindtap="inputShow"></cover-image>
+                  <cover-view class='cover-input' bindtap='tapInput'>
+                    <cover-view class='text'>{{inputInfo}}</cover-view>
+                    <input class='input' value='{{inputModel}}' focus='{{inputFocus}}' cursor-spacing="10" bindinput='blurInput'></input>
+                  </cover-view>
+                </cover-view>
+                <cover-view class="btn" bindtap="sendMessage">发送</cover-view>
+              </cover-view>
+            </cover-view>
+          </cover-view>
+        </cover-view>
+  
+      <!-- 上层弹框 -->
+      <cover-view class="upper" wx:if="{{upperShow}}">
+
+
+          </cover-view>
+        <!-- 直播商品 -->
+        <cover-view class="live_goods_box" wx:if="{{liveGoodShow}}">
+          <cover-view class="shadow" bindtap="liveGoodShow"></cover-view>
+          <cover-view class="goods_b">
+            <cover-view class="title">直播商品</cover-view>
+            <cover-view class="list">
+              <cover-view class="item" bindtap="coverGoods" data-goods_id="{{item.goods_id}}" wx:for="{{live_goods_list}}" wx:key='index'>
+                <cover-image class="good_img" src="{{item.pic_cover?item.pic_cover:'/images/no-goods.png'}}"></cover-image>
+                <cover-view class="info">
+                  <cover-view class="goods_name">{{item.goods_name}}</cover-view>
+                  <cover-view class="price_b">
+                    <cover-view class="price">¥{{item.price}}</cover-view>
+                  </cover-view>
+                </cover-view>
+              </cover-view>
+            </cover-view>
+          </cover-view>
+        </cover-view>
+      </cover-view>
+
+
+    </live-player>
+  </view>
+
+
+</view>
+
+
+

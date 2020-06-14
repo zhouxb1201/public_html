@@ -1,0 +1,366 @@
+{extend name="admin/base" /}
+{block name="resources"/}
+{/block}
+{block name="main"}
+<!-- page -->
+
+
+<div class="withdrawal">
+
+    <div class="withdrawal_cash">
+        <p class="canWithdrawal">
+            <span>可提现：</span>
+            <span class="red">{$shop_account_info["shop_total_money"]}</span> 元
+            <a href="{:__URL('ADMIN_MAIN/financial/applyShopAccountWithdraw')}" class="withdrawal_bor">提现</a>
+        </p>
+    </div>
+
+    <div class="row">
+        <div class="col-sm-3 pl30">
+            <p>
+                <span>营业额：</span>
+                <span class="red">{$shop_account_info["shop_entry_money"]}</span>元
+            </p>
+        </div>
+        <div class="col-sm-3 pl30">
+            <p>
+                <span>已提现：</span>
+                <span class="red">{$shop_account_info.shop_withdraw}</span>元
+            </p>
+        </div>
+        <div class="col-sm-3 pl30">
+            <p>
+                <span>平台抽取利润：</span>
+                <span class="red">{$shop_account_info["shop_platform_commission"]}</span>元
+            </p>
+        </div>
+    </div>
+
+</div>
+<!--tab栏切换-->
+<div class="infoTab">
+    <ul id="myTab" class="nav nav-tabs">
+        <li class="active"><a href="#orderRecord"  data-type="1" data-toggle="tab" class="infoSingle tab-1">订单记录</a></li>
+        <li><a href="#withdrawalRecord" data-type="2" data-toggle="tab" class="infoSingle tab-2">提现记录</a></li>
+        <li><a href="#accountRecord" data-type="3" data-toggle="tab" class="infoSingle tab-3">账户记录</a></li>
+        <li class="fr">
+            <span>时间选择：</span>
+            <span class="pr">
+                <input type="text" id="startDate" name="startDate" placeholder="开始时间" style="width: 250px;display: inline-block" class="form-control">
+                <label for="startDate"><i class="fa icon-calendar"></i></label>
+            </span>
+            <span>~</span>
+            <span class="pr">
+                <input type="text" id="endDate" name="endDate" placeholder="结束时间" style="width: 250px;display: inline-block" class="form-control">
+                <label for="endDate"><i class="fa icon-calendar"></i></label>
+            </span>
+            <span class="btn btn-primary search_to" style="margin-top: -6px">搜索</span>
+        </li>
+    </ul>
+    <div id="myTabContent" class="tab-content">
+        <div class="tab-pane fade in active" id="orderRecord">
+            <!--表格-->
+            <table class="table v-table">
+                <thead>
+                    <tr>
+                        <th>订单号</th>
+                        <th>实付金额</th>
+                        <!--<th>平台抽成</th>-->
+                        <th>下单成交</th>
+                        <th>是否结算</th>
+                        <th class="col-md-2 pr-14 operationLeft">操作</th>
+                    </tr>
+                </thead>
+                <tbody id="list1">
+                </tbody>
+            </table>
+            <div class="page clearfix">
+                <div class="M-box1 m-style fr">
+                </div>
+            </div>
+        </div>
+        <div class="tab-pane fade" id="withdrawalRecord">
+            <!--表格-->
+            <table class="table table-hover v-table">
+                <thead>
+                    <tr>
+                        <th>流水号</th>
+                        <th>提取方式</th>
+                        <th>提现金额</th>
+                        <th>平台抽取</th>
+                        <th>手续费</th>
+                        <th>申请时间</th>
+                        <th>状态</th>
+                        <th class="col-md-2 pr-14 operationLeft">操作</th>
+                    </tr>
+                </thead>
+                <tbody id="list2">
+                </tbody>
+            </table>
+            <div class="page clearfix">
+                <div class="M-box2 m-style fr">
+                </div>
+            </div>
+        </div>
+        <div class="tab-pane fade" id="accountRecord">
+            <!--表格-->
+            <table class="table table-hover v-table">
+                <thead>
+                    <tr>
+                        <th>金额</th>
+                        <th>发生方式</th>
+                        <th>创建时间</th>
+                        <th>备注</th>
+                    </tr>
+                </thead>
+                <tbody id="list3">
+                </tbody>
+            </table>
+            <div class="page clearfix">
+                <div class="M-box3 m-style fr">
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- 提现明细模态框（Modal） -->
+<div class="modal fade" id="showDetail" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog" style="width: 500px">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                <h4 class="modal-title" id="myModalLabel">提现明细</h4>
+            </div>
+            <div class="modal-body">
+                
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+            </div>
+        </div>
+    </div>
+
+</div>
+<!-- page end -->
+
+{/block}
+{block name="script"}
+
+<script>
+require(['util','utilAdmin'], function (util,utilAdmin) {
+$(function () {
+    // dateRange("startDate", true, false, '', 'left');
+    // dateRange("endDate", true, false, '', 'left');
+    util.layDate("#startDate");
+    util.layDate("#endDate");
+    LoadingInfo(1);
+})
+function searchData(){
+    var type = $('#myTab').find('li.active a').data('type');
+    if(type===1){
+        LoadingInfo(1);
+    }else if(type===2){
+        getShopAccountWithdrawPage(1);
+    }else if(type===3){
+        getShopAccountRecordCount(1);
+    }else{
+        return false;
+    }
+}
+function LoadingInfo(page_index) {
+    var start_date = $("#startDate").val();
+    var end_date = $("#endDate").val();
+    $.ajax({
+        type: "post",
+        url: "{:__URL('ADMIN_MAIN/financial/shoporderaccountlist')}",
+        async: true,
+        data: {
+            "page_index": page_index,
+            "start_date": start_date,
+            "end_date": end_date
+        },
+        success: function (data) {
+            var html = '';
+            if (data.list["data"].length > 0) {
+                for (var i = 0; i < data.list["data"].length; i++) {
+                    html += '<tr>';
+                    html += '<td>' + data.list["data"][i]["order_no"] + '</td>';
+                    if(data.list["data"][i]["pay_money"]>0){
+                        html += '<td>' + data.list["data"][i]["pay_money"] + '</td>';
+                    }else{
+                        html += '<td>' + data.list["data"][i]["user_platform_money"] + '</td>';
+                    }
+
+                    // html += '<td>' + data.list["data"][i]["platform_money"] + '</td>';
+                    html += '<td>'+utilAdmin.timeStampTurnTime(data.list["data"][i]["create_time"])+'</td>';
+                    if (data.list["data"][i]["order_status"]==4) {
+                        html += '<td><span class="label label-success">是</span></td>';
+                    } else {
+                        html += '<td><span class="label label-danger">否</span></td>';
+                    }
+                    html += '<td class="fs-0 operationLeft"><a class="btn-operation" href="'+__URL('ADMIN_MAIN/order/orderdetail?order_id='+data.list["data"][i]["order_id"])+'">详情</a></td>';
+                    html += '</tr>';
+                }
+            } else {
+                html += '<tr align="center"><td colspan="5" class="h-200">暂无符合条件的数据记录</td></tr>';
+            }
+            $("#list1").html(html);
+            utilAdmin.tips();
+            utilAdmin.page(".M-box1", data.list['total_count'], data.list["page_count"], page_index, LoadingInfo);
+        }
+    });
+}
+
+
+function getShopAccountWithdrawPage(page_index) {
+    var start_date = $("#startDate").val();
+    var end_date = $("#endDate").val();
+    $.ajax({
+        type: "post",
+        url: "{:__URL('ADMIN_MAIN/financial/shopaccountwithdrawlist')}",
+        async: true,
+        data: {
+            "page_index": page_index,
+            "start_date": start_date,
+            "end_date": end_date
+        },
+        success: function (data) {
+            var html = '';
+            if (data["data"].length > 0) {
+                for (var i = 0; i < data["data"].length; i++) {
+                    var status = "";
+                    var classs = "green";
+
+                    if (data["data"][i]["status"] == 1) {
+                        status = "待审核";
+                        classs = "label label-skyBlue";
+                    } else if (data["data"][i]["status"] == -1) {
+                        status = "审核不通过";
+                        classs = "label label-red";
+                    } else if (data["data"][i]["status"] == 2){
+                        status = "待打款";
+                        classs = "label label-orange";
+                    } else if (data["data"][i]["status"] == 3){
+                        status = "已打款";
+                        classs = "label label-green";
+                    } else if (data["data"][i]["status"] == 4){
+                        status = "拒绝打款";
+                        classs = "label label-red";
+                    } else if (data["data"][i]["status"] == 5){
+                        status = "打款失败";
+                        classs = "label label-grey";
+                    }
+
+                    html += '<tr>';
+                    html += '<td>' + data["data"][i]["withdraw_no"] + '</td>';
+                    html += '<td>' + data["data"][i]["type"] + '</td>';
+                    html += '<td>' + data["data"][i]["cash"] + '</td>';
+                    html += '<td>' + data["data"][i]["platform_money"] + '</td>';
+                    html += '<td>' + data["data"][i]["charge"] + '</td>';
+                    if(data["data"][i]["ask_for_date"]){
+                        html += '<td>' + data["data"][i]["ask_for_date"] + '</td>';
+                    }else{
+                        html += '<td>--</td>';
+                    }
+                    html += '<td><span class="' + classs + '">' + status + '</span></td>';
+                    html += '<td class="fs-0 operationLeft"><a class="btn-operation text-a" href="javascript:void(0);" data-id="' + data["data"][i]["id"] + '">提现明细</a></td>';
+                    html += '</tr>';
+                }
+            } else {
+                html += '<tr align="center"><td colspan="7" class="h-200">暂无符合条件的数据记录</td></tr>';
+            }
+
+            $("#list2").html(html);
+            utilAdmin.tips();
+            utilAdmin.page(".M-box2", data['total_count'], data["page_count"], page_index, getShopAccountWithdrawPage);
+        }
+    });
+}
+function getShopAccountRecordCount(page_index) {
+    var start_date = $("#page_shop_account  #startDate").val();
+    var end_date = $("#page_shop_account  #endDate").val();
+    $.ajax({
+        type: "post",
+        url: "{:__URL('ADMIN_MAIN/financial/shopaccountrecordcount')}",
+        async: true,
+        data: {
+            "page_index": page_index,
+            "start_date": start_date,
+            "end_date": end_date
+        },
+        success: function (data) {
+            $("#shop_cash").text(data.count.withdraw_cash);
+            $("#shop_cash_isautit").text(data.count.withdraw_isaudit);
+            $("#money").text(data.count.shop_order_money);
+            $("#money_isuse").text(data.count.shop_order_money_isuse);
+            var html = '';
+            if (data["list"]["data"].length > 0) {
+                for (var i = 0; i < data["list"]["data"].length; i++) {
+                    html += '<tr>';
+                    html += '<td>' + data["list"]["data"][i]["money"] + '</td>';
+                    if (data["list"]["data"][i]["account_type"] == 1) {
+                        html += '<td>订单支付</td>';
+                    } else if(data["list"]["data"][i]["account_type"] == 8) {
+                        html += '<td>提现</td>';
+                    } else if(data["list"]["data"][i]["account_type"] == 3) {
+                        html += '<td>订单退款</td>';
+                    } else if(data["list"]["data"][i]["account_type"] == 5) {
+                        html += '<td>订单完成</td>';
+                    }
+                    html += '<td>' + utilAdmin.timeStampTurnTime(data["list"]["data"][i]["create_time"]) + '</td>';
+                    html += '<td>' + data["list"]["data"][i]["remark"] + '</td>';
+                    html += '</tr>';
+                }
+            } else {
+                html += '<tr align="center"><td colspan="4" class="h-200">暂无符合条件的数据记录</td></tr>';
+            }
+            $("#list3").html(html);
+            utilAdmin.page(".M-box3", data.list['total_count'], data.list["page_count"], page_index, getShopAccountRecordCount);
+        }
+    });
+}
+//弹出提现明细模态框
+function boxShow(id) {
+	$('#showDetail').modal('show');
+	$.ajax({
+		type : "post",
+		url : "{:__URL('ADMIN_MAIN/financial/shopaccountwithdrawdetail')}",
+		async : false,
+		data : { "id" : id },
+                dataType: "json",
+		success : function(data) {
+			if (data) {
+                            var html = '';
+                            html +='<div class="pb"><span class="left">提现流水号:</span><span class="right">' + data.withdraw_no + '</span></div>';
+                            html +='<div class="pb"><span class="left">账号类型:</span><span class="right">' + data.type_name + '</span></div>';
+                            html +='<div class="pb"><span class="left">提现账户名:</span><span class="right">' + data.realname + '</span></div>';
+                            html +='<div class="pb"><span class="left">提现账号:</span><span class="right">' + data.account_number + '</span></div>';
+                            html +='<div class="pb"><span class="left">提现金额:</span><span class="right">' + data.cash + '</span></div>';
+                            html +='<div class="pb"><span class="left">申请时间:</span><span class="right">' + data.ask_for_date + '</span></div>';
+                            html +='<div class="pb"><span class="left">到账时间:</span><span class="right">' + data.payment_date + '</span></div>';
+                            $("#showDetail .modal-body").html(html);
+			}else{
+                            $("#showDetail .modal-body").html('<div class="pb">系统繁忙，请稍后重试</div>');
+                        }
+		}
+	})
+}
+$(".tab-1").on("click",function(){
+    LoadingInfo(1)
+});
+$(".tab-2").on("click",function(){
+    getShopAccountWithdrawPage(1)
+});
+$(".tab-3").on("click",function(){
+    getShopAccountRecordCount(1)
+});
+$(".search_to").on("click",function(){
+    searchData();
+});
+$("body").on("click",".text-a",function(){
+    var id=$(this).attr("data-id");
+    boxShow(id);
+});
+})
+</script>
+{/block}

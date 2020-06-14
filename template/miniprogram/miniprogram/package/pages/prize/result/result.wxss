@@ -1,0 +1,61 @@
+/* miniprogram/package/pages/prize/result/result.wxss */
+
+page {
+  background-color: #f8f8f8;
+}
+
+.success-txt {
+  font-size: 32rpx;
+  font-weight: normal;
+  color: #666;
+  text-align: center;
+  margin: 80rpx;
+}
+
+.img {
+  margin: auto;
+  position: relative;
+  width: 30%;
+}
+
+.img image {
+  width: 100%;
+  height: auto;
+  display: block;
+}
+
+.btn-wrap {
+  width: 60%;
+  margin: auto;
+  margin-top: 40rpx;
+  display: flex;
+  justify-content: center;
+}
+
+.btn-wrap button {
+  padding: 0 16rpx;
+  height: 60rpx;
+  width: 45%;
+  font-size: 24rpx;
+  line-height: 56rpx;
+  border-radius: 10rpx;
+  text-align: center;
+  -webkit-appearance:none;
+  appearance:none;
+}
+
+.btn-wrap button:nth-child(1) {
+  color: #fff;
+  background-color: #f44;
+  border: 2rpx solid #f44;
+  margin-right: 10%;
+}
+
+.btn-wrap button:nth-child(2) {
+  background-color: #fff;
+  color: #f44;
+  border: 2rpx solid #f44;
+}
+.btn-wrap button:after{
+  border: none; 
+}

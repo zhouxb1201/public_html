@@ -1,0 +1,143 @@
+<view class='coupon_detail'>
+  <view class='head_card card__group_box'>
+    <view class='cell_head van_cell' data-shopid='{{couponDetail.shop_id}}' bindtap='onShopPage'>
+      <view class='icon iconfont v-icon-shop1 shop_left'></view>
+      <view class='title'>{{couponDetail.shop_name}}</view>
+      <view>
+        <view class='flex_right'>
+          <view>进店</view>
+          <view class='icon iconfont v-icon-arrow-right arrow_right'></view>
+        </view>        
+      </view>
+    </view>
+    <view class='cell_text van_cell borderless'>
+      <view class='cell_value'>
+        <view class='value_title'>以下商品可使用以下优惠券</view>
+        <view class='info'>
+          <view class='coupon_type' wx:if='{{couponDetail.coupon_genre == 1}}'>
+            <van-tag type="primary" size="medium">店铺 | 优惠券</van-tag>
+            <view class='coupon_name'>无门槛{{couponDetail.money}}元</view>
+          </view>
+          <view class='coupon_type' wx:if='{{couponDetail.coupon_genre == 2}}'>
+            <van-tag type="primary" size="medium">店铺 | 金额券</van-tag>
+            <view class='coupon_name'>满{{couponDetail.at_least}}可减{{couponDetail.money}}元</view>
+          </view>
+          <view class='coupon_type' wx:if='{{couponDetail.coupon_genre == 3}}'>
+            <van-tag type="primary" size="medium">店铺 | 折扣券</van-tag>
+            <view class='coupon_name'>满{{couponDetail.at_least}}可打{{couponDetail.discount}}折</view>
+          </view>          
+        </view>
+      </view>
+    </view>
+    <view class='cell_text van_cell'>
+      <view class='cell_value'>
+        <view>{{couponDetail.start_time}} ~ {{couponDetail.end_time}}</view>
+      </view>
+    </view>
+  </view>
+
+  <view class="goodlist">
+    <view class="sort  {{topNavShow == true ? 'top_fixed' : ''}}">
+      <view class="item {{orderActive == '' ? 'on' : ''}}" data-order='' bindtap='changeSort'>
+        <text>默认</text>
+      </view>
+      <view class="item {{orderActive == 'sales' ? 'on' : ''}}" data-order='sales' data-sort='{{saleSort}}' bindtap='changeSort'>
+        <text>销售量</text>
+        <view class="icon iconfont v-icon-sort2 {{saleSort}}"></view>
+      </view>
+      <view class="item {{orderActive == 'price' ? 'on' : ''}}" data-order='price' data-sort='{{priceSort}}' bindtap='changeSort'>
+        <text>价格</text>
+        <view class="icon iconfont v-icon-sort2 {{priceSort}}"></view>
+      </view>
+      <view class="item" bindtap='pupupRightShow'>
+        <text>筛选</text>        
+      </view>
+    </view>
+
+    <view class='goodsRank'>
+      <view class='goodbox'>
+        <view class='gooditem' wx:for="{{goodlist}}" wx:key='' data-id="{{item.goods_id}}">          
+          <view data-goodsid='{{item.goods_id}}' bindtap='ongoodsPage'>
+            <view class='goodimg'>
+              <image mode='widthFix' src="{{item.pic_cover}}"></image>
+            </view>
+            <view class='gooddetail'>
+              <view class='goodname'>{{item.goods_name}}</view>
+              <view>
+                <text class='goodprice'>¥{{item.price}}</text>
+                <text class='marketprice'>¥{{item.market_price}}</text>
+              </view>
+              <view class='saleNum'>销量 <text>{{item.sales}}</text></view>
+            </view>
+          </view>        
+        </view>
+      </view>
+      <view class='no_gooddata' wx:if="{{noMore == 'true'}}">
+        <text>没有更多了</text> 
+      </view>
+    </view>
+  </view>
+</view>
+
+<van-popup show="{{ rightShow }}" position="right" custom-style="height:100%;width:60%;" bind:click-overlay="pupupRightClose">
+  <view class='rightShow'>
+    <view class='rs_goods'>
+
+      <view class='btn_box'>
+        <view class="text free_shipping_fee {{recommend_goods == 1 ? 'active' : ''}}" 
+          data-checked='recommend' 
+          bindtap='checkedBool'>
+          推荐
+        </view>
+      </view>
+
+      <view class='btn_box'>
+        <view class="text new_goods {{new_goods == 1 ? 'active' : ''}}" 
+          data-checked='newGoods' 
+          bindtap='checkedBool'>
+          新品
+        </view>
+      </view>
+
+      <view class='btn_box'>
+        <view class="text new_goods {{hot_goods == 1 ? 'active' : ''}}" 
+          data-checked='hotGoods' 
+          bindtap='checkedBool'>
+          热卖
+        </view>
+      </view>
+    
+      <view class='btn_box'>
+        <view class="text free_shipping_fee {{promotion_goods == 1 ? 'active' : ''}}" 
+          data-checked='promotion' 
+          bindtap='checkedBool'>
+          促销
+        </view>
+      </view>
+      
+      
+
+      <view class='btn_box'>
+        <view class="text free_shipping_fee {{free_shipping == 1 ? 'active' : ''}}" 
+          data-checked='freeShipping' 
+          bindtap='checkedBool'>
+          包邮
+        </view>
+      </view>
+
+    </view>
+    <view class='priceRange'>
+      <view class='rangeTitle'>价格区间</view>
+      <view class='range'>
+        <input type='text' class='minPrice' placeholder='最低价' bindinput='minPrice' value='{{minPrice}}'></input>
+        <view class='sign'>~</view>
+        <input type='text' class='maxPrice' placeholder='最高价' bindinput='maxPrice' value='{{maxPrice}}'></input>
+      </view>
+    </view>
+    <view class='buttomBtn'>
+      <view class='btn cancel' bindtap='resetData'>重置</view>
+      <view class='btn makesure' bindtap='chooseGoods'>确定</view>      
+    </view>
+  </view>
+  
+</van-popup>

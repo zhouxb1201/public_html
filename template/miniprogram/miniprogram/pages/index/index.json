@@ -1,0 +1,8 @@
+{
+  "usingComponents": {
+    "tem-component": "/pages/component/tem/index",
+    "copyright-component": "/pages/component/copyright/index",
+    "backtop-component": "/pages/component/backtop/backtop"
+    
+  }
+}

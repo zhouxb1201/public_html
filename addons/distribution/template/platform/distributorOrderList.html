@@ -1,0 +1,469 @@
+{block name="resource"}
+<style>
+	.label-danger a {
+		padding-top: 5px;
+	}
+</style>
+{/block}
+{block name="main"}
+		<!-- page -->
+
+        <form class="v-filter-container">
+            <div class="filter-fields-wrap">
+                <div class="filter-item clearfix">
+                    <div class="filter-item__field">
+                        <div class="v__control-group">
+                            <label class="v__control-label">订单编号</label>
+                            <div class="v__controls">
+                                <input type="text" id="order_no" class="v__control_input" placeholder="请输入订单编号" autocomplete="off">
+                            </div>
+                        </div>
+                        <div class="v__control-group">
+                            <label class="v__control-label">商品名称</label>
+                            <div class="v__controls">
+                                <input type="text" class="v__control_input" id="goods_name" placeholder="请输入商品名称" autocomplete="off">
+                            </div>
+                        </div>
+                        <div class="v__control-group">
+                            <label class="v__control-label">快递单号</label>
+                            <div class="v__controls">
+                                <input type="text" class="v__control_input" id="express_no" placeholder="请输入快递单号" autocomplete="off">
+                            </div>
+                        </div>
+                        <div class="v__control-group">
+                            <label class="v__control-label">支付方式</label>
+                            <div class="v__controls">
+                                <select class="v__control_input" id="payment_type">
+                                    <option value="">全部</option>
+                                    <option value="1">微信</option>
+                                    <option value="2">支付宝</option>
+                                    <option value="5">余额支付</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="v__control-group">
+                            <label class="v__control-label">下单时间</label>
+                            <div class="v__controls v-date-input-control">
+                                <label for="orderTime">
+                                    <input type="text" class="v__control_input pr-30" id="orderTime" placeholder="请选择时间" autocomplete="off" data-types="datetime">
+                                    <i class="icon icon-calendar"></i>
+                                    <input type="hidden" id="orderStartDate">
+                                    <input type="hidden" id="orderEndDate">
+                                </label>
+                            </div>
+                        </div>
+                        <div class="v__control-group">
+                            <label class="v__control-label">付款时间</label>
+                            <div class="v__controls v-date-input-control">
+                                <label for="payTime">
+                                    <input type="text" class="v__control_input pr-30" id="payTime" placeholder="请选择时间" autocomplete="off" data-types="datetime">
+                                    <i class="icon icon-calendar"></i>
+                                    <input type="hidden" id="payStartDate">
+                                    <input type="hidden" id="payEndDate">
+                                </label>
+                            </div>
+                        </div>
+                        <div class="v__control-group">
+                            <label class="v__control-label">发货时间</label>
+                            <div class="v__controls v-date-input-control">
+                                <label for="deliveryTime">
+                                    <input type="text" class="v__control_input pr-30" id="deliveryTime" placeholder="请选择时间" autocomplete="off" data-types="datetime">
+                                    <i class="icon icon-calendar"></i>
+                                    <input type="hidden" id="sendStartDate">
+                                    <input type="hidden" id="sendEndDate">
+                                </label>
+                            </div>
+                        </div>
+                        <div class="v__control-group">
+                            <label class="v__control-label">完成时间</label>
+                            <div class="v__controls v-date-input-control">
+                                <label for="completeTime">
+                                    <input type="text" class="v__control_input pr-30" id="completeTime" placeholder="请选择时间" autocomplete="off" data-types="datetime">
+                                    <i class="icon icon-calendar"></i>
+                                    <input type="hidden" id="finishStartDate">
+                                    <input type="hidden" id="finishEndDate">
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="filter-item clearfix">
+                    <div class="filter-item__field">
+                        <div class="v__control-group">
+                            <label class="v__control-label"></label>
+                            <div class="v__controls">
+                                <a class="btn btn-primary search"><i class="icon icon-search"></i> 搜索</a>
+                                <a class="btn btn-success ml-15 dataExcel">导出EXCEL</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </form>
+
+		<div class="screen-title">
+			<span class="text">订单列表</span>
+		</div>
+		<table class="table v-table table-auto-center mb-10">
+			<thead>
+			<tr>
+				<th class="col-md-3">商品</th>
+				<th class="col-md-1">单价</th>
+				<th class="col-md-1">数量</th>
+				<th class="col-md-2">买家</th>
+				<th class="col-md-2 operationLeft">实收/收货人</th>
+				<th class="col-md-1">订单状态</th>
+				<th class="col-md-2 pr-14 operationLeft">操作</th>
+			</tr>
+			</thead>
+		</table>
+        <div class="tables" id="list">
+
+        </div>
+
+		<input type="hidden" id="page_index">
+		<nav aria-label="Page navigation" class="clearfix">
+			<ul id="page" class="pagination pull-right"></ul>
+		</nav>
+		<!-- page end -->
+<input type="hidden" id="member_id" value="{$member_id}">
+<input type="hidden" id="website_id" value="{$website_id}">
+<input type="hidden" id="merchant_status" value="{$merchant_status}">
+<input type="hidden" id="merchant_expire" value="{$merchant_expire}">
+{/block}
+{block name="script"}
+<script type="text/javascript">
+    require(['util'], function (util) {
+        util.initPage(LoadingInfo);
+
+        util.layDate('#orderTime',true,function(value, date, endDate){
+            var h=date.hours<10 ?"0"+date.hours : date.hours;
+            var m=date.minutes<10 ?"0"+date.minutes : date.minutes;
+            var s=date.seconds<10 ?"0"+date.seconds : date.seconds;
+            var h1=endDate.hours<10 ?"0"+endDate.hours : endDate.hours;
+            var m1=endDate.minutes<10 ?"0"+endDate.minutes : endDate.minutes;
+            var s1=endDate.seconds<10 ?"0"+endDate.seconds : endDate.seconds;
+            var date1=date.year+'-'+date.month+'-'+date.date+' '+h+":"+m+":"+s;
+            var date2=endDate.year+'-'+endDate.month+'-'+endDate.date+' '+h1+":"+m1+":"+s1;
+
+            if(value){
+                $('#orderStartDate').val(date1);
+                $('#orderEndDate').val(date2);
+            }
+            else{
+                $('#orderStartDate').val('');
+                $('#orderEndDate').val('');
+            }
+
+        });
+        util.layDate('#payTime',true,function(value, date, endDate){
+            var h=date.hours<10 ?"0"+date.hours : date.hours;
+            var m=date.minutes<10 ?"0"+date.minutes : date.minutes;
+            var s=date.seconds<10 ?"0"+date.seconds : date.seconds;
+            var h1=endDate.hours<10 ?"0"+endDate.hours : endDate.hours;
+            var m1=endDate.minutes<10 ?"0"+endDate.minutes : endDate.minutes;
+            var s1=endDate.seconds<10 ?"0"+endDate.seconds : endDate.seconds;
+            var date1=date.year+'-'+date.month+'-'+date.date+' '+h+":"+m+":"+s;
+            var date2=endDate.year+'-'+endDate.month+'-'+endDate.date+' '+h1+":"+m1+":"+s1;
+            if(value){
+                $('#payStartDate').val(date1);
+                $('#payEndDate').val(date2);
+            }
+            else{
+                $('#payStartDate').val('');
+                $('#payEndDate').val('');
+            }
+
+        });
+        util.layDate('#deliveryTime',true,function(value, date, endDate){
+            var h=date.hours<10 ?"0"+date.hours : date.hours;
+            var m=date.minutes<10 ?"0"+date.minutes : date.minutes;
+            var s=date.seconds<10 ?"0"+date.seconds : date.seconds;
+            var h1=endDate.hours<10 ?"0"+endDate.hours : endDate.hours;
+            var m1=endDate.minutes<10 ?"0"+endDate.minutes : endDate.minutes;
+            var s1=endDate.seconds<10 ?"0"+endDate.seconds : endDate.seconds;
+            var date1=date.year+'-'+date.month+'-'+date.date+' '+h+":"+m+":"+s;
+            var date2=endDate.year+'-'+endDate.month+'-'+endDate.date+' '+h1+":"+m1+":"+s1;
+            if(value){
+                $('#sendStartDate').val(date1);
+                $('#sendEndDate').val(date2);
+            }
+            else{
+                $('#sendStartDate').val('');
+                $('#sendEndDate').val('');
+            }
+            
+        });
+        util.layDate('#completeTime',true,function(value, date, endDate){
+            var h=date.hours<10 ?"0"+date.hours : date.hours;
+            var m=date.minutes<10 ?"0"+date.minutes : date.minutes;
+            var s=date.seconds<10 ?"0"+date.seconds : date.seconds;
+            var h1=endDate.hours<10 ?"0"+endDate.hours : endDate.hours;
+            var m1=endDate.minutes<10 ?"0"+endDate.minutes : endDate.minutes;
+            var s1=endDate.seconds<10 ?"0"+endDate.seconds : endDate.seconds;
+            var date1=date.year+'-'+date.month+'-'+date.date+' '+h+":"+m+":"+s;
+            var date2=endDate.year+'-'+endDate.month+'-'+endDate.date+' '+h1+":"+m1+":"+s1;
+            if(value){
+                $('#finishStartDate').val(date1);
+                $('#finishEndDate').val(date2);
+            }
+            else{
+                $('#finishStartDate').val('');
+                $('#finishEndDate').val('');
+            }
+        });
+
+        var merchant_status= $("#merchant_status").val();
+        var merchant_expire= $("#merchant_expire").val();
+        function LoadingInfo(page_index) {
+            $("#page_index").val(page_index);
+            var order_no = $("#order_no").val();
+            var start_create_date = $("#orderStartDate").val();
+            var end_create_date = $("#orderEndDate").val();
+            var start_pay_date = $("#payStartDate").val();
+            var end_pay_date = $("#payEndDate").val();
+            var start_send_date = $("#sendStartDate").val();
+            var end_send_date = $("#sendEndDate").val();
+            var start_finish_date = $("#finishStartDate").val();
+            var end_finish_date = $("#finishEndDate").val();
+            var user = $("#user").val();
+            var express_no = $("#express_no").val();
+            var goods_name = $("#goods_name").val();
+            var payment_type = $("#payment_type").val();
+            var order_type = $("#order_type").val();
+            $.ajax({
+                type: "post",
+                url: "{$distributorOrderListUrl}",
+                async: true,
+                data: {
+                    "website_id":$("#website_id").val(),
+                    "page_index": page_index,
+                    "order_no": order_no,
+                    "start_create_date": start_create_date,
+                    "end_create_date": end_create_date,
+                    "start_pay_date": start_pay_date,
+                    "end_pay_date": end_pay_date,
+                    "start_send_date": start_send_date,
+                    "end_send_date": end_send_date,
+                    "start_finish_date": start_finish_date,
+                    "end_finish_date": end_finish_date,
+                    "user": user,
+                    "express_no": express_no,
+                    "goods_name": goods_name,
+                    "payment_type": payment_type,
+                    "order_type": order_type,
+                    "uid": $("#member_id").val()
+                },
+                success: function (data) {
+                    if(data['page_count']>=3){
+                        if(merchant_status==1){
+                            var html = '';
+                            html += '<div style="min-height: 100px;font-size: 16px;padding-top: 30px">免费版本数据量已达上限，需要继续使用请联系客服电话<span class="text-primary">400-889-6625</span>或<a href="http://pkt.zoosnet.net/LR/Chatpre.aspx?id=PKT84941002&lng=cn" target="_blank" class="text-primary"><i class="icon-sale icon"></i>  QQ客服</a>！</div>';
+                            util.confirm3('',html);
+                        }
+                    }
+                    var html = '';
+                    if (data['data'] == undefined || data['data'].length == 0) {
+                        html += '<table class="table v-table table-auto-center mb-10"><tbody><tr align="center"><td colspan="7" class="h-200">暂无符合条件的数据记录</td></tr></tbody></table>';
+                        $("#list").html(html);
+                        return true;
+                    }
+                    $.each(data['data'], function (k_order, v_order) {
+                        var order_id = v_order['order_id'];//订单id
+                        var order_no = v_order['order_no'];//订单编号
+                        var create_time = timeStampTurnTime(v_order['create_time']);//下单时间
+                        var shipping_type_name = v_order['shipping_type_name'];//配送方式
+                        var order_type_name = v_order['order_type_name'];//订单类型
+                        var order_money = v_order['order_money'];//订单金
+                        var shipping_money = v_order['shipping_money'] - v_order['promotion_free_shipping'];//运费
+                        var order_status = v_order['order_status'];
+                        var status_name = v_order['status_name'];
+                        var receiver_name = v_order['receiver_name']; //买家姓名
+                        var receiver_mobile = v_order['receiver_mobile']; //买家电话
+                        html += '<table class="table v-table table-auto-center mb-10"><tbody><tr>';
+                        html += '<td colspan="7" class="text-left bg-f9">';
+                        if (v_order['shop_id'] == 0) {
+                            html += '<span class="mr-15-oList">自营店</span>';
+                        }else{
+                            html += '<span class="mr-15-oList">入驻店</span>';
+                        }
+                        html += '<span class="mr-15-oList">订单号：' + order_no + '</span>';
+                        html += '<span class="mr-15-oList">下单时间：' + create_time + '</span>';
+                        if (shipping_type_name) {
+                            html += '<span class="mr-15-oList">配送方式：' + shipping_type_name + ' </span>';
+                        }
+                        if (order_type_name) {
+                            html += '<span class="mr-15-oList">订单类型：' + order_type_name + ' </span>';
+                        }
+                        html += '</td>';
+
+                        var buyer_info = false;
+                        var row = v_order["order_item_list"].length;
+                        $.each(v_order['order_item_list'], function (k_order_goods, v_order_goods) {
+                            var pic_cover_micro = v_order_goods['picture']['pic_cover_micro'];//商品图
+                            var goods_id = v_order_goods['goods_id'];//商品id
+                            var goods_name = v_order_goods['goods_name'];
+                            var price = v_order_goods['price'];//商品价格
+                            var num = v_order_goods['num'];//购买数量
+                            var spec_info = v_order_goods['spec'];
+
+                            html += '<tr><td class="col-md-3">';
+                            html += '<div class="media text-left">';
+                            html += '<div class="media-left"><img src="' + __IMG(pic_cover_micro) + '" width="60" height="60"></div>';
+                            html += '<div class="media-body break-word">';
+                            html += '<div class="line-2-ellipsis">';
+                            html += '<a href="' + __URLS('SHOP_MAIN/goods/goodsinfo&goodsid=' + goods_id) + '" target="_blank">' + goods_name + '</a>';
+                            html += '</div>';
+                            html += '<div class="small-muted line-2-ellipsis">';
+                            $.each(spec_info, function (spec_k, spec_v) {
+                                html += spec_v['spec_name'] + ':' + spec_v['spec_value_name'] + ' ';
+                            })
+                            html += '</div>';
+                            html += '</div>';
+                            html += '</div></td>';
+                            html += '<td class="col-md-1">￥' + price + '</td>';
+                            html += '<td class="col-md-1">' + num + '</td>';
+                            if (buyer_info == false) {
+                                if (row > 1) {
+                                    html += '<td  rowspan="' + row + '" class="border-left col-md-2">';
+                                } else {
+                                    html += '<td  rowspan="' + row + '" class="col-md-2">';
+                                }
+                                if(v_order['shipping_type'] == '2'){
+                                    html += '<a href="' + __URL('PLATFORM_MAIN/member/memberDetail?member_id=' + v_order['buyer_id']) + '" class="text-primary block mt-04" target="_blank">' + v_order['buyer_name'] + '</a>' + v_order['user_name'] + '<br>' + v_order['user_tel'] + '';
+                                }else{
+                                    html += '<a href="' + __URL('PLATFORM_MAIN/member/memberDetail?member_id=' + v_order['buyer_id']) + '" class="text-primary block mt-04" target="_blank">' + v_order['buyer_name'] + '</a>' + receiver_name + '<br>' + receiver_mobile + '';
+                                }
+                                html += '</td>';
+                                html += '<td class="text-right col-md-2" rowspan="' + row + '" >';
+                                if(v_order['presell_id']){
+                                	html += '定金：￥' + v_order['first_money'] + '<br> 尾款：￥' + v_order['final_money'] + '<br>';
+                                }else{
+                                	html += '商品总额：￥' + v_order['goods_money'] + '<br>';
+                                }
+                                if(v_order['deduction_money']>0){
+                                	html += '积分抵扣：￥' + v_order['deduction_money'] + '<br>';
+                                }
+                                	html += '优惠：￥' + v_order['order_promotion_money'] + '<br>';
+                               		html += '运费：￥' + shipping_money + '';
+                                if(v_order['presell_id']){
+                                	if(v_order['money_type']==1){
+                                		html += '<br>实收金额：￥' + v_order['pay_money'] + '<br>';
+                                	}else if(v_order['money_type']==2){
+                                		html += '<br>实收金额：￥' + order_money + '<br>';
+                                	}
+                                }else{
+                                	html += '<br>实收金额：￥' + order_money + '<br>';
+                                }
+                                html += '</td>';
+                                html += '<td rowspan="' + row + '" class="col-md-1">';
+                                // if (order_status == '3' || order_status == '4') {
+                                //     html += '<span class="label label-success">' + status_name + '</span>';
+                                // } else {
+                                //     html += '<span class="label label-danger">' + status_name + '</span>';
+                                // }
+                                if(order_status == '0'){
+                                    html += '<span class="label label-red">' + status_name + '</span>';
+                                }else if(order_status == '1'){
+                                    html += '<span class="label label-skyBlue">' + status_name + '</span>';
+                                }else if(order_status == '2'){
+                                    html += '<span class="label label-orange">' + status_name + '</span>';
+                                }else if(order_status == '3' || order_status == '4'){
+                                    html += '<span class="label label-green">' + status_name + '</span>';
+                                }else if(order_status == '5'){
+                                    html += '<span class="label label-grey">' + status_name + '</span>';
+                                }else{
+                                    html += '<span class="label label-orange2">' + status_name + '</span>';
+                                }
+
+                                html += '</td>';
+                                if(merchant_expire==1){
+                                    html += '<td rowspan="' + row + '" class="col-md-2">';
+                                    html += '无权操作';
+                                    html += '</td>';
+                                }else if(data['page_count']>=3 && merchant_status==1){
+                                    html += '<td rowspan="' + row + '" class="col-md-2">';
+                                    html += '无权操作';
+                                    html += '</td>';
+                                }else{
+                                    html += '<td rowspan="' + row + '" class="col-md-2 operationLeft fs-0">';  html += '<a href="'+__URL('ADDONS_MAINdistributorOrderDetail&order_id='+ order_id+'&distributor_id='+ $("#member_id").val())+'" class="btn-operation" target="_blank" >详情</a>';
+                                    html += '</td>';
+                                }
+                                html += '</tr>';
+                                buyer_info = true;
+                            } // end if buyer_info
+                        })// end order_goods each
+                        html += '<tr class="title-tr">';
+                        html += '<td colspan="7" class="text-left">';
+                        if(v_order['commission']){
+                            html += '<span class="label label-soft mr-15-oList">佣金：' + v_order['commission'] + '元</span>';
+                        }
+                        if(v_order['point']){
+                            html += '<span class="label label-soft mr-15-oList">积分：' + v_order['point'] + '积分</span>';
+                        }
+                        html += '</td>';
+                        html += '</tr>';
+                        html +='</tbody></table>';
+                    })// end data.data each
+                    $('#page').paginator('option', {
+                        totalCounts: data['total_count']  // 动态修改总数
+                    });
+                    $("#list").html(html);
+                    util.tips();
+                }
+            });
+        }
+
+        $('.search').on('click', function () {
+            util.initPage(LoadingInfo);
+        });
+
+        $("#search_text").keypress(function (e) {
+            if (e.keyCode == 13) {
+                LoadingInfo(1);
+            }
+        });
+
+        $(function () {
+            //数据导出
+            $('.dataExcel').on('click', function () {
+                var url='url:'+__URL(PLATFORMMAIN + '/order/dataExcel');
+                util.confirm('订单导出',url,function(){
+                	var ids = '';
+		        	$(".excel-list .field-item").each(function(){
+		            	var id = $(this).data('id');
+		            	ids += id + ',';
+		        	});
+		        	var uid = $("#member_id").val();
+	                var order_no = $("#order_no").val();
+	                var goods_name = $("#goods_name").val();
+	                var express_no = $("#express_no").val();
+	                var payment_type = $("#payment_type").val();
+	                var end_create_date = $("#orderTime").val();
+	                var end_pay_date = $("#payTime").val();
+	                var end_send_date = $("#deliveryTime").val();
+	                var end_finish_date = $("#completeTime").val();
+					if(ids.length==0){
+						util.message('请添加模板字段');
+						return false;
+					}
+	                window.location.href = __URL("PLATFORM_MAIN/order/orderDataExcel" +
+	                    "?order_no=" + order_no +
+	                    "&goods_name=" + goods_name +
+	                    "&express_no=" + express_no +
+	                    "&payment_type=" + payment_type +
+	                    "&end_create_date=" + end_create_date +
+	                    "&end_pay_date=" + end_pay_date +
+	                    "&end_send_date=" + end_send_date +
+	                    "&end_finish_date=" + end_finish_date +
+	                    "&uid=" + uid +
+	                    "&ids=" + ids +
+	                    "&type=5"
+	                );
+                },'xlarge');
+            })
+        })
+    })
+</script>
+
+{/block}

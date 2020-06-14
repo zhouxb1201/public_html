@@ -1,0 +1,720 @@
+{extend name="admin/base" /}
+{block name="resources"/}
+<link href="ADMIN_CSS/express/freight_edit.css" rel="stylesheet" type="text/css"/>
+{/block}
+{block name="main"}
+<!-- page -->
+<input type="hidden" id="hidden_co_id" value="{$co_id}" />
+<form class="form-horizontal widthFixedForm" role="form" id="freight_template_form">
+    <!--快递公司-->
+    <div class="form-group">
+        <label class="col-sm-2 control-label"><span class="red">*</span>快递公司</label>
+        <div class="col-sm-5">
+            <select class="form-control" name="co_id" required title="请选择快递公司">
+                {foreach name="company_lists['data']" item="company" key="k"}
+                <option value="{$company.co_id}" {if $company.co_id== $shipping_fee_detail.co_id}selected{/if}>{$company.company_name}</option>
+                {/foreach}
+            </select>
+        </div>
+    </div>
+    <!--模板名称-->
+    <div class="form-group">
+        <label class="col-sm-2 control-label"><span class="red">*</span>模板名称</label>
+        <div class="col-sm-5">
+            <input class="form-control" name="shipping_fee_name" id="shipping_fee_name" type="text"
+                   value="{$shipping_fee_detail.shipping_fee_name}" required autocomplete="off"/>
+        </div>
+    </div>
+    <!--计费方式-->
+    <div class="form-group">
+        <label class="col-sm-2 control-label"><span class="red">*</span>计费方式</label>
+        <div class="col-sm-5">
+            <label class="radio-inline">
+                <input type="radio" name="calculate_type" id="calculate_weight" value="1" {if $shipping_fee_detail.calculate_type== 1 || empty($shipping_fee_detail.calculate_type)}checked{/if}> 按重计费（kg）
+            </label>
+            <label class="radio-inline">
+                <input type="radio" name="calculate_type" id="calculate_num" value="2" {if $shipping_fee_detail.calculate_type== 2}checked{/if}> 按件计费（件）
+            </label>
+            <label class="radio-inline">
+                <input type="radio" name="calculate_type" id="calculate_volume" value="3" {if $shipping_fee_detail.calculate_type== 3}checked{/if}> 按体积计费（m³）
+            </label>
+        </div>
+    </div>
+    <!--配送区域设置-->
+    <div class="form-group area">
+        <label class="col-sm-2 control-label "><span class="red">*</span>配送区域设置</label>
+        <div class="col-sm-5" style="width:720px">
+            <table class="table table-bordered table-auto-center mb-0">
+                <thead>
+                <tr>
+                    <th>配送至</th>
+                    <th id="main_level_num">{if $shipping_fee_detail.calculate_type == 1 || empty($shipping_fee_detail.calculate_type)}首重(kg){/if}{if $shipping_fee_detail.calculate_type == 2}首件(件){/if}{if $shipping_fee_detail.calculate_type == 3}首体积(m³){/if}</th>
+                    <th id="main_level_fee">{if $shipping_fee_detail.calculate_type == 1 || empty($shipping_fee_detail.calculate_type)}首重运费(元){/if}{if $shipping_fee_detail.calculate_type == 2}首件运费(元){/if}{if $shipping_fee_detail.calculate_type == 3}首体积运费(元){/if}</th>
+                    <th id="extra_level_num">{if $shipping_fee_detail.calculate_type == 1 || empty($shipping_fee_detail.calculate_type)}续重(kg){/if}{if $shipping_fee_detail.calculate_type == 2}续件(件){/if}{if $shipping_fee_detail.calculate_type == 3}续体积运费(m³){/if}</th>
+                    <th id="per_extra_level_fee">{if $shipping_fee_detail.calculate_type == 1 || empty($shipping_fee_detail.calculate_type)}续重运费(元){/if}{if $shipping_fee_detail.calculate_type == 2}续件运费(元){/if}{if $shipping_fee_detail.calculate_type == 3}续体积运费(元){/if}</th>
+                    <th style="width: 45px">操作</th>
+                </tr>
+                </thead>
+                <tbody class="trs">
+                {foreach name='$shipping_fee_detail.shipping_area' item='area' key='k'}
+                <tr id="shipping_fee_area_id_{$area.shipping_fee_area_id}"
+                    data-shipping-fee-area-id="{$area.shipping_fee_area_id}"
+                    data-is-default="{$area.is_default_area}">
+                    <td class="tdWidth">
+                        {if $area.is_default_area}
+                        默认地区
+                        {else}
+                        {if condition="$area.province_name_array"}
+                        <span class="js-region-info">{:implode(',',$area.province_name_array)}</span>{/if}
+                        <a class="js-select-city text-primary" href="javascript:void(0);">
+                            <i class="edit icon-edit"></i>
+                            编辑</a></td>
+                    {/if}
+                    {if condition="$shipping_fee_detail"}
+                    <td class="tdWidth">
+                        {if $shipping_fee_detail.calculate_type == 2}
+                        <input type="number" name="main_level_num" int="true" step="1" min="0" value="{:intval($area.main_level_num)}"
+                                               class="form-control w-100" required>
+                        {else}
+                        <input type="number" name="main_level_num" min="0" value="{$area.main_level_num}"
+                               class="form-control w-100" required>
+                        {/if}
+                    </td>
+                    <td class="tdWidth"><input type="number" name="main_level_fee" min="0" value="{$area.main_level_fee}"
+                                               class="form-control w-100" required></td>
+                    <td class="tdWidth">
+                        {if $shipping_fee_detail.calculate_type == 2}
+                        <input type="number" name="extra_level_num" step="1" min="1" value="{:intval($area.extra_level_num)}"
+                                               class="form-control w-100" required>
+                        {else}
+                        <input type="number" name="extra_level_num" min="0" value="{$area.extra_level_num}"
+                               class="form-control w-100" required>
+                        {/if}
+                    </td>
+                    <td class="tdWidth"><input type="number" name="per_extra_level_fee" min="0" value="{$area.per_extra_level_fee}"
+                                               class="form-control w-100" required></td>
+                    {else/}
+                    <td class="tdWidth"><input type="number" name="main_level_num" {if $shipping_fee_detail.calculate_type == 2} step="1" {/if} min="0" class="form-control w-100" required></td>
+                    <td class="tdWidth"><input type="number" name="main_level_fee" min="0" class="form-control w-100" required></td>
+                    <td class="tdWidth"><input type="number" name="extra_level_num" {if $shipping_fee_detail.calculate_type == 2} step="1" {/if} min="0" class="form-control w-100" required></td>
+                    <td class="tdWidth"><input type="number" name="per_extra_level_fee" min="0" class="form-control w-100" required></td>
+                    {/if}
+                    <td>
+                        {if !$area.is_default_area}
+                        <a class="delete-area text-danger" href="javascript:void(0);">删除</a>
+                        {/if}
+                    </td>
+                </tr>
+                {/foreach}
+                </tbody>
+            </table>
+            <div class="addOneBorder"><a href="javascript:void(0);" class="add_area" id="add-area">新增配送区域</a></div>
+            <div class="help-block help-tips">根据重量计算运费，当物品不足《首重重量》时，按照《首重费用》计算，超过部分按照《续重重量》和《续重费用》乘积来计算</div>
+        </div>
+    </div>
+    <!--是否生效-->
+    <div class="form-group">
+        <label class="col-sm-2 control-label"><span class="red">*</span>是否生效</label>
+        <div class="col-sm-5">
+            <label class="radio-inline">
+                <input type="radio" name="is_enabled" value="1" id="is_enabled_yes" {if
+                       $shipping_fee_detail.is_enabled== 1}checked{/if}>生效
+            </label>
+            <label class="radio-inline">
+                <input type="radio" name="is_enabled" value="0" id="is_enabled_no" {if
+                       $shipping_fee_detail.is_enabled== 0}checked{/if} {if $use_count > 0}disabled{/if}>失效 {if $use_count > 0}(已被使用不能设置失效){/if}
+            </label>
+        </div>
+    </div>
+    <!--是否默认模板-->
+    {if $shipping_fee_detail.is_default == 0}
+    <div class="form-group">
+        <label class="col-sm-2 control-label">是否默认模板</label>
+        <div class="col-sm-5">
+            <label class="checkbox-inline">
+                <input class="decorate" type="checkbox" name="is_default" {if $shipping_fee_detail.is_default== 1}checked{/if}/> 是
+            </label>
+        </div>
+    </div>
+    {/if}
+    <!--添加返回-->
+    <div class="form-group add_back">
+        <label class="col-sm-2 control-label"></label>
+        <div class="col-sm-5">
+            <button type="button" class="btn save-button">保存</button>
+            <a href="javascript:window.history.go(-1)" class="btn back">返回</a>
+        </div>
+    </div>
+
+    </div>
+</form>
+<!-- page end -->
+
+<!-- 新增配送区域模态框 -->
+<div id="select-region" style="display: none;">
+    <div class="cont">
+        <div class="selectSub dialog-areas">
+            <ul class="js-regions">
+                <li>
+                    <div class="dcity clearfix">
+                        <!-- 省 -->
+                        <div class="province-list">
+                            {foreach name="$province_lists" item="province" key="province_id"}
+                            <div class="ecity">
+								<span class="gareas">
+									<input class="decorate" data-second-parent-index data-province-id="{$province_id}"
+                                           id="province_{$province_id}" type="checkbox"
+                                           data-province-name="{$province}"
+                                           value="{$province_id}"/>
+									<label for="province_{$province_id}"
+                                           title="{$province}">{$province}</label>
+									<img class="drop-down" src="ADMIN_IMG/freight_city_drop_down.jpg"
+                                         data-level="province"/>
+
+                                    <!-- 市 -->
+									<div class="citys">
+										{foreach name="$city_lists[$province_id]" item="city" key="city_id"}
+											<span class="areas">
+												<input class="decorate" data-third-parent-index
+                                                       data-province-id="{$province_id}"
+                                                       data-city-id="{$city_id}" value="{$city_id}"
+                                                       id="city_{$city_id}" type="checkbox"/>
+												<label for="city_{$city_id}"
+                                                       title="{$city}">{$city}</label>
+                                                {if condition="count($district_lists[$city_id])"}
+                                                <img class="drop-down" src="ADMIN_IMG/freight_city_drop_down.jpg"
+                                                     data-level="city"/>
+                                                {/if}
+
+                                                <!-- 区 -->
+													<div class="district">
+													{foreach name="$district_lists[$city_id]" item="district" key="district_id"}
+													<span class="areas">
+														<input class="decorate" data-four-parent-index
+                                                               data-province-id="{$province_id}"
+                                                               data-city-id="{$city_id}"
+                                                               value="{$district_id}"
+                                                               id="district_{$district_id}" type="checkbox"/>
+														<label for="district_{$district_id}"
+                                                               title="{$district}">{$district}</label>
+													</span>
+													{/foreach}
+													</div>
+											</span>
+										{/foreach}
+									</div>
+								</span>
+                            </div>
+                            {/foreach}
+                        </div>
+                    </div>
+                </li>
+            </ul>
+        </div>
+    </div>
+</div>
+{/block}
+{block name="script"}
+<script>
+    require(['utilAdmin','layer'], function (utilAdmin,layer) {
+
+        var shipping_fee_detail = {:json_encode($shipping_fee_detail)};
+        var area_tree = {};
+        area_tree['province'] =  {:json_encode($province_lists)};
+        area_tree['city'] =  {:json_encode($city_lists)};
+        area_tree['district'] =  {:json_encode($district_lists)};
+
+$(function () {
+    utilAdmin.validate("#freight_template_form");
+    // 弹出框
+    $(".trs").on("click", ".js-select-city", function () {
+        showSelectAreaModal($(this));
+    });
+
+    //弹出框
+    function showSelectAreaModal(e) {
+        layer.open({
+            type: 1,
+            title: ["选择地区", "font-weight:bold"],
+            skin: "layui-layer-rim", //加上边框
+            area: ['710px', '450px'], //宽高
+            content: $('#select-region'),
+            btn: ["确定", "取消"],
+            btnAlign: "c",
+            // 点击确定的回调
+            btn1: function (index, layero) {
+                setProvinceIdArray(shipping_fee_area_id);
+                setCityIdArray(shipping_fee_area_id);
+                setDistrictIdArray(shipping_fee_area_id);
+                var area_string = getAreas();
+                if (area_string.length != 0) {
+                    $('#' + shipping_fee_obj).find(".js-region-info").html(area_string);
+                } else {
+                    $('#shipping_fee_area_id_new_'+ (new_index - 1)).remove();
+                }
+                new_one = false;
+            },
+            //modal关闭的事件，包括确定，取消，x
+            end: function(){
+                if (!getAreas() && new_one){
+                    $('#shipping_fee_area_id_new_'+ (new_index - 1)).remove();
+                }
+                new_one = false;
+            },
+
+            // 弹出框出现的回调
+            success: function (layero, index) {
+                layero.find(".layui-layer-btn").css("text-align", "center");
+            }
+        });
+        window.shipping_fee_obj = e.parent().parent().attr('id');
+        window.shipping_fee_area_id = e.parent().parent().attr('data-shipping-fee-area-id');
+        if (pre_shipping_fee_area_id != shipping_fee_area_id) {
+            clearAreaTreeAttribute();
+            //addAreaTreeAttribute(shipping_fee_area_id);
+            addAreaTreeAttribute(shipping_fee_area_id);
+            pre_shipping_fee_area_id = shipping_fee_area_id;
+        }
+    }
+
+    //设置弹出地区的位置和宽度
+    $('#select-region').css({'top': '45px'});
+
+    /**
+     * 新加一个地区
+     */
+    $("#add-area").click(function () {
+        var calculate_type = $("input[name=calculate_type]:checked").val();
+        if (calculate_type == 2) {
+            var step_html = "step='1'";
+            var title = "请填写该项为正整数"
+            var int_html = "int='true'";
+        } else {
+            var step_html = '';
+            var title = "请填写该项";
+        }
+        var html = "<tr id='shipping_fee_area_id_new_" + new_index + "' data-shipping-fee-area-id='new_" + new_index + "'>" +
+            "<td class='tdWidth'>" +
+            "<span class='js-region-info'></span>" +
+            "<a class='js-select-city text-primary' href='javascript:;'><i class='edit icon-edit'></i>编辑</a>" +
+            "</td>" +
+            "<td class='tdWidth'>" +
+            "<input type='number' min='0' class='form-control w-100' "+ int_html + step_html + " name='main_level_num' placeholder='0' data-rule='int' required />" +
+            "</td>" +
+            "<td class='tdWidth'>" +
+            "<input type='number' min='0' class='form-control w-100' name='main_level_fee' placeholder='0' required />" +
+            "</td>" +
+            "<td class='tdWidth'>" +
+            "<input type='number' min='0' class='form-control w-100' " + int_html + step_html + " name='extra_level_num' placeholder='0' data-rule='greater_int' required />" +
+            "</td>" +
+            "<td class='tdWidth'>" +
+            "<input type='number' min='0' class='form-control w-100' name='per_extra_level_fee' placeholder='0' data-rule='greater_double' required />" +
+            "</td>" +
+            "<td>" +
+            "<a class='delete-area del text-danger' href='javascript:void(0);'>删除</a>" +
+            "</td>" +
+            "</tr>";
+        $(this).parent().prev().append(html);
+        showSelectAreaModal($("#shipping_fee_area_id_new_" + new_index).find(".js-select-city"));
+        new_index++;
+        new_one = true;
+    });
+
+    //切换计费方式
+    $("input[name=calculate_type]").change(function () {
+        var calculate_type = $(this).val();
+        switch (calculate_type) {
+            case 1:
+            case '1':
+                $("#main_level_num").html('首重(kg)');
+                $("#main_level_fee").html('首重运费(元)');
+                $("#extra_level_num").html('续重(kg)');
+                //$("#per_extra_level_fee").html('续费(元)');
+
+                $("input[name=main_level_num]").removeAttr('step').attr('title','请填写该项');
+                $("input[name=extra_level_num]").removeAttr('step').attr('title','请填写该项');
+                break;
+            case 2:
+            case '2':
+                $("#main_level_num").html('首件(件)');
+                $("#main_level_fee").html('首件运费(元)');
+                $("#extra_level_num").html('续件(件)');
+                //$("#per_extra_level_fee").html('续费(元)');
+
+                $("input[name=main_level_num]").attr('step',1).attr('title','请填写该项为正整数');
+                $("input[name=extra_level_num]").attr('step',1).attr('title','请填写该项为正整数');
+                break;
+            case 3:
+            case '3':
+                $("#main_level_num").html('首体积(m³)');
+                $("#main_level_fee").html('首体积运费(元)');
+                $("#extra_level_num").html('续体积(m³)');
+                //$("#per_extra_level_fee").html('续费(元)');
+
+                $("input[name=main_level_num]").removeAttr('step').attr('title','请填写该项');
+                $("input[name=extra_level_num]").removeAttr('step').attr('title','请填写该项');
+                break;
+        }
+    });
+
+    $("tbody").on('click', '.delete-area', function () {
+        var shipping_fee_area_id = $(this).parent().parent().attr('data-shipping-fee-area-id');
+        //console.log(shipping_fee_detail['shipping_area']);
+        $(this).parent().parent().remove();
+        if (shipping_fee_detail['shipping_area'][shipping_fee_area_id]) {
+            delete shipping_fee_detail['shipping_area'][shipping_fee_area_id];
+            pre_shipping_fee_area_id = 0;//是为了让打开同样地区的modal可以重新渲染
+        }
+        //console.log(shipping_fee_detail['shipping_area']);
+    })
+
+    /**
+     * 二级地区（省）例如：山西省、山东省、河北省等
+     * 根据当前地区的选中状态对应的改变它的子地区
+     */
+    $("input[data-second-parent-index]").change(function () {
+
+        var curr = $(this);//当前对象
+        var checked = curr.is(":checked");//选中状态
+
+        if (curr.parent().find("div input[type='checkbox']").length) {
+
+            curr.parent().find("div input[type='checkbox']").each(function () {
+                if (!$(this).is(":disabled") && !$(this).attr("data-is-disabled")) {
+                    $(this).prop("checked", checked);
+                }
+            });
+        }
+
+    });
+
+
+    /**
+     * 三级地区（市区）例如：太原市、运城市等
+     * 只要改变了三级地区那它的上一级为不选中状态
+     */
+    $("input[data-third-parent-index]").change(function () {
+
+        var curr = $(this);//当前对象
+        var checked = curr.is(":checked");//选中状态
+        if (curr.parent().find("div input[type='checkbox']").length) {
+
+            curr.parent().find("div input[type='checkbox']").each(function () {
+                if (!$(this).is(":disabled") && !$(this).attr("data-is-disabled")) {
+                    $(this).prop("checked", checked);
+                }
+            });
+
+        }
+
+        //一个没有选择，父级则不选中
+        if (curr.parent().parent().children("span").children("input[type='checkbox']:checked").length == 0) {
+            curr.parent().parent().parent().children("input").prop("checked", false);
+        }
+        //选中一个，父类则选中
+        if (checked) curr.parent().parent().parent().children("input").prop("checked", true);
+    });
+
+    /**
+     * 四级地区（区县）选择一个区县，父类（省市就选中）
+     * 创建时间：2017年8月11日 21:47:05
+     *
+     */
+    $("input[data-four-parent-index]").change(function () {
+        var curr = $(this);
+        var checked = curr.is(":checked");//选中状态
+        var province_id = curr.attr("data-province-id");//父级，省id
+        var city_id = curr.attr("data-city-id");//父级,市id
+
+        //一个没有选择，父级city则不选中
+        // if (curr.parent().parent().children("span").children("input[type='checkbox']:checked").length == 0) {
+        //     curr.parent().parent().parent().children("input").prop("checked", false);
+        // }
+        if (curr.parent().siblings().children("input[type='checkbox']:checked").length === 0 && checked === false) {
+            curr.parent().parent().parent().children("input").prop("checked", false);
+        }
+
+        //选中一个，父类则选中
+        if (checked) {
+            $("[data-second-parent-index][data-province-id='" + province_id + "']").prop("checked", true);
+            $("[data-third-parent-index][data-city-id='" + city_id + "']").prop("checked", true);
+        }
+    });
+
+    //判断是否显示 ok
+    $(".drop-down").click(function () {
+        var self = $(this);
+        var is_visible = self.next().is(":visible");
+        var level = $(this).attr("data-level");
+        $(".drop-down[data-level='" + level + "']").parent().parent().removeClass("open");
+        $(".drop-down[data-level='" + level + "']").next().hide();
+        if (!is_visible) {
+            self.parent().parent().addClass("open").attr("data-open", 1);
+            self.next().show().attr("data-open-children", 1);
+        } else {
+            self.next().hide().removeAttr("data-open-children");
+            self.parent().parent().removeClass("open").removeAttr("data-open");
+        }
+
+    });
+
+    var flag = false;
+    /**
+     * 保存运费模板
+     * edit_button为旧界面
+     * btn-common为新界面
+     */
+    $(".save-button").click(function () {
+        var check = $("#freight_template_form").valid();
+        window.legal = true;
+        if (!check) {
+            $('#freight_template_form').find('.error[aria-required]')[0].focus();
+            return;
+        }
+        if (flag) {
+            return;
+        }
+        buildData();
+        if (!legal){
+            utilAdmin.message('数目输入请输入正整数,金额为正数')
+            legal = true
+            return false;
+        }
+        //console.log(shipping_fee_detail);
+        flag = true;
+        $.ajax({
+            url: __URL(ADMINMAIN + "/express/freighttemplateedit"),
+            type: "post",
+            data: {"data": JSON.stringify(shipping_fee_detail)},
+            success: function (res) {
+                if (parseInt(res.code)) {
+                    utilAdmin.message(res.message,'success', function () {
+                        window.location.href = __URL(ADMINMAIN + '/Express/freightTemplateList');
+                    })
+                } else {
+                    utilAdmin.message(res.message, 'danger');
+                    flag = false;
+                }
+            }
+        });
+    });
+
+});
+
+var new_index = 1;
+var pre_shipping_fee_area_id = 0;
+var new_one = false;
+
+$('input[name="calculate_type"]').on('change',function(){
+    var value = $(this).val();
+    if(value==1){
+        $('.help-tips').html('根据重量计算运费，当物品不足《首重重量》时，按照《首重费用》计算，超过部分按照《续重重量》和《续重费用》乘积来计算');
+    }
+    if(value==2){
+        $('.help-tips').html('根据件数计算运费，当物品不足《首件数量》时，按照《首件费用》计算，超过部分按照《续件数量》和《续件费用》乘积来计算');
+    }
+    if(value==3){
+        $('.help-tips').html('根据体积计算运费，当物品不足《首体积》时，按照《首体积费用》计算，超过部分按照《续体积》和《续体积费用》乘积来计算');
+    }
+})
+
+//清除地区树的checked disabled属性
+function clearAreaTreeAttribute() {
+    $('#select-region').find("input[type=checkbox]").removeAttr('checked').attr('disabled', false)
+}
+
+//为地区树添加当前shipping_fee_area_id的属性
+function addAreaTreeAttribute(shipping_fee_area_id) {
+
+    var possible_disabled_city_id_array = {};
+    $.each(shipping_fee_detail['shipping_area'], function (k_shipping_fee_area_id, v) {
+        if (shipping_fee_area_id == k_shipping_fee_area_id) {
+            //district,city,province checked true
+            $.each(v.district_id_array, function (i, district_id) {
+                $('#select-region').find("#district_" + district_id).prop('checked', true);
+            })
+            $.each(v.city_id_array, function (i, city_id) {
+                $('#select-region').find("#city_" + city_id).prop('checked', true);
+            })
+            $.each(v.province_id_array, function (i, province_id) {
+                $('#select-region').find("#province_" + province_id).prop('checked', true);
+            })
+        } else {
+            //设置地区district的属性disabled和构建拥有disabled子节点的city
+            if (v.district_id_array){
+                //console.log(v.district_id_array);
+                $.each(v.district_id_array, function (i, district_id) {
+                    var district_obj = $('#select-region').find("#district_" + district_id);
+                    district_obj.prop('disabled', true);
+                    var city_id = district_obj.attr('data-city-id');
+                    if (!possible_disabled_city_id_array[city_id]) {
+                        possible_disabled_city_id_array[city_id] = []
+                    }
+                    possible_disabled_city_id_array[city_id].push(district_id);
+                })
+            }
+
+        }
+    })
+
+    //设置地区city的属性disabled和构建拥有disabled子节点的province
+    var possible_disabled_province_id_array = {};
+    $.each(possible_disabled_city_id_array, function (city_id, district_list) {
+        if (area_tree['district'][city_id]) {
+            var array = Object.keys(area_tree['district'][city_id]);
+            if (district_list.length === array.length) {
+                var city_obj = $('#select-region').find("#city_" + city_id);
+                city_obj.prop('disabled', true);
+                var province_id = city_obj.attr('data-province-id');
+                if (!possible_disabled_province_id_array[province_id]) {
+                    possible_disabled_province_id_array[province_id] = [];
+                }
+                possible_disabled_province_id_array[province_id].push(city_id);
+            }
+        }
+
+    })
+    //设置地区province的属性disabled
+    $.each(possible_disabled_province_id_array, function (province_id, city_list) {
+        if (area_tree['city'][province_id]) {
+            var array = Object.keys(area_tree['city'][province_id]);
+            if (city_list.length === array.length) {
+                $('#select-region').find("#province_" + province_id).prop('disabled', true);
+            }
+        }
+    })
+}
+
+
+/**
+ * 获取选中的地区（只显示省），逗号隔开
+ */
+function getAreas() {
+    var regions_arr = new Array();
+
+    if ($(".js-regions input[data-second-parent-index]:checked").length) {
+        $(".js-regions input[data-second-parent-index]:checked").each(function () {
+            regions_arr.push($(this).attr("data-province-name"));
+        });
+    }
+    return regions_arr.toString();//.replace(",","&nbsp;,&nbsp;");
+}
+
+/**
+ * 保存选中的省id组
+ * @param id_arr 省id组
+ */
+function setProvinceIdArray(shipping_fee_area_id) {
+
+    var id_arr = [];
+
+    if ($(".js-regions input[data-second-parent-index]:checked").length) {
+        $(".js-regions input[data-second-parent-index]:checked").each(function () {
+            if (!$(this).is(":disabled") && !$(this).attr("data-is-disabled")) {
+                id_arr.push($(this).val());
+            }
+        });
+    }
+
+    if (!shipping_fee_detail['shipping_area'][shipping_fee_area_id]) {
+        shipping_fee_detail['shipping_area'][shipping_fee_area_id] = {};
+    }
+    if (shipping_fee_detail['shipping_area'][shipping_fee_area_id].length == 0) {
+        shipping_fee_detail['shipping_area'][shipping_fee_area_id]['province_id_array'] = [];
+    }
+    shipping_fee_detail['shipping_area'][shipping_fee_area_id]['province_id_array'] = id_arr;
+}
+
+/**
+ * 保存选中的市id组
+ * @param id_arr
+ */
+function setCityIdArray(shipping_fee_area_id) {
+
+    var id_arr = [];
+    if ($(".js-regions input[data-third-parent-index]:checked").length) {
+        $(".js-regions input[data-third-parent-index]:checked").each(function () {
+            if (!$(this).is(":disabled") && !$(this).attr("data-is-disabled")) {
+                id_arr.push($(this).val());
+            }
+        });
+    }
+    if (!shipping_fee_detail['shipping_area'][shipping_fee_area_id]) {
+        shipping_fee_detail['shipping_area'][shipping_fee_area_id] = {};
+    }
+    if (shipping_fee_detail['shipping_area'][shipping_fee_area_id].length == 0) {
+        shipping_fee_detail['shipping_area'][shipping_fee_area_id]['city_id_array'] = [];
+    }
+    shipping_fee_detail['shipping_area'][shipping_fee_area_id]['city_id_array'] = id_arr;
+}
+
+/**
+ * 保存选中的区县id组
+ * 创建时间：2017年8月12日 09:22:40
+ * @param id_arr
+ */
+function setDistrictIdArray(shipping_fee_area_id) {
+
+    var id_arr = [];
+    if ($(".js-regions input[data-four-parent-index]:checked").length) {
+        $(".js-regions input[data-four-parent-index]:checked").each(function () {
+            if (!$(this).is(":disabled") && !$(this).attr("data-is-disabled")) {
+                id_arr.push($(this).val());
+            }
+        });
+    }
+
+    if (!shipping_fee_detail['shipping_area'][shipping_fee_area_id]) {
+        shipping_fee_detail['shipping_area'][shipping_fee_area_id] = {};
+    }
+
+    if (shipping_fee_detail['shipping_area'][shipping_fee_area_id].length == 0) {
+        shipping_fee_detail['shipping_area'][shipping_fee_area_id]['district_id_array'] = [];
+    }
+    shipping_fee_detail['shipping_area'][shipping_fee_area_id]['district_id_array'] = id_arr;
+}
+
+function buildData() {
+    shipping_fee_detail['shipping_fee_name'] = $("#shipping_fee_name").val();
+    shipping_fee_detail['calculate_type'] = $("input[name=calculate_type]:checked").val();
+    shipping_fee_detail['is_default'] = $("input[name=is_default]").length ? ($("input[name=is_default]:checked").val() ? 1 : 0) : 1;
+    shipping_fee_detail['is_enabled'] = $("input[name=is_enabled]:checked").val();
+    shipping_fee_detail['co_id'] = $("select[name=co_id]").val();
+    $("tr[id^=shipping_fee_area_id_]").each(function () {
+        var curr_shipping_fee_area_id = $(this).attr('data-shipping-fee-area-id');
+        var shipping_fee_area_is_default = $(this).attr('data-is-default') || 0;
+        var main_level = $(this).find("input[name=main_level_num]").val()
+        var main_level_fee = $(this).find("input[name=main_level_fee]").val()
+        var extra_level_num = $(this).find("input[name=extra_level_num]").val()
+        var per_extra_level_fee = $(this).find("input[name=per_extra_level_fee]").val()
+        if (shipping_fee_detail['shipping_area'][curr_shipping_fee_area_id]) {
+            if (shipping_fee_detail['calculate_type'] == 2) {
+                if (main_level % 1 != 0) {
+                    legal = false
+                }
+                if (main_level_fee % 1 != 0) {
+                    legal = false
+                }
+            }
+            if (main_level == '' || main_level_fee == '' || extra_level_num == '' || per_extra_level_fee == '') {
+                legal = false
+            }
+            if (main_level <= 0 || main_level_fee < 0 || extra_level_num <= 0 || per_extra_level_fee < 0) {
+                legal = false
+            }
+            shipping_fee_detail['shipping_area'][curr_shipping_fee_area_id]['main_level_num'] = main_level;
+            shipping_fee_detail['shipping_area'][curr_shipping_fee_area_id]['main_level_fee'] = main_level_fee;
+            shipping_fee_detail['shipping_area'][curr_shipping_fee_area_id]['extra_level_num'] = extra_level_num;
+            shipping_fee_detail['shipping_area'][curr_shipping_fee_area_id]['per_extra_level_fee'] = per_extra_level_fee;
+            shipping_fee_detail['shipping_area'][curr_shipping_fee_area_id]['is_default_area'] = shipping_fee_area_is_default;
+        } else {
+            //请选择地区
+            //showTip('非默认地区请选择地区', "warning");
+        }
+
+    })
+}
+
+    })
+</script>
+{/block}

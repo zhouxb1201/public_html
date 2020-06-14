@@ -1,0 +1,232 @@
+{block name="main"}
+			<!-- page -->
+			<form class="form-horizontal form-validate pt-15 widthFixedForm">
+				<div class="form-group">
+					<label class="col-md-2 control-label"><span class="text-bright">*</span>等级名称</label>
+					<div class="col-md-5">
+						<input type="text" class="form-control" name="level_name" required autocomplete="off">
+					</div>
+				</div>
+				{if $website['microshop_pattern']>=1}
+				<div class="form-group">
+					<label class="col-md-2 control-label"><span class="text-bright">*</span>一级收益</label>
+					<div class="col-md-5">
+						<div class="input-group w-200">
+							<input type="number" class="form-control" min="0" max="100" name="profit1" {if $website['microshop_pattern']>=1}required{/if}>
+							<div class="input-group-addon">%</div>
+						</div>
+					</div>
+				</div>
+				{/if}
+				{if $website['microshop_pattern']>=2}
+				<div class="form-group">
+					<label class="col-md-2 control-label"><span class="text-bright">*</span>二级收益</label>
+					<div class="col-md-5">
+						<div class="input-group w-200">
+							<input type="number" class="form-control" min="0" max="100" name="profit2" {if $website['microshop_pattern']>=2}required{/if}>
+							<div class="input-group-addon">%</div>
+						</div>
+					</div>
+				</div>
+				{/if}
+				{if $website['microshop_pattern']>=3}
+				<div class="form-group">
+					<label class="col-md-2 control-label"><span class="text-bright">*</span>三级收益</label>
+					<div class="col-md-5">
+						<div class="input-group w-200">
+							<input type="number" class="form-control" min="0" max="100" name="profit3" {if $website['microshop_pattern']>=3}required{/if}>
+							<div class="input-group-addon">%</div>
+						</div>
+					</div>
+				</div>
+				{/if}
+				<div class="form-group">
+					<label class="col-md-2 control-label">自购返利</label>
+					<div class="col-md-5">
+						<div class="input-group w-200">
+							<input type="number" class="form-control" min="0" max="100" name="selfpurchase_rebate">
+							<div class="input-group-addon">%</div>
+						</div>
+						<div class="mb-0 help-block">店主自己购买商品可获得的利润百分比。收益计算节点 * 等级自购返利比例 = 返利</div>
+					</div>
+				</div>
+				<div class="form-group">
+					<label class="col-md-2 control-label">下级开店返利</label>
+					<div class="col-md-5">
+						<div class="input-group w-200">
+							<input type="number" class="form-control" min="0" max="100" name="shop_rebate">
+							<div class="input-group-addon">%</div>
+						</div>
+						<div class="mb-0 help-block">下级分销商达到条件成为店主，该等级的店主可获得的利润百分比。下级开店购买商品（计算节点） * 等级下级开店返利比例 = 下级开店返利</div>
+					</div>
+				</div>
+				<div class="form-group">
+					<label class="col-md-2 control-label"><span class="text-bright">*</span>升级条件</label>
+					<div class="col-md-5">
+						<label class="radio-inline">
+							<input type="radio" name="microshopconditions" checked> 购买其中一款商品
+						</label>
+						<a class="btn btn-primary search_goods"> 挑选商品</a>
+					</div>
+				</div>
+				<div class="form-group">
+					<label class="col-md-2 control-label"></label>
+					<div class="col-md-8">
+						<div class="border-default padding-15">
+							<div class="mb-20">
+								<div class="picture-list1">
+									<div class="empty-box" style="border:none">暂无商品</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="form-group">
+					<label class="col-md-2 control-label"><span class="text-bright">*</span>有效期</label>
+					<div class="col-md-5">
+						<div class="input-group w-200">
+							<input type="text"  name="term_validity" required class="form-control">
+							<div class="input-group-addon" style="padding: 5px 12px;">
+								<select id="validity" name="validity" required  >
+									<option value="">请选择</option>
+									<option value="1">天</option>
+									<option value="2">月</option>
+									<option value="3">年</option>
+								</select>
+							</div>
+						</div>
+						
+
+						<div class="mb-0 help-block">微店等级过期时间，过期降为默认等级。</div> 
+					</div>
+				</div>
+				<div class="form-group">
+					<label class="col-md-2 control-label"><span class="text-bright">*</span>权重</label>
+					<div class="col-md-5">
+						<input type="number" class="form-control" name="weight" required>
+						<div class="mb-0 help-block">等级权重，数字越大级别越高。按设置的权重大小从低到高进行升级。</div>
+					</div>
+				</div>
+				<div class="form-group"></div>
+				<div class="form-group">
+					<label class="col-md-2 control-label"></label>
+					<div class="col-md-8">
+						<button class="btn btn-primary add" type="submit" >添加</button>
+						<a href="javascript:history.go(-1);" class="btn btn-default">返回</a>
+					</div>
+				</div>
+			</form>
+<input type="hidden" value="{$level_weight}" id="level_weight">
+<input id="goodsid" type="hidden" value="">
+<input id="ungoodsid" type="hidden" value="{$ungoodsid}">
+			<!-- page end -->
+{/block}
+{block name="script"}
+<script>
+    require(['util'],function(util) {
+        Array.prototype.remove = function(val) {
+            var index = this.indexOf(val);
+            if (index > -1) {
+                this.splice(index, 1);
+            }
+        };
+        // 移除图片
+        $('.picture-list1').on('click','.icon-danger',function(e){
+            e && e.stopPropagation ? e.stopPropagation() : window.event.cancelBubble = true;
+            var id=$(this).parents('.picture-list1-pic').attr('data-id');
+            $(this).parents('.picture-list1-pic').remove();
+            var str=$("#goodsid").val();
+            var str1 = str.split(',');
+            str1.remove(id);
+            var str2 = str1.join(',');
+            $("#goodsid").val(str2);
+        })
+        $('.search_goods').on('click', function () {
+            var url = "{:__URL('PLATFORM_MAIN/goods/selectNumGoodsList')}&goodsid="+$("#goodsid").val()+"&ungoodsid="+$("#ungoodsid").val();
+            util.confirm('选择商品','url:'+url, function () {
+                var goods_id = this.$content.find('#goods_id').val();
+                $("#goodsid").val(goods_id);
+                $.ajax({
+                    type:"post",
+                    url:" {:__URL('PLATFORM_MAIN/goods/selectNumGoodsInfo')}",
+                    data:{
+                        'goods_id':goods_id,
+                    },
+                    async:true,
+                    success:function (data) {
+                        if (data) {
+                            var html='';
+                            for(var i=0;i<data.length;i++){
+                                html+='<a href="javascript:;" class="fl picture-list1-pic" data-id='+data[i]['goods_id']+'>';
+                                html+='<i class="icon icon-danger" style="right:10px;" title="删除"></i>';
+                                html+='<div><img style=\'width: 80px;height: 80px\' src='+__IMG(data[i]['pic_cover_mid'])+' ></div>';
+                                html+='<div class="line-1-ellipsis">'+data[i]['goods_name']+'</div>';
+                                html+='</a>';
+                            }
+                            $(".picture-list1").html(html);
+                        }
+                    }
+                });
+            })
+        })
+		$("input[name='weight']").on('blur',function () {
+            var weight = $("input[name='weight']").val();
+            var arr = $("#level_weight").val();
+            arr = arr.split(',');
+			for(var i = 0; i < arr.length; i++){
+				if(weight === arr[i]){
+					util.message('该等级权重值已存在');
+					$("input[name='weight']").val('');
+					return false;
+				}
+			}
+        })
+        util.validate($('.form-validate'),function(form){
+            var level_name = $("input[name='level_name']").val();
+            var goods_id = $("#goodsid").val();
+            var profit1 = $("input[name='profit1']").val();
+            var profit2 = $("input[name='profit2']").val();
+            var profit3 = $("input[name='profit3']").val();
+            var selfpurchase_rebate = $("input[name='selfpurchase_rebate']").val();
+            var shop_rebate = $("input[name='shop_rebate']").val();
+            var term_validity = $("input[name='term_validity']").val();
+            var validity = $("#validity").val();
+            var weight = $("input[name='weight']").val();
+            if(goods_id==''){
+                util.message('请选择升级条件的商品');
+                return false;
+			}
+            $('.add').attr({disabled: "disabled"}).html('提交中...');
+            $.ajax({
+                type: "post",
+                url: "{$addShopkeeperLevelUrl}",
+                data: {
+                    'level_name': level_name,
+                    'profit1': profit1,
+                    'profit2': profit2,
+                    'profit3': profit3,
+                    'term_validity': term_validity,
+                    'validity': validity,
+                    'selfpurchase_rebate': selfpurchase_rebate,
+                    'shop_rebate': shop_rebate,
+                    'weight': weight,
+                    'goods_id': goods_id
+                },
+                async: true,
+                success: function (data) {
+                    if (data['code'] > 0) {
+                        util.message(data["message"], 'success', "{:__URL('ADDONS_MAINshopkeeperLevelList')}");
+                    } else {
+                        if(data['code'] == -2){
+                            util.message('该等级已存在', 'danger');
+                        }else{
+                            util.message(data["message"], 'danger');
+						}
+                        $('.add').removeAttr('disabled').html('添加');
+                    }
+                }
+            });
+        })
+    })
+</script>
+{/block}

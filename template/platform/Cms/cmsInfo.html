@@ -1,0 +1,29 @@
+{extend name="platform/new_base" /}
+{block name="resource"}
+
+{/block}
+{block name="main"}
+
+				<!-- page -->
+				
+				<div class="alert alert-info alert-dismissible" role="alert">
+					<span class="strong mr-15">{$info['title']}</span>
+					发件人：<span class="strong mr-15">团大人</span>
+					时间：<span class="strong mr-15">{$info['create_time']}</span>
+				</div>
+
+				<div class="content">
+					{$info['content']}
+				</div>
+
+				<!-- page end -->
+
+{/block}
+
+{block name="script"}
+<script>
+    require(['util'],function(util){
+    	
+    })
+</script>
+{/block}

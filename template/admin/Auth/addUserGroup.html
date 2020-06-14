@@ -1,0 +1,163 @@
+{extend name="admin/base" /}
+{block name="main"}
+<!-- page -->
+<form class="form-horizontal widthFixedForm" role="form">
+    <!--角色名-->
+    <div class="form-group">
+        <label for="roleName" class="col-md-2 control-label">角色名</label>
+        <div class="col-md-8">
+            <input type="text" class="form-control" id="group_name" name="group_name" value="{$info['group_name']}">
+        </div>
+    </div>
+    <!--备注文本域-->
+    <div class="form-group">
+        <label for="name" class="col-md-2 control-label">备注</label>
+        <div class="col-md-8">
+            <textarea class="form-control ta_resize" rows="8" cols="3" name="desc" id="desc" onpropertychange="this.style.posHeight=this.scrollHeight">{$info['desc']}</textarea>
+        </div>
+    </div>
+    <!--权限-->
+    <div class="form-group J-level_0">
+        <label for="firstname" class="col-md-2 control-label">权限</label>
+        <div class="col-md-8">
+            <!--复选框-->
+            <div class="checkbox">
+                <label><input class="decorate" type="checkbox" id="checkall" value="0"> <b style="color:#555;">全选</b></label>
+            </div>
+            {foreach name="list" item="v1"}
+            <!--复选框-->
+            {if $default_module_id_array && in_array($v1['module_id'],$default_module_id_array)}
+            {else}
+            <div class="J-level_1">
+                <div class="checkbox">
+                    <label>
+                        <input class="decorate level1" type="checkbox" dir="0" data-level1="level_1"  name="module_id" value="{$v1['module_id']}" {in name="$v1['module_id']" value="$info['module_id_array']"}checked{/in}> <b style="color:#555;">{$v1['module_name']}</b>
+                    </label>
+                </div>
+                <!--复选框二级-->
+                <div class="checkbox pl">
+                    {foreach name="v1['child']" item="v2"}
+                    {if $default_module_id_array && in_array($v2['module_id'],$default_module_id_array)}
+                    {else}
+                    <div class="J-level_2">
+                        <label class="checkbox">
+                            <input class="decorate level2" type="checkbox" dir="{$v2['pid']}" data-level2="level_2"  name="module_id" value="{$v2['module_id']}" {in name="$v2['module_id']" value="$info['module_id_array']"}checked{/in}> <b>{$v2['module_name']}</b>
+                        </label>
+                        {notempty  name="v2['child']"}
+                        <div class="checkbox pl">
+                            【
+                            {foreach name="v2['child']" item="v3"}
+                            {if $default_module_id_array && in_array($v2['module_id'],$default_module_id_array)}
+                            {else}
+                            <label>
+                                <input class="decorate level3" type="checkbox" parentdir="{$v2['pid']}" dir="{$v3['pid']}" data-level3="level_3"  name="module_id" value="{$v3['module_id']}" {in name="$v3['module_id']" value="$info['module_id_array']"}checked{/in}> {$v3['module_name']}
+                            </label>
+                            {/if}
+                            {/foreach}
+                            】
+                        </div>
+                        {/notempty}
+                    </div>
+                    {/if}
+                    {/foreach}
+                </div>
+            </div>
+            {/if}
+            {/foreach}
+        </div>
+    </div>
+    <!--发送返回-->
+    <div class="form-group add_back">
+        <label for="firstname" class="col-md-2 control-label"></label>
+        <div class="col-md-8">
+            <input type="hidden" id="group_id" value="{$info['group_id']}">
+            <button type="button" class="btn save">保存</button>
+            <a href="{:__URL('ADMIN_MAIN/auth/authgrouplist')}" class="btn back">返回</a>
+        </div>
+    </div>
+</form>
+<!-- page end -->
+{/block}
+{block name="script"}
+<script>
+  require(['utilAdmin'], function (utilAdmin) {
+    $("#checkall").on("click",function(){
+        $(".J-level_0 input[name='module_id']").prop("checked", $(this).is(":checked") == true ? "checked" : false);
+    });
+    function selectlevel(level, event){
+            var dir = $(event).attr("dir");
+            if($(event).is(":checked") == true){
+                    $("input[name='module_id'][value='"+dir+"']").prop("checked", "checked");
+            }
+            if(level === 'level_3'){
+                    var pardir = $(event).attr("parentdir");
+                    if($(event).is(":checked") == true){
+                            $("input[name='module_id'][value='"+pardir+"']").prop("checked", "checked");
+                    }
+            }
+            $(event).parents(".J-"+level).find("input[name='module_id']").prop("checked", $(event).is(":checked") == true ? "checked" : false);
+    }
+    
+    $("body").on("click",".level1",function(){
+        var level=$(this).attr("data-level1");
+        var event=$(this);
+        selectlevel(level, event)
+    })
+    $("body").on("click",".level2",function(){
+        var level=$(this).attr("data-level2");
+        var event=$(this);
+        selectlevel(level, event)
+    })
+    $("body").on("click",".level3",function(){
+        var level=$(this).attr("data-level3");
+        var event=$(this);
+        selectlevel(level, event)
+    })
+
+    function add_RoleManage() {
+        var group_id = $("#group_id").val();
+	    var group_name = $("#group_name").val();
+        var desc = $("#desc").val();
+        var select_box = '';
+        $("input[name='module_id']:checked").each(function(){
+                select_box = select_box+','+$(this).val();
+        });
+	if (group_name === '') {
+            utilAdmin.message('请填写角色名！','info',function(){
+                $('#group_name').focus();
+            });
+            return false;
+	}
+        select_box = select_box.substring(1);
+        console.log(select_box);
+	if (select_box === '') {
+            utilAdmin.message('请选择权限！');
+            return false;
+	}
+	$.ajax({
+		url : "{:__URL('ADMIN_MAIN/auth/addusergroup')}",
+		type : "post",
+		data : {
+			'group_id' : group_id,
+                        'group_name' : group_name,
+                        'select_box' : select_box,
+                        'desc' : desc
+		},
+		success : function(res) {
+			if(res['code'] > 0){
+                            utilAdmin.message("操作成功！",'success', function () {
+                                location.href = "{:__URL('ADMIN_MAIN/auth/authgrouplist')}";
+                            });
+			}else{
+                            utilAdmin.message(res['message'],'danger');
+			}
+		}
+	})
+
+}
+    $("body").on("click",".save",function(){
+        add_RoleManage();
+    })
+  })
+</script>
+{/block}

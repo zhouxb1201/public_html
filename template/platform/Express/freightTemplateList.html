@@ -1,0 +1,162 @@
+{extend name="platform/new_base" /}
+{block name="resources"/}
+{/block}
+{block name="main"}
+        <!-- page -->
+        <div class="mb-20 flex flex-pack-justify">
+            <div class="">
+                <a href="{:__URL('PLATFORM_MAIN/express/freightTemplateEdit?co_id='.$co_id)}" class="btn btn-primary"><i
+                        class="icon icon-add1"></i> 添加模板</a>
+            </div>
+            <div class="input-group search-input-group">
+                <input type="text" class="form-control" placeholder="模板名称" id="search_text">
+                <span class="input-group-btn"><a class="btn btn-primary search">搜索</a></span>
+            </div>
+        </div>
+        <table class="table v-table table-auto-center">
+            <thead>
+            <tr>
+                <th>模版名称</th>
+                <th>计费方式</th>
+                <th>首（重/件/体积）费</th>
+                <th>续（重/件/体积）费</th>
+                <th>状态</th>
+                <th>是否默认</th>
+                <th class="col-md-2 pr-14 operationLeft">操作</th>
+            </tr>
+            </thead>
+            <tbody id="list">
+
+            </tbody>
+        </table>
+        <input type="hidden" id="page_index">
+        <nav aria-label="Page navigation" class="clearfix">
+            <ul id="page" class="pagination pull-right"></ul>
+        </nav>
+        <!-- page end -->
+<input type="hidden" id="hidden_co_id" value="{$co_id}">
+{/block}
+{block name="script"}
+<script>
+    require(['util'], function (util) {
+        util.initPage(getList);
+
+        function getList(page_index) {
+            $("#page_index").val(page_index);
+            var search_text = $("#search_text").val();
+            $.ajax({
+                type: "post",
+                url: "{:__URL('PLATFORM_MAIN/express/freightTemplateList')}",
+                async: true,
+                data: {
+                    "page_index": page_index,
+                    "search_text": search_text,
+                    "co_id": $("#hidden_co_id").val()
+                },
+                success: function (data) {
+                    var html = '';
+                    if (data["data"].length > 0) {
+                        $.each(data['data'], function (k, v) {
+                            html += '<tr>';
+                            html += '<td>' + v.shipping_fee_name + '</td>';
+                            if (v.calculate_type == 1) {
+                                html += "<td>按重计费</td>";
+                                html += "<td>" + v.main_level_fee + "(元)/" + v.main_level_num + "(kg)</td>";
+                                html += "<td>" + v.per_extra_level_fee + "(元)/" + v.extra_level_num + "(kg)</td>";
+                            } else if (v.calculate_type == 2) {
+                                html += "<td>按件计费</td>";
+                                html += "<td>" + v.main_level_fee + "(元)/" + v.main_level_num + "(件)</td>";
+                                html += "<td>" + v.per_extra_level_fee + "(元)/" + v.extra_level_num + "(件)</td>";
+                            } else if (v.calculate_type == 3) {
+                                html += "<td>按体积计费</td>";
+                                html += "<td>" + v.main_level_fee + "(元)/" + v.main_level_num + "(m³)</td>";
+                                html += "<td>" + v.per_extra_level_fee + "(元)/" + v.extra_level_num + "(m³)</td>";
+                            }
+
+                            if (v.is_enabled == 1) {
+                                html += "<td><span class='label label-success'>有效</span></td>";
+                            } else {
+                                html += "<td><span class='label label-danger'>失效</span></td>";
+                            }
+                            if (v.is_default == 1) {
+                                html += "<td>是</td>";
+                                html += "<td class='operationLeft'>";
+                                html += "<a href=" + __URL('PLATFORM_MAIN/express/freighttemplateedit?shipping_fee_id=' + v.shipping_fee_id + '&co_id=' + v.co_id) + " class='btn-operation'>编辑</a>"
+                                html += "</td>";
+                            } else {
+                                html += "<td>否</td>";
+                                html += "<td class='operationLeft'>";
+                                html += '<a href="javascript:void(0);" class="btn-operation setDefault" data-id="' + v.shipping_fee_id + '" >设为默认</a>';
+                                html += "<a href=" + __URL('PLATFORM_MAIN/express/freighttemplateedit?shipping_fee_id=' + v.shipping_fee_id + '&co_id=' + v.co_id) + " class='btn-operation' >编辑</a>"
+                                html += '<a href="javascript:void(0);" class="btn-operation text-red1 del"  data-id="' + v.shipping_fee_id + '" >删除</a>';
+                                html += "</td>";
+                            }
+                        })
+                    } else {
+                        html = "<tr ><td colspan='7' class='h-200'>暂无符合条件的数据记录</td></tr>";
+                    }
+                    $('#page').paginator('option', {
+                        totalCounts: data['total_count']  // 动态修改总数
+                    });
+                    $("#list").html(html);
+                    util.tips();
+                    del();
+                    setDefault();
+                }
+            });
+        }
+
+        $('.search').on('click', function () {
+            util.initPage(getList);
+        });
+
+        // 删除
+        function setDefault() {
+            $('.setDefault').on('click', function () {
+                var shipping_fee_id = $(this).data('id');
+                util.alert('是否设为默认？', function () {
+                    $.ajax({
+                        type: "post",
+                        url: "{:__URL('PLATFORM_MAIN/Express/setDefaultShippingFee')}",
+                        async: true,
+                        data: {
+                            "shipping_fee_id": shipping_fee_id
+                        },
+                        success: function (data) {
+                            if (data["code"] > 0) {
+                                util.message(data["message"], 'success', getList($('#page_index').val()));
+                            } else {
+                                util.message(data["message"], 'danger');
+                            }
+                        }
+                    });
+                })
+            })
+        }
+
+        // 删除
+        function del() {
+            $('.del').on('click', function () {
+                var shipping_fee_id = $(this).data('id');
+                util.alert('是否删除该运费模板？', function () {
+                    $.ajax({
+                        type: "post",
+                        url: "{:__URL('PLATFORM_MAIN/Express/freightTemplateDelete')}",
+                        async: true,
+                        data: {
+                            "shipping_fee_id": shipping_fee_id
+                        },
+                        success: function (data) {
+                            if (data["code"] > 0) {
+                                util.message(data["message"], 'success', getList($('#page_index').val()));
+                            } else {
+                                util.message(data["message"], 'danger');
+                            }
+                        }
+                    });
+                })
+            })
+        }
+    })
+</script>
+{/block}

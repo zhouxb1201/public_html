@@ -1,0 +1,217 @@
+<!--视频课程-->
+<view class="vedio-wrap" wx:if="{{imgSource.type == 1}}">
+	<view class="vedio-content">
+		<view class="video-player"><video wx:if="{{!videoOverlayShow}}" show-fullscreen-btn="{{false}}" src="{{imgSource.content}}" bindtimeupdate="onCurrentTime"></video></view>
+		<view class="audio-overlay" wx:if="{{videoOverlayShow}}">
+			<view class="audio-overlay-wrap mt-200">
+				<view class="audio-overlay-text">试学结束，购买后查看完整版</view>
+				<view class="audio-overlay-btn" bindtap="onShop"><button>立即购买</button></view>
+			</view>
+		</view>
+	</view>
+	<view class="title">
+		<text class="tag" wx:if="{{imgSource.is_see > 0 && !imgSource.is_buy}}">试学{{imgSource.is_see}}分钟</text>{{imgSource.name}}
+	</view>
+</view>
+<!--音频课程-->
+<view class="audio-box" wx:if="{{imgSource.type == 2}}">
+	<view class="audio-wrap">
+		<view class="audio-img">
+			<image mode="widthFix" src="{{imgSource.goods_picture ? imgSource.goods_picture : '/images/no-goods.png'}}"></image>
+		</view>
+		<view class="audio-content">
+			<view class="title"><text class="tag" wx:if="{{imgSource.is_see > 0 && !imgSource.is_buy}}">试学{{imgSource.is_see}}分钟</text>{{imgSource.name}}</view>
+			<view class="slider">
+				<view class="slider-track"></view>
+				<view class="slider-fill" style="width: {{sliderTime}}%;"></view>
+				<view class="slider-thumb" style="left: {{sliderTime}}%;"></view>
+			</view>
+			<view class="flex-pack-justify">
+				<view class="fs-10">{{filter.realFormatSecond(currentTime)}}</view>
+				<view class="startPlayOrPause">
+					<view class="play-circle-o" bindtap="onPlayAudio" data-src="{{imgSource.content}}" wx:if="{{!playing}}">
+						<view class="player"></view>
+					</view>
+					<view class="play-circle-o" wx:else bindtap="onPauseAudio">
+						<view class="pause"></view>
+					</view>
+				</view>
+				<view class="pr-12 fs-10">{{filter.realFormatSecond(maxTime)}}</view>
+			</view>
+		</view>
+		<view class="audio-overlay" wx:if="{{audioOverlayShow}}">
+			<view class="audio-overlay-wrap pt-50">
+				<view class="audio-overlay-text">试学结束，购买后查看完整版</view>
+				<view class="audio-overlay-btn" bindtap="onShop"><button>立即购买</button></view>
+			</view>
+		</view>
+	</view>
+</view>
+<!--图片课程-->
+<view wx:if="{{imgSource.type == 3}}">
+	<view class="phto" wx:if="{{!imgSource.is_buy && imgSource.is_see == -1}}">
+		<view class="picture">
+			<view class="img">
+				<image mode="widthFix" src="/images/no-goods.png"></image>
+			</view>
+			<view class="audio-overlay">
+				<view class="audio-overlay-wrap mt-200">
+					<view class="audio-overlay-text">试学结束，购买后查看完整版</view>
+					<view class="audio-overlay-btn" bindtap="onShop"><button>立即购买</button></view>
+				</view>
+			</view>
+		</view>
+		<view class="source__title">{{imgSource.name}}</view>
+	</view>
+	<view class="phto" wx:else>
+		<view class="picture">
+			<view class="img">
+				<image mode="widthFix" src="{{imgSource.content ? imgSource.content : '/images/no-goods.png'}}"></image>
+			</view>
+		</view>
+		<view class="source__title">{{imgSource.name}}</view>
+	</view>
+</view>
+<!--card-->
+<view class="card-group-box">
+	<view class="cell">
+		<view class="cell__value">
+			<view class="card">
+				<view class="card__thumb">
+					<image mode="widthFix" src="{{imgSource.goods_picture ? imgSource.goods_picture : '/images/no-goods.png'}}"></image>
+				</view>
+				<view class="card__content">
+					<view class="card__title">{{imgSource.goods_name}}</view>
+					<view class="card__bottom">
+						<view class="card__price-group"><text class="card__price">共{{imgSource.total_count}}节</text></view>
+						<view class="card__btn" wx:if="{{!imgSource.is_buy}}">
+							<button bindtap="onShop">立即购买</button>
+						</view>
+					</view>
+				</view>
+			</view>
+		</view>
+	</view>
+</view>
+<!--评价-->
+<view class='evaluate'>
+	<view class='evaluateTab'>
+		<view class='tab {{evaluatenum == 0 ? "tabactive" : ""}}' data-current="0" bindtap='checkEvaluate'>
+			<text>全部({{evaluateData.evaluate_count}})</text>
+		</view>
+		<view class='tab {{evaluatenum == 1 ? "tabactive" : ""}}' data-current="1" bindtap='checkEvaluate'>
+			<text>图片({{evaluateData.imgs_count}})</text>
+		</view>
+		<view class='tab {{evaluatenum == 2 ? "tabactive" : ""}}' data-current="2" bindtap='checkEvaluate'>
+			<text>好评({{evaluateData.praise_count}})</text>
+		</view>
+		<view class='tab {{evaluatenum == 3 ? "tabactive" : ""}}' data-current="3" bindtap='checkEvaluate'>
+			<text>中评({{evaluateData.center_count}})</text>
+		</view>
+		<view class='tab {{evaluatenum == 4 ? "tabactive" : ""}}' data-current="4" bindtap='checkEvaluate'>
+			<text>差评({{evaluateData.bad_count}})</text>
+		</view>
+	</view>
+	<view class='evaluate_detail'>
+		<view class='evaluate_cell' wx:for='{{evaluateData.review_list}}' wx:key='' wx:for-item='evalItem'>
+			<view class='head'>
+				<view class='head_info'>
+					<view class='img'>
+						<image src="{{evalItem.user_headimg != '' &&  evalItem.nick_name != null ?evalItem.user_headimg:'/images/no-avatar.png'}}">
+						</image>
+					</view>
+					<view class='user'>
+						<view class='name'>{{evalItem.nick_name != '' && evalItem.nick_name != null ? evalItem.nick_name : '匿名'}}</view>
+						<view class='score' wx:if='{{evalItem.explain_type == 1}}'>差评</view>
+						<view class='score' wx:elif='{{evalItem.explain_type == 3}}'>中评</view>
+						<view class='score' wx:else>好评</view>
+					</view>
+				</view>
+				<view class='time'>{{evalItem.addtime}}</view>
+			</view>
+			<view class='content_item'>
+				<view class='content'>{{evalItem.content}}</view>
+			</view>
+			<view class='imgs'>
+				<view class='img_group'>
+					<view class='img_item' wx:for='{{evalItem.images}}' wx:key='' wx:for-item='imgItem' data-imglist='{{evalItem.images}}' bindtap='previewImg'>
+						<image mode='widthFix' src='{{imgItem}}'></image>
+					</view>
+				</view>
+			</view>
+			<view class='business_explain' wx:if='{{evalItem.explain_time != 0}}'>
+				<view class='title'>[商家回复]：</view>
+				<view class='content'>{{evalItem.explain_first}}</view>
+			</view>
+			<view class='again_explain' wx:if='{{evalItem.again_addtime != 0}}'>
+				<view class='title'>追评：</view>
+				<view class='content'>{{evalItem.again_content}}</view>
+				<view class='again_img'>
+					<view class='img_group'>
+						<view class='img_item' wx:for='{{evalItem.again_images}}' wx:key='' wx:for-item='againImgItem' data-imglist='{{evalItem.again_images}}' bindtap='previewImg'>
+							<image mode='widthFix' src='{{againImgItem}}'></image>
+						</view>
+					</view>
+				</view>
+			</view>
+			<view class='again_explain' wx:if='{{evalItem.again_explain_time != 0}}'>
+				<view class='title'>[追评回复]：</view>
+				<view class='content'>{{evalItem.again_explain}}</view>
+			</view>
+		</view>
+	</view>
+	<view class='no_detail' wx:if="{{evaluateData.review_list.length == 0}}">
+		<text>暂无评论</text>
+	</view>
+</view>
+
+
+<!--目录-->
+<view class="d-box" bindtap="onChangeShow">
+	<view class="icon-table">
+		<view class="one"></view>
+		<view class="two"></view>
+		<view class="three"></view>
+	</view>
+	<view class="d-box-text">目录</view>
+</view>
+
+<van-popup show="{{ is_catalog }}" position="bottom" custom-style="height:60%;" z-index="2000">
+	<view class='popup-title'>
+		<view class='close' bindtap="onChangeHide">
+			<text class='icon-close iconfont v-icon-close2'></text>
+		</view>
+		<view class='goods-title'>课程目录</view>
+	</view>
+	<view class="popup-content">
+		<view class="van-cell-group">
+			<block wx:for="{{source}}" wx:key="" wx:for-item="item">
+				<view class="cell" bindtap="onCloseCourse" data-cid="{{item.knowledge_payment_id}}">
+					<view class="cell__value">
+						<view class="col col--18 {{item.knowledge_payment_id == imgSource.id ? 'active' : ''}}">{{item.knowledge_payment_name}}</view>
+						<view class="col col--6" wx:if="{{!is_buy}}">
+							<view class="same" wx:if="{{item.knowledge_payment_id == imgSource.id}}">
+								<text class="line1"></text>
+								<text class="line2"></text>
+								<text class="line3"></text>
+								<text class="line4"></text>
+							</view>
+							<text class="tag"  wx:if="{{item.knowledge_payment_is_see == -1}}">付费浏览</text>
+							<text class="tag"  wx:if="{{item.knowledge_payment_is_see > 0}}">试学</text>
+						</view>
+						<view class="col col--6" wx:else>
+							<view class="same" wx:if="{{item.knowledge_payment_id == imgSource.id}}">
+								<text class="line1"></text>
+								<text class="line2"></text>
+								<text class="line3"></text>
+								<text class="line4"></text>
+							</view>
+						</view>
+					</view>
+				</view>
+			</block>
+		</view>
+	</view>
+</van-popup>
+
+<wxs src='../../../../utils/addmul.wxs' module='filter' />

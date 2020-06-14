@@ -1,0 +1,172 @@
+{extend name="platform/new_base" /}
+{block name="resources"/}
+{/block}
+{block name="main"}
+                <!-- page -->
+                <form class="form-horizontal form-validate pt-15 widthFixedForm">
+                    
+                    <div class="form-group">
+                        <label class="col-md-2 control-label"><span class="text-bright">*</span>角色名</label>
+                        <div class="col-md-5">
+                            <input type="text" class="form-control" id="role_name" required autocomplete="off">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-md-2 control-label">备注</label>
+                        <div class="col-md-5">
+                            <textarea class="form-control" rows="4" id="memo"></textarea>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-md-2 control-label"><span class="text-bright">*</span>权限</label>
+                        <div class="col-md-8">
+                            <div class="tree-checkbox-group">
+                                <div class="checkbox">
+                                    <label for="chek_all">
+                                        <input type="checkbox" name="module_id" id="chek_all" value="chek_all" />全选
+                                    </label>
+                                </div>
+                                {foreach name="list" item="v1"}
+                                <div class="item_chek">
+                                    <div class="checkbox">
+                                        <label for="{$v1['module_id']}">
+                                            <input type="checkbox" value="{$v1['module_id']}" id="{$v1['module_id']}" name="module_id">{$v1['module_name']}
+                                        </label>
+                                    </div>
+                                    {foreach name="v1['child']" item="v2"}
+                                    <div class="checkbox_seconds">
+                                        <label for="{$v2['module_id']}" class="checkbox-inline seconds-label">
+                                            <input type="checkbox" id="{$v2['module_id']}" value="{$v2['module_id']}" name="module_id">{$v2['module_name']}
+                                        </label>
+
+                                        <div class="checkbox_three item_content">
+                                            {foreach name="v2['child']" item="v3"}
+                                            <label for="{$v3['module_id']}" class="checkbox-inline">
+                                                <input type="checkbox" name="module_id" id="{$v3['module_id']}" value="{$v3['module_id']}" />{$v3['module_name']}
+                                            </label>
+                                            {/foreach}
+                                        </div>
+
+                                    </div>
+                                    {/foreach}
+                                </div>
+                                {/foreach}
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group"></div>
+                    <div class="form-group">
+                        <label class="col-md-2 control-label"></label>
+                        <div class="col-md-8">
+                            <button class="btn btn-primary add" type="submit">添加</button>
+                            <a href="javascript:history.go(-1);" class="btn btn-default">返回</a>
+                        </div>
+                    </div>
+
+                </form>
+                
+                <!-- page end -->
+{/block}
+{block name="script"}
+<script>
+require(['util'],function(util){
+    $(function(){
+        var type_module_array = "";
+        var type_module_array = type_module_array.split(',');
+        var shop_type_module_array = "";
+        var shop_type_module_array = shop_type_module_array.split(',');
+
+        for (var i = 0; i < type_module_array.length; i++) {
+            $('input[type="checkbox"][value="' + type_module_array[i] + '"]').prop("checked", true);
+        }
+        for (var i = 0; i < shop_type_module_array.length; i++) {
+            $('input[type="checkbox"][value="' + shop_type_module_array[i] + '"]').prop("checked", true);
+        }
+        //全选
+        $('#chek_all').click(function() {
+            if ($(this).is(":checked")) {
+                $('input[type="checkbox"]').prop("checked", true);
+            } else {
+                $('input[type="checkbox"]').prop("checked", false);
+            }
+        });
+
+        $('input[type="checkbox"]').click(function() {
+            //添加选中
+            if ($(this).is(":checked")) {
+                $(this).parents('.item_content').prev().find('input[type="checkbox"]').prop("checked", true);
+                $(this).parents('.item_chek').children('.checkbox').find('input[type="checkbox"]').prop("checked", true);
+            } else { //取消选中
+                if ($(this).parents('.checkbox_seconds').children('label').children('input[type="checkbox"]:checked').length == 0 &&$(this).parents('.checkbox_seconds').siblings('.checkbox_seconds').find('input[type="checkbox"]:checked').length == 0) {
+                    $(this).parents('.item_chek').find('input').prop("checked", false);
+                }
+                if ($('input[type="checkbox"]:checked').length == 1) {
+                    $('#chek_all').prop("checked", false);
+                }
+            }
+        })
+        //选中取消子集
+        $('.checkbox>label>input').click(function() {
+            if ($(this).is(":checked")) {
+                $(this).parents('.item_chek').find('input[type="checkbox"]').prop("checked", true);
+            } else {
+                $(this).parents('.item_chek').find('input[type="checkbox"]').prop("checked", false);
+            }
+            if ($(this).is(":checked")) {
+                $(this).parents('.shop_item_chek').find('input[type="checkbox"]').prop("checked", true);
+            } else {
+                $(this).parents('.shop_item_chek').find('input[type="checkbox"]').prop("checked", false);
+            }
+        });
+        $('.checkbox_seconds>label>input').click(function() {
+            if ($(this).is(":checked")) {
+                $(this).parent().next('.item_content').find('input[type="checkbox"]').prop("checked", true);
+            } else {
+                $(this).parent().next('.item_content').find('input[type="checkbox"]').prop("checked", false);
+            }
+        });
+    })
+    /*
+     *添加角色
+     */
+    util.validate($('.form-validate'),function(form){
+        var group_name = $("#role_name").val();
+        var memo = $("#memo").val();
+        var select_box = '';
+        $("input[name='module_id']:checked").each(function(){
+            if($(this).val()!='chek_all'){
+                select_box = select_box+','+$(this).val();
+            }
+            
+        });
+        $('.add').attr({disabled: "disabled"}).html('提交中...');
+        select_box = select_box.substring(1);
+        if(select_box){
+            $.ajax({
+                type : "post",
+                url : "{:__URL('PLATFORM_MAIN/Auth/addAuthGroup')}",
+                data : {
+                    'group_name' : group_name,
+                    'memo' : memo,
+                    'select_box' : select_box
+                },
+                async : true,
+                success : function(data) {
+                    if (data['code'] > 0) {
+                        util.message(data["message"],'success',"{:__URL('PLATFORM_MAIN/Auth/authGroupList')}");
+                    }else{
+                        util.message(data["message"],'danger');
+                        $('.add').removeAttr('disabled').html('添加');
+                    }
+                }
+            });
+        }else{
+            util.message('请选择权限');
+            return false;
+        }
+
+    });
+
+})
+</script>
+{/block}

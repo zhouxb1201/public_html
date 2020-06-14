@@ -1,0 +1,130 @@
+<view class='user_info'>
+  <!-- 手机验证 -->
+  <view class='phone_validate' wx:if='{{check_code == 0}}'>
+  
+    <view class='group'>
+    
+      <view class='cell'>
+        <view class='title'>手机号码</view>
+        <view class="areaCode" wx:if="{{is_country_code}}"><text>{{getCity}} ({{getShowCode}})</text></view>
+        <view class='value'>
+          
+          <input type='text' value='{{user_tel}}' disabled='disabled'></input>
+        </view>
+      </view>
+      <view class='cell'>
+        <view class='title'>短信验证码</view>
+        <view class='value phone_code'>
+          <input type='text' placeholder='请输入短信验证码' bindinput='verificationCodeFun'></input>
+          <button class="v_code {{codeDis == true?'d_code':''}}" bindtap="changeCode" disabled="{{codeDis}}">
+              {{phoneCode}}
+              <text hidden="{{phoneCode == '获取验证码'}}">S</text>
+          </button>
+        </view>
+      </view>
+    </view>
+
+    <view class='foot'>
+      <view class='foot_btn' bindtap='checkVerificationCode'>下一步</view>
+    </view>
+  </view>
+  
+  <!-- 修改密码 -->
+  <view class='reset_password' wx:if='{{reset_sign == 1 && check_code == 1}}'>
+    <view class='group'>
+      <view class='cell'>
+        <view class='title'>新密码</view>
+        <view class='value'>
+          <input type='password' placeholder='请输入新密码' bindinput='newPasswordFun'></input>
+        </view>
+      </view>
+      <view class='cell'>
+        <view class='title'>确认密码</view>
+        <view class='value'>
+          <input type='password' placeholder='再次输入密码' bindinput='confirmPasswordFun'></input>
+        </view>
+      </view>
+    </view>
+
+    <view class='foot'>
+      <view class='foot_btn' bindtap='updatePassword'>完成</view>
+    </view>
+  </view>
+
+  <!-- 修改支付密码 -->
+  <view class='reset_pay_password' wx:if='{{reset_sign == 2 && check_code == 1}}'>
+    <view class='group'>
+      <view class='cell'>
+        <view class='title'>支付密码</view>
+        <view class='value'>
+          <input type='password' placeholder='请输入支付密码' bindinput='newPayPasswordFun'></input>
+        </view>
+      </view>
+      <view class='cell'>
+        <view class='title'>确认密码</view>
+        <view class='value'>
+          <input type='password' placeholder='再次输入支付密码' bindinput='confirmPayPasswordFun'></input>
+        </view>
+      </view>
+    </view>
+
+    <view class='foot'>
+      <view class='foot_btn' bindtap='updatePayPassword'>完成</view>
+    </view>
+  </view>
+
+  <!-- 修改关联手机 -->
+  <!-- wx:if='{{reset_sign == 3 && check_code == 1}}' -->
+  <view class='reset_phone_num' wx:if='{{reset_sign == 3 && check_code == 1}}' >
+    <view class='group'>
+      <view class='cell'>
+        <view class='title'>新手机号码</view>
+        <view class="areaCode" wx:if="{{is_country_code}}"><areaCode-compoent bind:getValue="onGetValue"></areaCode-compoent></view>
+        <view class='value'>
+          <input type='text' placeholder='请输入新手机号码' bindinput='newPhoneNumFun'></input>
+        </view>
+      </view>
+      <view class='cell'>
+        <view class='title'>短信验证码</view>
+        <view class='value phone_code'>
+          <input type='text' placeholder='请输入验证码' bindinput='newPhoneCodeFun'></input>
+          <button class="v_code {{newCodeDis == true?'d_code':''}}" bindtap="newChangeCode" disabled="{{newCodeDis}}">
+              {{newPhoneCode}}
+              <text hidden="{{newPhoneCode == '获取验证码'}}">S</text>
+          </button>
+        </view>
+      </view>
+    </view>
+
+    <view class='foot'>
+      <view class='foot_btn' bindtap='updateMobile'>完成</view>
+    </view>
+  </view>
+
+  <!-- 修改绑定邮箱 -->
+  <view class='reset_email' wx:if='{{reset_sign == 4 && check_code == 1}}'>
+    <view class='group'>
+      <view class='cell'>
+        <view class='title'>电子邮箱</view>
+        <view class='value'>
+          <input type='text' placeholder='请输入电子邮箱' bindinput='emailNumFun'></input>
+        </view>
+      </view>
+      <view class='cell'>
+        <view class='title'>邮箱验证码</view>
+        <view class='value phone_code'>
+          <input type='text' placeholder='请输入验证码' bindinput='emailCode'></input>
+          <button class="v_code {{newEmailCodeDis == true?'d_code':''}}" bindtap="newEmailCode" disabled="{{newEmailCodeDis}}">
+              {{newEmailCode}}
+              <text hidden="{{newEmailCode == '获取验证码'}}">S</text>
+          </button>
+        </view>
+      </view>
+    </view>
+
+    <view class='foot'>
+      <view class='foot_btn' bindtap='updateEmail'>完成</view>
+    </view>
+  </view>
+
+</view>

@@ -1,0 +1,178 @@
+
+page{
+  font-size: 28rpx;
+  background-color: #f8f8f8;
+}
+
+.pay_top{
+  text-align: center;
+  font-size: 32rpx;
+  margin: 40rpx 0;
+}
+
+.pay_top .money{
+  font-size: 1.3em;
+  font-weight: 700; 
+  color: #ff454e;
+  margin: 15rpx 0; 
+}
+.pay_top .limit_time{
+  color: #909399;
+  font-size: .8em;
+}
+.pay_type{
+  background-color: #fff;
+}
+.pay_type .pay_type_title{
+  padding: 20rpx 30rpx;
+  border-bottom: 1px solid #dfdede88;
+}
+.pay_type .pay_type_item{
+  padding: 20rpx 40rpx;
+  position: relative;
+  border-bottom: 1px solid #dfdede88;
+}
+.pay_type .pay_type_item .v-icon-balance3{
+  font-size: 40rpx;
+  color: #f44;
+  display: inline-block;
+  margin-right: 10rpx;
+}
+.pay_type .pay_type_item .v-icon-wx-pay{
+  font-size: 40rpx;
+  color: #00c403;
+  display: inline-block;
+  margin-right: 10rpx;
+}
+.pay_type .pay_type_item .v-icon-refund{
+  font-size: 40rpx;
+  color: #e23ba2;
+  display: inline-block;
+  margin-right: 10rpx;
+}
+.pay_type .pay_type_item .v-icon-logistic4{
+  font-size: 40rpx;
+  color: #EFB336;
+  display: inline-block;
+  margin-right: 10rpx;
+}
+.balanceTotal{
+  color: #606266;
+  font-size: 24rpx;
+}
+
+
+.pay_type .pay_type_item icon{
+  position: absolute;
+  right: 30rpx;
+}
+
+.foot_pay{
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  padding: 30rpx;
+}
+.paybtn{ 
+  color: #fff;
+  border-radius: 50rpx;
+  background-color: #07c160;
+  font-size: 30rpx;
+}
+.paybtn::after{
+  border: 0;
+}
+
+.pay_box{
+  font-size: 28rpx;
+  margin-top: 20rpx;
+}
+.pay_group .cell{
+  display: flex;
+  align-items: center;
+  padding: 20rpx 30rpx;  
+  border-top: 1px solid #ddd;
+  border-bottom: 1px solid #ddd;
+}
+.pay_group .cell .title{
+  width: 180rpx;
+}
+.pay_box .text_group{
+  text-align: center;
+  font-size: 24rpx;
+  color: #ccc;
+  margin: 10rpx 0;
+}
+.reset_btn{
+  color: rgba(49, 137, 252, 0.801);
+  padding: 10rpx 0;
+}
+
+
+.reset_password_box .top{
+  padding: 20rpx 30rpx;
+  border-bottom: 1px solid #ebedf0;
+  text-align: center;
+  font-size: 32rpx;
+}
+.phone_validate{
+  margin-bottom: 600rpx;
+}
+.reset_pay_password{
+  margin-bottom: 600rpx;
+}
+
+
+.group{
+  background-color: #fff;
+}
+.cell{
+  display: flex;
+  padding: 20rpx 30rpx;
+  align-items: center;
+  border-bottom: 1px solid #ebedf0;
+}
+.cell .title{
+  width: 180rpx;
+}
+.cell .value{
+  flex: 1;
+}
+
+.phone_code{
+  position: relative;
+}
+.v_code{
+  position: absolute;
+  right: 0;
+  top: 0;
+  font-size: 22rpx;
+  border-radius: 50rpx;
+  color: red;
+  border: 1px solid red;
+  background-color: #fff;
+  z-index: 99;
+}
+.d_code{
+  border: 1px solid rgba(182, 179, 179, 0.171);
+}
+
+.foot{
+  position: fixed;
+  bottom: 0;  
+  display: flex;
+  width: 100%;
+}
+.foot_btn{
+  background-color: #fff;  
+  color: rgba(49, 137, 252, 0.801);
+  height: 80rpx;
+  line-height: 80rpx;
+  text-align: center;
+  display: inline-block;
+  flex: 1;
+  border:1px solid #ebedf0 
+}
+
+

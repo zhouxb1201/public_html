@@ -1,0 +1,38 @@
+/* 按钮组 */
+.menu{
+   position: relative;
+  overflow: hidden;
+  margin: 20rpx;
+  border-radius: 20rpx;
+  box-shadow: 0 0 10px 0 rgba(0,0,0,.05);
+}
+.menu .row-3 .item{
+  width: 33.33%;
+}
+.menu .row-4 .item{
+  width: 25%;
+}
+.menu .row-5 .item{
+  width: 20%;
+}
+.menu .item{
+  display: block;
+  float: left;
+  height: auto;
+  text-align: center;
+  margin: 30rpx 0;
+} 
+.menu  .item .image{
+  display: inline-block;
+  max-width: 44px;
+  max-height: 44px;
+}
+.menu  .item .text{
+  font-size: 28rpx;
+  text-align: center;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  padding: 12rpx;
+  color: #666666;
+}

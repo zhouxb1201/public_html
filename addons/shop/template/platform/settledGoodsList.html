@@ -1,0 +1,400 @@
+{block name="resource"}
+<style>
+    .label-danger a{padding-top:5px;}
+</style>
+{/block}
+{block name="main"}
+<!-- page -->
+<form class="v-filter-container">
+    <div class="filter-fields-wrap">
+        <div class="filter-item clearfix">
+            <div class="filter-item__field">
+                <div class="v__control-group">
+                    <label class="v__control-label">商品名称</label>
+                    <div class="v__controls">
+                        <input type="text" id="goods_name" name="goods_name" class="v__control_input" placeholder="请输入商品名称" autocomplete="off">
+                    </div>
+                </div>
+                <div class="v__control-group">
+                    <label class="v__control-label">店铺名称</label>
+                    <div class="v__controls">
+                        <input type="text" id="shop_name" name="shop_name" class="v__control_input" placeholder="请输入店铺名称" autocomplete="off">
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="filter-item clearfix">
+            <div class="filter-item__field">
+                <div class="v__control-group">
+                    <label class="v__control-label"></label>
+                    <div class="v__controls">
+                        <a class="btn btn-primary search"><i class="icon icon-search"></i> 搜索</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</form>
+<!-- page -->
+<ul class="nav nav-tabs v-nav-tabs fs-12">
+    <li role="presentation" {if condition="$state eq 1"} class="active" {/if}><a href="{:__URL('ADDONS_MAINgoodsList&state=1')}" class="flex-auto-center">出售中<br><span class="J-on"></span></a></li>
+    <li role="presentation" {if condition="$state eq 11"} class="active" {/if}><a href="{:__URL('ADDONS_MAINgoodsList&state=11')}" class="flex-auto-center">待审核<br><span class="J-checking"></span></a></li>
+    <li role="presentation" {if condition="$state eq 12"} class="active" {/if}><a href="{:__URL('ADDONS_MAINgoodsList&state=12')}" class="flex-auto-center">审核不通过<br><span class="J-uncheck"></span></a></li>
+    <li role="presentation" {if condition="$state eq 10"} class="active" {/if}><a href="{:__URL('ADDONS_MAINgoodsList&state=10')}" class="flex-auto-center">违规下架<br><span class="J-out"></span></a></li>
+</ul>
+<div class="mb-10 flex flex-pack-justify">
+    <div class="">
+        <a class="btn btn-default" href="javascript:void(0);">
+            <label class="checkbox-inline">
+                <input type="checkbox" id="checkAll">全选
+            </label>
+        </a>
+        {if $state == 1}
+        <a class="btn btn-default J-outline" href="javascript:void(0);">下架</a>
+        {/if}
+        {if $state == 10}
+        <a class="btn btn-default J-deleteGood" href="javascript:void(0);">删除</a>
+        {/if}
+        {if $state == 11 || $state == 12}
+        <a class="btn btn-default J-audit" href="javascript:void(0);">审核</a>
+        {/if}
+        
+        
+    </div>
+</div>
+<table class="table v-table table-auto-center">
+    <thead>
+        <tr>
+            <th></th>
+            <th>商品</th>
+            <th>店铺</th>
+            <th>价格</th>
+            <th>库存</th>
+            <th>状态</th>
+            {if $state == 10 || $state == 12}
+            <th>原因</th>
+            {/if}
+            <th class="col-md-2 operationLeft pr-14">操作</th>
+        </tr>
+    </thead>
+    <tbody id="list">
+
+    </tbody>
+</table>
+<input type="hidden" id="page_index">
+<input type="hidden" id="state" value="{$state}">
+<nav aria-label="Page navigation" class="clearfix">
+    <ul id="page" class="pagination pull-right"></ul>
+</nav>
+<!-- page end -->
+{/block}
+
+{block name="script"}
+<script>
+
+    require(['util'], function (util) {
+        //搜索
+        $('.search').on('click', function () {
+            util.initPage(LoadingInfo);
+        });
+        
+        util.initPage(LoadingInfo);
+        function LoadingInfo(page_index) {
+            var goods_name = $("#goods_name").val();
+            var shop_name = $("#shop_name").val();
+            var state = $('#state').val();
+            $.ajax({
+                type: "post",
+                url: "{$goodsListUrl}",
+                data: {
+                    "page_index": page_index,
+                    "goods_name": goods_name,
+                    "shop_name": shop_name,
+                    "state": state
+                },
+                success: function (data) {
+                    var html = '';
+                    if (data["data"].length > 0) {
+                        for (var i = 0; i < data["data"].length; i++) {
+
+                            html += '<tr>';
+                            html += '<td>';
+                            html += '<input value="' + data["data"][i]["goods_id"] + '" name="sub" data-state="' + data["data"][i]["state"] + '" type="checkbox">';
+                            html += '</td>';
+                            html += '<td>';
+                            html += '<div class="media text-left">';
+                            html += '<div class="media-left">';
+                            html += '<img src="' + __IMG(data["data"][i]["pic_cover_micro"]) + '" style="width:60px;height:60px;">';
+                            html += '</div>';
+                            html += '<div class="media-body max-w-300">';
+                            html += '<div class="line-2-ellipsis"><a class="J-goods_name" href="' + __URLS('SHOP_MAIN/index.php/goods/goodsinfo&goodsid=' + data["data"][i]["goods_id"]) + '" target="_blank">' + data["data"][i]["goods_name"] + '</a></div>';
+                            html += '</div>';
+                            html += '</div>';
+                            html += '</td>';
+                            html += '<td>';
+                            html += '<div class="">' + data["data"][i]["shop_name"] + '</div>';
+                            html += '</td>';
+                            html += '<td>';
+                            html += data["data"][i]["price"];
+                            html += '</td>';
+                            html += '<td>';
+                            html += data["data"][i]["stock"];
+                            html += '</td>';
+                            html += '<td>';
+                            if (data["data"][i]["state"] == 1) {
+                                html += '<a class="label label-default" href="javascript:void(0);" style="background:#5cb85c;">上架</a>';
+                            } else if (data["data"][i]["state"] == 10) {
+                                html += '<a class="label label-default" href="javascript:void(0);" style="background:#c9302c;">违规下架</a>';
+                            } else if (data["data"][i]["state"] == 11) {
+                                html += '<a class="label label-default" href="javascript:void(0);" style="background:#fb6638;">待审核</a>';
+                            } else if (data["data"][i]["state"] == 12) {
+                                html += '<a class="label label-default" href="javascript:void(0);" style="background:#c9302c;">审核不通过</a>';
+                            }
+                            html += '</td>';
+                            if (data["data"][i]["state"] == 10 || data["data"][i]["state"] == 12) {
+                                html += '<td class="J-reason">' + data["data"][i]["illegal_reason"] + '</td>';
+                            } 
+                            html += '<td class="operationLeft">';
+                            if (data["data"][i]["state"] == 1) {
+                                html += '<a class="btn-operation link-pr" data-goods_id="' + data["data"][i]["goods_id"] + '" href="javascript:void(0);"><span>查看<span><div class="link-pos"> </div></a><a class="btn-operation J-outline" href="javascript:void(0);" data-id="' + data["data"][i]["goods_id"] + '">违规下架</a>';
+                            } else if (data["data"][i]["state"] == 10) {
+                                html += '<a class="btn-operation link-pr" data-goods_id="' + data["data"][i]["goods_id"] + '" href="javascript:void(0);"><span>查看<span><div class="link-pos"> </div></a><a class="btn-operation J-deleteGood text-red1" href="javascript:void(0);" data-id="' + data["data"][i]["goods_id"] + '">删除</a>';
+                            } else if (data["data"][i]["state"] == 11 || data["data"][i]["state"] == 12) {
+                                html += '<a class="btn-operation link-pr" data-goods_id="' + data["data"][i]["goods_id"] + '" href="javascript:void(0);"><span>查看<span><div class="link-pos"> </div></a><a class="btn-operation J-audit text-red1" href="javascript:void(0);" data-id="' + data["data"][i]["goods_id"] + '">审核</a>';
+                            } 
+                            util.copy();
+                            html += '</td>';
+                            html += '</tr>';
+
+                        }
+                    } else {
+                        html += '<tr align="center"><td colspan="9" class="h-200">暂无符合条件的数据记录</td></tr>';
+                    }
+                    $('#page').paginator('option', {
+                        totalCounts: data['total_count']  // 动态修改总数
+                    });
+                    $("#list").html(html);
+                    util.tips();
+                }
+            });
+        }
+        $("#checkAll").on('click',function(){
+            $("#list input[type = 'checkbox']").prop("checked", this.checked);
+        })
+
+        //下架
+        $("body").on('click', '.J-outline', function () {
+            var goodsId = [];
+            var goodsName = [];
+            if($(this).data('id')&&!isNaN($(this).data('id'))){
+                goodsId.push($(this).data('id'));
+                goodsName = $(this).parents('tr').find('.J-goods_name').html();
+            }else{
+                $("#list input[type = 'checkbox']:checked").each(function(i){
+                    if (!isNaN($(this).val())) {
+                        goodsId.push($(this).val());
+                        if(i == 0){
+                            goodsName = $(this).parents('tr').find('.J-goods_name').html();
+                        }
+                    }
+                })
+            }
+            if (goodsId.length == 0) {
+                util.message('请选择需要下架的商品', 'danger');
+                return false;
+            }
+            var goods_name_show = goodsName;
+            var count = goodsId.length;
+            if(count > 1){
+                goods_name_show = goodsName + '&nbsp; 等' + count + '个商品';
+            }
+            
+            var html = '<form class="form-horizontal padding-15" id="">';
+            html += '<div class="form-group"><label class="col-md-3 control-label">商品名称</label><div class="col-md-8"><p class="form-control-static">' + goods_name_show + ' </p></div></div>';
+            html += '<div class="form-group reason"><label class="col-md-3 control-label">下架原因</label><div class="col-md-8"><textarea id="reason" class="form-control" rows="4"></textarea></div></div>';
+            html += '</form>';
+            util.confirm('违规下架', html, function () {
+                var reason = this.$content.find("#reason").val();
+                $.ajax({
+                    type: "post",
+                    url: "{:__URL('PLATFORM_MAIN/goods/ModifyGoodsOutline')}",
+                    data: {"goods_ids": goodsId.toString(), "reason" : reason},
+                    dataType: "json",
+                    async: true,
+                    success: function (data) {
+                        if (data["code"] > 0) {
+                            getgoodscount();
+                            util.message(data["message"], 'success', LoadingInfo($('#pageIndex').val()));
+                        } else {
+                            util.message(data["message"], 'error', LoadingInfo($('#pageIndex').val()));
+                        }
+                    }
+                });
+            });
+        });
+        //审核
+        $("body").on('click', '.J-audit', function () {
+            var goodsId = [];
+            var goodsName = [];
+            var now_reason = '';
+            if($(this).data('id')&&!isNaN($(this).data('id'))){
+                goodsId.push($(this).data('id'));
+                goodsName = $(this).parents('tr').find('.J-goods_name').html();
+                now_reason = $(this).parents('tr').find('.J-reason').html();
+            }else{
+                $("#list input[type = 'checkbox']:checked").each(function(i){
+                    if (!isNaN($(this).val())) {
+                        goodsId.push($(this).val());
+                        if(i == 0){
+                            now_reason = $(this).parents('tr').find('.J-reason').html();
+                            goodsName = $(this).parents('tr').find('.J-goods_name').html();
+                        }
+                    }
+                })
+            }
+            if (goodsId.length == 0) {
+                util.message('请选择需要审核的商品', 'danger');
+                return false;
+            }
+            var goods_name_show = goodsName;
+            var count = goodsId.length;
+            if(count > 1){
+                goods_name_show = goodsName + '&nbsp; 等' + count + '个商品';
+            }
+            var now_state = $('#state').val();
+            if(now_state != '11' && now_state != '12'){
+                util.message('操作失败，请刷新重试', 'danger');
+                return false;
+            }
+            var html = '<form class="form-horizontal padding-15" id="">';
+            html += '<div class="form-group"><label class="col-md-3 control-label">商品名称</label><div class="col-md-8"><p class="form-control-static">' + goods_name_show + ' </p></div></div>';
+            var hide = '';
+            if(now_state == '11'){
+                now_reason = '';
+                hide = 'hide';
+                html += '<div class="form-group"><label class="col-md-3 control-label">处理结果</label><div class="col-md-8"><label class="radio-inline"><input type="radio" name="result" value="1" checked /> 审核通过</label><label class="radio-inline"><input type="radio" name="result" value="12" /> 审核不通过</label></div></div>';    
+            }else{
+                
+                html += '<div class="form-group"><label class="col-md-3 control-label">处理结果</label><div class="col-md-8"><label class="radio-inline"><input type="radio" name="result" value="1" /> 审核通过</label><label class="radio-inline"><input type="radio" name="result" value="12" checked/> 审核不通过</label></div></div>';    
+            }
+            html += '<div class="form-group reason ' + hide + '"><label class="col-md-3 control-label">拒絕原因</label><div class="col-md-8"><textarea id="reason" class="form-control" rows="4">'+now_reason+'</textarea></div></div>';
+            html += '</form>';
+            util.confirm('审核商品', html, function () {
+                var reason = '';
+                var state = this.$content.find('input:radio[name=result]:checked').val();
+                if (state == '12') {
+                    reason = this.$content.find("#reason").val();
+                }
+                $.ajax({
+                    type: "post",
+                    url: "{:__URL('PLATFORM_MAIN/goods/ModifyGoodsAudit')}",
+                    data: {"goods_ids": goodsId.toString(), "reason" : reason, "state" : state},
+                    dataType: "json",
+                    async: true,
+                    success: function (data) {
+                        if (data["code"] > 0) {
+                            getgoodscount();
+                            util.message(data["message"], 'success', LoadingInfo($('#pageIndex').val()));
+                        } else {
+                            util.message(data["message"], 'danger', LoadingInfo($('#pageIndex').val()));
+                        }
+                    }
+                });
+            }, function () {
+                click(this.$content);
+            });
+        });
+
+        function click(obj) {
+            obj.find('input:radio[name=result]').on('click', function () {
+                if ($(this).val() == 1) {
+                    obj.find('.reason').addClass('hide');
+                } else {
+                    obj.find('.reason').removeClass('hide');
+                }
+            })
+        }
+        //删除
+        $("body").on('click', '.J-deleteGood', function () {
+            var goodsId = [];
+            if($(this).data('id')&&!isNaN($(this).data('id'))){
+                goodsId.push($(this).data('id'));
+            }else{
+                $("#list input[type = 'checkbox']:checked").each(function(){
+                    if (!isNaN($(this).val())) {
+                        goodsId.push($(this).val());
+                    }
+                })
+            }
+            if(goodsId.length==0){
+                util.message('请选择需要删除的商品','danger');
+                return false;
+            }
+            util.alert('是否删除此商品？', function () {
+                $.ajax({
+                    type: "post",
+                    url: "{:__URL('PLATFORM_MAIN/goods/deletegoods')}",
+                    data: {"goods_ids": goodsId.toString()},
+                    dataType: "json",
+                    async: true,
+                    success: function (data) {
+                        if (data["code"] > 0) {
+                            getgoodscount();
+                            util.message(data["message"], 'success', LoadingInfo($('#pageIndex').val()));
+                        } else {
+                            util.message(data["message"], 'danger', LoadingInfo($('#pageIndex').val()));
+                        }
+                    }
+                });
+            });
+        });
+        
+        getgoodscount();
+        //获取商品各种状态的数量
+        function getgoodscount(){
+            $.ajax({
+                type: "post",
+                url: "{$getShopGoodsCountUrl}",
+                success: function (data) {
+                    $('.J-on').html('('+data.on+')');
+                    $('.J-checking').html('('+data.checking+')');
+                    $('.J-uncheck').html('('+data.uncheck+')');
+                    $('.J-out').html('('+data.out+')');
+                }
+            })
+        }
+        //当经过链接的时候再加载二维码
+        $('body').on('mouseover', '.link-pr', function(){
+            if($(this).attr('mark')){
+                return;
+            }
+            var goods_id = $(this).data('goods_id');
+            
+            var html = '<div class="link-arrow">' +
+            ' <form class="form-horizontal"> ';
+            if('{$wap_status}' == 1){
+                html += '<div class="form-group"> <label class="col-md-2 control-label">手机端</label> <div class="col-md-10"> <div class="input-group"> <input class="form-control" type="text" disabled value="' + __URLS('SHOP_MAIN/wap/goods/detail/' + goods_id) + '"> <span class="input-group-btn btn btn-primary bbllrr0 copy" data-clipboard-text="' + __URLS('SHOP_MAIN/wap/goods/detail/' + goods_id) + '">复制链接</span> </div> </div> </div>';
+            }
+
+            if('{$is_pc_use}' == 1){
+                html += ' <div class="form-group"> <label class="col-md-2 control-label">电脑端</label> <div class="col-md-10"> <div class="input-group"> <input class="form-control" type="text" disabled value="' + __URLS('SHOP_MAIN/goods/goodsinfo&goodsid=' + goods_id) + '"> <span class="input-group-btn btn btn-primary bbllrr0 copy" data-clipboard-text="' + __URLS('SHOP_MAIN/goods/goodsinfo&goodsid=' + goods_id) + '">复制链接</span> </div> </div> </div> ';
+            }
+            if('{$is_minipro}' == 1){
+                html += ' <div class="form-group"> <label class="col-md-2 control-label">小程序端</label> <div class="col-md-10"> <div class="input-group"> <input class="form-control" type="text" disabled value="' + 'pages/goods/detail/index?goodsId=' + goods_id + '"> <span class="input-group-btn btn btn-primary bbllrr0 copy" data-clipboard-text="' + 'pages/goods/detail/index?goodsId=' + goods_id + '">复制链接</span> </div> </div> </div> ';
+            }
+                html += '</form> <div class="flex link-flex"> ';
+            if('{$wap_status}' == 1) {
+                html += '<div class="flex-1"> <div class="mb-04"><img src="' + __URL(PLATFORMMAIN + '/goods/getGoodsDetailQr') + '?goods_id=' + goods_id + '&qr_type=1&wap_path=/wap/goods/detail/" style="width: 100px;height: 100px"></div> <p>(手机端二维码)</p> </div> ';
+            }
+            if('{$is_minipro}' == 1){
+                html += '<div class="flex-1"> <div class="mb-04"><img src="'+ __URL(PLATFORMMAIN + '/goods/getGoodsDetailQr') +'?goods_id='+ goods_id +'&qr_type=2&mp_path=pages/goods/detail/index" style="width: 100px;height: 100px"></div> <p>(小程序二维码)</p> </div>';
+            }
+            html += ' </div> </div>';
+            $(this).find('.link-pos').html(html);
+            $(this).attr('mark', true);
+            mark = true;
+        })
+
+    });
+</script>
+{/block}

@@ -1,0 +1,13 @@
+{
+  "usingComponents": {
+    "phone-compoent": "/pages/component/phone/phonecom",
+    "tem-component": "/pages/component/tem/index",
+    "copyright-component": "/pages/component/copyright/index",
+    "member_fixed-component":"/pages/component/member/member_fixed/index",
+    "member_assets_fixed-component":"/pages/component/member/member_assets_fixed/index",
+    "member_order_fixed-component": "/pages/component/member/member_order_fixed/index",
+    "member_bind_fixed-component": "/pages/component/member/member_bind_fixed/index"
+  },
+  "navigationBarTitleText": "会员中心"
+  
+}

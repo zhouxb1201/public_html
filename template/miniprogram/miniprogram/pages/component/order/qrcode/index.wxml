@@ -1,0 +1,9 @@
+<van-popup custom-style='background: none;' show="{{ boxshow }}"  bind:close="boxCodeClose">
+  <view class='box_code'>
+    <view class='code_img'>
+      <image mode='aspectFit' src='{{code_img}}'></image>
+    </view>
+    <view class='code_num'>{{code_num}}</view>
+    <view class='code_text'>提货码为提货凭证,请妥善保管</view>
+  </view>  
+</van-popup>

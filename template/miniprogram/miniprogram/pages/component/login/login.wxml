@@ -1,0 +1,22 @@
+<van-popup show="{{loginShow}}" position="bottom" z-index='999'>
+  <view class='login' >
+    <view class='title'>
+      <view class='wx_img'>
+        <image src='{{head_img}}'></image>
+      </view>
+      <view class='text'>欢迎来到{{mall_name}}</view>
+    </view>
+    <view class='content'>
+      <view class='info'>为提供优质的服务，{{mall_name}}需要获取以下信息</view>
+      <view class='item'>· 你的公开信息(昵称、头像等）</view>
+    </view>
+    <view class='foot_group'>
+      <button class='sure' type='primary' open-type='getUserInfo' bindgetuserinfo="bindGetUserInfo">确认微信授权</button>
+      <view class='no_sure' bindtap='onLoginClose'>暂不授权</view>
+    </view>
+  </view>
+  </van-popup>
+
+
+
+

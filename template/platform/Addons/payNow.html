@@ -1,0 +1,145 @@
+{extend name="platform/new_base" /}
+{block name="resources"/}
+{/block}
+{block name="main"}
+<div class="payState">
+    <div class="row mb-10">
+        <div class="col-sm-3 text-right"> <i class="icon icon-success"></i> </div>
+        <div class="col-sm-8">订单提交成功，还差最后一步就能完成订购，赶快支付吧~</div>
+    </div>
+    <div class="row mb-10">
+        <div class="col-sm-3"></div>
+        <div class="col-sm-8 fs-12">请在<span class="text-red J-orderTime">00:00:00</span>秒内完成支付，否则订单会被自动关闭。</div>
+    </div>
+    <div class="row mb-10">
+        <div class="col-sm-3 text-right">待支付</div>
+        <div class="col-sm-8"><span class="waitPay">￥{$order_info['pay_money']}</span></div>
+    </div>
+    <div class="row mb-10 border">
+        <div class="col-sm-3 text-right">支付方式</div>
+        <div class="col-sm-8">
+            {if $pay_configs['wchat_pay_config']['is_use'] ==1 || $pay_configs['ali_pay_config']['is_use'] == 1}
+            {if $pay_configs['wchat_pay_config']['is_use']==1}
+            <a href="javascript:void(0);" class="pay_type pay_type1"  data-id="1">
+                <img src="PLATFORM_STATIC/images/wechat1.png" alt="">
+                
+            </a>
+            {/if}
+            {if $pay_configs['ali_pay_config']['is_use']==1}
+            <a href="javascript:void(0);" class="pay_type pay_type2" data-id="2">
+                <img src="PLATFORM_STATIC/images/alipay1.png" alt="">
+            </a>
+            {/if}
+            {else}
+            后台暂未开启支付方式
+            {/if}
+        </div>
+    </div>
+    <div class="payState_code">
+        <!--<img src="http://iph.href.lu/230x230" alt="" class="inline-block payState_code_img">-->
+        <!--<p >请选择支付方式进行扫码支付</p>-->
+        <div class="col-sm" id="code_pays"><span class="waitPay">请选择一种支付方式进行扫码支付！</span></div>
+    </div>
+    <input type="hidden" value="{$order_info['create_time'] | getTimeStampTurnTime}" id="create_time" />
+    <input type="hidden" value="30" id="buy_close_time" />
+    <input type="hidden" value="{$order_info['out_trade_no']}" id="out_trade_no" />
+</div>
+{/block}
+
+{block name="script"}
+<script>
+require(['util'],function(util){
+    countdown();
+    interval = setInterval(countdown, 1000);
+    function countdown() {
+        var date = new Date($("#create_time").val().replace(/\-/g, "\/"));//订单创建时间
+        var buy_close_time = parseFloat($("#buy_close_time").val()) * 60 * 1000;//订单关闭时间
+        date.setDate(date.getDate() + 1);
+        var date_now = new Date($.ajax({async: false}).getResponseHeader("Date"));//当前时间
+        var end_time = date.getTime() + buy_close_time; //结束时间毫秒数
+        var lag = (end_time - date_now.getTime()) / 1000; //当前时间和结束时间之间的秒数
+        payStatus();
+        if (lag > 0) {
+            var hour = Math.floor((lag / 3600) % 24);
+            var minute = Math.floor((lag / 60) % 60);
+            var second = Math.floor(lag % 60);
+            if (hour == 0 && second == 0 && minute == 0) {
+                clearInterval(interval);
+                window.location.reload();
+            }
+            if (second < 10) {
+                second = "0" + second;
+            }
+            if (minute < 10) {
+                minute = "0" + minute;
+            }
+            if (hour < 10) {
+                hour = "0" + hour;
+            }
+            $(".J-orderTime").text(hour + ":" + minute + ":" + second);
+        }
+    }
+    function payStatus() {
+        var out_trade_nos = $("#out_trade_no").val();
+        $.ajax({
+            type: "post",
+            url: "{:__URL('PLATFORM_MAIN/pay/wchatQrcodePay')}",
+            data: {
+                out_trade_no: out_trade_nos
+            },
+            success: function (data) {
+                if (data['code'] > 0) {
+                   util.message('支付成功！','success');
+                    location.href="{:__URL('PLATFORM_MAIN/addonslist/incrementOrderList')}"
+                }
+            }
+        })
+    }
+    $('.pay_type1').on('click',function(){
+        // var pay_type = $(this).data('id');
+        var out_trade_nos = $("#out_trade_no").val();
+        // if(pay_type==1){
+            $(this).addClass('sel');
+            $(this).siblings('.pay_type2').removeClass('sel');
+            $.ajax({
+                type: "post",
+                url: "{:__URL('PLATFORM_MAIN/pay/wchatPay')}",
+                data: {
+                    no: out_trade_nos
+                },
+                success: function (data) {
+                    if (data['code'] > 0) {
+                    var str = '<img alt=\'\' class=\'inline-block payState_code_img\' src='+__IMG(data['message'])+'><p>微信二维码</p>';
+                    $("#code_pays").hide();
+                    $(".payState_code").html(str);
+                    }else{
+                        util.message('二维码生成失败！','danger');
+                    }
+                }
+            })
+        // }
+    })
+    $('.pay_type2').on('click',function(){
+        var out_trade_nos = $("#out_trade_no").val();
+            $(this).addClass('sel');
+            $(this).siblings('.pay_type1').removeClass('sel');
+            $.ajax({
+                type: "post",
+                url: "{:__URL('PLATFORM_MAIN/pay/aliPay')}",
+                data: {
+                    no: out_trade_nos
+                },
+                success: function (data) {
+                    if (data['code'] > 0) {
+                        var str = '<img alt=\'\' class=\'inline-block payState_code_img\' src='+__IMG(data['message'])+'><p>支付宝二维码</p>';
+                        $("#code_pays").hide();
+                        $(".payState_code").html(str);
+                    }else{
+                        util.message('二维码生成失败！','danger')
+                    }
+                }
+            })
+    })
+})
+</script>
+{/block}

@@ -1,0 +1,24 @@
+<div class="goods-dialog" id="goods-dialog">
+    <div class="dialog-box tab-content">
+        <div role="tabpanel" class="tab-pane fade in active" id="list">
+            <div id="product_sku" class="">
+                <div class="form-group">
+                    <label class="col-md-4 control-label">报名条件（满足{if $is_condition == 1}全部{else}一项{/if}）：</label>
+                    <div class="col-md-8">
+                        <!--<textarea class="form-control" rows="6" cols="5" name="del_goods_info" id="del_goods_info"></textarea>-->
+                        {foreach name='apply_condition' item='applay_val'}
+                        <p>{$applay_val}</p>
+                        {/foreach}
+                    </div>
+                    <!--<div class="sele-goods-info" style=""></div>-->
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+require(['util'],function(util){
+
+})
+</script>

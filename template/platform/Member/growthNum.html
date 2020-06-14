@@ -1,0 +1,91 @@
+{extend name="platform/new_base" /}
+{block name="resources"/}
+{/block}
+{block name="main"}
+<form action="" class="form-horizontal form-validate pt-15 widthFixedForm">
+    <div class="form-group">
+        <label class="col-md-2 control-label">订单完成加成长值</label>
+        <div class="col-md-5">
+            <div class="input-group">
+            <input type="number" class="form-control" id="complete_num" value="{$growth_info['complete_num']}">
+                <div class="input-group-addon">成长值</div>
+            </div>
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="col-md-2 control-label">充值成功加成长值</label>
+        <div class="col-md-5">
+            <div class="input-group">
+                <input type="number" id="recharge_money" class="form-control number-form-control"  value="{$growth_info['recharge_money']}">
+                <div class="input-group-addon">元，增加</div>
+                <input type="number" id="recharge_num" class="form-control number-form-control"  value="{$growth_info['recharge_num']}">
+                <div class="input-group-addon">成长值</div>
+                <div class="input-group-addon"> <input type="checkbox" id="recharge_multiple" name="recharge_multiple" {if $growth_info['recharge_multiple']==2}checked{/if} class="number-form-control">倍数递增</div>
+            </div>
+            <p class="help-block">勾选倍数递增后，达到充值金额整数倍时将会翻倍增加。例如：消费100加10，消费200加20，消费300加30，以此类推。</p>
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="col-md-2 control-label">单次消费满</label>
+        <div class="col-md-5">
+            <div class="input-group">
+                <input type="number" id="order_money" class="form-control number-form-control"  value="{$growth_info['order_money']}">
+                <div class="input-group-addon">元，增加</div>
+                <input type="number" id="pay_num" class="form-control number-form-control"  value="{$growth_info['pay_num']}">
+                <div class="input-group-addon">成长值</div>
+                <div class="input-group-addon"> <input type="checkbox" id="order_multiple"  name="order_multiple" {if $growth_info['order_multiple']==2}checked{/if} class="number-form-control">倍数递增</div>
+            </div>
+            <p class="help-block">勾选倍数递增后，达到消费金额整数倍时将会翻倍增加。例如：消费100加10，消费200加20，消费300加30，以此类推。</p>
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="col-md-2 control-label"></label>
+        <div class="col-md-8">
+            <button class="btn btn-primary add" type="submit">添加</button>
+            <!--<a href="javascript:history.go(-1);" class="btn btn-default">返回</a>-->
+        </div>
+    </div>
+</form>
+{/block}
+{block name="script"}
+<script>
+require(['util'],function(util){
+    util.validate($('.form-validate'),function(form){
+            var pay_num = $("#pay_num").val();
+            var complete_num = $("#complete_num").val();
+            var recharge_money = $("#recharge_money").val();
+            var recharge_num = $("#recharge_num").val();
+            var order_money = $("#order_money").val();
+            var recharge_multiple= $("input[name='recharge_multiple']").is(':checked')? 2 : 1;
+            var order_multiple= $("input[name='order_multiple']").is(':checked')? 2 : 1;
+            if(pay_num || complete_num || recharge_num){
+                $.ajax({
+                    type : "post",
+                    url : "{:__URL('PLATFORM_MAIN/Member/growthNum')}",
+                    async : false,
+                    data : {
+                        "pay_num" : pay_num,
+                        "complete_num" :complete_num,
+                        "recharge_num" : recharge_num,
+                        "recharge_money" : recharge_money,
+                        "order_money" : order_money,
+                        "recharge_multiple":recharge_multiple,
+                        "order_multiple":order_multiple
+                    },
+                    success : function(data) {
+                        if (data["code"] > 0) {
+                            util.message(data["message"],'success', "{:__URL('PLATFORM_MAIN/Member/growthNum')}");
+                        }else{
+                            util.message(data["message"],'danger');
+                        }
+                    }
+                });
+            }else{
+                util.message('成长值不能都为空','danger')
+            }
+
+        })
+    })
+
+</script>
+{/block}

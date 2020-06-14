@@ -1,0 +1,18 @@
+<view wx:if="{{list.length > 0}}">
+	<view class="item" wx:for="{{list}}" wx:key="index" wx:for-item="item">
+		<view class="h4">{{time.formatDate(item.create_time)}}</view>
+		<view class="cell-group-box">
+			<view class="title">{{item.title}}</view>
+			<view class="text">{{item.content}}</view>
+		</view>
+	</view>
+</view>
+<view class="no_good" wx:else>
+	<view class="box">
+		<view class="img">
+			<image mode="widthFix" src="/images/empty-data.png"></image>
+		</view>
+		<view class="text">暂无数据~</view>
+	</view>
+</view>
+<wxs src="../grapDetail/time.wxs" module="time" />

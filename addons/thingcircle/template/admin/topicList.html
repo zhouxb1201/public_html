@@ -1,0 +1,94 @@
+<div class="goods-dialog" id="goods-dialog">
+    <ul class="nav nav-tabs v-nav-tabs pt-15" role="tablist">
+        <li role="presentation" class="active"><a href="#list" aria-controls="list" role="tab" data-toggle="tab" class="flex-auto-center">话题列表</a></li>
+        <div class="input-group search-input-group pull-right">
+            <input type="text" class="form-control" name="name" placeholder="话题名称">
+            <span class="input-group-btn"><button class="btn search search-color" >搜索</button></span>
+        </div>
+    </ul>
+    <div class="dialog-box tab-content">
+        <div role="tabpanel" class="tab-pane fade in active" id="list">
+            <table class="table v-table table-auto-center">
+                <thead>
+                <tr>
+                    <th>一级话题</th>
+                    <th>二级话题</th>
+                    <th width="150">操作</th>
+                </tr>
+                </thead>
+                <tbody id="content"></tbody>
+            </table>
+            <nav aria-label="Page navigation" class="clearfix">
+                <ul id="page_goods" class="pagination pull-right"></ul>
+            </nav>
+        </div>
+    </div>
+    <input type="hidden" id="selectedData">
+</div>
+<script id='topic_tpl_content' type='text/html'>
+    <%each data as item itemid%>
+    <tr>
+        <td>
+            <div class="media text-align">
+                <div class="media-body max-w-300">
+                    <div class="line-2-ellipsis"><%if item.superiors_id == 0%><span class="btn btn-sm" style="padding:2px 5px"><%item.topic_title%></span>&nbsp;<%else%><span class="btn btn-sm" style="padding:2px 5px"><%item.stopic_title%></span>&nbsp;<%/if%></div>
+                </div>
+            </div>
+        </td>
+        <td>
+            <div class="media text-align">
+                <div class="media-body max-w-300">
+                    <div class="line-2-ellipsis"><%if item.superiors_id != 0%><span class="btn btn-sm" style="padding:2px 5px"><%item.topic_title%></span>&nbsp;<%/if%></div>
+                </div>
+            </div>
+        </td>
+        <td>
+            <a href="javascript:;" class="text-primary selec_btn" data-topic_title="<%item.topic_title%>" data-topic_id="<%item.topic_id%>" >选择</a>
+        </td>
+    </tr>
+    <%/each%>
+</script>
+<script>
+    require(['utilAdmin','tpl'],function(utilAdmin,tpl){
+        //$('.btn-primary').hide();
+        //$('.btn-default').hide();
+        var page_index = 1;
+        var all_data = {};
+        utilAdmin.initPage(LoadingInfo,'page_goods')
+        function LoadingInfo(page_index){
+            var val = $('input[name="name"]').val();
+            $.ajax({
+                type: "post",
+                url: "{$selectTopicList}",
+                async: true,
+                data: {
+                    "page_index": page_index,
+                    "search_text": val
+                },
+                success: function (data) {
+                    all_data = data;
+                    $('#goods-dialog #content').html(tpl('topic_tpl_content',all_data));
+                    $('#page_goods').paginator('option', {
+                        totalCounts: data.total_count
+                    });
+                }
+            });
+        }
+        // 搜索
+        $('.search').on('click',function(){
+            LoadingInfo(1);
+        });
+        // 选择
+        $('#goods-dialog').on('click','.selec_btn',function(){
+            var topic_id = $(this).data('topic_id');
+            var topic_title = $(this).data('topic_title');
+            //var pic_cover = $(this).data('img');
+
+            var html = '';
+            html += '<input type="hidden" name="topic_id" id="topic_id" value="' + topic_id +'">';
+            $("#topic").append(html);
+            $("#topic").val(topic_title);
+            $('.jconfirm-closeIcon').click();
+        });
+    })
+</script>

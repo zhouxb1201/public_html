@@ -1,0 +1,73 @@
+page{
+  background-color: #f8f8f8;
+  font-size: 28rpx;
+  color: #323233;
+}
+
+.list{
+  background-color: #fff;
+}
+.list .item{
+  display: flex;
+  align-items: center;
+  padding: 20rpx 30rpx;
+  border-bottom: 1px solid #ebedf0;
+}
+.list .item .good_l{
+  display: flex;  
+  flex: 1;
+}
+.list .item .good_l .good_img{
+  width: 180rpx;
+  height: 180rpx;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  margin-right: 20rpx;
+}
+.list .item .good_l .good_info{
+  position: relative;
+  font-size: 24rpx;
+  flex: 1;
+  margin-right: 20rpx;
+}
+.list .item .good_l .good_info .good_name{
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: -webkit-box;
+  -webkit-line-clamp:2;
+  -webkit-box-orient: vertical;
+  height: 80rpx;
+}
+.list .item .good_l .good_info .good_num{
+  position: absolute;
+  bottom: 0;
+  width: 100%;
+  text-align: right;
+}
+.list .item .good_r{
+  display: flex;
+  align-items: center;
+  border-left: 1px solid #ebedf0;
+}
+.list .item .good_r .good_detail .text_icon{
+  font-size: 48rpx;
+}
+.list .item .good_r .cell{
+  padding: 20rpx 10rpx 20rpx 20rpx;
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+}
+.list .item .good_r .cell .icon{
+  margin: 4rpx;
+}
+
+.no_more{
+  padding: 40rpx;
+  color: #606266;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}

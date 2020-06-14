@@ -1,0 +1,32 @@
+page{
+  font-size: 28rpx;
+  background-color: #f8f8f8;
+}
+.logistics{
+  padding-bottom: 160rpx;
+}
+.logistics_header{
+  background-color: #fff;
+  padding: 20rpx 30rpx;
+  display: flex;
+  margin-bottom: 20rpx;
+}
+.logistics_header .logistics_logo{
+  width: 220rpx;
+  height: 100rpx;
+  margin-right: 20rpx;
+  line-height: 100rpx;
+}
+.logistics_header .logistics_group{
+  font-size: 24rpx;
+  line-height: 48rpx;
+}
+.packet{
+  display: flex;
+}
+.packet .packet_name{
+  background-color: #fff;
+  padding: 10rpx 15rpx;
+  margin-right: 5rpx;
+  border-radius: 10rpx 10rpx 0 0;
+}

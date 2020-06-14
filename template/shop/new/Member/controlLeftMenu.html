@@ -1,0 +1,88 @@
+<div class="v-main-left fl">
+
+  <div class="info clearfix">
+    <div class="info-avatar-wrapper fl">
+      <a class="member-home" href="javascript:void(0);" target="_self">
+        <img class="member-avatar" src="{if $member_info.user_info.user_headimg}{:__IMG($member_info.user_info.user_headimg)}{else}__TEMP__/shop/new/public/image/0000000000_21_120x120.jpg{/if}" width="50px" height="50px">
+      </a>
+    </div>
+    <div class="info-desc fl">
+      <div class="username"><a href="javascript:void(0);">{if $member_info.user_info.user_name}{$member_info.user_info.user_name}{else if $member_info.user_info.nick_name}{$member_info.user_info.nick_name}{/if}</a></div>
+      <div class="vip"><span>{$member_info.level_name}</span></div>
+      <div class="exit"><a href="javascript:void(0);" class="J-logout"><i class="icon icon-logout"></i> 安全退出</a></div>
+    </div>
+  </div>
+
+  <div class="navs-list">
+    <dl>
+      <dt>
+        <a href="javascript:void(0);">
+          <i class="icon icon-cart2"></i>
+          交易中心
+        </a>
+      </dt>
+      <dd><a href="{:__URL('SHOP_MAIN/member/orderlist')}">我的订单<i class="icon icon-dir-right3 right"></i></a></dd>
+      <dd><a href="{:__URL('SHOP_MAIN/member/backlist')}">退货/退款订单<i class="icon icon-dir-right3 right"></i></a></dd>
+      <dd><a href="{:__URL('SHOP_MAIN/member/goodsevaluationlist')}">商品评价/晒单<i class="icon icon-dir-right3 right"></i></a></dd>
+    </dl>
+    <dl>
+      <dt><a href="javascript:void(0);">
+        <i class="icon icon-financial"></i>
+        资产中心</a></dt>
+      <dd><a href="{:__URL('SHOP_MAIN/member/balancelist')}">账号{$copystyle['balance_style']}<i class="icon icon-dir-right3 right"></i></a></dd>
+      <dd><a href="{:__URL('SHOP_MAIN/member/integrallist')}">我的{$copystyle['point_style']}<i class="icon icon-dir-right3 right"></i></a></dd>
+      {if $isCoupon==1}
+      <dd><a href="{:__URL('ADDONS_SHOP_MAIN','addons=couponList')}">我的优惠券<i class="icon icon-dir-right3 right"></i></a></dd>
+      {/if}
+      <dd><a href="{:__URL('SHOP_MAIN/member/accountList')}">提现账号<i class="icon icon-dir-right3 right"></i></a></dd>
+    </dl>
+    {if $distributionStatus==1}
+    {if $member_info['isdistributor']==2}
+    <dl>
+      <dt><a href="javascript:void(0);">
+        <i class="icon icon-sharing"></i>
+        分销分红</a></dt>
+      <dd><a href="{:__URL('ADDONS_SHOP_MAIN','addons=distributionIndex')}"><span id="distribution_name">{if $distribution_name}{$distribution_name}{else}分销中心{/if}</span><i class="icon icon-dir-right3 right"></i></a></dd>
+      {if $bonusStatus ==1}
+      {if $member_info['is_global_agent']==2 || $member_info['is_area_agent']==2 || $member_info['is_team_agent']==2}
+      <dd><a href="{:__URL('SHOP_MAIN/member/bonusIndex')}">{if $bonus_set['bonus_name']}{$bonus_set['bonus_name']}{else}分红中心{/if}<i class="icon icon-dir-right3 right"></i></a></dd>
+      {/if}
+      {/if}
+    </dl>
+    {/if}
+    {/if}
+    <dl>
+      <dt><a href="javascript:void(0);">
+        <i class="icon icon-follow"></i>
+        关注中心</a></dt>
+      <dd><a href="{:__URL('SHOP_MAIN/member/goodscollectionlist')}">商品收藏<i class="icon icon-dir-right3 right"></i></a></dd>
+      {if $shopStatus==1}
+      <dd><a href="{:__URL('ADDONS_SHOP_MAIN','addons=shopCollectionList')}">店铺收藏<i class="icon icon-dir-right3 right"></i></a></dd>
+      {/if}
+    </dl>
+    <dl>
+      <dt><a href="javascript:void(0);">
+        <i class="icon icon-vip3"></i>
+        会员信息</a></dt>
+      <dd><a href="{:__URL('SHOP_MAIN/member/person')}">个人信息<i class="icon icon-dir-right3 right"></i></a></dd>
+      <dd><a href="{:__URL('SHOP_MAIN/member/addresslist')}">收货地址<i class="icon icon-dir-right3 right"></i></a></dd>
+    </dl>
+  </div>
+
+</div>
+<script>
+    require(['dialog'], function (Dialog) {
+        $(function () {
+            var path_info = '{$path_info}';
+            var hook_name = '{$hook_name}';
+            $('.navList>dd').removeClass('active');
+            var reg = RegExp(/member/);
+            if(hook_name!=''){
+                $("[href='{:__URL('ADDONS_SHOP_MAIN','addons='.$hook_name.'')}']").addClass('active');
+            }
+            if (reg.test(path_info)) {
+                $("[href='{:__URL('SHOP_MAIN'.$path_info)}']").addClass('active');
+            }
+        })
+    });
+</script>

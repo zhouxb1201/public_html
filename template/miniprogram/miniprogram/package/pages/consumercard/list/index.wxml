@@ -1,0 +1,34 @@
+<view class='consumer_card'>
+  <van-tabs active="{{ active }}" bind:change="onConsumerCardChange">
+    <van-tab title="可使用"></van-tab>
+    <van-tab title="已使用"></van-tab>
+    <van-tab title="已过期"></van-tab>
+  </van-tabs>
+
+
+  <view class='no_data' wx:if='{{card_list.length == 0}}'>
+    <view class='no_data_box'>
+      <view class='img'>
+        <image src='/images/empty-data.png' mode='widthFix'></image>
+      </view>
+      <view class='no_data_text'>没有相关数据</view>
+    </view>
+  </view>
+  <view class='consumer_card_list' wx:else>
+    <view class="item {{state == 0 ? 'active' : 'normal' }} {{item.type == 1?'active_1':''}}" wx:for="{{card_list}}" wx:key='' data-cardid='{{item.card_id}}' bindtap='onDetailPage'>
+      <view class='info'>
+       <view class='name'>{{item.goods_name}}</view>
+        <view class='time'>有效期至：{{item.invalid_time}}</view>
+      </view>
+      <view class='num'>
+        <view>
+          <text wx:if='{{item.type == 2}}'>剩余次数</text>
+          <text wx:if='{{item.type == 1}}'>剩余天数</text>
+        </view>
+        <view class='strong'>{{item.surplus_num}}</view>
+      </view>
+    </view>
+  </view>
+  
+  
+</view>

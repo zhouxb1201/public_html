@@ -1,0 +1,73 @@
+{block name="main"}
+			<!-- page -->
+			<div class="screen-title">
+				<span class="text">基本信息</span>
+			</div>
+			<div class="row panel-detail">
+				<div class="col-md-6">
+					<div class="item h-auto">
+						<div class="media">
+							<div class="media-left">
+								<img src="{:__IMG($info['user_headimg'])}" width="160px" height="160px" >
+							</div>
+							<input type="hidden" id="uid" value="{$info['uid']}">
+							<div class="media-body">
+								<p class="p"><span class="text-label">ID：</span>{$info['uid']}</p>
+								<p class="p"><span class="text-label">昵称：</span>{$info['member_name']}</p>
+								<div class="p">
+									<p class="p"><span class="text-label">手机号码：</span>{$info['mobile']}</p>
+								</div>
+								<div class="p">
+									<span class="text-label">店主等级：</span>
+									<select id="level" class="form-control select-form-control inline-block">
+										{foreach name="Shopkeeper_level" item="value"}
+										<option value="{$value.id}" {if $info['microshop_level_id']==$value.id}selected{/if}>{$value.level_name}</option>
+										{/foreach}
+									</select>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="col-md-6">
+					<div class="item h-auto">
+						<div class="media-body">
+							<p class="p">累积收益：{if $info['total_profit']}{$info['total_profit']}{else}0.00{/if}</p>
+							<p class="p">可用收益：{if $info['profit']}{$info['profit']}{else}0.00{/if}</p>
+							<p class="p">已提收益：{if $info['withdrawals']}{$info['withdrawals']}{else}0.00{/if}</p>
+							<p class="p">成为店主时间：{$info['become_shopkeeper_time']}</p>
+						</div>
+					</div>
+				</div>
+			</div>
+			<!-- page end -->
+{/block}
+{block name="script"}
+<script>
+    require(['util'],function(util){
+        // 修改等级
+        $('#level').on('change',function(){
+            var level_id = $(this).val();
+            var uid = $('#uid').val();
+            util.alert('是否修改会员等级？',function(){
+                $.ajax({
+                    type : "post",
+                    url : "{$updateLevelUrl}",
+                    async : true,
+                    data : {
+                        "uid" : uid,
+                        "level_id":level_id,
+                    },
+                    success : function(data) {
+                        if (data["code"] > 0) {
+                            util.message(data["message"],'success',location.reload());
+                        }else{
+                            util.message(data["message"],'danger');
+                        }
+                    }
+                });
+            })
+        })
+    })
+</script>
+{/block}

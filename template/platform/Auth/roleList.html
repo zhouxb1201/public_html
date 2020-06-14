@@ -1,0 +1,95 @@
+{extend name="platform/new_base" /}
+{block name="resources"/}
+{/block}
+{block name="main"}
+                <!-- page -->
+                <div class="mb-20 flex flex-pack-justify">
+                    <div class="">
+                        <a href="{:__URL('PLATFORM_MAIN/Auth/addAuthGroup')}" class="btn btn-primary"><i class="icon icon-add1"></i> 添加角色</a>
+                    </div>
+                    <div class="input-group search-input-group">
+                        <input type="text" class="form-control" placeholder="角色名">
+                        <span class="input-group-btn"><button class="btn btn-primary search">搜索</button></span>
+                    </div>
+                </div>
+                <table class="table v-table table-auto-center">
+                    <thead>
+                        <tr>
+                            <th>角色名</th>
+                            <th class="col-md-2 pr-14 operationLeft">操作</th>
+                        </tr>
+                    </thead>
+                    <tbody id="list">
+
+                    </tbody>
+                </table>
+                <nav aria-label="Page navigation" class="clearfix">
+                    <ul id="page" class="pagination pull-right"></ul>
+                </nav>
+                <!-- page end -->
+{/block}
+{block name="script"}
+<script>
+require(['util'],function(util){
+    util.initPage(getAuthList);
+    function getAuthList(page_index){
+        var search_text = $("#search_text").val();
+        $.ajax({
+            type : "post",
+            url : "{:__URL('PLATFORM_MAIN/auth/authGroupList')}",
+            async : true,
+            data : {
+                "page_index" : page_index, "search_text" : search_text
+            },
+            success : function(data) {
+                var html = '';
+                if (data["data"].length > 0) {
+                    for (var i = 0; i < data["data"].length; i++) {
+                        html += '<tr>';
+                        html += '<td >' + data["data"][i]["group_name"] + '</td>';
+                        if(data['data'][i]['is_system'] == 1){
+                            html += '<td class="operationLeft">超级管理员不能修改</a>';
+                        }else{
+                            html += '<td class="operationLeft"><a class="btn-operation" href="'+__URL('PLATFORM_MAIN/Auth/updateAuthGroup?group_id=' + data["data"][i]["group_id"] +'')+'">编辑</a><a href="javascript:void(0);" class="btn-operation del text-red1" data-id="'+data["data"][i]["group_id"]+'">删除</a></td>';
+                        }
+                        html += '</tr>';
+                    }
+                } else {
+                    html += '<tr><th colspan="2">暂无符合条件的数据记录</th></tr>';
+                }
+                $('#page').paginator('option', {
+                    totalCounts: data['total_count']  // 动态修改总数
+                });
+                $("#list").html(html);del();
+                util.tips();
+            }
+        });
+    }
+    $('.search').on('click',function(){
+        util.initPage(getAuthList);
+    });
+    function del(){
+        $('.del').click(function(e){
+            var group_id = $(this).data('id');
+            util.alert('是否确定删除此角色吗？',function(){
+                $.ajax({
+                    type : "post",
+                    url : "{:__URL('PLATFORM_MAIN/Auth/deleteSystemUserGroup')}",
+                    async : true,
+                    data : {
+                        "group_id" : group_id
+                    },
+                    success : function(data) {
+                        if (data["code"] > 0) {
+                            util.message(data["message"],'success',getAuthList());
+                        }else{
+                            util.message(data["message"],'danger');
+                        }
+                    }
+                });
+            })
+        })
+    }
+})
+</script>
+{/block}

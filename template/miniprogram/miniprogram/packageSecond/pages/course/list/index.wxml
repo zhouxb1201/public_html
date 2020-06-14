@@ -1,0 +1,38 @@
+<view class="head_box">
+	<view class="head_search">
+		<view class="search_box">
+			<view class="iconfont v-icon-search"></view>
+			<input class="search_input" placeholder="课程名称" bindconfirm="searchContent"></input>
+		</view>
+	</view>
+</view>
+<view class="content_box">
+	<view class="list" wx:if="{{course_list != ''}}">
+		<view class="card-group-box" wx:for="{{course_list}}" wx:key="">
+			<view class="cell">
+				<view class="cell__value">
+					<view class="card">
+						<view class="card__thumb">
+							<image mode="widthFix" src="{{item.goods_picture != '' ? item.goods_picture : '/images/no-goods.png'}}"></image>
+						</view>
+						<view class="card__content">
+							<view class="card__title">{{item.goods_name}}</view>
+							<view class="card__bottom">
+								<view class="card__price-group"><text class="card__price">共{{item.total_count}}节</text></view>
+								<view class="card__btn">
+									<button data-goodsid="{{item.goods_id}}}" bindtap="onStudy">前往学习</button>
+								</view>
+							</view>
+						</view>
+					</view>
+				</view>
+			</view>
+		</view>
+	</view>
+	<view wx:else class="empty">
+		<view class="prt">
+			<image mode="widthFix" src="/images/empty-goods.png"></image>
+			<view class="text">暂无课程</view>
+		</view>
+	</view>
+</view>

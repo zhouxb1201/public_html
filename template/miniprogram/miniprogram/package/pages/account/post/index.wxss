@@ -1,0 +1,51 @@
+page{
+  background-color: #f8f8f8;
+  font-size: 28rpx;
+}
+.areaCode{
+  padding: 0  20rpx 0 0;
+}
+.group{
+  background-color: #fff;
+}
+.cell{
+  display: flex;
+  padding: 20rpx 30rpx;
+  align-items: center;
+  border-bottom: 1px solid #ebedf0;
+}
+.cell .title{
+  width: 180rpx;
+}
+.cell .value{
+  flex: 1;
+}
+
+.phone_code{
+  position: relative;
+}
+.v_code{
+  position: absolute;
+  right: 0;
+  top: -10rpx;
+  font-size: 22rpx;
+  border-radius: 50rpx;
+  color: red;
+  border: 1px solid red;
+  background-color: #fff;
+  z-index: 99;
+}
+.d_code{
+  border: 1px solid rgba(182, 179, 179, 0.171);
+}
+
+.foot{
+  padding: 80rpx 30rpx;
+}
+.foot_btn{
+  background-color: #f44;
+  color: #fff;
+  height: 80rpx;
+  line-height: 80rpx;
+  text-align: center;
+}

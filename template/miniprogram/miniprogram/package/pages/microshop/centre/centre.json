@@ -1,0 +1,8 @@
+{
+  "usingComponents": {
+    "Mine":"../component/mine/mine",
+    "Post": "../component/post/post",
+    "login-component": "/pages/component/login/login"
+  },
+  "navigationBarTitleText": "我的微店"
+}

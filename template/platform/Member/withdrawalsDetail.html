@@ -1,0 +1,70 @@
+<form class="form-horizontal padding-15" id="">
+    <div class="form-group">
+        <label class="col-md-3 control-label">提现流水号</label>
+        <div class="col-md-8">
+            <p class="form-control-static">{$list["withdraw_no"]}</p>
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="col-md-3 control-label">提现类型</label>
+        <div class="col-md-8">
+            <p class="form-control-static">{if $list["type"]==1 || $list["type"]==4}银行卡{elseif $list["type"]==2}微信{elseif $list["type"]==3}支付宝{/if}</p>
+        </div>
+    </div>
+    {if $list["type"]==1 || $list["type"]==4}
+    <div class="form-group">
+        <label class="col-md-3 control-label">银行名称</label>
+        <div class="col-md-8">
+            <p class="form-control-static">{$list["open_bank"]}</p>
+        </div>
+    </div>
+    {/if}
+    <div class="form-group">
+        <label class="col-md-3 control-label">提现账户</label>
+        <div class="col-md-8">
+            <p class="form-control-static">{$list["account_number"]}</p>
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="col-md-3 control-label">会员信息</label>
+        <div class="col-md-8">
+            <p class="form-control-static">{$list["realname"]}</p>
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="col-md-3 control-label">提现金额</label>
+        <div class="col-md-8">
+            <p class="form-control-static">{$list["cash"]}</p>
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="col-md-3 control-label">提现手续费</label>
+        <div class="col-md-8">
+            <p class="form-control-static">{$list["charge"]}</p>
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="col-md-3 control-label">申请时间</label>
+        <div class="col-md-8">
+            <p class="form-control-static">{$list["ask_for_date"]}</p>
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="col-md-3 control-label">到账时间</label>
+        <div class="col-md-8">
+            <p class="form-control-static">{$list["payment_date"]}</p>
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="col-md-3 control-label">状态</label>
+        <div class="col-md-8">
+            <p class="form-control-static">{if $list["status"]==1}审核中{elseif $list["status"]==2}待打款{elseif $list["status"]==-1}审核不通过{elseif $list["status"]==3}已打款{elseif $list["status"]==4}拒绝打款{elseif $list["status"]==5}打款失败{/if}</p>
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="col-md-3 control-label">备注</label>
+        <div class="col-md-8">
+            <p class="form-control-static">{if $list["memo"]}{$list["memo"]}{else}无{/if}</p>
+        </div>
+    </div>
+</form>

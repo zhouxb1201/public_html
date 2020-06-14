@@ -1,0 +1,89 @@
+/* 图片橱窗css */
+.picturew{
+  position: relative;
+  overflow: hidden;
+  background-color: #fff;
+}
+.picturew .vui-cube{
+  display: flex;
+  height: 376rpx;
+}
+.picturew .vui-cube .vui-cube-left{
+  width: 50%;
+  height: 100%
+}
+.picturew .vui-cube .vui-cube-left .image{
+  width: 100%;
+  height: 100%;
+}
+.picturew .vui-cube .vui-cube-right{
+  width: 50%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+}
+.picturew .vui-cube .vui-cube-right .vui-cube-right1{
+  height: 50%;
+}
+.picturew .vui-cube .vui-cube-right .vui-cube-right1 .image{
+  width: 100%;
+  height: 100%;
+}
+.picturew .vui-cube .vui-cube-right .vui-cube-right2{
+  display: flex;
+  width: 100%;  
+}
+.picturew .vui-cube .vui-cube-right .vui-cube-right2 .vui-cube-right2-item{
+  width: 100%;
+}
+.picturew .vui-cube .vui-cube-right .vui-cube-right2 .vui-cube-right2-item .image{
+  width: 100%;
+  height: 100%;
+}
+.picturew .vui-cube .vui-cube-right .vui-cube-right3{
+  display: flex;
+  width: 100%;  
+  height: 100%;
+  flex-direction: column;
+}
+.picturew .vui-cube .vui-cube-right .vui-cube-right3 .image{
+  height: 100%;
+  width: 100%;
+}
+.vui-cube-right4{
+  display: flex;
+  width: 100%;  
+  height: 100%;
+  flex-direction: column;
+}
+.vui-cube-right4 .image1{
+  height: 50%;
+  width: 100%;
+}
+.picturew .row-2 .item{
+  box-sizing: border-box;
+  width: 50%;
+}
+.picturew .row-3 .item{
+  box-sizing: border-box;
+ width: 33.33%;
+}
+.picturew .row-4 .item{
+  box-sizing: border-box;
+  width: 25%;
+}
+.picturew .item{
+  display: block;
+  float: left;
+  height: auto;
+} 
+.picturew  .item .image{
+  display: inline-block;
+  max-width: 100%;
+  max-height: 100%;
+}
+.picturew  .row-2 .item .image{
+  display: inline-block;
+  max-width: 100%;
+  max-height: 100%;
+}

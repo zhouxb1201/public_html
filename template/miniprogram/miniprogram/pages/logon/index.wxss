@@ -1,0 +1,56 @@
+page{
+  font-size: 28rpx;
+}
+
+.logon_btn{
+  position: fixed;
+  height: 80%;
+  width: 100%;
+  display:flex;
+  flex-direction:column;
+  align-items:center;/*垂直居中*/
+  justify-content: center;/*水平居中*/
+}
+button{
+  width: 658rpx;
+}
+.phone_logon{
+  margin-top: 40rpx;
+}
+
+.mini_img{
+  width: 180rpx;
+  height: 180rpx;
+  border-radius: 50%;
+  overflow: hidden;
+  margin-bottom: 40rpx;
+}
+.mini_img image{
+  width: 100%;
+  height: 100%;
+}
+.content{
+  text-align: center;
+}
+.content .title{
+  font-size: 36rpx;
+  font-weight: 500;
+  line-height: 48rpx;
+  margin-bottom: 20rpx;
+}
+.content .text{
+  line-height: 48rpx;
+  margin-bottom: 20rpx;
+}
+.content .message{
+  font-size: 24rpx;
+  color: rgba(141, 140, 140, 0.678);
+  line-height: 48rpx;
+  margin-bottom: 40rpx;
+}
+
+.btn_sure{
+  background-color: #57bf6a;
+  color: #fff;
+  border-radius: 50rpx;
+}

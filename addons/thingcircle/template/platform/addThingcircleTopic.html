@@ -1,0 +1,134 @@
+{block name="resource"}
+<style>
+    .label-danger a{padding-top:5px;}
+</style>
+{/block}
+{block name="main"}
+                <!-- page -->
+                <form class="form-horizontal pt-15 form-validate widthFixedForm">
+                    {:token()}
+                    <div class="form-group">
+                        <label class="col-md-2 control-label"><span class="text-bright">*</span>话题名称</label>
+                        <div class="col-md-5">
+                            <input type="text" class="form-control" id="topic_title" name="topic_title" required>
+                        </div>
+                    </div>
+                    {if $topic_state == 1}
+                    <div class="form-group J-cate">
+                        <label class="col-md-2 control-label">上级话题</label>
+                        <div class="col-md-5">
+                            <select class="form-control" id="pid" name="pid">
+                                <option value="0" data-pid="0" >顶级话题</option>
+                                {foreach name="topic_list" item="v1"}
+                                <option value="{$v1['topic_id']}" data-pid="{$v1['topic_id']}" {if condition="$topic_temp eq $v1['topic_id']"}selected{/if}>{$v1['topic_title']}</option>
+                                {/foreach}
+                            </select>
+                        </div>
+                    </div>
+                    {/if}
+                    <div class="form-group J-img">
+                        <label class="col-md-2 control-label">话题图片</label>
+                        <div class="col-md-5">
+                            <div class="picture-list" id="pictureList">
+                                <a href="javascript:void(0);" class="plus-box" data-toggle="singlePicture"><i class="icon icon-plus"></i></a>
+                            </div>
+                            <p class="help-block mb-0">建议100*100，支持JPG/GIF/PNG格式，图片大小建议1M以内，图片在移动端展示。</p>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-md-2 control-label">排序</label>
+                        <div class="col-md-5">
+                            <input type="text" class="form-control" id="sort" name="sort" min="0">
+                            <p class="help-block mb-0">分类排序，数字越大越靠前。</p>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-md-2 control-label">是否启用</label>
+                        <div class="col-md-5">
+                            <div class="switch-inline">
+                                <input type="checkbox" id="state" name="state">
+                                <label for="state" class=""></label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="col-md-2 control-label"></label>
+                        <div class="col-md-8">
+                            <button class="btn btn-primary" id="add_category" type="submit">添加</button>
+                            <a href="javascript:history.go(-1);" class="btn btn-default">返回</a>
+                        </div>
+                    </div>
+
+                </form>
+
+                <!-- page end -->
+{/block}
+
+
+{block name="script"}
+<script>
+require(['util'],function(util){
+    $('#pid').change(function(){
+        if($(this).find('option:selected').data('pid') == 0){
+            $('.J-img').show();
+        }else{
+            $('.J-img').hide();
+        }
+        var attr_id = $(this).find('option:selected').data('attr_id');
+        console.log(attr_id);
+        if(attr_id){
+            $("#attr_id").val(attr_id);
+        }else{
+            $("#attr_id").val('0');
+        }
+    })
+    if($('.J-cate').find('option:selected').data('pid') == 0){
+        $('.J-img').show();
+    }else{
+        $('.J-img').hide();
+    }
+            var flag = false;
+    util.validate($('.form-validate'),function(form) {
+        var topic_title = $("#topic_title").val();
+        var pid = $("#pid").val();
+        var sort = $("#sort").val();
+        if ($("#state").prop("checked")) {
+            var state = 1;
+        } else {
+            var state = 0;
+        }
+        //var category_pic = $("#Logo").val();
+        var topic_pic = $('.picture-list img').attr("src");
+        var attr_id = $("#attr_id").val();
+        if(flag){
+            return false;
+        }
+        var token = $("input[name='__token__']").val();
+        flag = true;
+
+        $.ajax({
+                type: "post",
+                url: "{$addThingcircleTopicUrl}",
+                data: {
+                    'topic_title': topic_title,
+                    'pid': pid,
+                    'sort': sort,
+                    'state': state,
+                    'topic_pic': topic_pic,
+                    '__token__':token
+                },
+                async: true,
+                success: function (data) {
+                    if (data["code"] > 0) {
+                        util.message(data["message"], 'success', "{:__URL('ADDONS_MAINtopicList')}");
+                    } else {
+                        util.message(data["message"], 'danger');
+                    }
+                }
+            });
+    })
+
+})
+</script>
+{/block}

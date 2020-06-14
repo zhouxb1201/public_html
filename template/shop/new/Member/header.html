@@ -1,0 +1,30 @@
+
+<!--头部-->
+<div class="header">
+    <div class="w w1200 clearfix">
+        <div class="fl">
+            <div class="logo">
+                <a href="{:__URL('SHOP_MAIN')}"><img src="{if $pc_info['logo']}{$pc_info['logo']}{else}/template/shop/new/public/image/missing.png{/if}" alt=""></a>
+            </div>
+        </div>
+        <div class="fr">
+            <div class="search">
+                <input type="text" class="search_input J-keyword" placeholder="手机">
+                <button type="submit" class="searchs J-platform_goods">搜索</button>
+            </div>
+        </div>
+    </div>
+</div>
+<!--导航-->
+<div class="navs">
+    <div class="w1200 clearfix">
+        <ul class="fl clearfix">
+            <li class="active navitems-group">
+                <a class="fore" href="{:__URL('SHOP_MAIN/member/index')}">会员中心</a>
+            </li>
+            <li class="navitems-group"><a class="fore" href="{:__URL('SHOP_MAIN/member/userSecurity')}">账户安全</a>
+            </li>
+        </ul>
+        <div class="fr navs-right"><a href="{:__URL('SHOP_MAIN/index/index')}">商城首页>></a></div>
+    </div>
+</div>

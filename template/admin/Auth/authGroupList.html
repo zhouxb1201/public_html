@@ -1,0 +1,93 @@
+{extend name="admin/base" /}
+{block name="main"}
+<!--添加按钮和搜索框-->
+<div class="mb-20 flex flex-pack-justify">
+    <div class="">
+        <a href="{:__URL('ADMIN_MAIN/auth/addusergroup')}" class="btn btn-primary J-add"><i class="icon icon-add1"></i> 添加角色</a>
+    </div>
+</div>
+<!--表格-->
+<table class="table v-table">
+    <thead>
+        <tr>
+            <th>角色名</th>
+            <th class="col-md-2 pr-14 operationLeft">操作</th>
+        </tr>
+    </thead>
+    <tbody class="trs" id="list">
+        
+    </tbody>
+</table>
+<div class="page clearfix">
+    <div class="M-box3 m-style fr">
+    </div>
+</div>
+<!-- page end -->
+{/block}
+{block name="script"}
+<script type="text/javascript">
+  require(['utilAdmin'], function (utilAdmin) {
+    $(function () {
+        LoadingInfo(1);
+    });
+    function LoadingInfo(page_index) {
+        $('#page_index').val(page_index ? page_index : '1');
+        $.ajax({
+            url: "{:__URL('ADMIN_MAIN/auth/authgrouplist')}",
+            type: "post",
+            data: {"page_index": page_index, "page_size": $("#showNumber").val()},
+            dataType: "json",
+            success: function (data) {
+                var html = '';
+                if (data["data"].length > 0) {
+                    for (var i = 0; i < data['data'].length; i++) {
+                        html += '<tr>';
+                        html += '<td>' + data["data"][i]["group_name"] + '</td>';
+                        if (data['data'][i]['is_system'] == 1) {
+                            html += '<td></td>';
+                        } else {
+                            html += '<td class="fs-0 operationLeft"><a href="' + __URL('ADMIN_MAIN/Auth/addUserGroup?group_id=' + data["data"][i]["group_id"]) + '" class="btn-operation">编辑</a>';
+                            html += '<a href="javascript:void(0);" class="btn-operation text-red1 del" data-id="' + data["data"][i]["group_id"] + '">删除</a></td>';
+                        }
+                        html += '</tr>';
+                    }
+                } else {
+                    html += '<tr><td class="h-200" colspan="2">暂无符合条件的数据记录</td></tr>';
+                }
+                $("#list").html(html);
+                utilAdmin.tips();
+                utilAdmin.page(".M-box3", data['total_count'], data["page_count"], page_index, LoadingInfo);
+            }
+        });
+    }
+    function delAuthGroup(group_id) {
+        utilAdmin.alert('你确定删除该用户组吗？',function(){
+            $.ajax({
+                type: "post",
+                url: "{:__URL('ADMIN_MAIN/auth/deletesystemusergroup')}",
+                async: true,
+                dataType: "json",
+                data: {
+                    "group_id": group_id
+                },
+                success: function (data) {
+                    if (data["code"] > 0) {
+                        utilAdmin.message("操作成功！",'success', function () {
+                            LoadingInfo($('#page_index').val());
+                        });
+                    } else {
+                        utilAdmin.message(data['message'], 'danger');
+                        return false;
+                    }
+                }
+            });
+        })
+    }
+    $("body").on("click",".del",function(){
+        var group_id=$(this).attr("data-id");
+        console.log(group_id);
+        delAuthGroup(group_id)
+    })
+  })
+</script>
+{/block}

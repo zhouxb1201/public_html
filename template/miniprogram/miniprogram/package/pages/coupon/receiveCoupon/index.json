@@ -1,0 +1,8 @@
+{
+  "usingComponents": {
+    "login-component": "/pages/component/login/login",
+    "phone-compoent": "/pages/component/phone/phonecom",
+    "topnav-component": "/pages/component/topnav/topnav"
+  },
+  "navigationBarTitleText": "优惠券"
+}

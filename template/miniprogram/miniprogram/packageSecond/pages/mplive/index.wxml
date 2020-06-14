@@ -1,0 +1,30 @@
+<view class='square_box'>  
+  <view class="live_list">
+    <view class="live_item" wx:for="{{live_list}}" wx:key="index" data-roomid="{{item.roomid}}" bindtap="onMPLivePage">
+      <view class="live_box">
+        <image class="live_img" src="{{item.cover_img?item.cover_img:'/images/icon-bg-live.png'}}"></image>
+        <view class="opacity_shadow"></view>
+        <view class="font_level">
+          <view class="live_status">
+            <!-- <view class="status {{item.live_status == 103?'alearly':'active'}}">· {{item.status_name}}</view> -->
+            <view class="status alearly" wx:if='{{item.live_status == 103}}'>· {{item.status_name}}</view>
+            <view class="status {{item.live_status == 102?'active':'active_r'}} " wx:else>· {{item.status_name}}</view>
+            <view class="time text-nowrap" wx:if='{{item.live_status == 102}}'>{{item.advance_date}}</view>
+          </view>
+          <view class="bottom">
+            <view class="title text-nowrap">{{item.name}}</view>
+            <view class="row">
+              <view class="anchor">
+                <view class="img">
+                  <image src="{{item.share_img?item.share_img:'/images/no-user.png'}}"></image>
+                </view>
+                <view class="name text-nowrap">{{item.anchor_name}}</view>
+              </view>              
+            </view>
+          </view>
+        </view>
+      </view>
+    </view>
+
+  </view> 
+</view>

@@ -1,0 +1,157 @@
+page{
+  font-size: 28rpx;
+  background-color: #f8f8f8;
+}
+.list{
+  margin-top: 225rpx;
+}
+.cell_item{
+  margin: 20rpx;
+  border-radius: 20rpx;
+  overflow: hidden;
+  box-shadow: 0 0 10px 0 rgba(0,0,0,.05);
+  padding: 20rpx 30rpx;
+  background-color: #fff;
+  border-bottom: 1px solid #ebedf0;
+}
+.cell_item .item_top{
+  display: flex;
+  justify-content: space-between;
+  align-items: center;  
+  padding-bottom: 10rpx;
+}
+.cell_item .item_top .name{
+  
+}
+.cell_item .score{
+  padding: 2rpx 5rpx;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.cell_item .location{
+ display: flex;
+ align-items: center;
+ padding: 10rpx 0;
+ color: #909399;
+ font-size: 24rpx;
+}
+.cell_item .location .icon{
+  text-align: left;
+  font-size: 28rpx;
+}
+.store_box{
+  display: flex;  
+}
+.store_box .store_img{
+  min-width: 300rpx;
+  height: 150rpx;
+  
+  overflow: hidden; 
+}
+.store_box .store_img image{
+  width: 100%;
+  height: 100%;
+}
+.store_box .store_info{
+  flex: 1;
+  font-size: 24rpx;
+  margin-left: 20rpx;
+}
+
+.goods{
+  padding-top: 20rpx;
+  border-top: 1px solid #ebedf0;
+  margin-top: 20rpx;
+}
+.goods .goods_box .goods_list{
+  display: flex;
+  align-items: center;
+  width: 100%;
+}
+.goods .goods_box .goods_list .goodItem{
+  width: 25%;
+  padding: 10rpx;
+}
+.goods .goods_box .goods_list .goodItem .goodImg{
+  width: 100%;
+  height: 154rpx;
+  background: #f9f9f9;
+  overflow: hidden;
+}
+.goods .goods_box .goods_list .goodItem .good_price{
+  color: #f44;
+}
+.no_more{
+  text-align: center;
+  padding: 20rpx 30rpx;
+}
+
+
+.navtop{
+   position: fixed;
+    width: 100%;
+    top: 0;
+    padding:0;
+    background: #fff;
+    z-index: 1000;
+}
+.shop_search{
+  padding: 16rpx 20rpx;
+  border-bottom: 2px solid #f5f5f5;
+  display: flex;
+  align-items: center;
+  justify-content: space-around;
+}
+.shop_search .search_input{
+  background-color: #f5f5f5;
+  display: flex;  
+  align-items: center;
+  padding: 12rpx;
+  flex: 1;
+}
+.shop_search .search_text{
+  width: 95%;
+  font-size: 14px;
+  height: 40rpx;
+  color: rgb(167, 166, 166);
+  margin-left: 10rpx;
+}
+.shop_search .icon{
+  color: rgb(167, 166, 166);
+}
+
+
+.sort {
+    align-items: center;
+    display: flex;
+    z-index: 99;
+}
+.sort .item {
+    flex: 1;
+    position: relative;
+    text-align: center;
+    font-size: 28rpx;
+    padding: 25rpx 30rpx;
+    color: #666;
+    vertical-align: middle;
+}
+.sort .item:first-child {
+    border: 0;
+}
+.sort .item .icon{
+  display: inline-block;
+}
+.sort .item.on text {
+    color: #fd5454;
+}
+.sort .item.on .icon{
+  color: #fd5454;
+}
+.DESC{
+  transform:rotate(0deg);
+}
+.ASC{
+  transform:rotate(180deg);
+  
+}

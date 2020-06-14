@@ -1,0 +1,292 @@
+<div class="links-dialog">
+
+    <ul class="nav nav-tabs v-nav-tabs pt-15" role="tablist">
+        <li role="presentation" class="active"><a href="#mall" aria-controls="mall" role="tab" data-toggle="tab" class="flex-auto-center">商城页面</a></li>
+        {if $config['pcport']}
+        <li role="presentation"><a href="#diy" aria-controls="diy" role="tab" data-toggle="tab" class="flex-auto-center">自定义页</a></li>
+        {/if}
+        <li role="presentation"><a href="#category" aria-controls="category" role="tab" data-toggle="tab" class="flex-auto-center">商品分类</a></li>
+        <li role="presentation"><a href="#shopGoods" aria-controls="shopGoods" role="tab" data-toggle="tab" class="flex-auto-center">商品</a></li>
+        <li role="presentation"><a href="#links" aria-controls="links" role="tab" data-toggle="tab" class="flex-auto-center">链接</a></li>
+    </ul>
+    <div class="tab-content min-h-200">
+        <div role="tabpanel" class="tab-pane fade in active" id="mall">
+            <div class="" id="custom">
+                <div class="linkDialog-title">商城基础</div>
+                <a href="javascript:void(0);" class="btn btn-default selectedPage" data-link="{:__URLS('SHOP_MAIN/index')}">商城首页</a>
+                <a href="javascript:void(0);" class="btn btn-default selectedPage" data-link="{:__URLS('SHOP_MAIN/goods/category')}">商品分类</a>
+                <a href="javascript:void(0);" class="btn btn-default selectedPage" data-link="{:__URLS('SHOP_MAIN/goods/goodslist')}">商品列表</a>
+                <a href="javascript:void(0);" class="btn btn-default selectedPage" data-link="{:__URLS('SHOP_MAIN/goods/cart')}">购物车</a>
+                {if $config['shop']}
+                <a href="javascript:void(0);" class="btn btn-default selectedPage" data-link="{:__URLS('ADDONS_SHOP_MAIN','addons=shopIndex&shop_id='.$shop_id)}">店铺首页</a>
+                <a href="javascript:void(0);" class="btn btn-default selectedPage" data-link="{:__URLS('ADDONS_SHOP_MAIN','addons=shopStreet')}">店铺街</a>
+                <!--<a href="javascript:void(0);" class="btn btn-default selectedPage" data-link="">商家入驻</a>-->
+                {/if}
+                
+
+                <div class="linkDialog-title">会员中心</div>      
+                <a href="javascript:void(0);" class="btn btn-default selectedPage" data-link="{:__URLS('SHOP_MAIN/member/index')}">会员中心</a>
+                <a href="javascript:void(0);" class="btn btn-default selectedPage" data-link="{:__URLS('SHOP_MAIN/member/orderlist')}">订单列表</a>
+                <a href="javascript:void(0);" class="btn btn-default selectedPage" data-link="{:__URLS('SHOP_MAIN/member/balancelist')}">余额</a>
+                <a href="javascript:void(0);" class="btn btn-default selectedPage" data-link="{:__URLS('SHOP_MAIN/member/balancewithdrawals')}">余额提现</a>
+                <a href="javascript:void(0);" class="btn btn-default selectedPage" data-link="{:__URLS('SHOP_MAIN/member/createrechargeorder')}">余额充值</a>
+                <a href="javascript:void(0);" class="btn btn-default selectedPage" data-link="{:__URLS('SHOP_MAIN/member/integrallist')}">积分</a>
+                {if $config['coupontype']}
+                <a href="javascript:void(0);" class="btn btn-default selectedPage" data-link="{:__URLS('ADDONS_SHOP_MAIN','addons=couponList')}">优惠券列表</a>
+                {/if}
+                <a href="javascript:void(0);" class="btn btn-default selectedPage" data-link="{:__URLS('SHOP_MAIN/member/accountList')}">提现账户</a>
+                {if $config['shop']}
+                <a href="javascript:void(0);" class="btn btn-default selectedPage" data-link="{:__URLS('ADDONS_SHOP_MAIN','addons=shopCollectionList')}">店铺收藏</a>
+                {/if}
+                <a href="javascript:void(0);" class="btn btn-default selectedPage" data-link="{:__URLS('SHOP_MAIN/member/goodscollectionlist')}">商品收藏</a>
+                <a href="javascript:void(0);" class="btn btn-default selectedPage" data-link="{:__URLS('SHOP_MAIN/member/addresslist')}">收货地址</a>
+                <a href="javascript:void(0);" class="btn btn-default selectedPage" data-link="{:__URLS('SHOP_MAIN/member/userSecurity')}">帐号设置</a>
+
+                {if $config['distribution']}
+                <div class="linkDialog-title">分销业务</div>
+                <a href="javascript:void(0);" class="btn btn-default selectedPage" data-link="{:__URLS('ADDONS_SHOP_MAIN','addons=distributionIndex')}">分销中心</a>
+                {/if}
+                <!--{if $config['areabonus']}
+                <a href="javascript:void(0);" class="btn btn-default selectedPage" data-link="{:__URLS('SHOP_MAIN/member/bonusIndex')}">分红</a>
+                {/if}-->
+            </div>
+        </div>
+        {if $config['pcport']}
+        <div role="tabpanel" class="tab-pane fade" id="diy">
+            <p class="form-control-static">请选择要跳转的页面</p>
+            <div class="" id="diy_custom">
+
+            </div>
+        </div>
+        {/if}
+        <div role="tabpanel" class="tab-pane fade" id="category">
+            <p class="form-control-static">请选择要跳转的分类页<span class="pull-right small-muted">你选择的分类是：<b id="selectedSort"></b></span></p>
+            <div class="category-group flex">
+                <div class="list flex-1" id="sort1"></div>
+                <div class="list flex-1" id="sort2"></div>
+                <div class="list flex-1" id="sort3"></div>
+            </div>
+        </div>
+        <div role="tabpanel" class="tab-pane fade" id="shopGoods">
+            <p class="form-control-static">请选择要跳转的商品</p>
+            <form class="form-horizontal">
+                <div class="input-group mb-10">
+                    <input type="text" class="form-control" id="search_text" placeholder="请输入商品名称">
+                    <span class="input-group-btn"><button type="button" class="btn btn-primary" id="search_goods">搜索</button></span>
+                </div>
+                <div class="links-list">
+                </div>
+            </form>
+        </div>
+        <div role="tabpanel" class="tab-pane fade" id="links">
+            <p class="form-control-static">请输入要跳转的链接</p>
+            <form class="form-horizontal padding-15">
+                <div class="form-group">
+                    <label class="col-md-2 control-label">链接</label>
+                    <div class="col-md-9">
+                        <input type="text" id="link" class="form-control" placeholder="请输入链接，以http或https开头">
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+
+
+    <input type="hidden" id="selectedData">
+</div>
+{if $config['pcport']}
+<script>
+    getCustomOfDiy();
+    //获取自定义页面链接
+    function getCustomOfDiy() {
+        $.ajax({
+            type: "post",
+            url: '{$pcCustomTemplateListUrl}',
+            data: {
+                "type": 'diy'
+            },
+            success: function (data) {
+                var html = "";
+                if (data['data'].length > 0) {
+                    for (var i = 0; i < data['data'].length; i++) {
+                        var curr = data['data'][i];
+                        html += '<a href="javascript:void(0);" class="btn btn-default selectedPage" data-link="' + __URLS("SHOP_MAIN/index/custompage&suffix=" + curr.code + "&temp_type=" + curr.type + "&instance_id={$shop_id}" ) + '">' + curr.name + '</a> ';
+                    }
+                } else {
+                    html += '<div class="padding-15" style="text-align: center">暂无符合条件的数据记录</div>';
+                }
+                $("#diy_custom").html(html);
+            }
+        });
+    };
+</script>
+{/if}
+<script>
+
+    $(function () {
+        var cname1, cname2, cname3;
+        // 获取分类数据
+        //获取一级分类链接
+        function select_cates() {
+            $.ajax({
+                type: "post",
+                url: __URL(MAIN + '/goods/getcategorylistforlink'),
+                success: function (data) {
+                    var html = "";
+                    if (data['data'].length > 0) {
+                        for (var i = 0; i < data['data'].length; i++) {
+                            var curr = data['data'][i];
+                            // html += '<a href="javascript:void(0);" class="clearfix" data-href="' + __URLS('SHOP_MAIN/goods/goodslist&category_id=' + curr["category_id"]) + '" onclick="chooseLink(this);selectcate1('+curr["category_id"]+')">' + curr["category_name"] + '<span class="fr">></span></a>';
+                            html += '<a href="javascript:void(0);" class="item" data-href="' + __URLS('SHOP_MAIN/goods/goodslist&category_id=' + curr["category_id"]) + '" data-id="' + curr["category_id"] + '">' + curr["category_name"] + '</a>';
+                        }
+                    } else {
+                        html += '<div class="padding-15">暂无符合条件的数据记录</div>';
+                    }
+                    $("#sort1").html(html);
+                }
+            });
+        }
+        ;
+        select_cates();
+        //获取二级分类链接
+        function selectcate1(id) {
+            $("#sort2").html("");
+            $("#sort3").html("");
+            $.ajax({
+                type: "post",
+                url: __URL(MAIN + '/goods/getcategorylistforlink'),
+                data: {
+                    "id": id
+                },
+                success: function (data) {
+                    var html = "";
+                    if (data['data'].length > 0) {
+                        for (var i = 0; i < data['data'].length; i++) {
+                            var curr = data['data'][i];
+                            // html += '<a href="javascript:void(0);" class="clearfix" data-href="' + __URLS('SHOP_MAIN/goods/goodslist&category_id=' + curr["category_id"]) + '" onclick="chooseLink(this);selectcate2('+curr["category_id"]+')">' + curr["category_name"] + '<span class="fr">></span></a>';
+                            html += '<a href="javascript:void(0);" class="item" data-href="' + __URLS('SHOP_MAIN/goods/goodslist&category_id=' + curr["category_id"]) + '" data-id="' + curr["category_id"] + '">' + curr["category_name"] + '</a>';
+                        }
+                    } else {
+                        html += '<div class="padding-15">暂无符合条件的数据记录</div>';
+                    }
+                    $("#sort2").html(html);
+                }
+            });
+        }
+        //获取三级分类链接
+        function selectcate2(id) {
+            $.ajax({
+                type: "post",
+                url: __URL(MAIN + '/goods/getcategorylistforlink'),
+                data: {
+                    "id": id
+                },
+                success: function (data) {
+                    var html = "";
+                    if (data['data'].length > 0) {
+                        for (var i = 0; i < data['data'].length; i++) {
+                            var curr = data['data'][i];
+                            // html += '<a href="javascript:void(0);" class="clearfix" data-href="' + __URLS('SHOP_MAIN/goods/goodslist&category_id=' + curr["category_id"]) + '" onclick="chooseLink(this);">' + curr["category_name"] + '<span class="fr">></span></a>';
+                            html += '<a href="javascript:void(0);" class="item" data-href="' + __URLS('SHOP_MAIN/goods/goodslist&category_id=' + curr["category_id"]) + '" data-id="' + curr["category_id"] + '">' + curr["category_name"] + '</a>';
+                        }
+                    } else {
+                        html += '<div class="padding-15">暂无符合条件的数据记录</div>';
+                    }
+                    $("#sort3").html(html);
+                }
+            });
+        }
+
+
+        // 搜索商品
+        $("#search_goods").on('click', function () {
+            $.ajax({
+                type: "post",
+                data: {
+                    "search_text": $("#search_text").val()
+                },
+                url: __URL(PLATFORMMAIN + '/shop/getSearchGoods'),
+                success: function (res) {
+                    var data = res['data'];
+                    var html = "";
+                    if (data.length > 0) {
+                        for (var i = 0; i < data.length; i++) {
+                            var curr = data[i];
+                            html += '<div class="item">';
+                            html += '<div class="media">';
+                            html += '<div class="media-left">';
+                            if (curr["picture_info"] != null) {
+                                html += '<img src="' + __IMG(curr["picture_info"]['pic_cover_micro']) + '" alt="" width="60" height="60">';
+                            } else {
+                                html += '<img src="http://iph.href.lu/60x60?text=60x60" alt="" width="60" height="60">'
+                            }
+                            html += '</div>';
+                            html += '<div class="media-body max-w-300">';
+                            html += '<div class="line-2-ellipsis">' + curr["goods_name"] + '</div>';
+                            html += '<div class="line-1-ellipsis text-danger">' + curr['price'] + '</div>';
+                            html += '<div class="line-1-ellipsis">' + curr['shop_name'] + '</div>';
+                            html += '</div>';
+                            html += '</div>';
+                            html += '<a href="javascript:void(0);" class="btn btn-default selectedGoods" data-id="' + curr["goods_id"] + '" data-href="' + __URLS('SHOP_MAIN/goods/goodsinfo&goodsid=' + curr["goods_id"]) + '">选择</a>';
+                            html += '</div>';
+                        }
+                    } else {
+                        html += '<div class="padding-15">暂无符合条件的数据记录</div>';
+                    }
+                    $("#shopGoods").find(".links-list").html(html);
+                }
+            });
+        })
+        // 选中商品
+        $('.links-dialog').on('click', '.selectedGoods', function () {
+            var href = $(this).attr('data-href');
+            selecteddata('goods', href);
+        })
+        // 选中页面
+        $('.links-dialog').on('click', '.selectedPage', function () {
+            $(this).siblings().removeClass('btn-primary');
+            $(this).addClass('btn-primary');
+            selecteddata('page', $(this).data('link'))
+        })
+
+        $('#sort1').on('click', '.item', function () {
+            $(this).addClass('active').siblings().removeClass('active');
+            $('#sort3').html('');
+            var id = $(this).attr('data-id');
+            selectcate1(id);
+            cname1 = $(this).text();
+            $('#selectedSort').html(cname1);
+            var hrefs = $(this).attr('data-href');
+            selecteddata('category', hrefs);
+        });
+        $('#sort2').on('click', '.item', function () {
+            $(this).addClass('active').siblings().removeClass('active');
+            var id = $(this).attr('data-id');
+            selectcate2(id)
+            cname2 = $(this).text();
+            $('#selectedSort').html(cname1 + ' > ' + cname2);
+            var hrefs = $(this).attr('data-href');
+            selecteddata('category', hrefs);
+        });
+        $('#sort3').on('click', '.item', function () {
+            $(this).addClass('active').siblings().removeClass('active');
+            cname3 = $(this).text();
+            $('#selectedSort').html(cname1 + ' > ' + cname2 + ' > ' + cname3);
+            var hrefs = $(this).attr('data-href');
+            selecteddata('category', hrefs);
+        });
+        // 直接输入链接焦点离开事件
+        $("#link").on('blur', function () {
+            selecteddata('link', $(this).val());
+        })
+
+        function selecteddata(type, params) {
+            var selecteddata = {
+                type: type,
+                params: params
+            }
+            $('#selectedData').data(selecteddata);
+        }
+
+    })
+</script>

@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <title>欢迎登录 - {if $logo_config.title_word}{$logo_config.title_word}{else}团大人 - 让更多的人帮你卖货！{/if}</title>
+    <meta name="description" content="团大人,微信三级分销系统,微信分销系统,登录">
+    <meta name="keywords" content="登录,团大人">
+    <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=1" name="viewport">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta http-equiv="Cache-Control" content="no-transform">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="layoutmode" content="standard">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <meta name="renderer" content="webkit">
+    <meta name="applicable-device" content="mobile">
+    <meta name="wap-font-scale" content="no">
+    <meta content="telephone=no" name="format-detection">
+    <meta http-equiv="Pragma" content="no-cache">
+
+    <link rel="stylesheet" href="PLATFORM_NEW_CSS/loginMobile.css">
+
+    <script type="text/javascript" src="PLATFORM_NEW_JS/jquery.min.js"></script>
+</head>
+
+<body>
+    <input type="hidden" id="website_id" value="{$website_id}">
+    <header class="head">
+        <div class="top flex_box jc_sb">
+            <div class="h_logo "><img src="{if $logo_config.platform_logo}{$logo_config.platform_logo}{else}http://m.vslai.com/statics/images/mobile/common/h_logo.png{/if}" onerror=""></div>
+        </div>
+    </header>
+    <div class="res_page">
+            <h1>欢迎登录{if $logo_config.login_mall_name}{$logo_config.login_mall_name}{else}团大人{/if}</h1>
+            <form>
+                <div class="register_box">
+                    <div class="register_center">
+                        <div class="register_infor">
+                            <span class="left_tt" style="letter-spacing: 4px;">登录账号</span>
+                            <input class="input" type="text" name="mobile" id="mobile" placeholder="请输入手机号码">
+                        </div>
+                        <div class="register_infor">
+                            <span class="left_tt password_bp">密 码</span>
+                            <input type="password" class="input" id="password" name="password" placeholder="请输入密码" autocomplete="new-password">
+                        </div>
+
+                        <div class="stage">
+                            <div class="slider" id="slider">
+                                <div class="label">向右滑动验证</div>
+                                <div class="track" id="track">
+                                    <div class="bg-green" style="color: #fff">验证成功</div>
+                                </div>
+                                <div class="button" id="btn">
+                                    <div class="icon" id="icon"></div>
+                                    <div class="spinner" id="spinner"></div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="register_but"><a href="javascript:;" id="submit" class="disaleds" disabled="disabled" onclick="login()">登录</a></div>
+                     </div>
+                </div>
+            </form>
+            <footer class="res_copyright">
+                {if $logo_config.login_copyright}{$logo_config.login_copyright}{else}
+                <p>All Right Reserved ©2017 版权所有</p>
+                <p>广州领客信息科技股份有限公司</p>
+                {/if}
+            </footer>
+    </div>
+
+<script type="text/javascript" src="PLATFORM_NEW_JS/slider.js"></script>
+<script>
+
+    // pc端移动端判断
+    (function () {
+        var url = location.href;
+        // replace www.test.com with your domain
+        if (!navigator.userAgent.match(/(iPhone|iPod|Android|ios|iPad)/i)) {
+            // location.href = "{:__URL('PLATFORM_MAIN/login/registermobile')}";
+            location.href = "{:__URL('ADMIN_MAIN/login/index')}&website_id="+$('#website_id').val();
+        }
+    })();
+
+// alert提示语优化
+function showMsg(text,position){
+	var show	=	$('.show_msg').length
+	if(show>0){
+		
+	}else{
+		var	div		=	 $('<div></div>');
+			div.addClass('show_msg');
+		var span	=	$('<span></span>');
+			span.addClass('show_span');
+			span.appendTo(div);
+			span.text(text);
+		$('body').append(div);
+	}
+	$(".show_span").text(text);
+	if(position=='bottom'){
+		$(".show_msg").css('bottom','5%');
+	}else if(position=='center'){
+		$(".show_msg").css('top','');
+		$(".show_msg").css('bottom','50%');
+	}else{
+		$(".show_msg").css('bottom','95%');
+	}
+	$('.show_msg').hide();
+	$('.show_msg').fadeIn(2000);
+	$('.show_msg').fadeOut(1000);
+}
+
+    (function(doc, win) {
+        var docEl = doc.documentElement,
+            resizeEvt = 'orientationchange' in window ? 'orientationchange' : 'resize',
+            recalc = function() {
+                var clientWidth = docEl.clientWidth;
+                if (!clientWidth) return;
+                clientWidth = clientWidth > 640 ? 640 : clientWidth;
+                docEl.style.fontSize = 40 * (clientWidth / 640) + 'px';
+            };
+        if (!doc.addEventListener) return;
+        win.addEventListener(resizeEvt, recalc, false);
+        doc.addEventListener('DOMContentLoaded', recalc, false);
+        var head=$('.head').height();
+        var aa=docEl.clientHeight-"80";
+        $('.res_page').height(aa);
+    })(document, window);
+
+    function login() {
+        ClearCookie();
+        var userName = $("#mobile").val();
+        var password = $("#password").val();
+        if(userName.trim()==''){
+            showMsg('请输入用户名','center');
+            return false;
+        }
+        if(password.trim()==''){
+            showMsg('请输入密码','center');
+            return false;
+        }
+
+        $.ajax({
+            type: "post",
+            url: "{:__URL('ADMIN_MAIN/login/login')}",
+            data: {
+                'userName': userName,
+                'website_id': $('#website_id').val(),
+                'password': password
+            },
+            success: function (data) {
+                if (data["code"] > 0) {
+                    $("#submit").attr("disabled", "disabled");
+                    window.location.href = "{:__URL('ADMIN_MAIN/index/index')}";
+                    return true;
+                }else if(data["code"] == -1001){
+                    showMsg('商城已过期，请联系商家', 'cneter');
+                    return false;
+                }else if(data["code"] == -3000){
+                    showMsg('无权限访问，请检查当前访问链接', 'cneter');
+                    return false;
+                } else {
+                    showMsg('用户名或密码错误', 'center');
+                    return false;
+
+                }
+            }
+        });
+
+    }
+
+    function ClearCookie() {
+        var expires = new Date();
+        expires.setTime(expires.getTime() - 1000);
+        document.cookie = "appCode='';path=/;expires=" + expires.toGMTString() + "";
+        document.cookie = "roleID='';path=/;expires=" + expires.toGMTString() + "";
+        document.cookie = "parentMenuID='';path=/;expires=" + expires.toGMTString() + "";
+        document.cookie = "currentMenuName='';path=/;expires=" + expires.toGMTString() + "";
+    }
+
+</script>
+</body>
+
+</html>

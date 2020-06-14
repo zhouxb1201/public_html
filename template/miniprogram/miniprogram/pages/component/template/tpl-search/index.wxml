@@ -1,0 +1,17 @@
+<view>
+  <form>
+    <view style="background:{{temDataitem.style.background}};padding:{{temDataitem.style.paddingtop}}px {{temDataitem.style.paddingleft}}px;">
+    <view style="position:relative" >
+      <view bindtap='_onSearchPage'>
+        <van-icon name="search" color='#999' style='position:absolute;top:16rpx;left:16rpx;'/>
+        <input 
+          placeholder="{{temDataitem.params.placeholder}}" 
+          placeholder-style="font-size:15px;color:#999" 
+          style='border:1rpx solid #fff;color:#999;padding-left:30px;font-size:25rpx;background:#fff;height:60rpx;' 
+          disabled='disabled'>
+          </input>
+      </view>
+    </view>        
+    </view>    
+  </form>
+</view>

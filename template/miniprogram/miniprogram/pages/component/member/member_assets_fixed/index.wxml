@@ -1,0 +1,43 @@
+<view class='assets group' style="background:{{items.styleColor.background}};">
+    <view bindtap="onMyPropertyPage">          
+      <view class='hair_top'>
+        <view class='hair_left'>        
+          <van-icon name="cash-back-record" class='l_icon' size="16px"/>
+          <view class='l_text' style="color:{{items.styleColor.titlecolor}};">{{items.params.title}}</view>
+        </view>
+        <view class='hair_right'>
+          <view class='r_text' style="color:{{items.styleColor.titleremarkcolor}};">{{items.params.remark}}</view>
+          <van-icon name="arrow" class='r_icon' size="14px"/>
+        </view>      
+      </view>    
+    </view>    
+    <view class="cell_card {{more_account == false?'row_one':'row_two'}}" wx:if="{{isLogin}}">
+
+      <view class='card_item item_cel_3' wx:if="{{items.balanceData.is_show > 0}}" bindtap='onBalancePage'>
+        <view class='card_title' style="color:{{items.styleColor.textcolor}}">{{items.balanceData.name}}</view>
+        <view class='card_text' style="color:{{items.styleColor.highlight}}">{{memberData.balance}}</view>
+      </view>
+      <view class='card_item item_cel_3' wx:if="{{items.pointsData.is_show > 0}}" bindtap='onPointPage'>
+        <view class='card_title' style="color:{{items.styleColor.textcolor}}">{{items.pointsData.name}}</view>
+        <view class='card_text' style="color:{{items.styleColor.highlight}}">{{memberData.point}}</view>
+      </view>
+      <view class='card_item item_cel_3' wx:if="{{items.coupontypeData.is_show > 0 && coupontype_addons == 1}}" bindtap='onCouponPage'>
+        <view class='card_title' style="color:{{items.styleColor.textcolor}}">{{items.coupontypeData.name}}</view>
+        <view class='card_text' style="color:{{items.styleColor.highlight}}">{{memberData.coupon_num}}</view>
+      </view>
+
+      <view class='card_item item_cel_3' wx:if="{{items.giftvoucherData.is_show > 0 && giftvoucher_addons == 1}}" bindtap='onGifvoucherPage'>
+        <view class='card_title' style="color:{{items.styleColor.textcolor}}">{{items.giftvoucherData.name}}</view>
+        <view class='card_text' style="color:{{items.styleColor.highlight}}">{{memberData.giftvoucher_num}}</view>
+      </view>
+      <view class='card_item item_cel_3' wx:if="{{items.storeData.is_show > 0 && store_addons == 1}}" bindtap='onConsumerCardPage'>
+        <view class='card_title' style="color:{{items.styleColor.textcolor}}">{{items.storeData.name}}</view>
+        <view class='card_text' style="color:{{items.styleColor.highlight}}">{{memberData.store_card_num}}</view>
+      </view>
+
+
+    </view>    
+    <view class='foot_icon' wx:if='{{isLogin && items.show_array.length > 3}}'>      
+      <view class='icon iconfont v-icon-{{iconShow}}' data-icon='{{iconShow}}' bindtap='iconChangeShow'></view>
+    </view>
+  </view>

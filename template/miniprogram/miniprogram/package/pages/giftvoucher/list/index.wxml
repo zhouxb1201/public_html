@@ -1,0 +1,80 @@
+<view class='giftvoucher_list'>
+  <van-tabs active="{{ active }}" bind:change="onGiftvoucherChange">
+
+    <van-tab title="未使用">
+      <view class='not_use' wx:if="{{state == 1}}">
+        <view class='not_use_item' wx:for='{{giftvoucherList}}' wx:key="">
+          <view class='info'>            
+            <view class='img'>
+              <image src="{{item.pic_cover_mid}}"></image>
+            </view>
+            <view class='not_use_text'>
+              <view class='name'>{{item.gift_name}}</view>
+              <view class='time'>{{item.start_time}}~{{item.end_time}}</view>
+              <view class='detail' bindtap='onGifDetailPage' data-id='{{item.record_id}}'>
+                详情
+                <view class='icon iconfont v-icon-triangle'></view>
+              </view>
+            </view>
+          </view>                  
+        </view>        
+      </view>
+    </van-tab>
+
+    <van-tab title="已使用">
+      <view class='not_use' wx:if="{{state == 2}}">
+        <view class='not_use_item' wx:for='{{giftvoucherList}}' wx:key="">
+          <view class='info'>            
+            <view class='img'>
+              <image src="{{item.pic_cover_mid}}"></image>
+            </view>
+            <view class='not_use_text'>
+              <view class='name'>{{item.gift_name}}</view>
+              <view class='time'>{{item.start_time}}~{{item.end_time}}</view>
+              <view class='detail' bindtap='onGifDetailPage' data-id='{{item.record_id}}'>
+                详情 
+                <view class='icon iconfont v-icon-triangle'></view>
+              </view>
+            </view>
+          </view>
+          <view class='icon_use'>
+            <view class='icon iconfont v-icon-coupon-use'></view>
+          </view>          
+        </view>
+      </view>    
+    </van-tab>
+
+    <van-tab title="已过期">
+      <view class='not_use' wx:if="{{state == 3}}">
+        <view class='not_use_item' wx:for='{{giftvoucherList}}' wx:key="">
+          <view class='info'>            
+            <view class='img'>
+              <image src="{{item.pic_cover_mid}}"></image>
+            </view>
+            <view class='not_use_text'>
+              <view class='name'>{{item.gift_name}}</view>
+              <view class='time'>{{item.start_time}}~{{item.end_time}}</view>
+              <view class='detail' bindtap='onGifDetailPage' data-id='{{item.record_id}}'>
+                详情 
+                <view class='icon iconfont v-icon-triangle'></view>
+              </view>
+            </view>
+          </view>
+          <view class='icon_use'>
+            <view class='icon iconfont v-icon-overdue'></view>
+          </view>
+        </view>
+      </view>
+    </van-tab>
+  </van-tabs>
+
+
+  <view class='no_data' wx:if='{{total_count == 0}}'>
+    <view class='no_data_box'>
+      <view class='img'>
+        <image src='/images/empty-data.png' mode='widthFix'></image>
+      </view>
+      <view class='no_data_text'>没有相关数据</view>
+    </view>
+  </view>
+</view>

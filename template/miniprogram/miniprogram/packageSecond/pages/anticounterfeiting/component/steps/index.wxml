@@ -1,0 +1,28 @@
+<view class='order_logistics'>
+  <view class="content">
+    <view class="pane">
+      <view class="van_steps vertical">
+        <view class="steps_items">
+          <view class="step_wrap step_vertical" wx:for='{{steps}}' wx:key=''>
+            <view class="step_title">
+              <view class="head">
+                <view class="name">{{item.node_name}}</view>
+                <view class="time">{{item.create_time}}</view>
+              </view>
+              <view class="step_content">节点详情：{{item.node_description}}</view>
+              <view class="step_img">
+                <view class="img_item" wx:for='{{item.img_temp_array}}' wx:key='' wx:for-item='imgItem'>
+                  <image mode="widthFix" src="{{imgItem.pic_cover_small}}"></image>
+                </view>                
+              </view>
+            </view>
+            <view class="step__circle_container">
+              <van-icon name="checked" />
+            </view>
+            <view class="step_line"></view>
+          </view>
+        </view>
+      </view>
+    </view>
+  </view>
+</view>

@@ -1,0 +1,176 @@
+{extend name="shop/new/Member/base" /}
+{block name="main"}
+<div class="v-main-right fl">
+                    <div class="v-container">
+                        <!--page-->
+                        <div class="tips">温馨提示：如收到商品遇到质量问题，请联系商家。电话：{if $order.shop_phone}{$order.shop_phone}{else}{$web_info.web_phone}{/if}</div>
+
+                        <div class="screen-title"><span class="text">订单信息</span></div>
+
+                        <div class="infoTable clearfix">
+                            <ul class="control-item">
+                                <li>商家店铺：</li>
+                                <li>订单编号：</li>
+                                <li>订单状态：</li>
+                                <li>支付方式：</li>
+                                <li>付款状态：</li>
+                                <li>配送方式：</li>
+                                <li>收货信息：</li>
+                                <li>买家留言：</li>
+                            </ul>
+                            <ul class="control-content">
+                                <li class="shopName">{if $order.shop_name}{$order.shop_name}{else}官方旗舰店{/if}</li>
+                                <li class="orderNum">{$order.order_no}</li>
+                                <li class="orderState">{$order.status_name}</li>
+                                <li class="payWay">{$order.payment_type_name}</li>
+                                <li class="payState">{$order.pay_status_name}</li>
+                                <li class="sendWay">{$order.shipping_type_name}&nbsp;&nbsp;{$order['shipping_company_name']}</li>
+                                {if($order.card_store_id==0)}
+                                {if $order['shipping_type']==1}
+                                <li class="receiveInfo"><a href="javascript:void(0);" title="{$order['receiver_name']}，{$order['receiver_mobile']}，{$order['address']}">{$order['receiver_name']}，{$order['receiver_mobile']}，{$order['address']}</a></li>
+                                {else}
+                                <li class="receiveInfo"><a href="javascript:void(0);" title="{$order['order_pickup']['user_tel']}，{$order['order_pickup']['address']}">{$order['order_pickup']['user_tel']}，{$order['order_pickup']['province_name']}{$order['order_pickup']['city_name']}{$order['order_pickup']['dictrict_name']}{$order['order_pickup']['address']}</a></li>
+                                {/if}
+                                {else}
+                                <li class="receiveInfo"><a href="javascript:void(0);" title="无">无</a></li>
+                                {/if}
+                                <li class="messages"><a href="javascript:void(0);" title="{$order['buyer_message']}">{if $order['buyer_message']}{$order['buyer_message']}{else}暂无{/if}</a></li>
+                            </ul>
+                            {if $order.order_status>1}
+                            <ul class="control-Courier pr">
+                                <div class="parcel" {if $order['goods_packet_num']<2} style="display:none" {/if}>
+                                    {foreach name="order['goods_packet_list']" id="vo" key='k'}
+                                    <a href="javascript:void(0);" data-id={$vo.express_code} {if $k==0} class="selected" {/if} >{$vo.packet_name}</a>
+                                    {/foreach}
+                                </div>
+                                <li class="lis list1">
+
+
+                                </li>
+                                <li class="Courier lis">
+                                    <div class="Courier-list">
+                                        <ul id="list">
+                                        </ul>
+                                    </div>
+                                </li>
+                            </ul>
+                            {else}
+                            <ul class="control-Courier pr"><li class="lis">暂无物流信息！</li><li class="Courier lis"></li></ul>
+                            {/if}
+                        </div>
+
+                        <div class="screen-title"><span class="text">商品列表</span></div>
+
+                        <div class="cart-wrapper detailGoodsList">
+                            <div class="cart-header">
+                                <div class="cart-table-header">
+                                    <div class="inner-box c6">
+                                        <div class="th th-item">商品</div>
+                                        <div class="th th-receive">会员价</div>
+                                        <div class="th th-money">数量</div>
+                                        <div class="th th-state">优惠</div>
+                                        <div class="th th-op">合计</div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="cart-list">
+                                {foreach name="order['order_goods']" id="vo"}
+                                <div class="cart-item">
+                                    <div class="item-main clearfix">
+                                        <div class="td td-item clearfix">
+                                            <div class="item-pic">
+                                                <a href="javascript:void(0);" class="item-img-box">
+                                                    <img src="{if $vo['picture_info']['pic_cover_micro']}{:__IMG($vo['picture_info']['pic_cover_micro'])}{else}/template/shop/new/public/image/missing.png{/if}" alt="">
+                                                </a>
+                                            </div>
+                                            <div class="item-desc">
+                                                <a href="javascript:void(0);" class="item-title">{$vo['goods_name']}</a>
+                                                <p class="colors">
+                                                    {foreach name="vo['spec']" id="vo1"}
+                                                    {$vo1['spec_name']}{$vo1['spec_value_name']}
+                                                    {/foreach}
+                                                </p>
+                                            </div>
+                                        </div>
+                                        <div class="td td-receive">￥{$vo['member_price']}</div>
+                                        <div class="td td-state">{$vo['num']}</div>
+                                        <div class="td td-state">￥{:round($vo['price'] * $vo['num'] - $vo['actual_price'] * $vo['num'],2)}</div>
+                                        <div class="td td-op">￥{$vo['actual_price'] * $vo['num']}</div>
+                                    </div>
+                                </div>
+                                {/foreach}
+
+                            </div>
+
+                            <div class="cart-footer">
+                                <p>商品总额：￥{$order['goods_money']}</p>
+                                {if($order['deduction_money']>0)}<p>积分抵扣：￥-{$order['deduction_money']}</p>{/if}
+                                {if $order['order_type'] == 1}
+                                <p>会员折扣：￥-{:round($order['goods_money']-$order['member_money'],2)}</p>
+                                <p>优惠金额：￥-{:round($order['member_money'] + $order['shipping_money'] - $order['promotion_free_shipping'] - $order['order_money'] - $order['deduction_money'],2)}</p>
+                                {else}
+                                <p>会员折扣：￥-0</p>
+                                <p>优惠金额：￥-0</p>
+                                {/if}
+                                <p>运费：￥+{$order['shipping_money'] - $order['promotion_free_shipping']}</p>
+                                <p class="red">实付金额：{$order['order_money']}</p>
+                            </div>
+                        </div>
+                        <!--page-->
+                    </div>
+                </div>
+<div class='j-express' style="display: none">
+    {foreach name="order['goods_packet_list']" key="k" id="vo"}
+    <span class='express_info' data-id="{$vo.express_code}">
+        <span>{$vo.express_name}</span>
+    <span>快递单号：</span>
+    <span>{$vo.express_code}</span>
+    </span>
+    {/foreach}
+</div>
+{/block}
+{block name="javascript"}
+<script>
+    require(['dialog'], function (Dialog) {
+        Dialog.withAccount(".parcel", "a", "selected");
+        $('body').on('click','.selected', function () {
+            express();
+        })
+        express();
+        function express() {
+            var express_id = $(".selected").data('id');
+            if(express_id){
+                loading(express_id);
+            }
+            function loading(express_id) {
+                $('.j-express').find(".express_info").each(function () {
+                    data_id = $(this).data('id');
+                    if(data_id==express_id){
+                        data_html ='';
+                        data_html = $(this).html();
+                        $('.list1').html(data_html);
+                    }
+                });
+                $.ajax({
+                    type: "post",
+                    url: __URL(SHOPMAIN + "/member/getordergoodsexpressmessage"),
+                    data : {"express_no":express_id},
+                    success: function (data) {
+                        var html = '';
+                        if (data["code"] > 0) {
+                            $.each(data.data.data, function (k_ex, v_ex) {
+                                html +='<li>'+v_ex.context+'</p><p class="time">'+v_ex.time+'</li>';
+                            });
+                        } else {
+                            html +=  '<li style="text-align:center">暂无物流信息</li>';
+                        }
+                        $("#list").html(html);
+                    }
+                })
+            }
+        }
+
+    });
+</script>
+{/block}

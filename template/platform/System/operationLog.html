@@ -1,0 +1,90 @@
+{extend name="platform/new_base" /}
+{block name="resources"/} {/block}
+{block name="main"}
+<!-- page -->
+<!--内容-->
+<div class="content">
+    <!--搜索框-->
+    <div class="mb-10 flex flex-pack-justify">
+        <div class=""></div>
+        <div class="flex">
+            <select class="form-control select-form-control" id="uid">
+                <option value="0">请选择操作员...</option>
+                {foreach name="userlist" item="vs"}
+                <option value="{$vs['uid']}">{if $vs['user']}{$vs['user']}{else}{$vs['admin_name']}{/if}</option>
+                {/foreach}
+            </select>
+            <div class="input-group search-input-group ml-10">
+                <input type="text" class="form-control" placeholder="操作类型/内容" id="search_text">
+                <span class="input-group-btn">
+                    <a href="javascript:void(0)" class="btn search btn-primary" type="button">搜索</a>
+                </span>
+            </div>
+        </div>
+    </div>
+    <!--表格-->
+        <table class="table v-table table-auto-center">
+            <thead>
+                <tr>
+                    <th>操作类型</th>
+                    <th>日志内容</th>
+                    <th>操作时间</th>
+                    <th>操作员</th>
+                </tr>
+            </thead>
+
+            <tbody class="trs" id="list">
+              
+            </tbody>
+        </table>
+    <input type="hidden" id="pageIndex">
+    <nav aria-label="Page navigation" class="clearfix">
+        <ul id="page" class="pagination pull-right"></ul>
+    </nav>
+</div>
+<!-- page end -->
+{/block}
+{block name="script"}
+<script type="text/javascript">
+    require(['util'],function(util){
+        $(function () {
+            $('.search').on('click',function(){
+                LoadingInfo(1)
+            });
+
+            util.initPage(LoadingInfo);
+            function LoadingInfo(pageIndex) {
+                var search_text = $('#search_text').val();
+                var uid = $("#uid").val();
+                $.ajax({
+                    type: "post",
+                    url: __URL("PLATFORM_MAIN/system/operationlog"),
+                    data: {"pageIndex": pageIndex,"search_text":search_text,"uid":uid},
+                    success: function (data) {
+                        var html = '';
+                        if (data['data'].length > 0) {
+                            for (var i = 0; i < data['data'].length; i++) {
+                                html += '<tr>';
+                                html += '<td>' + data["data"][i]["module_name"] + '</td>';
+                                html += '<td style="max-width:200px;overflow:hidden">' + data["data"][i]["data"] + '</td>';
+                                html += '<td>' + data["data"][i]["create_time"] + '</td>';
+                                html += '<td>' + data["data"][i]["user_name"] + '</td>';
+                                html += '</tr>';
+                            }
+                        } else {
+                            html += '<tr><td colspan="4" class="h-200">暂无符合条件的数据记录</td></tr>';
+                        }
+                        $("#list").html(html);
+                        $('#page').paginator('option', {
+                            totalCounts: data['total_count']  // 动态修改总数
+                        });
+                    }
+                });
+            }
+        });
+    })
+
+
+
+</script>
+{/block}

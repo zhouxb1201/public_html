@@ -1,0 +1,97 @@
+{extend name="platform/new_base" /}
+{block name="resources"/}
+{/block}
+{block name="main"}
+                <!-- page -->
+                <form class="form-horizontal form-validate pt-15 widthFixedForm">
+                    <input type="password" name="user_password" style="height:0px; border:none;">
+                    <div class="form-group">
+                        <label class="col-md-2 control-label"><span class="text-bright">*</span>手机号</label>
+                        <div class="col-md-5">
+                            <input type="number" class="form-control" id="mobile" required autocomplete="off">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-md-2 control-label"><span class="text-bright">*</span>密码</label>
+                        <div class="col-md-5">
+                            <input type="password" class="form-control" id="user_password" required>
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="col-md-2 control-label">使用人</label>
+                        <div class="col-md-5">
+                            <input type="text" class="form-control" id="user">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-md-2 control-label"><span class="text-bright">*</span>角色</label>
+                        <div class="col-md-5">
+                            <select class="form-control" id="group_id">
+                                {if $auth_group}
+                                {foreach name="auth_group" item="v1"}
+                                <option value="{$v1['group_id']}">&nbsp;&nbsp;{$v1['group_name']}</option>
+                                {/foreach}
+                                {else}
+                                <p class="help-block">没有角色?去<a href="{:__URL('PLATFORM_MAIN/Auth/addAuthGroup')}" target="_blank" class="text-primary">新建</a>，新建完刷新页面</p>
+                                {/if}
+                            </select>
+                        </div>
+                    </div>
+                
+                
+                    <div class="form-group"></div>
+                    <div class="form-group">
+                        <label class="col-md-2 control-label"></label>
+                        <div class="col-md-8">
+                            <button class="btn btn-primary J-submit" type="submit">添加</button>
+                            <a href="javascript:history.go(-1);" class="btn btn-default">返回</a>
+                        </div>
+                    </div>
+
+                </form>
+                
+                <!-- page end -->
+{/block}
+{block name="script"}
+<script>
+require(['util'],function(util){
+    util.validate($('.form-validate'),function(form){
+        var group_id = $("#group_id").val();
+        var user_password = $("#user_password").val();
+        var user = $("#user").val();
+        var mobile = $("#mobile").val();
+        if(mobile==''){
+            util.message('手机号不能为空','danger');
+            return false;
+        }
+        $('.J-submit').attr({disabled: "disabled"}).html('提交中...');
+        $.ajax({
+            type : "post",
+            url : "{:__URL('PLATFORM_MAIN/auth/addUser')}",
+            data : {
+                'group_id' : group_id,
+                'mobile' : mobile,
+                'user_password' : user_password,
+                'user' : user
+            },
+            async : true,
+            success : function(data) {
+                if (data['code'] > 0) {
+                    util.message(data["message"],'success',"{:__URL('PLATFORM_MAIN/Auth/userList')}");
+                }else{
+                    if(data['code'] ==-2){
+                        util.message('该手机号已存在','danger');
+                    } else if(data['code'] ==-3){
+                        util.message('该手机已经在团大人平台使用','danger');
+                    }else{
+                        util.message(data["message"],'danger');
+                    }
+                    $('.J-submit').removeAttr('disabled').html('添加');
+                }
+            }
+        });
+    });
+})
+</script>
+{/block}

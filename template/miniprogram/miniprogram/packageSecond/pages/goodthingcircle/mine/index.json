@@ -1,0 +1,6 @@
+{
+  "usingComponents": {
+    "bottom-menu":"../component/bottom_menu/index"
+  },
+  "navigationBarTitleText": "我的"
+}

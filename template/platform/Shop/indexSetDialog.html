@@ -1,0 +1,36 @@
+<div class="sets">
+    <div class="modal-body fs12">
+        <p>请选择要设置的快捷入口，最多5个</p>
+        <div class="sets-border">
+            {if $nav_list}
+            {volist name="nav_list" id="vo"}
+
+            <div class="sets-first">
+                <p>{$vo['data']['module_name']}</p>
+                {notempty name="vo['sub_menu']"}
+                <div class="checkbox pl">
+                    {volist name="vo['sub_menu']" id="v1"}
+                    <label>
+                        <input class="decorate" type="checkbox" name="module" value="{$v1['module_id']}"> {$v1['module_name']}
+                    </label>
+                    {/volist}
+                </div>
+                {/notempty}
+            </div>
+            {/volist}
+            {/if}
+        </div>
+    </div>
+<input type="hidden" id="entry_ids" value="{$entry_ids}">
+</div>
+<script>
+    require(['util'],function(util){
+        var type_module =  $("#entry_ids").val();
+        if(type_module){
+            var type_module_array = type_module.split(',');
+            for (var i = 0; i < type_module_array.length; i++) {
+                $('input[type="checkbox"][value="' + type_module_array[i] + '"]').prop("checked", true);
+            }
+        }
+    })
+</script>

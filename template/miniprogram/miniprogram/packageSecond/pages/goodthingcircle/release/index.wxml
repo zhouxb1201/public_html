@@ -1,0 +1,174 @@
+<view class="card-group-box">
+	<!-- <view class="cell thing-type">
+		<view class="cell__title">干货类型</view>
+		<view class="cell__value">
+			<van-radio-group value="{{ thing_type }}" bind:change="onThingTypeChange">
+				<van-radio checked-color="#f44" name="{{1}}">图文</van-radio>
+				<van-radio checked-color="#f44" name="{{2}}">视频</van-radio>
+			</van-radio-group>
+		</view>
+	</view> -->
+	<view class="cell">
+		<view class="cell__value">
+			<view class="field__body">
+				<input maxlength="20" bindinput="onTitleInput" class="field__control" auto-focus placeholder="加个标题会有更多赞哦！最多20字" />
+			</view>
+		</view>
+	</view>
+	<view class="cell">
+		<view class="cell__value">
+			<view class="field__body" style="display:{{is_textarea ? 'block' : 'none'}}">
+				<textarea maxlength="1000" bindinput="onContentInput" placeholder="说说此刻心情。最多1000字" />
+				</view>
+    </view>
+  </view>
+  <view class="upload-wrap" >
+		<view class="img-group">
+		 <view class="item" wx:for="{{arrImg}}" wx:key='index' wx:for-item='imgItem'>
+		 		<view class='btn-delete iconfont v-icon-close' data-index="{{index}}" bindtap='deleteImg'></view>
+		 		<view class="img"><image mode="widthFix" src="{{imgItem}}"></image></view>
+		 </view>
+			<view class="upload-img van-uploader" bindtap="onUploadImages" wx:if="{{arrImg.length < 9}}">
+				<view class="uploader">
+					<van-icon name="photograph" size='38px' class="upload-icon"/>
+					<view class='img_num'>{{arrImg.length}}/9</view>
+				</view>
+			</view>
+		</view>
+	</view>
+  <!-- <view class="upload-wrap">
+		<view class="img-group">
+		 <view class="item" wx:for="{{arrVideo}}" wx:key='index' wx:for-item='videoItem'>
+		 		<view class='btn-delete iconfont v-icon-close' data-index="{{index}}"></view>
+		 		<view class="img"><image mode="widthFix" src="{{videoItem}}"></image></view>
+		 </view>
+			<view class="upload-img van-uploader" bindtap="onUnloadVideo" wx:if="{{arrVideo.length < 1}}">
+				<view class="uploader">
+					<van-icon name="photograph" size='38px' class="upload-icon"/>
+					<view class='img_num'>{{arrVideo.length}}/{{1}}</view>
+				</view>
+			</view>
+		</view>
+	</view> -->
+	<view class="cell" bindtap="onGoods">
+		<view class="iconfont v-icon-zan cell-icon-left {{title_goods != '推荐商品' ? 'bg-blue' : ''}}"></view>
+		<view class="cell__title {{title_goods != '推荐商品' ? 'cr-blue' : ''}}">{{title_goods}}</view>
+		<view class="cell__value nowrap">{{text_goods}}</view>
+		<view class="iconfont v-icon-arrow-right cell-icon-right"></view>
+	</view>
+	<view class="cell" bindtap="onTopic">
+		<view class="iconfont v-icon-topic cell-icon-left {{title_topic != '参与话题' ? 'bg-blue' : ''}}"></view>
+		<view class="cell__title {{title_topic != '参与话题' ? 'cr-blue' : ''}}">{{title_topic}}</view>
+		<view class="cell__value nowrap">{{text_topic}}</view>
+		<view class="iconfont v-icon-arrow-right cell-icon-right"></view>
+	</view>
+	<view class="cell" bindtap="onLocation">
+		<view class="iconfont v-icon-location-03 cell-icon-left {{title_location != '添加定位' ? 'bg-blue' : ''}}"></view>
+		<view class="cell__title {{title_location != '添加定位' ? 'cr-blue' : ''}}">{{title_location}}</view>
+		<view class="cell__value nowrap">{{text_location}}</view>
+		<view class="iconfont v-icon-arrow-right cell-icon-right"></view>
+	</view>
+</view>
+
+<view class="btn">
+	<van-button round="{{true}}" loading="{{isLoading}}" block="{{block}}" type="danger" bind:click="onSubmit">发布干货</van-button>
+</view>
+
+<!--推荐商品-->
+<van-popup show="{{ is_goods }}" position="bottom" custom-style="height:100%;">
+  <view class='popup-title'>
+    <view class='close' bindtap="closeGoods">
+      <text class='icon-left iconfont v-icon-arrow-left2'></text>
+      返回
+    </view>
+    <view class='goods-title'>推荐商品</view> 
+  </view>
+	<view class='goods-list'>
+		<view class="cell" wx:for="{{goods_list}}" wx:key='index' wx:for-item='goodsItem'>
+			<view class="cell__value" data-index="{{index}}" data-goodsid="{{goodsItem.goods_id}}" bindtap="toggleGoods">
+				<view class="goods-item">
+					<view class="goods-checkbox">
+						<van-checkbox checked-color="#ff4444" value="{{ goodsItem.checked }}"></van-checkbox>
+					</view>
+					<view class="goods-card">
+						<view class="img"><image mode="widthFix" src="{{goodsItem.goods_img ? goodsItem.goods_img : '/images/no-goods.png'}}"></image></view>
+						<view class="content">
+							<view class="title">{{goodsItem.goods_name}}</view>
+							<view class="bottom">
+								<text>￥{{goodsItem.price}}</text><text>￥{{goodsItem.market_price}}</text>
+							</view>
+						</view>
+					</view>
+				</view>
+			</view>
+		</view>
+	</view>
+	<view class="btn-bottom">
+		<button class='btn-goods' bindtap="onRecommend">推荐</button>
+	</view>
+</van-popup>
+
+<!--参与话题-->
+<van-popup show="{{ is_topic }}" position="bottom" custom-style="height:100%;">
+	<view class="head-search">
+		<view class="search-box">
+			<view class="left-icon" bindtap="onLeftTopic">
+				<view class='icon-left iconfont v-icon-arrow-left2'></view>
+			</view>
+			<view class="search">
+				<view class="iconfont v-icon-search"></view>
+				<input class="search-input" placeholder="请输入搜索关键字" value="{{topic_search_text}}"></input>
+			</view>
+			<view class="search-action">搜索</view>
+		</view>
+	</view>
+	<view class="part-list">
+		<view class="part-tab-nav" wx:if="{{topic_state == 1}}">
+			<block wx:for="{{tab_topic_list}}" wx:key='index' wx:for-item='tabItem'>
+				<view class="tab" data-id="{{tabItem.topic_id}}" bindtap="onTabTopic">
+					<image mode="widthFix" src="{{tabItem.topic_pic ? tabItem.topic_pic : '/images/no-goods.png'}}"  class="img"></image>
+					<view class="text">{{tabItem.topic_title}}</view>
+				</view>
+			</block>
+		</view>
+		<view class="opt cell" bindtap="getNOTopicsInfo">
+			<view class="left-icon"></view>
+			<view class="cell__title">不参与任何话题</view>
+		</view>
+		<view class="list">
+		 <block wx:for="{{title_topic_list}}" wx:key='index' wx:for-item='item'>
+				<view class="cell" data-title="{{item.topic_title}}" data-id="{{item.topic_id}}" bindtap="onAddTopics">
+					<view class="cell__title">#{{item.topic_title}}</view>
+				</view>
+		 </block>
+		</view>
+	</view>
+</van-popup>
+
+<!--添加定位-->
+<van-popup show="{{ is_location }}" position="bottom" custom-style="height:100%;">
+	<view class="head-search">
+		<view class="search-box">
+			<view class="left-icon" bindtap="onLeftLocation">
+				<view class='icon-left iconfont v-icon-arrow-left2'></view>
+			</view>
+			<view class="search">
+				<view class="iconfont v-icon-search"></view>
+				<input class="search-input" bindinput="onLocationSearchText" placeholder="请输入搜索关键字" ></input>
+			</view>
+			<view class="search-action" bindtap="onLocationSearch">搜索</view>
+		</view>
+	</view>
+	<view class="opt cell">
+		<view class="left-icon"></view>
+		<view class="cell__title">不显示位置</view>
+	</view>
+	<block wx:for="{{address_list}}" wx:key='index' wx:for-item='item'>
+		<view class="cell" bindtap="onSelectAddress" data-location="{{item.location}}" data-title="{{item.name}}">
+			<view class="cell__title">
+				<view>{{item.name}}</view>
+				<view class="cell__label">{{item.address}}</view>
+			</view>
+		</view>
+	</block>
+</van-popup>

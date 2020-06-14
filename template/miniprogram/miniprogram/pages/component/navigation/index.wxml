@@ -1,0 +1,4 @@
+<navigator open-type='{{openType}}' url='{{turl}}' hover-class="none">
+  <slot></slot>
+</navigator>
+

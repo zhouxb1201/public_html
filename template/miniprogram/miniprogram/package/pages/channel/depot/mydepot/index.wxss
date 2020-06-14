@@ -1,0 +1,22 @@
+page{
+  background-color: #f8f8f8;
+  font-size: 28rpx;
+}
+
+.cell_group{
+  background-color: #fff;
+}
+.cell_group .cell_item{
+  display: flex;
+  padding: 20rpx 30rpx;
+  color: #323233;
+  align-items: center;
+  justify-content: space-between;
+}
+.cell_group .cell_item .item_l{
+  display: flex;
+  align-items: center;
+}
+.line{
+ border-bottom: 1rpx solid #ebedf0; 
+}

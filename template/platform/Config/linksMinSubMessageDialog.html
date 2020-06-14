@@ -1,0 +1,41 @@
+<div class="links-dialog">
+
+    <ul class="nav nav-tabs v-nav-tabs pt-15" role="tablist">
+        <li role="presentation" class="active"><a href="#keyWord" aria-controls="keyWord" role="tab" data-toggle="tab" class="flex-auto-center">商城变量</a></li>
+    </ul>
+    <div class="tab-content min-h-200">
+        <div role="tabpanel" class="tab-pane fade in active" id="keyWord">
+            <div class="" id="custom">
+                <div class="linkDialog-title">付款成功</div>
+                <a href="javascript:void(0);" class="btn btn-default selectedPage" data-link="pages/index/index">商城首页</a>
+                <a href="javascript:void(0);" class="btn btn-default selectedPage" data-link="pages/category/index">商品分类</a>
+                <a href="javascript:void(0);" class="btn btn-default selectedPage" data-link="pages/goodlist/index">商品列表</a>
+                <div class="linkDialog-title">订单关闭</div>
+                <a href="javascript:void(0);" class="btn btn-default selectedPage" data-link="pages/index/index">商城首页2</a>
+                <a href="javascript:void(0);" class="btn btn-default selectedPage" data-link="pages/category/index">商品分类2</a>
+                <a href="javascript:void(0);" class="btn btn-default selectedPage" data-link="pages/goodlist/index">商品列表2</a>
+            </div>
+        </div>
+    </div>
+
+    <input type="hidden" id="selectedData">
+</div>
+<script>
+    $(function(){
+        // 选中页面
+        $('.links-dialog').on('click','.selectedPage',function(){
+            $(this).siblings().removeClass('btn-primary');
+            $(this).addClass('btn-primary');
+            selecteddata('page',$(this).data('link'))
+        });
+
+        function selecteddata(type,params){
+            var selecteddata = {
+                type:type,
+                params:params
+            };
+            $('#selectedData').data(selecteddata);
+        }
+    })
+
+</script>

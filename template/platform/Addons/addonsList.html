@@ -1,0 +1,147 @@
+{extend name="platform/new_base" /}
+{block name="resources"/}
+{/block}
+{block name="menu"}
+{/block}
+{block name="main"}
+        <div class="flex flex-pack-center mb-20">
+            <div class="input-group search-input-group">
+                <input type="text" class="form-control" id="search_text" placeholder="应用名称">
+                <span class="input-group-btn">
+                    <button class="btn btn-primary J-search" type="button">搜索</button>
+                </span>
+            </div>
+        </div>
+
+        <div class="plugin" id="list">
+            
+        </div>
+{/block}
+{block name="script"}
+<script>
+    require(['util'], function (util) {
+        getAddonsList();
+        function getAddonsList() {
+            var search_text = $("#search_text").val();
+            $.ajax({
+                type: "post",
+                url: "{:__URL('PLATFORM_MAIN/addonslist/addonslist')}",
+                async: true,
+                data: {
+                     "search_text": search_text
+                },
+                success: function (data) {
+                    var html = '';
+                    if (data.length > 0) {
+                        for (var i = 0; i < data.length; i++) {
+                            html += '<div class="mb-20">';
+                            if(data[i]['category_name'] == '常用功能'){
+
+                            }else{
+                                html += '<div class="plugin-title">' + data[i]['category_name'] + '</div>';
+                            }
+                            html += '<ul class="plugin-list clearfix">';
+                            var addons = data[i].addons;
+                            if(addons.length > 0){
+                                for(var j = 0; j < addons.length; j++){
+                                    var logo = '/public/platform/images/addonDefault.png';
+                                    if(addons[j]['logo_small']){
+                                        logo = __IMG(addons[j]['logo_small']);
+                                    }
+                                    if(data[i]['category_name'] == '常用功能'){
+                                        break;
+                                        if(addons[j]['logo_often']){
+                                            logo = __IMG(addons[j]['logo_often']);
+                                        }
+                                    }
+                                    if(addons[j]['permission']){
+                                        html += '<li>';
+                                        if(addons[j]['up_status']==2){
+                                            html += '<a href="javascript:;" class="item increment" data-id="'+ addons[j]['id'] +'" data-type="3"><div class="willOnline"><img src="/public/platform/images/willOnline.png"></div>';
+                                        }else{
+                                            if(addons[j]['name']=='wechat'){
+                                                html += '<a href="'+__URL('PLATFORM_MAIN/wchat/config')+'" class="item">';
+                                            }else if(addons[j]['name']=='subaccount'){
+                                                html += '<a href="'+__URL('PLATFORM_MAIN/Auth/userlist')+'" class="item">';
+                                            }else{
+                                                html += '<a href="'+__URL('PLATFORM_MAIN/'+ addons[j]['url'])+'" class="item">';
+                                            }
+                                        }
+                                        html += '<div class="media mt-0">';
+                                        html += '<div class="media-left pr">';
+                                        html += '<img src="' + logo + '" width="48" height="48">';
+                                        html += '</div>';
+                                        html += '<div class="media-body">';
+                                        html += '<h3 class="strong">'+ addons[j]['module_name'] +'</h3>';
+                                        html += '<p class="small-muted line-1-ellipsis" title="'+ addons[j]['desc'] +'" style="max-width:150px;">'+ addons[j]['desc'] +'</p>';
+                                        html += '</div>';
+                                        html += '</div>';
+                                        html += '</a>';
+                                        html += '</li>';
+                                    }else{
+                                        html += '<li>';
+                                        if(addons[j]['is_value_add']==1 && addons[j]['up_status']!=2){
+                                            html += '<a href="javascript:;" class="item increment" data-id="'+ addons[j]['id'] +'" data-type="1">';
+                                        }else if(addons[j]['up_status']==2){
+                                            html += '<a href="javascript:;" class="item increment" data-id="'+ addons[j]['id'] +'" data-type="3"><div class="willOnline"><img src="/public/platform/images/willOnline.png"></div>';
+                                        }else{
+                                            html += '<a href="javascript:;" class="item increment" data-id="'+ addons[j]['id'] +'" data-type="2">';
+                                        }
+                                            html += '<div class="media mt-0">';
+                                            html += '<div class="media-left pr">';
+                                            html += '<img src="' + logo + '" width="48" height="48">';
+                                        if( addons[j]['up_status']!=2) {
+                                            html += '<div class="unauthorized">未授权</div>';
+                                        }
+                                            html += '</div>';
+                                        html += '<div class="media-body">';
+                                        if(addons[j]['is_value_add']==1 && addons[j]['up_status']!=2) {
+                                            html += '<h3 class="strong">' + addons[j]['title'] + ' <span class="label label-red">增值</span></h3>';
+                                        }else{
+                                            html += '<h3 class="strong">' + addons[j]['title'] + '</h3>';
+                                        }
+                                        html += '<p class="small-muted line-1-ellipsis" title="'+ addons[j]['desc'] +'" style="max-width:150px;">'+ addons[j]['desc'] +'</p>';
+                                        html += '</div>';
+                                        html += '</div>';
+                                        html += '</a>';
+                                        html += '</li>';
+                                    }
+                                }
+                            }
+                            html += '</ul>';
+                            html += '</div>';
+                        }
+                    }
+                    $("#list").html(html);
+                }
+            });
+        }
+        $('.J-search').on('click', function () {
+            getAddonsList();
+        });
+        $('body').on('click','.increment', function () {
+            var addons_id = $(this).data('id');
+            var type = $(this).data('type');
+            if(type==1){
+                var url=  __URL(PLATFORMMAIN + '/addonslist/increment&addons_id='+addons_id+'&type=1');
+                util.confirm1('增值应用','url:'+url,'.xlarge',function(){
+                })
+            }
+            if(type==2){
+                var url=  __URL(PLATFORMMAIN + '/addonslist/increment&addons_id='+addons_id+'&type=2');
+                util.confirm1('未授权应用','url:'+url,'.xlarge',function(){
+                })
+            }
+            if(type==3){
+                var url=  __URL(PLATFORMMAIN + '/addonslist/increment&addons_id='+addons_id+'&type=3');
+                util.confirm1('即将上线','url:'+url,'.xlarge',function(){
+                })
+            }
+        });
+
+        $(document).ready(function(){
+            $('.v-layout').addClass('nosubnav');
+        });
+    })
+</script>
+{/block}

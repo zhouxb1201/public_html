@@ -1,0 +1,218 @@
+{extend name="shop/new/base" /}
+{block name="head"}
+<!--头部-->
+<div class="header shopHeader">
+    <div class="w w1200 clearfix">
+        <div class="fl oneItem">
+            <div class="logo">
+                <a href="{:__URL('SHOP_MAIN')}" class="logo_a"><img src="{$pc_info['logo']}" alt=""></a>
+            </div>
+        </div>
+
+        <div class="stepbar-box step1"></div>
+    </div>
+</div>
+<!--分隔线-->
+<div class="sc-hr"></div>
+{/block}
+{block name="main"}
+<input type="hidden" value="{$getGoodsCouponTypeUrl}" id="getGoodsCouponTypeUrl">
+<input type="hidden" value="{$fetchCouponTypeUrl}" id="fetchCouponTypeUrl">
+<!--购物车布局-->
+{if $list}
+<div class="cart-layout-TB" style="display: block">
+    <div class="cart-main w1200">
+        <!--表头-->
+        <div class="cart-table-th clearfix">
+            <div class="fl th-chk">
+                <label for="selectAll">
+                    <input type="checkbox" id="selectAll" class="whole_check"> 全选
+                </label>
+            </div>
+            <div class="fl th-item">
+                <div class="th-inner">商品信息</div>
+            </div>
+            <div class="fl th-info">
+                <div class="th-inner">属性</div>
+            </div>
+            <div class="fl th-price">
+                <div class="th-inner">单价（元）</div>
+            </div>
+            <div class="fl th-amount">
+                <div class="th-inner">数量</div>
+            </div>
+            <div class="fl th-sum">
+                <div class="th-inner">小计（元）</div>
+            </div>
+            <div class="fl th-op">
+                <div class="th-inner">操作</div>
+            </div>
+        </div>
+        <!--订单信息-->
+        <div class="cart-orderList">
+            {foreach name="list" item="cart" key="i"}
+            <div class="cart-ol-item">
+                
+                <div class="shopInfo">
+                    {if $shopStatus}
+                    <input type="checkbox" class="shopChoice" data-shop-id="<?php $a= explode(',',$i); echo $a[0];?>">&nbsp;&nbsp; 店铺：
+                    <a href="javascript:void(0);"> <?php $a= explode(",",$i); echo $a[1];?></a>
+                    {/if}
+                    {if $isCoupon}
+                    <div class="cart-coupons">
+                        <div class="cart-coupons-border">优惠券 <i class="icon-dir-down icon"></i></div>
+
+                        <div class="coupon-popup hovers">
+                            <div class="coupon-close"><i class="icon-close"></i></div>
+                            <div class="coupon-list">
+                                <ul class="J_ShopCouponList">
+                                    
+                                </ul>
+                            </div>
+                            <span class="arrow"></span>
+                        </div>
+                    </div>
+                    {/if}
+                </div>
+                <div class="order-content">
+                    {foreach name="cart" item="cart_info" key="k"}
+                    <div class="item-body">
+                        <ul class="item-content clearfix">
+                            <li class="td td-chk">
+                                <div class="td-inner">
+                                    <input type="checkbox" class="son_check" name="sel_cartgoods[]" value="{$cart_info.cart_id}" data-goods-shop-id="{$cart_info.shop_id}" data-goods-id="{$cart_info.goods_id}">&nbsp;&nbsp;
+                                </div>
+                            </li>
+                            <li class="td td-item">
+                                <div class="td-inner clearfix">
+                                    <div class="item-pic">
+                                        <a href="{:__URL('SHOP_MAIN/goods/goodsinfo?goodsid='.$cart_info.goods_id)}">
+                                            <img src="{:__IMG($cart_info.picture_info.pic_cover_small)}" alt="" title="{$cart_info.goods_name}">
+                                        </a>
+                                    </div>
+                                    <div class="item-info">
+                                        <div class="item-basic-info">
+                                            <a href="{:__URL('SHOP_MAIN/goods/goodsinfo?goodsid='.$cart_info.goods_id)}" target="_blank" title="{$cart_info.goods_name}" class="item-title">{$cart_info.goods_name}</a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </li>
+                            <li class="td td-info">
+                                <div class="item-props">
+                                    {if $cart_info.sku_name_arr}
+                                    {foreach $cart_info.sku_name_arr as $vs}
+                                    <p class="sku-line">{$vs}</p>
+                                    {/foreach}
+                                    {/if}
+                                </div>
+                            </li>
+                            <li class="td td-price">
+                                <div class="td-inner">
+                                    <div class="price-content">
+                                        <em class="price-now unitPrice" data-price="{$cart_info.price}" id="goods_price_{$cart_info.cart_id}">
+                                            ￥{$cart_info.price}
+                                            {if condition="$cart_info.point_exchange_type==1 "}
+                                            {if condition=" $cart_info.point_exchange>0"}
+                                            +{$cart_info.point_exchange}积分
+                                            {/if}<br/>积分商品
+                                            {/if}
+                                        </em>
+                                    </div>
+                                </div>
+                            </li>
+                            <li class="td td-amount">
+                                <div class="td-inner">
+                                    <div class="item-amount J-amount" data-id="{$cart_info.cart_id}" data-max_buy="{$cart_info.max_buy}" data-goods_id="{$cart_info.goods_id}" data-stock="{$cart_info.stock}">
+                                        <a href="javascript:void(0);" class="J_Minus minus">-</a>
+                                        <input type="text" value="{$cart_info.num}" class="text text-amount J_ItemAmount" autocomplete="off" data-default-num="{$cart_info.num}">
+                                        <a href="javascript:void(0);" class="J_Plus plus">+</a>
+                                    </div>
+                                </div>
+                            </li>
+                            <li class="td td-sum">
+                                <div class="td-inner">
+                                    <div class="price-content">
+                                        <em class="price-now sum_price" id="subtotal_{$cart_info.cart_id}" data-total="{$cart_info.price*$cart_info.num}" data-integral="{if condition='$cart_info.point_exchange_type==1'}{$cart_info.point_exchange*$cart_info.num}{else/}0{/if}" data-price="{$cart_info.price}">￥{$cart_info.price*$cart_info.num}</em>
+                                    </div>
+                                </div>
+                            </li>
+                            <li class="td td-op">
+                                <div class="td-inner">
+                                    <a href="javascript:void(0);" class="delBtn" data-id="{$cart_info.cart_id}">删除</a>
+                                </div>
+                            </li>
+                        </ul>
+                    </div>
+                    {/foreach}
+<!--                    <div class="welfare">
+                        <p><span class="w-border">满减</span> 满1000减50</p>
+                        <p><span class="w-border">包邮</span> 满1000减包邮</p>
+                    </div>-->
+                </div>
+
+            </div>
+            {/foreach}
+        </div>
+    </div>
+
+    <div id="hide_site"></div>
+    <div class="float-bar w1200">
+        <!--float-bar-fixed-->
+        <div class="float-bar-wrapper clearfix">
+            <div class="shop-selectall fl">
+                <label for="select-all">
+                    <input type="checkbox" id="select-all" class="whole_check" style="vertical-align: sub;"> 全选
+                </label>
+            </div>
+            <div class="operations fl">
+                <a href="javascript:void(0);" class="J-clear-cart">删除</a>
+            </div>
+            <div class="float-bar-right fr clearfix">
+                <div class="price-sum">
+                    <span class="txt">合计（不含运费）：</span>
+                    <strong class="totalPrice">￥0.00</strong>
+                </div>
+                <div class="btn-area">
+                    <a href="javascript:void(0);" class="submit-btn-disabled submit-btn J-cartsubmit">
+                        结算
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{else/}
+<!--购物车为空的布局-->
+<div class="cart-none w1200">
+    <div class="crumbs">
+        <p>您的位置：
+            <a href="{:__URL('SHOP_MAIN')}" class="blue">首页</a>
+            <span>></span>
+            <span>我的购物车</span>
+        </p>
+    </div>
+    <div class="cart-layout-none ">
+        <h2>您的购物车还是空的，赶紧行动吧！您可以：</h2>
+        <ul>
+            <li>返回<a href="{:__URL('SHOP_MAIN')}">首页</a></li>
+            <li>返回<a href="{:__URL('SHOP_MAIN/member/goodscollectionlist')}" class="blue">我的收藏夹</a></li>
+        </ul>
+    </div>
+</div>
+{/if}
+
+<div style="height: 50px;width: 100%"></div>
+{/block}
+{block name="javascript"}
+<script>
+    require(['cart'], function (Cart) {
+        Cart.showCoupons();
+        Cart.car();
+        Cart.footview();
+        
+        window.onscroll = function () {
+           Cart.footview();
+        }
+    })
+</script>
+{/block}

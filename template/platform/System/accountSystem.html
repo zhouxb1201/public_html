@@ -1,0 +1,319 @@
+{extend name="platform/new_base" /} {block name="resource"} {/block} {block name="main"}
+<!-- page -->
+<!--账号体系模板-->
+<div class="editor1-main-tips mt-10 mb-20" style="min-height: 0">
+	<p class="mb-10">会员登录不同渠道商城时，根据账号体系判断会员身份是否为同一会员或新会员。</p>
+	<p class="text-red">账号体系与商城今后发展密切相关，设置后不可更改，请谨慎设置。</p>
+</div>
+
+<form class="form-horizontal form-validate">
+    <div class="screen-title2" data-id="t2">
+        <span class="text">手机号类型</span>
+</div>
+<div class="form-group">
+    <label class="col-md-2 control-label">手机号类型</label>
+    <div class="col-md-8">
+        <label class="radio-inline">
+            <input type="radio" name="mobile_type" class="mobile_type mainland" checked="checked" value="0"> 大陆手机号
+        </label>
+        <label class="radio-inline">
+            <input type="radio" name="mobile_type" class="mobile_type international" value="1"> 国际手机号
+        </label>
+        <p class="text-red">手机号类型保存后不可修改，默认为大陆手机号类型</p>
+    </div>
+</div>
+<div class="screen-title2" data-id="t2">
+        <span class="text">账号体系</span>
+</div>
+<div class="account-system">
+	<div class="as-box flex mb-20">
+		<div class="as-box-item" data-account_type='1'>
+			<div class="sel-pic"></div>
+			<div class="as-title">
+				<img src="/public/platform/images/accountSystem/as1.png" alt="" class="as-title-img">
+				<div class="fs-14">全渠道同一账号体系</div>
+				<div class="fs-14">（手机号）</div>
+			</div>
+			<p class="mb-10 mh-56">以手机号码为主账号，可支持一个账号登录公众号、小程序、H5、APP、PC等所有不同渠道的商城。</p>
+			<ul class="nav nav-tabs v-nav-tabs as-tabs" role="tablist">
+				<li role="presentation" class="active"><a href="#tab1" aria-controls="tab1" role="tab" data-toggle="tab" class="flex-auto-center">优点</a></li>
+				<li role="presentation"><a href="#tab2" aria-controls="tab2" role="tab" data-toggle="tab" class="flex-auto-center">缺点</a></li>
+				<li role="presentation"><a href="#tab3" aria-controls="tab3" role="tab" data-toggle="tab" class="flex-auto-center">准备工作</a></li>
+			</ul>
+			<div class="tab-content pt-10">
+				<div role="tabpanel" class="tab-pane fade in active" id="tab1">该账号体系可支持多端、商家只需要配置短信即可，搭建成本低。</div>
+				<div role="tabpanel" class="tab-pane fade" id="tab2">前端会员体验差，在使用支持微信联合登录下的端口（公众号、小程序、APP、PC）<span class="text-orange">各端均需要</span>绑定一次手机号码账号数据才能互通。</div>
+				<div role="tabpanel" class="tab-pane fade" id="tab3">开启并配置 <a href="javascript:void(0);" class="text-primary" target="_blank">短信</a> 功能。</div>
+			</div>
+		</div>
+
+		<div class="as-box-item" data-account_type='2'><!--unSel 为不能选中-->
+			<div class="sel-pic"></div>
+			<div class="as-title">
+				<img src="/public/platform/images/accountSystem/as2.png" alt="" class="as-title-img">
+				<div class="fs-14">全渠道同一账号体系</div>
+				<div class="fs-14">
+					（手机号 + 微信开放平台）<div class="v-tooltip inline-block">
+						<span class="tips-box"><i class="icon icon-index-guide"></i></span>
+						<div class="v-tooltip-box">
+							<div class="v-tooltip-box-arrow">
+								微信开放平台需要每年给腾讯300元年费。
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+			<p class="mb-10 mh-56">以微信账号与手机号码组成的账号，可支持一个账号登录公众号、小程序、H5、APP、PC等所有不同渠道的商城。<span class="text-orange">多端商城推荐使用</span>。</p>
+			<ul class="nav nav-tabs v-nav-tabs as-tabs" role="tablist">
+				<li role="presentation" class="active"><a href="#tab4" aria-controls="tab4" role="tab" data-toggle="tab" class="flex-auto-center">优点</a></li>
+				<li role="presentation"><a href="#tab5" aria-controls="tab5" role="tab" data-toggle="tab" class="flex-auto-center">缺点</a></li>
+				<li role="presentation"><a href="#tab6" aria-controls="tab6" role="tab" data-toggle="tab" class="flex-auto-center">准备工作</a></li>
+			</ul>
+			<div class="tab-content pt-10">
+				<div role="tabpanel" class="tab-pane fade in active" id="tab4">前端会员体验较好，在使用支持微信联合登录下的端口（公众号、小程序、APP、PC）<span class="text-orange">只需要在任意一端</span>绑定一次手机号码账号数据即可互通。</div>
+				<div role="tabpanel" class="tab-pane fade" id="tab5">除了需要配置 <a href="javascript:void(0);" class="text-primary" target="_blank">短信</a> 之外还要申请 <a href="javascript:void(0);" class="text-primary" target="_blank">微信开放平台</a> 账号。最后根据商城使用的端口把相关信息填写至开放平台（例：关联公众号、关联小程序、添加APP应用、添加网站应用）。</div>
+				<div role="tabpanel" class="tab-pane fade" id="tab6">申请 <a href="javascript:void(0);" class="text-primary" target="_blank">微信开放平台</a> 并关联需要微信联合登录端口的应用（例：关联公众号、关联小程序、添加APP应用、添加网站应用），并开启配置 <a href="javascript:void(0);" class="text-primary" target="_blank">短信</a>。</div>
+			</div>
+		</div>
+
+		<div class="as-box-item" data-account_type='3'>
+			<div class="sel-pic"></div>
+			<div class="as-title">
+				<img src="/public/platform/images/accountSystem/as3.png" alt="" class="as-title-img">
+				<div class="fs-14">单一渠道账号体系</div>
+				<div class="sel-pic"></div>
+				<div class="switch-inline J-is_bind_phone hide">
+					<p class="bind-phone">绑定手机</p>
+					<p class="check-box">
+						<input type="checkbox" id="is_bind_phone">
+						<label for="is_bind_phone" class=""></label>
+					</p>
+				</div>
+			</div>
+			<p class="mb-10 mh-56">以微信账号或手机账号为主账号，一个微信账号在公众号、小程序、APP、PC等端口数据不互通，H5端只支持使用手机号码注册及登录。不推荐使用</p>
+			<ul class="nav nav-tabs v-nav-tabs as-tabs" role="tablist">
+				<li role="presentation" class="active"><a href="#tab7" aria-controls="tab7" role="tab" data-toggle="tab" class="flex-auto-center">优点</a></li>
+				<li role="presentation"><a href="#tab8" aria-controls="tab8" role="tab" data-toggle="tab" class="flex-auto-center">缺点</a></li>
+				<li role="presentation"><a href="#tab9" aria-controls="tab9" role="tab" data-toggle="tab" class="flex-auto-center">准备工作</a></li>
+			</ul>
+			<div class="tab-content pt-10">
+				<div role="tabpanel" class="tab-pane fade in active" id="tab7">只做单渠道商城的商家搭建成本低，在微信、小程序端口可不开通短信功能。</div>
+				<div role="tabpanel" class="tab-pane fade" id="tab8">微信账号会员数据在各渠道商城中各不互通，无法合并。不适合做多渠道商城。</div>
+				<div role="tabpanel" class="tab-pane fade" id="tab9">如只考虑做公众号、小程序端口的商家只需要对接好公众号或小程序即可，如需做H5、PC端、APP端则需要开启并配置 <a href="javascript:void(0);" class="text-primary" target="_blank">短信</a> 功能。</div>
+			</div>
+		</div>
+
+	</div>
+	<!-- 第一种账号体系 -->
+	<div class="modal fade" id="myModal1" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" data-backdrop="static">
+	<div class="modal-dialog">
+		<div class="modal-content" style="border-radius:5px">
+			<div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+				<h4 class="modal-title" id="myModalLabel">提示</h4>
+			</div>
+			<div class="modal-body">
+				<p class="padding-alert">当前选中 <span class="color-alert">全渠道同一账号体系（手机号）</span></p>
+				<p class="padding-alert">1、<span class="color-alert">帐号体系一旦保存将无法更改，请为商城今后发展谨慎考虑。</span></p>
+				<p class="padding-alert">2、请确定已开通并配置<span class="color-alert">短信</span>，否则商城前端将会有部分功能受限。</p>
+				<p class="padding-alert"><input type="checkbox" name="select_account_type1" data-type="1" class="J-select-account">&nbsp;确认选择体系并已开通配置好相关功能</p>
+			</div>
+			<div class="modal-footer">
+				<button  class="btn btn-primary J-account1" disabled type="submit">确定</button>
+				<button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
+			</div>
+		</div><!-- /.modal-content -->
+	</div><!-- /.modal -->
+</div>
+	<!-- 第二种账号体系 -->
+	<div class="modal fade" id="myModal2" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" data-backdrop="static">
+		<div class="modal-dialog">
+			<div class="modal-content" style="border-radius:5px">
+				<div class="modal-header">
+					<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+					<h4 class="modal-title" id="myModalLabel2">提示</h4>
+				</div>
+				<div class="modal-body">
+					<p class="padding-alert">当前选中 <span class="color-alert">全渠道同一账号体系（手机号 + 微信开放平台）</span></p>
+					<p class="padding-alert">1、<span class="color-alert">帐号体系一旦保存将无法更改，请为商城今后发展谨慎考虑。</span></p>
+					<p class="padding-alert">2、请确定已开通并配置<span class="color-alert">短信</span>，否则商城前端将会有部分功能受限。</p>
+					<p class="padding-alert">3、请确定已开通并配置<span class="color-alert">微信开放平台</span>，否则微信联合登录信息无法得到同步。</p>
+					<p class="padding-alert"><input type="checkbox" name="select_account_type2" data-type="2" class="J-select-account">&nbsp;确认选择体系并已开通配置好相关功能</p>
+				</div>
+				<div class="modal-footer">
+					<button  class="btn btn-primary J-account2" disabled type="submit">确定</button>
+					<button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
+				</div>
+			</div><!-- /.modal-content -->
+		</div><!-- /.modal -->
+	</div>
+	<!-- 第三种账号体系 -->
+	<div class="modal fade" id="myModal3" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" data-backdrop="static">
+		<div class="modal-dialog">
+			<div class="modal-content" style="border-radius:5px">
+				<div class="modal-header">
+					<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+					<h4 class="modal-title" id="myModalLabel3">提示</h4>
+				</div>
+				<div class="modal-body">
+					<p class="padding-alert">当前选中 <span class="color-alert">单一渠道账号体系</span></p>
+					<p class="padding-alert">1、<span class="color-alert">帐号体系一旦保存将无法更改，请为商城今后发展谨慎考虑。</span></p>
+					<p class="padding-alert">2、当前体系不建议使用多渠道的商城，请谨慎考虑。</p>
+					<p class="padding-alert">3、请确定已开通并配置<span class="color-alert">短信</span>，否则商城前端将会有部分功能受限。</p>
+					<p><p class="padding-alert"><input type="checkbox" name="select_account_type3" data-type="3" class="J-select-account">&nbsp;确认选择体系并已开通配置好相关功能</p></p>
+				</div>
+				<div class="modal-footer">
+					<button  class="btn btn-primary J-account3" disabled type="submit">确定</button>
+					<button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
+				</div>
+			</div><!-- /.modal-content -->
+		</div><!-- /.modal -->
+	</div>
+	<div class="as-box flex">
+		<button class="btn btn-primary hide add" type="button">保存</button>
+		<!--<a href="javascript:void(0);" class="btn btn-primary">保存</a>-->
+	</div>
+</div>
+</form>
+<!--账号体系模板-->
+<!-- page end -->
+{/block} {block name="script"}
+<script>
+	// 账号体系模板
+	require(['util'], function (util) {
+	    init();
+		$('.as-box-item').on('click',function(){
+			if(!$(this).hasClass('unSel')){
+				$(this).addClass('sel').siblings().removeClass('sel');
+			}
+
+			if($(this).data('account_type') == 3 && $(this).hasClass('sel')){
+                $('.J-is_bind_phone').removeClass('hide');
+                $('.J-is_bind_phone').addClass('show');
+			}else{
+                if(!$(this).hasClass('unSel')){
+                    $('.J-is_bind_phone').removeClass('show');
+                    $('.J-is_bind_phone').addClass('hide');
+				}
+			}
+			
+		})
+		$.each($('.as-box-item'), function(i, v){
+            if($(this).hasClass('sel')){
+                $('.J-is_bind_phone').removeClass('hide');
+                $('.J-is_bind_phone').addClass('show');
+            }
+		})
+		$('.J-select-account').change(function(){
+		    var type = $(this).data('type');
+		    if($(this).is(':checked')){
+		        $('.J-account'+type).attr('disabled', false);
+			}else{
+                $('.J-account'+type).attr('disabled', true);
+			}
+		})
+		//点击弹出类型提示框
+		$('.add').click(function(){
+			var height = window.innerHeight;
+			var item_height = 200;
+			var top = (height - item_height) / 2;
+			if(top < 0){
+			    top = 0;
+			}
+            $('#myModal'+account_type).css('top', top+'px');
+            var account_type = $('.sel').data('account_type');
+            $('#myModal'+account_type).modal('show');
+		});
+        util.validate($('.form-validate'),function(form){
+            var mobile_type = $("input[name='mobile_type']:checked").val()//手续费类型
+            //获取到当前选中的框框类型
+			var account_type = $('.sel').data('account_type');
+			//如果现在是第三种，则获取是否设置了绑定手机
+			if(account_type == 3){
+                var is_bind_phone;
+			    if($('#is_bind_phone').is(':checked')){
+                    is_bind_phone = 1;
+				}else{
+                    is_bind_phone = 0;
+				}
+			}
+			$.ajax({
+				'url':"{:__URL('PLATFORM_MAIN/system/saveAccountType')}",
+				'type':'post',
+				'data':{'account_type':account_type, 'is_bind_phone':is_bind_phone, 'mobile_type':mobile_type},
+				success:function(data){
+				    if(data['code'] > 0){
+                        util.message(data['message'], 'success', "{:__URL('PLATFORM_MAIN/system/accountSystem')}");
+                        $('#myModal'+account_type).modal('hide');
+					}else{
+                        util.message(data['message'], 'danger');
+					}
+				}
+			})
+		})
+		function init(){
+		    $.ajax({
+				'url':"{:__URL('PLATFORM_MAIN/system/getAccountType')}",
+				'type':'post',
+				'data':{},
+				success:function(data){
+				    var account_type = data.account_type;
+				    var is_bind_phone = data.is_bind_phone;
+                                    var mobile_type = data.mobile_type;
+				    if(account_type != 0){
+                        $('.as-box-item').each(function(i,v){
+                            if(account_type == $(v).data('account_type')){
+                                $(v).addClass('sel');
+                                if(account_type == 3){
+                                    $('.J-is_bind_phone').removeClass('hide');
+                                    $('.J-is_bind_phone').addClass('show');
+                                    if(is_bind_phone != 0){
+                                        $('#is_bind_phone').attr('checked', true);
+                                    }
+								}
+                            }else{
+                                $(v).removeClass('sel');
+                                $(v).addClass('unSel');
+                            }
+                        })
+                        $('.mobile_type').attr('disabled','true');
+
+					}else{
+                        $('.add').removeClass('hide').addClass('show');
+                        $('.as-box-item').eq(0).addClass('sel');
+                    }
+                                    if(!mobile_type){
+                                        $(".mainland").attr("checked", true);
+                                        $(".international").attr("checked", false);
+                                    }else{
+                                        $(".mainland").attr("checked", false);
+                                        $(".international").attr("checked", true);
+                                    }
+                    
+				}
+			})
+		}
+		$('#is_bind_phone').change(function(){
+            //获取到当前选中的框框类型
+            var account_type = $('.sel').data('account_type');
+            //如果现在是第三种，则获取是否设置了绑定手机
+            if(account_type == 3){
+                var is_bind_phone;
+                if($('#is_bind_phone').is(':checked')){
+                    is_bind_phone = 1;
+                }else{
+                    is_bind_phone = 0;
+                }
+            }
+            $.ajax({
+                'url':"{:__URL('PLATFORM_MAIN/system/setBindPhone')}",
+                'type':'post',
+                'data':{'is_bind_phone' : is_bind_phone},
+                success:function(data){
+                }
+            })
+		})
+	})
+	// 账号体系模板
+</script>
+{/block}

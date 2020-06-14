@@ -1,0 +1,98 @@
+{extend name="admin/base" /} 
+{block name="main"}
+<!-- page -->
+<!--内容-->
+<div class="content">
+    <!--搜索框-->
+    <!--<div class="row addBtnSearch">
+        <div class="col-md-6 col-sm-6">
+        </div>
+        <div class="col-md-2 col-sm-2 search">
+            <select class="input-sm form-control" id="uid">
+                <option value="0">请选择操作员...</option> 
+                {foreach name="userlist" item="vs"}
+                <option value="{$vs['uid']}">{if $vs['user']}{$vs['user']}{else}{$vs['admin_name']}{/if}</option>
+                {/foreach}
+            </select>
+        </div>
+        <div class="searchFr search">
+            <input type="text" class="searchs" id="search_text" placeholder="操作类型/内容">
+            <button class="search_to">搜索</button>
+        </div>
+    </div>-->
+<div class="mb-20 flex flex-pack-justify">
+    <div class="">
+    </div>
+    <div class="flex">
+        <select class="form-control select-form-control" id="uid">
+            <option value="0">请选择操作员...</option> 
+            {foreach name="userlist" item="vs"}
+            <option value="{$vs['uid']}">{if $vs['user']}{$vs['user']}{else}{$vs['admin_name']}{/if}</option>
+            {/foreach}
+        </select>
+        <div class="input-group search-input-group ml-10">
+            <input type="text" class="form-control" id="search_text" name="search_text" placeholder="操作类型/内容">
+            <span class="input-group-btn "><a class="btn btn-primary search_to">搜索</a></span>
+        </div>
+    </div>
+
+</div>
+    <!--表格-->
+    <table class="table table-hover v-table">
+        <thead>
+            <tr>
+                <th>操作类型</th>
+                <th>日志内容</th>
+                <th>操作时间</th>
+                <th>操作员</th>
+            </tr>
+        </thead>
+
+        <tbody class="trs" id="list">
+
+        </tbody>
+    </table>
+    <div class="page clearfix">
+        <div class="M-box3 m-style fr">
+        </div>
+    </div>
+</div>
+<!-- page end -->
+{/block}
+{block name="script"}
+<script type="text/javascript">
+    require(['utilAdmin', 'util'], function (utilAdmin, util) {
+        LoadingInfo(1);
+        function LoadingInfo(page_index) {
+            $('#page_index').val(page_index ? page_index : '1');
+            var search_text = $('#search_text').val();
+            var uid = $("#uid").val();
+            $.ajax({
+                type: "post",
+                url: __URL("ADMIN_MAIN/system/operationlog"),
+                data: {"pageIndex": page_index, "page_size": $("#showNumber").val(), "search_text": search_text, "uid": uid},
+                success: function (data) {
+                    var html = '';
+                    if (data['data'].length > 0) {
+                        for (var i = 0; i < data['data'].length; i++) {
+                            html += '<tr>';
+                            html += '<td>' + data["data"][i]["module_name"] + '</td>';
+                            html += '<td style="max-width:200px;overflow:hidden">' + data["data"][i]["data"] + '</td>';
+                            html += '<td>' + data["data"][i]["create_time"] + '</td>';
+                            html += '<td>' + data["data"][i]["user_name"] + '</td>';
+                            html += '</tr>';
+                        }
+                    } else {
+                        html += '<tr><td colspan="4" class="h-200">暂无符合条件的数据记录</td></tr>';
+                    }
+                    $("#list").html(html);
+                    utilAdmin.page(".M-box3", data['total_count'], data["page_count"], page_index, LoadingInfo);
+                }
+            });
+        }
+        $('body').on('click','.search_to',function(){
+            LoadingInfo(1);
+        });
+    });
+</script>
+{/block}

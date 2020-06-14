@@ -1,0 +1,193 @@
+{extend name="platform/new_base" /}
+{block name="resources"}
+
+{/block}
+{block name="main"}
+        <!-- page -->
+        <input type="hidden" id="album_id" value="{$default_album_id}"/>
+        <div class="mb-20 flex flex-pack-justify">
+            <div class="">
+                <a class="btn btn-primary add"> 创建相册</a>
+                <a class="btn btn-info btn-file">上传图片<input id="fileupload" class="fileupload" type="file" name="file_upload" multiple></a>
+            </div>
+            <div class="input-group search-input-group">
+                <input type="text" class="form-control" placeholder="请输入相册名称" id="album_name">
+                <span class="input-group-btn"><a class="btn btn-primary search">搜索</a></span>
+            </div>
+        </div>
+        <div class="row picture" id="list"></div>
+        <input type="hidden" id="pageIndex">
+        <nav aria-label="Page navigation" class="clearfix">
+            <ul id="page" class="pagination pull-right"></ul>
+        </nav>
+        <!-- page end -->
+{/block}
+
+
+
+{block name="script"}
+<script>
+
+require(['util'],function(util){
+    $(function(){
+
+        $('.search').on('click',function(){
+            util.initPage(LoadingInfo);
+        });
+
+        util.initPage(LoadingInfo);
+        //加载信息
+        function LoadingInfo(pageIndex) {
+            $("#pageIndex").val(pageIndex);
+            var album_name = $("#album_name").val();
+            $.ajax({
+                type: "post",
+                url: "{:__URL('PLATFORM_MAIN/system/albumlist')}",
+                async: true,
+                data: {
+                    "page_index": pageIndex, "album_name": album_name
+                },
+                success: function (data) {
+                    var html = '';
+                    if (data["data"].length > 0) {
+                        for (var i = 0; i < data["data"].length; i++) {
+                            html+='<div class="thumbnail">';
+                            html+='<a href="'+__URL('PLATFORM_MAIN/system/albumpicturelist?album_id='+ data["data"][i]["album_id"])+'" class="img">';
+                            if($.trim(data['data'][i]['album_cover']) !="" && $.trim(data["data"][i]["pic_album_cover"]) != ''){
+                                html += '<img src="'+__IMG(data["data"][i]["pic_album_cover"])+'" class="caption">';
+                            }else{
+                                html += '<img src="PLATFORM_IMG/album/album_cover_default.png" class="caption">';
+                            }
+                            html+='</a>';
+                            html+='<div class="operation">';
+                            html+='<h3>'+data["data"][i]["album_name"]+'</h3>';
+                            html+='<p><button class="btn btn-primary btn-sm edit" data-album_id="'+data["data"][i]["album_id"]+'">编辑</button>';
+                            if (data["data"][i]["is_default"] != 1) {
+                              html+='<button class="btn btn-default btn-sm delete" data-album_id="'+data["data"][i]["album_id"]+'">删除</button>';
+                            }
+                            html +='</p>';
+                            html+='</div>';
+                            html+='</div>';
+                        }
+                    } else {
+                        html += '<div class="empty-box">暂无符合条件的数据记录</div>';
+                    }
+                    $("#list").html(html);
+                    $('#page').paginator('option', {
+                        totalCounts: data['total_count']  // 动态修改总数
+                    });
+                }
+            });
+        }
+
+        //上传相册
+        $('.add').on('click',function(){
+            var html = '<form class="form-horizontal padding-15" >';
+            html += '<div class="form-group"><label class="col-md-3 control-label">相册名称</label><div class="col-md-8"><input type="text" class="form-control albumName" /></div></div>';
+            html += '<div class="form-group"><label class="col-md-3 control-label">排序</label><div class="col-md-8"><input type="text" class="form-control" /></div></div>';
+            html += '</form>';
+            util.confirm('创建相册',html,function(){
+                var name = this.$content.find('.albumName').val();
+                var sort = this.$content.find('.sort').val()
+                if(!name){
+                    util.message('内容不能为空')
+                    return false;
+                }
+                $.ajax({
+                    type: "post",
+                    url: "{:__URL('PLATFORM_MAIN/system/addalbumclass')}",
+                    data : {
+                        "album_name" : name,
+                        "sort" : sort,
+                    },
+                    dataType: "json",
+                    async : true,
+                    success : function(data) {
+                        if (data["code"] > 0) {
+                            util.message(data["message"],'success',"{:__URL('PLATFORM_MAIN/system/albumlist')}");
+                        }else{
+                            util.message(data["message"],'error',"{:__URL('PLATFORM_MAIN/system/albumlist')}");
+                        }
+                    }
+                })
+            })
+        })
+
+        //删除
+        $('.picture').on('click','.delete', function (e) {
+            e && e.stopPropagation ? e.stopPropagation() : window.event.cancelBubble = true;
+            var aclass_id_array = $(this).data('album_id');
+            util.alert('确认删除此相册吗？', function () {
+                $.ajax({
+                    type : "post",
+                    url : "{:__URL('PLATFORM_MAIN/system/deleteAlbumClass')}",
+                    async : true,
+                    data : {
+                        "aclass_id_array" : aclass_id_array,
+                    },
+                    success : function(data) {
+                        if (data["code"] > 0) {
+                            util.message(data["message"],'success',LoadingInfo($('#pageIndex').val()));
+                        }else{
+                            util.message(data["message"],'error',LoadingInfo($('#pageIndex').val()));
+                        }
+                    }
+                })
+            })
+        })
+
+        //编辑
+        $('.picture').on('click','.edit',function(e){
+            e && e.stopPropagation ? e.stopPropagation() : window.event.cancelBubble = true;
+            var album_id = $(this).data('album_id');
+            var text = $(this).parents('.operation').find('h3').text();
+            var html = '<form class="form-horizontal padding-15">';
+            html += '<div class="form-group"><label class="col-md-3 control-label">相册名称</label><div class="col-md-8"><input type="text" name="album_name" class="form-control" value="'+text+'"></div></div>';
+            html += '<div class="form-group"><label class="col-md-3 control-label">排序</label><div class="col-md-8"><input type="text" class="form-control" name="sort"></div></div>';
+            html += '</form>';
+            util.confirm('编辑相册',html,function(){
+                // 执行确认后的逻辑
+                var album_name = $("input[name='album_name']").val();
+                var sort = $("input[name='sort']").val();
+                $.ajax({
+                    type : "post",
+                    url : "{:__URL('PLATFORM_MAIN/system/updateAlbumClass')}",
+                    async : true,
+                    data : {
+                        "album_name" : album_name,
+                        "album_id" : album_id,
+                        "sort" : sort,
+                    },
+                    success : function(data) {
+                        if (data["code"] > 0) {
+                            util.message(data["message"],'success',LoadingInfo($('#pageIndex').val()));
+                        }else{
+                            util.message(data["message"],'error',LoadingInfo($('#pageIndex').val()));
+                        }
+                    }
+                })
+            })
+        })
+        $('.btn-file').click(function () {
+            var album_id = $("#album_id").val();
+            var is_video = $(this).data('is_video');
+            var dataAlbum = {
+                "album_id": album_id,
+                "type": "1,2,3,4"
+            };
+            if (is_video) {
+                dataAlbum = {
+                    "album_id": album_id,
+                    "type": "",
+                    "file_type": 1
+                };
+            }
+            var url = "{:__URL('PLATFORM_MAIN/upload/uploadFile')}";
+            util.fileupload(url, dataAlbum, function (file_url) {
+                LoadingInfo(1);
+            });
+        })
+    })
+})
+</script>
+{/block}

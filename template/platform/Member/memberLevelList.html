@@ -1,0 +1,89 @@
+{extend name="platform/new_base" /}
+{block name="resources"/}
+{/block}
+{block name="main"}
+                <!-- page -->
+                <div class="mb-20">
+                    <a href="{:__URL('PLATFORM_MAIN/member/addmemberlevel')}" class="btn btn-primary"><i class="icon icon-add1"></i> 添加等级</a>
+                </div>
+                
+                <table class="table v-table table-auto-center">
+                    <thead>
+                        <tr>
+                            <th>等级名称</th>
+                            <th>升级条件</th>
+                            <th>折扣</th>
+                            <th class="col-md-2 pr-14 operationLeft">操作</th>
+                        </tr>
+                    </thead>
+                    <tbody id="list">
+
+                       
+                    </tbody>
+                </table>
+
+{/block}
+{block name="script"}
+<script>
+require(['util'],function(util){
+    getList();
+    function getList(){
+        $.ajax({
+            type : "post",
+            url : "{:__URL('PLATFORM_MAIN/member/memberLevelList')}",
+            async : true,
+            data : {},
+            success : function(data) {
+                var html = '';
+                if (data["data"].length > 0) {
+                    for (var i = 0; i < data["data"].length; i++) {
+                        html += '<tr>';
+                        html += '<td>'+ data["data"][i]["level_name"]+'</td>';
+                        html += '<td>';
+                        html += '成长值达' + data['data'][i]['growth_num'];
+                        html += '</td>';
+                        html += '<td>' + data['data'][i]['goods_discount']  + '</td>';
+                        html += '<td class="operationLeft">';
+                        if(data['data'][i]['is_default'] == 1){
+                            html += '<a href="'+__URL('PLATFORM_MAIN/member/updateMemberLevel?level_id='+ data['data'][i]['level_id']) +'"  class="btn-operation" >编辑</a>';
+                        }else{
+                            html += '<a href="'+__URL('PLATFORM_MAIN/member/updateMemberLevel?level_id='+ data['data'][i]['level_id']) +'"  class="btn-operation">编辑</a><a class="btn-operation text-red1 delLevel" href="javascript:void(0);"  data-id='+ data['data'][i]['level_id'] +'>删除</a>';
+                        }
+                        html += '</td>';
+                        html += '</tr>';
+                    }
+                } else {
+                    html += '<tr align="center"><td colspan="4" class="h-200">暂无符合条件的数据记录</td></tr>';
+                }
+                $("#list").html(html);
+                util.tips();
+                delLevel();
+            }
+        });
+    }
+    // 删除等级
+    function delLevel(){
+        $('.delLevel').on('click',function(){
+            var level_id = $(this).data('id');
+            util.alert('是否删除该会员等级？',function(){
+                $.ajax({
+                    type : "post",
+                    url : "{:__URL('PLATFORM_MAIN/Member/deleteMemberLevel')}",
+                    async : true,
+                    data : {
+                        'level_id' : level_id
+                    },
+                    success : function(data) {
+                        if (data["code"] > 0) {
+                            util.message(data["message"],'success',getList());
+                        }else{
+                            util.message(data["message"],'danger');
+                        }
+                    }
+                });
+            })
+        })
+    }
+})
+</script>
+{/block}

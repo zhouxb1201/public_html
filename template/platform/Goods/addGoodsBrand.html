@@ -1,0 +1,117 @@
+{extend name="platform/new_base" /}
+{block name="resource"}
+
+{/block}
+{block name="main"}
+<style>.sotr-selector .sotr-box{left:14px;}</style>
+<!-- page -->
+<form class="form-horizontal form-validate pt-15 widthFixedForm" id="goods_brand_form" name="form">
+
+    <div class="form-group">
+        <label class="col-md-2 control-label"><span class="text-bright">*</span>品牌名称</label>
+        <div class="col-md-5">
+            <input type="text" class="form-control" id="brand_name" name="brand_name" value="" required="">
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="col-md-2 control-label"><span class="text-bright">*</span>首写字母</label>
+        <div class="col-md-5">
+            <input type="text" class="form-control" id="brand_initial" name="brand_initial" value="" required maxlength="1">
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="col-md-2 control-label">是否启用</label>
+        <div class="col-md-5">
+            <div class="switch-inline">
+                <input type="checkbox" id="brand_recommend">
+                <label for="brand_recommend" class=""></label>
+            </div>
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="col-md-2 control-label">品牌图片</label>
+        <div class="col-md-5">
+            <div class="picture-list">
+                <a href="javascript:void(0);" class="plus-box" data-toggle="singlePicture"><i class="icon icon-plus brand_pic"></i></a>
+            </div>
+            <p class="help-block mb-0">建议400*200，支持JPG/GIF/PNG格式，图片大小建议1M以内。</p>
+        </div>
+
+    </div>
+    <div class="form-group">
+        <label class="col-md-2 control-label">排序</label>
+        <div class="col-md-5">
+            <input type="number" class="form-control" id="sort" name="sort" value="">
+        </div>
+    </div>
+
+    <div class="form-group">
+        <label class="col-md-2 control-labe l"></label>
+        <div class="col-md-8">
+            <button class="btn btn-primary add_brand" href="javascript:void(0)" type="submit">添加</button>
+            <a href="javascript:history.go(-1);" class="btn btn-default">返回</a>
+        </div>
+    </div>
+
+</form>
+
+<!-- page end -->
+{/block}
+
+
+{block name="script"}
+
+<script>
+    //异步添加
+
+    require(['util'], function (util) {
+        $("#brand_initial").on('blur', function () {
+            var value = $("#brand_initial").val();
+            var reg = /^[a-zA-Z]$/;
+            if (reg.test(value) === false) {
+                util.message("只能输入字母，请重新输入", 'danger');
+                $("#brand_initial").val('');
+                return false;
+            }
+        });
+        var commitStatus = false;
+        util.validate($('.form-validate'), function (form) {
+            if (commitStatus) {
+                return false;
+            }
+
+            var brand_name = $("#brand_name").val();
+            var brand_initial = $("#brand_initial").val();
+            if ($("#brand_recommend").prop("checked")) {
+                var brand_recommend = 1;
+            } else {
+                var brand_recommend = 0;
+            }
+            var brand_pic = $('.picture-list img').attr("src");
+            var brand_ads = $("#Logo1").val();
+            var sort = $("#sort").val();
+            commitStatus = true;
+            $.ajax({
+                type: "post",
+                url: "{:__URL('PLATFORM_MAIN/goods/addgoodsbrand')}",
+                data: {
+                    'brand_name': brand_name,
+                    'brand_initial': brand_initial,
+                    'brand_recommend': brand_recommend,
+                    'brand_pic': brand_pic,
+                    'brand_ads': brand_ads,
+                    'sort': sort
+                },
+                async: true,
+                success: function (data) {
+                    if (data["code"] > 0) {
+                        util.message('商品品牌添加成功', "success", "{:__URL('PLATFORM_MAIN/goods/goodsbrandlist')}");
+                    } else {
+                        util.message('商品品牌添加失败', "danger");
+                    }
+                }
+            });
+        });
+    });
+</script>
+{/block}

@@ -1,0 +1,96 @@
+<import src="/common/wxParse/wxParse.wxml"/>
+<view class='global_apply' wx:if='{{boxShow}}'>
+  <view class='banner' wx:if="{{bonusApplyData.global_bonus_agreement.logo != ''}}">
+    <image mode='widthFix' src='{{bonusApplyData.global_bonus_agreement.logo}}' binderror='errorimg'></image>
+  </view>
+
+  <!-- 等待审核 -->
+  <view class='auditing' wx:if='{{bonusApplyData.is_global_agent == 1}}'>
+    <view class='info'>
+      <van-icon class='icon' name="underway" size='4em' color='rgb(25, 137, 250)'/>
+      <view>提交成功，等待审核！</view>
+    </view>
+  </view>
+
+  <!-- 审核失败 -->
+  <view class='auditing' wx:if='{{bonusApplyData.is_global_agent == -1}}'>
+    <view class='info'>
+      <van-icon class='icon' name="clear" size='4em' color='rgb(102, 102, 102)'/>
+      <view>后台拒绝申请，请联系客服！</view>
+    </view>
+  </view>
+
+  <!-- 完善资料 -->
+  <view class='auditing' wx:if='{{bonusApplyData.is_global_agent == 3}}'>
+    <view class='info'>
+      <van-icon class='icon' name="more" size='4em' color='rgb(25, 137, 250)'/>
+      <view>满足条件，请完善资料！</view>
+    </view>
+  </view>
+
+  <!-- 未申请，满足条件之一 / 满足以下所有条件-->
+  <view wx:if='{{bonusApplyData.is_global_agent == 0 }}'>
+    <view class='condition_group' wx:if='{{globalagent_condition == 2 || globalagent_condition == 1}}'>
+      <view class='title' wx:if='{{globalagent_condition == 2}}'>满足其中一个条件即可成为代理商</view>
+      <view class='title' wx:if='{{globalagent_condition == 1}}'>满足以下条件自动成为代理商</view>
+      <view class='value' wx:for='{{conditions_array}}' wx:key=''>
+      <view class='cell' wx:if="{{item == '1'}}">{{index+1}}：自购订单金额满 <text class='num'>{{bonusApplyData.global_bonus.pay_money}}</text> 元</view>
+        <view class='cell' wx:if="{{item == '2'}}">{{index+1}}：下级分销商满 <text class='num'>{{bonusApplyData.global_bonus.number}}</text> 人</view>
+        <view class='cell' wx:if="{{item == '3'}}">{{index+1}}：一级分销商满 <text class='num'>{{bonusApplyData.global_bonus.one_number}}</text> 人</view>
+        <view class='cell' wx:if="{{item == '4'}}">{{index+1}}：二级分销商满 <text class='num'>{{bonusApplyData.global_bonus.two_number}}</text> 人</view>
+        <view class='cell' wx:if="{{item == '5'}}">{{index+1}}：三级分销商满 <text class='num'>{{bonusApplyData.global_bonus.three_number}}</text> 人</view>
+        <view class='cell' wx:if="{{item == '6'}}">{{index+1}}：下级订单金额满 <text class='num'>{{bonusApplyData.global_bonus.order_money}}</text> 元</view>
+        <view class='cell' wx:if="{{item == '7'}}">{{index+1}}：购买指定商品  <navigator class='buy' url='/pages/goods/detail/index?goodsId={{bonusApplyData.global_bonus.goods_id}}'>去购买</navigator></view>
+      </view>
+    </view>    
+  </view>
+
+  <!-- 未申请，直接申请 -->
+  <view wx:if='{{(globalagent_condition == -1 && bonusApplyData.is_global_agent == 0 )|| bonusApplyData.is_global_agent == -1 || bonusApplyData.is_global_agent == 3}}'>
+    <view> 
+      <view class='apply_group' wx:if="{{customform == ''}}">
+        <view class='apply_cell'>
+          <view class='title'>真实姓名</view>
+          <view class='value'>
+            <input type='text' placeholder='请输入真实姓名' bindblur='realNameFun'></input>
+          </view>
+        </view>
+        <view class='apply_cell'>
+          <view class='title'>手机号码</view>
+          <view class='value'>
+            <input type='text' value='{{bonusApplyData.user_tel}}' disabled='disabled'></input>
+          </view>
+        </view>
+      </view>
+      <view wx:else>
+        <!-- 自定义表单    -->
+        <form-com wx:if="{{customform != ''}}" customform='{{customform}}' bind:customformEven='customformData' ></form-com>
+      </view>
+      <view class='Agreement_btn'>
+        <view class='Agreement_radio'>
+          <label class='radio' data-checked='{{radioChecked}}' bindtap='radioApplyChange'>
+              <radio value="" checked="{{radioChecked}}" color='#1989fa'></radio>
+              我已阅读并同意以下协议
+            </label>
+        </view>    
+        <view class="sub_btn {{radioChecked == true ? 'active_btn' : ''}}">
+          <button bindtap='globalAgentApply'>提交申请</button>
+        </view>    
+      </view>
+    </view>  
+
+  </view>
+
+  <!-- 协议 -->
+  <view class='Agreement_content'>
+    <view class='Agreement_title'><text class='title_text'>{{txt_global_agreement}}协议</text></view>
+    <view class='content'>
+      <template is="wxParse" data="{{wxParseData:content.nodes}}" />
+    </view>
+  </view>
+
+
+</view>
+
+<!-- 关联手机 -->
+<phone-compoent phoneShow='{{phoneShow}}' bind:phoneEven='phonereResult'></phone-compoent>

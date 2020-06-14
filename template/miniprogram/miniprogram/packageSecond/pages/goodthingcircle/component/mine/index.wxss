@@ -1,0 +1,131 @@
+@import "/css/iconfont.wxss";
+
+.head {
+  background-color: #ffffff;
+  position: relative;
+}
+
+.head .info {
+  display: flex;
+  padding: 20rpx 30rpx;
+  align-items: center;
+}
+
+.head .info .avator {
+  border-radius: 50%;
+  position: relative;
+  width: 100rpx;
+  height: 100rpx;
+  overflow: hidden;
+  background: #fff;
+}
+
+.head .info .content {
+  flex: 1;
+  padding-left: 20rpx;
+  line-height: 40rpx;
+}
+
+.head .info .content .number {
+  font-size: 24rpx;
+  color: #999;
+}
+
+.head .info .icon_msg {
+  position: absolute;
+  right: 30rpx;
+  top: 28rpx;
+  font-size: 36rpx;
+}
+
+.head .box {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  font-size: 24rpx;
+  padding: 20rpx 0px;
+}
+
+.head .box view {
+  flex: 1;
+  width: 33.333%;
+}
+
+.tab {
+  margin-top: 20rpx;
+  position: relative;
+}
+
+.tab:after {
+  content: ' ';
+  position: absolute;
+  pointer-events: none;
+  box-sizing: border-box;
+  left: 0;
+  bottom: -1px;
+  transform: scaleY(0.5);
+  height: 1px;
+  background-color:#ebedf0 ;
+  width: 100%;
+  z-index: 10;
+
+}
+
+.van-list {
+  position: relative;
+}
+
+.van-list .wrap {
+  background-color: #fff;
+}
+
+.van-list .wrap .item {
+  display: flex;
+  padding: 20rpx 0rpx;
+}
+
+.van-list .wrap .item .date {
+  font-size: 36rpx;
+  width: 140rpx;
+  text-align: center;
+  font-weight: 700;
+}
+
+.van-list .wrap .item .date .month {
+  font-size: 24rpx;
+  font-weight: normal;
+  margin-left: 10rpx;
+}
+
+.van-list .wrap .item .boxes {
+  flex: 1;
+}
+
+.van-list .wrap .item .boxes .content {
+  display: flex;
+  margin-top: 20rpx;
+}
+
+.van-list .wrap .item .boxes .content:first-child {
+  margin-top: 0px;
+}
+
+.van-list .wrap .item .boxes .content image {
+  width: 100rpx;
+  height: 100rpx;
+  display: inline-block;
+}
+
+.van-list .wrap .item .boxes .content text {
+  display: inline-block;
+  flex: 1;
+  padding: 0rpx 40rpx 0rpx 20rpx;
+  max-height: 80rpx;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+  line-height: 40rpx;
+}

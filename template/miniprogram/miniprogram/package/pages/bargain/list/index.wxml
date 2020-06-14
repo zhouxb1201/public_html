@@ -1,0 +1,29 @@
+<view class='bargain_list'>
+  <view class='list'>
+    <view class='group' wx:for='{{bargain_list}}' wx:key=''>
+      <navigator class='item' url='/pages/goods/detail/index?goodsId={{item.goods_id}}'>
+        <view class='img'>
+          <image mode='widthFix' src="{{item.pic_cover_url}}"></image>
+        </view>
+        <view class='info'>
+          <view class='good_name'>{{item.goods_name}}</view>
+          <view class='bargain_time'>
+            <view class='time' wx:if='{{item.status == 1}}'>
+              <view class='end_time'>结束时间</view>
+              <view>{{item.end_bargain_date}}</view>
+            </view>
+            <view class='time' wx:else>
+              <view class='start_time'>开始时间</view>
+              <view>{{item.start_bargain_date}}</view>
+            </view>
+          </view>
+          <view class='price'>初次价格：¥{{item.start_money}}</view>
+        </view>
+      </navigator>  
+    </view>
+  </view>
+
+  <view class='foot'>
+    <view>没有更多了</view>
+  </view>
+</view>

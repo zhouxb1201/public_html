@@ -1,0 +1,10 @@
+<!-- 多选框 -->
+    <view class='custom customDisplay wx:if="{{customitem.required == true ? "custom_padd" : ""}}"'>
+      <view class='label_text'><text class="star" wx:if='{{customitem.required == true}}'>*</text>{{customitem.label}}</view>
+      <checkbox-group data-index="{{index}}" bindchange="checkboxChange">
+          <label class="checkbox" wx:for="{{customitem.options}}" wx:key="">
+            <checkbox value="{{item.value}}" checked="{{item.checked}}" />
+            <text>{{item.value}}</text>            
+          </label>
+        </checkbox-group>
+    </view>

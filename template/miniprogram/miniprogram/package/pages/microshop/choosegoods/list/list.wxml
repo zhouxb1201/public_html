@@ -1,0 +1,102 @@
+<view class="goodlist">
+  <view class='sort'>
+    <view class="item {{orderActive == '' ? 'on' : ''}}" data-order='' bindtap='changeSort'>
+      <text>默认</text>
+    </view>
+    <view class="item {{orderActive == 'sales' ? 'on' : ''}}" data-order='sales' data-sort='{{saleSort}}' bindtap='changeSort'>
+      <text>销售量</text>
+      <view class="icon iconfont v-icon-sort2 {{saleSort}}"></view>
+    </view>
+    <view class="item {{orderActive == 'price' ? 'on' : ''}}" data-order='price' data-sort='{{priceSort}}' bindtap='changeSort'>
+      <text>价格</text>
+      <view class="icon iconfont v-icon-sort2 {{priceSort}}"></view>
+    </view>
+    <view class="item" bindtap='pupupRightShow'>
+      <text>筛选</text>
+    </view>
+  </view>
+
+  <view class='goodsRank'>
+    <view class='goodbox'>
+      <view class='gooditem' wx:for="{{goodlist}}" wx:key='' data-id="{{item.goods_id}}">
+        <view>
+          <view class='goodimg'>
+            <image mode='widthFix' src="{{item.logo}}"></image>
+          </view>
+          <view class='gooddetail'>
+            <view class='goodname'>{{item.goods_name}}</view>
+            <view>
+              <text class='goodprice'>¥{{item.price}}</text>
+              <text class='marketprice'>¥{{item.market_price}}</text>
+            </view>
+            <view class='bottom-group'>
+              <view class='saleNum'>销量
+                <text>{{item.sales}}</text>
+              </view>
+              <view>
+                <button class='btn-mini del' wx:if="{{selected[index] == 1}}" bindtap="delGoods" data-goodsid="{{item.goods_id}}" data-index="{{index}}" disabled='{{delDisabled}}'>取消</button>
+                <button class='btn-mini' wx:else bindtap="selectGoods" data-goodsid="{{item.goods_id}}" data-index="{{index}}" disabled='{{selectDisabled}}'>挑选</button>
+              </view>
+            </view>
+          </view>
+        </view>
+      </view>
+    </view>
+    <view class='no_gooddata' wx:if="{{noMore == 'true'}}">
+      <text>没有更多了</text>
+    </view>
+  </view>
+</view>
+
+<van-popup show="{{ rightShow }}" position="right" custom-style="height:100%;width:60%;" bind:click-overlay="pupupRightClose">
+  <view class='rightShow'>
+    <view class='rs_goods'>
+
+      <view class='btn_box'>
+        <view class="text free_shipping_fee {{recommend_goods == 1 ? 'active' : ''}}" data-checked='recommend' bindtap='checkedBool'>
+          推荐
+        </view>
+      </view>
+
+      <view class='btn_box'>
+        <view class="text new_goods {{new_goods == 1 ? 'active' : ''}}" data-checked='newGoods' bindtap='checkedBool'>
+          新品
+        </view>
+      </view>
+
+      <view class='btn_box'>
+        <view class="text new_goods {{hot_goods == 1 ? 'active' : ''}}" data-checked='hotGoods' bindtap='checkedBool'>
+          热卖
+        </view>
+      </view>
+
+      <view class='btn_box'>
+        <view class="text free_shipping_fee {{promotion_goods == 1 ? 'active' : ''}}" data-checked='promotion' bindtap='checkedBool'>
+          促销
+        </view>
+      </view>
+
+
+
+      <view class='btn_box'>
+        <view class="text free_shipping_fee {{free_shipping == 1 ? 'active' : ''}}" data-checked='freeShipping' bindtap='checkedBool'>
+          包邮
+        </view>
+      </view>
+
+    </view>
+    <view class='priceRange'>
+      <view class='rangeTitle'>价格区间</view>
+      <view class='range'>
+        <input type='text' class='minPrice' placeholder='最低价' bindinput='minPrice' value='{{minPrice}}'></input>
+        <view class='sign'>~</view>
+        <input type='text' class='maxPrice' placeholder='最高价' bindinput='maxPrice' value='{{maxPrice}}'></input>
+      </view>
+    </view>
+    <view class='buttomBtn'>
+      <view class='btn cancel' bindtap='resetData'>重置</view>
+      <view class='btn makesure' bindtap='conditionGoods'>确定</view>
+    </view>
+  </view>
+
+</van-popup>

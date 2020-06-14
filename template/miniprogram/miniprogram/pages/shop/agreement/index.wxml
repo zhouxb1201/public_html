@@ -1,0 +1,13 @@
+<import src="/common/wxParse/wxParse.wxml"/>
+<view class='shop_agreement'>
+  <view class='content' wx:if="{{shop_protocol[4].content != ''}}">
+    <template is="wxParse" data="{{wxParseData:agreement.nodes}}" />
+  </view>
+  <view class='content no_agreement' wx:else>暂无协议</view>
+</view>
+
+<view class='foot_group'>
+  <view class='cell'>
+    <view class='agree_btn' bindtap='onApplyFormPage'>同意，前往申请</view>
+  </view>
+</view>

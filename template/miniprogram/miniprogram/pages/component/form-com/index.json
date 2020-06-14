@@ -1,0 +1,16 @@
+{
+  "component": true,
+  "usingComponents": {
+    "input-component": "/pages/component/formComponent/form-input/input",
+    "textarea-component": "/pages/component/formComponent/form-textarea/index",
+    "select-component": "/pages/component/formComponent/form-select/index",
+    "radio-component": "/pages/component/formComponent/form-radio/index",
+    "checkbox-component": "/pages/component/formComponent/form-checkbox/index",
+    "img-component": "/pages/component/formComponent/form-img/index",
+    "phone-component": "/pages/component/formComponent/form-phone/index",
+    "card-component": "/pages/component/formComponent/form-card/index",
+    "date-component": "/pages/component/formComponent/form-date/index",
+    "date-range-component": "/pages/component/formComponent/form-date-range/index",
+    "area-component": "/pages/component/formComponent/form-area/index"
+  }
+}

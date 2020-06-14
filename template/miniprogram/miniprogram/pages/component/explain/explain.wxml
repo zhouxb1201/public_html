@@ -1,0 +1,48 @@
+<view class='popup' wx:if='{{isShow}}'>
+  <view class='popup-explain-wrap'>
+    <view class='explain-content'>
+      <view class="prize-title">
+        <image mode='widthFix' src="{{publicUrl}}/wap/static/images/prize_title.png"></image>
+        <text>活动奖品</text>
+      </view>
+
+      <view class='prize-table'>
+        <view class='table-th ul'>
+          <view class='li'>
+            <text class='tal'>奖项</text>
+            <text>奖品名称</text>
+            <text class='tar'>数量</text>
+          </view>
+        </view>
+        <view class='ul'>
+          <view class='li' wx:for="{{info.prize}}" wx:key="">
+            <text class='tal'>{{item.term_name}}</text>
+            <text>{{item.prize_name}}</text>
+            <text class='tar'>{{item.num}}</text>
+          </view>
+        </view>
+      </view>
+
+      <view class='prize-title'>
+        <image mode='widthFix' src="{{publicUrl}}/wap/static/images/prize_title.png"></image>
+        <text>活动时间</text>
+      </view>
+      <view class='time'>{{filter.formatDate(info.start_time,'s')}} ~ {{filter.formatDate(info.end_time,'s')}}</view>
+
+      <view class='prize-title' wx:if="{{info.desc}}">
+        <image mode='widthFix' src="{{publicUrl}}/wap/static/images/prize_title.png"></image>
+        <text>活动说明</text>
+      </view>
+      <view class='time' wx:if="{{info.desc}}">{{info.desc}}</view>
+    </view>
+    <!--知道了-->
+    <view class='explain-bottom'>
+      <image mode='widthFix' src="{{publicUrl}}/wap/static/images/arcs.png" class='pic-arcs'></image>
+      <view class='bottom-wrap'>
+        <button class="btn" hover-class='none' bindtap='onClose'>知道了</button>
+      </view>
+    </view>
+  </view>
+</view>
+
+<wxs src='../../../utils/addmul.wxs' module='filter' />

@@ -1,0 +1,75 @@
+{block name="main"}
+<table class="table v-table table-auto-center mb-10">
+    <thead>
+        <tr>
+            <th>文件名</th>
+            <th>类型</th>
+            <th>时间</th>
+            <th>状态</th>
+            <th>失败原因</th>
+            <th>操作</th>
+        </tr>
+    </thead>
+    <tbody id="order_list">
+    </tbody>
+</table>
+{/block}
+{block name="script"}
+<script id="tpl_express_order_list" type="text/html">
+    <%each data as item index%>
+    <tr>
+        <td><%item.old_name%></td>
+        <td><%item.add_type%></td>
+        <td><%item.create_time%></td>
+        <td><%item.status_name%></td>
+        <td><%item.error_info%></td>
+        <td colspan="2">
+            <%if item.status!=1%>
+            <a class="text-primary J-del" data-id="<%item.help_id%>" href="javascript:;">删除任务</a>
+            <%/if%>
+        </td>
+    </tr>
+    <%/each%>
+</script>
+
+<script>
+    require(['util', 'tpl'], function (util, tpl) {
+        LoadingInfo();
+        function LoadingInfo() {
+            $.ajax({
+                url: '{$progressUrl}',
+                type: 'post',
+                data: {
+                    'data': true
+                },
+                success: function (data) {
+                    $("#order_list").html(tpl('tpl_express_order_list', {data: data}))
+                }
+            })
+        }
+
+
+        $('#order_list').on('click', ".J-del", function () {
+            var help_id = $(this).data('id');
+            
+            util.alert('删除任务？', function () {
+                $.ajax({
+                    url: '{$delGoodsHelpUrl}',
+                    type: 'post',
+                    data: {
+                        'help_id': help_id
+                    },
+                    dataType: "json",
+                    success: function (data) {
+                        if (data["code"] > 0) {
+                            util.message(data["message"], 'success', LoadingInfo());
+                        } else {
+                            util.message(data['message']);
+                        }
+                    }
+                })
+            })
+        })
+    });
+</script>
+{/block}

@@ -1,0 +1,6 @@
+{
+  "component": true,
+  "usingComponents": {
+    "areaCode-compoent": "/pages/component/areaCode/areaCode"
+  }
+}

@@ -1,0 +1,22 @@
+<view class='customerList' wx:if='{{pageShow}}'>
+  <view class='list'>
+    <view class='item' wx:for='{{customer_list}}' wx:key=''>
+      <view class='img'>
+        <image src="{{item.user_headimg !=''?item.user_headimg:'/images/no-pic.jpg'}}"></image>
+      </view>
+      <view class='customer_info'>
+        <view>
+          <text class='name'>{{item.nick_name}}</text>
+          <text class='level'>{{item.member_level_name}}</text>
+        </view>
+        <view class='order_num'>成交订单：{{item.order_count}}</view>
+      </view>
+    </view>
+  </view>  
+  <view class='foot'>
+    <view>没有更多了</view>
+  </view>
+</view>
+
+<!-- 登录组件 -->
+<login-component loginShow='{{loginShow}}' bind:request='requestLogin'></login-component>

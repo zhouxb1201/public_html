@@ -1,0 +1,242 @@
+{extend name="platform/new_base" /}
+{block name="resources"/}
+{/block}
+{block name="main"}
+               <!-- page -->
+                <!--<form action="" class="form">
+                    <div class="v-form-inline">
+                        <div class="form-group">
+                            <label class="control-label">商品名称</label>
+                            <input type="text" id="goods_name" class="form-control">
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label">店铺类型</label>
+                            <select class="form-control" id="shop_type">
+                                <option value="">全部</option>
+                                <option value="1">自营店</option>
+                                {if $shopStatus}
+                                <option value="2">入驻店</option>
+                                {/if}
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label">排序方式</label>
+                            <div class="inline-control">
+                                <label class="radio-inline">
+                                  <input type="radio" name="sort" checked value="1"> 按销量
+                                </label>
+                                <label class="radio-inline">
+                                  <input type="radio" name="sort"  value="2"> 按销售额
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="v-form-inline">
+                        <div class="form-group date-form-group">
+                            <label class="control-label">下单时间</label>
+                            <div class="date-input-group" >
+                                <div class="date-input-control">
+                                    <input type="text" class="form-control" id="startDate" placeholder="开始时间" value=""><i class="icon icon-calendar"></i>
+                                </div>
+                                <span class="date-input-group-addon">~</span>
+                                <div class="date-input-control">
+                                    <input type="text" class="form-control" id="endDate" placeholder="结束时间" value=""><i class="icon icon-calendar"></i>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <a class="btn btn-primary search"><i class="icon icon-search"></i> 搜索</a>
+                        </div>
+                    </div>
+                </form>-->
+<form class="v-filter-container">
+    <div class="filter-fields-wrap">
+        <div class="filter-item clearfix">
+            <div class="filter-item__field">
+                <div class="v__control-group">
+                    <label class="v__control-label">商品名称</label>
+                    <div class="v__controls">
+                        <input type="text" id="goods_name" class="v__control_input" autocomplete="off">
+                    </div>
+                </div>
+                <div class="v__control-group">
+                    <label class="v__control-label">店铺类型</label>
+                    <div class="v__controls">
+                        <select class="v__control_input" id="shop_type">
+                            <option value="">全部</option>
+                            <option value="1">自营店</option>
+                            <option value="2">入驻店</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="v__control-group">
+                    <label class="v__control-label">排序方式</label>
+                    <div class="v__controls">
+                            <div class="inline-control">
+                                <label class="radio-inline">
+                                  <input type="radio" name="sort" checked="" value="1"> 按销量
+                                </label>
+                                <label class="radio-inline">
+                                  <input type="radio" name="sort" value="2"> 按销售额
+                                </label>
+                            </div>
+                    </div>
+                </div>
+                <div class="v__control-group">
+                    <label class="v__control-label">下单时间</label>
+                    <div class="v__controls v-date-input-control">
+                        <label for="orderTime">
+                            <input type="text" class="v__control_input pr-30" id="orderTime" placeholder="请选择时间" autocomplete="off" data-types="datetime">
+                            <i class="icon icon-calendar"></i>
+                            <input type="hidden" id="startDate">
+                            <input type="hidden" id="endDate">
+                        </label>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+        <div class="filter-item clearfix">
+            <div class="filter-item__field">
+                <div class="v__control-group">
+                    <label class="v__control-label"></label>
+                    <div class="v__controls">
+                        <a class="btn btn-primary search"><i class="icon icon-search"></i> 搜索</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</form>
+
+                <div class="screen-title">
+                    <span class="text">数据列表</span>
+                </div>
+                <div class="flex-auto-center mb-20 bg-info text-center border-info">
+                    <div class="flex-1 padding-15">
+                        <h3 class="strong">总销售额</h3>
+                        <p id="account_money"></p>
+                    </div>
+                    <div class="flex-1 padding-15">
+                        <h3 class="strong">总销量</h3>
+                        <p id="account_sum"></p>
+                    </div>
+                    <div class="flex-1 padding-15">
+                        <h3 class="strong">商品总数</h3>
+                        <p id="account_goods"></p>
+                    </div>
+                </div>
+                <table class="table v-table table-auto-center">
+                    <thead>
+                        <tr>
+                            <th>排行</th>
+                            <th class="col-md-6">商品名称</th>
+                            <th>销量</th>
+                            <th>销售额</th>
+                        </tr>
+                    </thead>
+                    <tbody id="list">
+                    </tbody>
+                </table>
+                <nav aria-label="Page navigation" class="clearfix">
+                    <ul id="page" class="pagination pull-right"></ul>
+                </nav>
+                <!-- page end -->
+{/block}
+{block name="script"}
+<script>
+require(['util'],function(util){
+    util.initPage(LoadingInfo);
+    // util.layDate('#startDate');
+    // util.layDate('#endDate');
+    util.layDate('#orderTime',true,function(value, date, endDate){
+        var h=date.hours<10 ?"0"+date.hours : date.hours;
+        var m=date.minutes<10 ?"0"+date.minutes : date.minutes;
+        var s=date.seconds<10 ?"0"+date.seconds : date.seconds;
+        var h1=endDate.hours<10 ?"0"+endDate.hours : endDate.hours;
+        var m1=endDate.minutes<10 ?"0"+endDate.minutes : endDate.minutes;
+        var s1=endDate.seconds<10 ?"0"+endDate.seconds : endDate.seconds;
+        var date1=date.year+'-'+date.month+'-'+date.date+' '+h+":"+m+":"+s;
+        var date2=endDate.year+'-'+endDate.month+'-'+endDate.date+' '+h1+":"+m1+":"+s1;
+
+        if(value){
+            $('#startDate').val(date1);
+            $('#endDate').val(date2);
+        }
+        else{
+            $('#startDate').val('');
+            $('#endDate').val('');
+        }
+
+    });
+    function LoadingInfo(page_index) {
+        var start_date = $("#startDate").val();
+        var end_date = $("#endDate").val();
+        var goods_name = $("#goods_name").val();
+        var shop_type = $("#shop_type").val();
+        var sort = $("input[type='radio'][name='sort']:checked").val();
+        $.ajax({
+            type: "post",
+            url: "{:__URL('PLATFORM_MAIN/statistics/goodsAnalysis')}",
+            async: true,
+            data: {
+                "page_index": page_index,
+                "start_date": start_date,
+                "end_date": end_date,
+                "goods_name": goods_name,
+                "shop_type": shop_type,
+                "sort": sort
+            },
+            success: function (data) {
+                var html = '';
+                $("#account_money").html(data['account'][0]);
+                $("#account_sum").html(data['account'][1]);
+                $("#account_goods").html(data['account'][2]);
+                $("#total_count_num").text(data["total_count"]);
+                $("#page_count_num").text(data["page_count"]);
+                $("#page_count").val(data["page_count"]);
+                $("#pageNumber a").remove();
+                if (data["data"]['data'].length > 0) {
+                    for (var i = 0; i < data["data"]['data'].length; i++) {
+                        html +='<tr>';
+                        html +='<td>';
+                        if (i == 0) {
+                            html +='<div class="ranking placed">' + (i + 1) + '</div>';
+                        } else if (i == 1) {
+                            html +='<div class="ranking placed">' + (i + 1) + '</div>';
+                        } else if (i == 2) {
+                            html +='<div class="ranking placed">' + (i + 1) + '</div>';
+                        }else{
+                            html +='<div class="ranking">' + (i + 1) + '</div>';
+                        }
+                        html +='</td>';
+                        html +='<td>';
+                        html +='<div class="media text-left">';
+                        html +='<div class="media-left">';
+                        html +='<img width="60px" height="60px" src="' + __IMG(data["data"]['data'][i]["pic_cover_micro"]) + '">';
+                        html +='</div>';
+                        html +='<div class="media-body break-word"><div class="line-2-ellipsis">' + data["data"]['data'][i]["goods_name"]+ '</div>';
+                        html +='</div>';
+                        html +='</div>';
+                        html +='</td>';
+                        html +='<td>' + data["data"]['data'][i]['sumCount'] + '</td>';
+                        html +='<td>'+data["data"]['data'][i]['sumMoney'] + '</td>';
+                        html +='</tr>';
+                    }
+                } else {
+                    html += '<tr><td colspan="4" class="h-200">暂无符合条件的数据记录</td></tr>';
+                };
+                console.log(data['data']['total_count'])
+                $('#page').paginator('option', {
+                    totalCounts: data['data']['data']['total_count']  // 动态修改总数
+                });
+                $("#list").html(html)
+            }
+        });
+    }
+    $('.search').on('click',function(){
+        util.initPage(LoadingInfo);
+    });
+})
+</script>
+{/block}

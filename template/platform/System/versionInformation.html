@@ -1,0 +1,171 @@
+{extend name="platform/new_base" /} {block name="resource"}
+<style>
+	body{
+		background-color: red;
+	}
+	
+</style>
+{/block} {block name="main"}
+<!-- page -->
+<style>
+.u-log p{min-height:17px;word-wrap: break-word;word-break: normal; }
+</style>
+<form action="" class="form-horizontal">
+
+	<div class="form-group">
+		<label class="col-md-2 control-label">版本名称</label>
+		<div class="col-md-8">
+			<div class="form-control-static">{$version_data['version_name']}</div>
+		</div>
+	</div>
+	<div class="form-group">
+		<label class="col-md-2 control-label">当前版本号</label>
+		<div class="col-md-8">
+			<div class="form-control-static">
+				<span class="mr-10">{$version_data['version_num']}</span>
+				{if $version_data['version_status_code']==1  && $ismade == '否'}
+				<span class="text-red mr-10">检测到新版本：{$version_data['version_new_num']}</span>
+				{/if}
+				{if $alllogs}
+				<a class="text-primary updateLog" href="javascript:void(0);">更新日志</a>
+				{else}
+				<!-- <a class="text-primary" href="javascript:void(0);">暂无更新日志</a> -->
+				{/if}
+			</div>
+		</div>
+	</div>
+	<div class="form-group">
+		<label class="col-md-2 control-label">版本介绍</label>
+		<div class="col-md-8">
+			<div class="form-control-static">{$version_data['version_introduction']}</div>
+		</div>
+	</div>
+	<div class="form-group">
+		<label class="col-md-2 control-label">开发者</label>
+		<div class="col-md-8">
+			<div class="form-control-static">{$version_data['developer']}</div>
+		</div>
+	</div>
+	<div class="form-group">
+		<label class="col-md-2 control-label">升级更新</label>
+		{if $version_data['version_status_code']==1 && $ismade == '否'}
+		<div class="col-md-8">
+			<div class="form-control-static"><a class="btn btn-primary updateVersion" href="javascript:void(0);">更新</a></div>
+		</div>
+		{else}
+		<div class="col-md-8">
+			<div class="form-control-static"><a class="btn btn-news" href="javascript:void(0);">已是最新版本</a></div>
+		</div>
+		{/if}
+	</div>
+</form>
+<div style="display: none" id="aa">
+	<div class="u-log">
+		{foreach name="$version_data['version_log']" item="version_log" key="k" }
+		<div class="u-log-item mb-10">
+			<div class="u-log-title">
+				{$version_log['version_num']}
+				<span>{$version_log['version_time'] | getTimeStampTurnTime}</span>
+			</div>
+			<div class="u-log-content">{$version_log['update_ins']}</div>
+		</div>
+		{/foreach}
+	</div>
+</div>
+<div style="display: none" id="cc">
+	<div class="u-log">
+		{$alllogs}
+	</div>
+</div>
+<div style="display: none" id="bb">
+	<p class="mb-10">1、更新前请先对代码以及数据进行备份，若更新失败可用于恢复。</p>
+	<p class="mb-10">2、请确保没有对团大人分销商城系统进行二开，如有二开请停止更新操作</p>
+	<p class="mb-10">3、更新内容涉及代码与数据库，建议选择深夜或闲时停止系统所有操作再进行更新，以免导致系统报错与数据丢失的问题。</p>
+	<p class="mb-10">4、确定更新后请耐心等待，不要关闭网站，确保网络流畅不卡顿，以免导致更新失败无法正常访问系统。</p>
+</div>
+
+<div  class="updateTips" style="display: none;">
+	<div class="updateTips-dia">
+		<img src="/public/platform/images/updateTips.svg" alt="" class="updateTips-dia-img">
+		<div style="color: #fff">系统正在更新中，请停止系统的一切操作，不要关闭浏览器。</div>
+	</div>
+</div>
+<input type="hidden" id="version_message" value="{$version_message}">
+
+<!-- page end -->
+{/block} {block name="script"}
+<script>
+    require(['util'], function (util) {
+		var version_message = $("#version_message").val();
+		if(version_message){
+            util.alert1('更新提示',version_message);
+		}
+        $('.updateLog').on('click',function(){
+            var html=$("#cc").html();
+            util.confirm2('更新日志',html,'xlarge');
+        })
+        $('.updateVersion').on('click',function(){
+            var html=$("#bb").html();
+            util.confirm('更新须知',html,function(){
+                $('.updateTips').show();
+                $.ajax({
+                    type: "post",
+                    url: "{:__URL('PLATFORM_MAIN/Versions/versionUpdate')}",
+                    async: true,
+                    success: function (data) {
+                        if (data["code"] > 0) {
+                          $('.updateTips').hide();
+                          util.message('更新成功','success',location.reload())
+                        }else if (data["code"] ==-1 ) {
+                            $('.updateTips').hide();
+                            util.alert1('更新提示','系统核心配置文件已被篡改，无法完成更新，请把配置文件恢复至原始内容再重试更新');
+						}else if (data["code"] ==-2 ) {
+                            $('.updateTips').hide();
+                            util.alert1('更新提示','数据库更新失败，系统已自动还原');
+                        }else if (data["code"] ==-3 ) {
+                            $('.updateTips').hide();
+                            util.alert1('更新提示','代码更新失败，系统已自动还原');
+                        }else if (data["code"] ==-4 ) {
+                            $('.updateTips').hide();
+                            util.alert1('更新提示','代码备份失败，系统已自动还原');
+                        }else if (data["code"] ==-5 ) {
+                            $('.updateTips').hide();
+                            util.alert1('更新提示','数据库备份失败，系统已自动还原');
+                        }else if (data["code"] ==-6 ) {
+                            $('.updateTips').hide();
+                            util.alert1('更新提示','代码更新失败，请你手动恢复到之前的代码');
+                        }else if (data["code"] ==-7 ) {
+                            $('.updateTips').hide();
+                            util.alert1('更新提示','生成md5文件失败，系统已自动还原');
+                        }else if (data["code"] ==-8 ) {
+                            $('.updateTips').hide();
+                            util.alert1('更新提示','获取客户端md5文件失败，系统已自动还原');
+                        }else if (data["code"] ==-9 ) {
+                            $('.updateTips').hide();
+                            util.alert1('更新提示','版本id有误，系统已自动还原');
+                        }else if (data["code"] ==-10 ) {
+                            $('.updateTips').hide();
+                            util.alert1('更新提示','获取服务端MD5文件失败，系统已自动还原');
+                        }
+						else if (data["code"] ==-11 ) {
+                            $('.updateTips').hide();
+                            util.alert1('更新提示','代码已经是最新版，无需更新');
+                        }
+						else if (data["code"] ==-12 ) {
+                            $('.updateTips').hide();
+                            util.alert1('更新提示','源码已定制，不能更新');
+                        }else if (data["code"] ==-13 ) {
+                            $('.updateTips').hide();
+                            util.alert1('更新提示','缺少php_zip扩展，不支持ZipArchive类'); 
+                        }else{
+                            $('.updateTips').hide();
+                            util.alert1('更新提示','数据库更新失败，系统已自动还原');
+                        }
+                    }
+                });
+            })
+        })
+
+    })
+</script>
+{/block}

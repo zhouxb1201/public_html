@@ -1,0 +1,193 @@
+{extend name="platform/new_base" /}
+{block name="resources"/}
+{/block}
+{block name="main"}
+                <div class="mb-20 flex flex-pack-end">
+                    <div class="date-input-control">
+                        <input type="text" class="form-control" id="date" placeholder="查询时间"><i class="icon icon-calendar"></i>
+                    </div>
+                </div>
+                <div class="flex reconciliation-box">
+                    <div class="padding-15">
+                        <p class="strong fs-18" id=platform_trunover>{if $accountCount.platform_trunover}{$accountCount.platform_trunover}{else}0.00{/if}</p>
+                        <p>平台成交额 <a href="javascript:void(0);" class="ml-2" title="自营店成交额+入驻店成交额" data-toggle="tooltip" data-trigger="hover" data-placement="bottom"><i class="icon icon-help"></i></a></p>
+                    </div>
+                    <div class="padding-15">
+                        <p class="strong fs-18" id=account_entry>{if $accountCount.account_entry}{$accountCount.account_entry}{else}0.00{/if}</p>
+                        <p>入账总金额 <a href="javascript:void(0);" class="ml-2" title="平台账户实际到账的款项（微信支付、支付宝支付）" data-toggle="tooltip" data-trigger="hover" data-placement="bottom"><i class="icon icon-help"></i></a></p>
+                    </div>
+                    {if $shopStatus}
+                    <div class="padding-15">
+                        <p class="strong fs-18" id=self_trunover>{if $accountCount.self_trunover}{$accountCount.self_trunover}{else}0.00{/if}</p>
+                        <p>自营成交额 <a href="javascript:void(0);" class="ml-2" title="会员在自营店下单购买商品的总金额" data-toggle="tooltip" data-trigger="hover" data-placement="bottom"><i class="icon icon-help"></i></a></p>
+                    </div>
+                    {/if}
+                    <div class="padding-15">
+                        <p class="strong fs-18" id=balance_entry>{if $accountCount.balance_entry}{$accountCount.balance_entry}{else}0.00{/if}</p>
+                        <p>余额充值 <a href="javascript:void(0);" class="ml-2" title="会员在商城充值余额的总金额" data-toggle="tooltip" data-trigger="hover" data-placement="bottom"><i class="icon icon-help"></i></a></p>
+                        </div>
+                    
+                    <div class="padding-15">
+                        <p class="strong fs-18" id=wx_payment>{if $accountCount.wx_payments}{$accountCount.wx_payments}{else}0.00{/if}</p>
+                        <p>微信入账 <a href="javascript:void(0);" class="ml-2" title="会员在商城使用微信支付的总金额（包含自营订单、入驻订单、余额充值）" data-toggle="tooltip" data-trigger="hover" data-placement="bottom"><i class="icon icon-help"></i></a></p>
+                        </div>
+                    
+                    <div class="padding-15">
+                        <p class="strong fs-18" id=ali_payment>{if $accountCount.ali_payments}{$accountCount.ali_payments}{else}0.00{/if}</p>
+                        <p>支付宝入账 <a href="javascript:void(0);" class="ml-2" title="会员在商城使用支付宝支付的总金额（包含自营订单、入驻订单、余额充值）" data-toggle="tooltip" data-trigger="hover" data-placement="bottom"><i class="icon icon-help"></i></a></p>
+                    </div>
+
+                    <div class="padding-15">
+                        <p class="strong fs-18" id=account_withdrawals>{if $accountCount.account_withdrawals}{$accountCount.account_withdrawals}{else}0.00{/if}</p>
+                        {if $shopStatus}
+                        <p>提现总金额 <a href="javascript:void(0);" class="ml-2" title="会员和店铺在商城提现出来的总金额(微信提现+支付宝提现+银行卡提现）" data-toggle="tooltip" data-trigger="hover" data-placement="bottom"><i class="icon icon-help"></i></a></p>
+                        {else}
+                        <p>提现总金额 <a href="javascript:void(0);" class="ml-2" title="会员在商城提现出来的总金额(微信提现+支付宝提现+银行卡提现）" data-toggle="tooltip" data-trigger="hover" data-placement="bottom"><i class="icon icon-help"></i></a></p>
+                        {/if}
+                        </div>
+                    
+                    <div class="padding-15">
+                        <p class="strong fs-18" id=wx_withdraw>{if $accountCount.wx_withdraw}{$accountCount.wx_withdraw}{else}0.00{/if}</p>
+                        {if $shopStatus}
+                        <p>微信提现 <a href="javascript:void(0);" class="ml-2" title="会员和店铺在商城提现到微信钱包的总金额" data-toggle="tooltip" data-trigger="hover" data-placement="bottom"><i class="icon icon-help"></i></a></p>
+                        {else}
+                        <p>微信提现 <a href="javascript:void(0);" class="ml-2" title="会员在商城提现到微信钱包的总金额" data-toggle="tooltip" data-trigger="hover" data-placement="bottom"><i class="icon icon-help"></i></a></p>
+                        {/if}
+                        </div>
+                    
+                    <div class="padding-15">
+                        <p class="strong fs-18" id=ali_withdraw>{if $accountCount.ali_withdraw}{$accountCount.ali_withdraw}{else}0.00{/if}</p>
+                        {if $shopStatus}
+                        <p>支付宝提现 <a href="javascript:void(0);" class="ml-2" title="会员和店铺在商城提现到支付宝的总金额" data-toggle="tooltip" data-trigger="hover" data-placement="bottom"><i class="icon icon-help"></i></a></p>
+                        {else}
+                        <p>支付宝提现 <a href="javascript:void(0);" class="ml-2" title="会员在商城提现到支付宝的总金额" data-toggle="tooltip" data-trigger="hover" data-placement="bottom"><i class="icon icon-help"></i></a></p>
+                        {/if}
+                    </div>
+
+                    <div class="padding-15">
+                        <p class="strong fs-18" id=bank_withdraw>{if $accountCount.bank_withdraw}{$accountCount.bank_withdraw}{else}0.00{/if}</p>
+                        {if $shopStatus}
+                        <p>银行卡提现 <a href="javascript:void(0);" class="ml-2" title="会员和店铺在商城提现到银行卡的总金额" data-toggle="tooltip" data-trigger="hover" data-placement="bottom"><i class="icon icon-help"></i></a></p>
+                        {else}
+                        <p>银行卡提现 <a href="javascript:void(0);" class="ml-2" title="会员在商城提现到银行卡的总金额" data-toggle="tooltip" data-trigger="hover" data-placement="bottom"><i class="icon icon-help"></i></a></p>
+                        {/if}
+                    </div>
+
+                    <div class="padding-15">
+                        <p class="strong fs-18"  id=balance_payment>{if $accountCount.balance_payment}{$accountCount.balance_payment}{else}0.00{/if}</p>
+                        <p>余额支付 <a href="javascript:void(0);" class="ml-2" title="会员使用余额进行消费的总金额" data-toggle="tooltip" data-trigger="hover" data-placement="bottom"><i class="icon icon-help"></i></a></p>
+                    </div>
+                    
+                    <div class="padding-15">
+                        <p class="strong fs-18" id=balance_adjust>{if $accountCount.balance_adjust}{$accountCount.balance_adjust}{else}0.00{/if}</p>
+                        <p>余额调整 <a href="javascript:void(0);" class="ml-2" title="通过后台给会员充值和扣除余额的总和" data-toggle="tooltip" data-trigger="hover" data-placement="bottom"><i class="icon icon-help"></i></a></p>
+                    </div>
+                    
+                    <div class="padding-15">
+                        <p class="strong fs-18" id=platform_preference>{if $accountCount.platform_preference}{$accountCount.platform_preference}{else}0.00{/if}</p>
+                        <p>平台优惠 <a href="javascript:void(0);" class="ml-2" title="会员下单平台给予的优惠总金额" data-toggle="tooltip" data-trigger="hover" data-placement="bottom"><i class="icon icon-help"></i></a></p>
+                    </div>
+
+                    {if $distributionStatus || $shopStatus || $globalStatus || $areaStatus || $teamStatus}
+                        {if $distributionStatus}
+                        <div class="padding-15">
+                            <p class="strong fs-18"  id=commission_total>{if $accountCount.commission_total}{$accountCount.commission_total}{else}0.00{/if}</p>
+                            <p>赠送佣金 <a href="javascript:void(0);" class="ml-2" title="分销商累计佣金（订单产生的佣金）" data-toggle="tooltip" data-trigger="hover" data-placement="bottom"><i class="icon icon-help"></i></a></p>
+                        </div>
+                        {/if}
+                        {if $globalStatus || $areaStatus || $teamStatus}
+                        <div class="padding-15">
+                            <p class="strong fs-18" id=bonus_total>{if $accountCount.bonus_total}{$accountCount.bonus_total}{else}0.00{/if}</p>
+                            <p>赠送分红 <a href="javascript:void(0);" class="ml-2" title="全球股东、区域代理、团队队长累计分红（订单产生的分红）" data-toggle="tooltip" data-trigger="hover" data-placement="bottom"><i class="icon icon-help"></i></a></p>
+                        </div>
+                        {/if}
+                        {if $microshopStatus}
+                        <div class="padding-15">
+                            <p class="strong fs-18"  id=microshop_total>{if $accountCount.microshop_total}{$accountCount.microshop_total}{else}0.00{/if}</p>
+                            <p>赠送收益 <a href="javascript:void(0);" class="ml-2" title="微店店主累计收益（订单产生的收益）" data-toggle="tooltip" data-trigger="hover" data-placement="bottom"><i class="icon icon-help"></i></a></p>
+                        </div>
+                        {/if}
+                        {if $shopStatus}
+                        <div class="padding-15">
+                            <p class="strong fs-18" id=platform_profit>{if $accountCount.platform_profit}{$accountCount.platform_profit}{else}0.00{/if}</p>
+                            <p>平台利润 <a href="javascript:void(0);" class="ml-2" title="平台抽取店铺的利润" data-toggle="tooltip" data-trigger="hover" data-placement="bottom"><i class="icon icon-help"></i></a></p>
+                        </div>
+                        <div class="padding-15">
+                            <p class="strong fs-18" id=shop_preference>{if $accountCount.shop_preference}{$accountCount.shop_preference}{else}0.00{/if}</p>
+                            <p>店铺待结算金额 <a href="javascript:void(0);" class="ml-2" title="平台还没有给店铺结算的金额（包括冻结金额、待提现的金额）" data-toggle="tooltip" data-trigger="hover" data-placement="bottom"><i class="icon icon-help"></i></a></p>
+                        </div>
+                        {/if}
+                    {/if}
+
+                    {if $distributionStatus || $shopStatus || $globalStatus || $areaStatus || $teamStatus}
+                    <div class="padding-15">
+                        <p class="strong fs-18"  id=income_tax_total>{if $accountCount.income_tax_total}{$accountCount.income_tax_total}{else}0.00{/if}</p>
+                        <p>个人所得税 <a href="javascript:void(0);" class="ml-2" title="佣金、分红提现时所扣除的个人所得税总额" data-toggle="tooltip" data-trigger="hover" data-placement="bottom"><i class="icon icon-help"></i></a></p>
+                    </div>
+                    
+                    {/if}
+                    <div class="padding-15">
+                        <p class="strong fs-18" id=service_charge_total>{if $accountCount.service_charge_total}{$accountCount.service_charge_total}{else}0.00{/if}</p>
+                        <p>手续费 <a href="javascript:void(0);" class="ml-2" title="会员提现、店铺提现所扣除的手续费总额" data-toggle="tooltip" data-trigger="hover" data-placement="bottom"><i class="icon icon-help"></i></a></p>
+                    </div>
+                    <div class="padding-15">
+                        <p class="strong fs-18" id=refund_total>{if $accountCount.refund_total}{$accountCount.refund_total}{else}0.00{/if}</p>
+                        <p>订单退款 <a href="javascript:void(0);" class="ml-2" title="订单退款总额" data-toggle="tooltip" data-trigger="hover" data-placement="bottom"><i class="icon icon-help"></i></a></p>
+                    </div>
+                    <div class="padding-15">
+                        <p class="strong fs-18" id=point_discount_total>{if $accountCount.point_discount_total}{$accountCount.point_discount_total}{else}0.00{/if}</p>
+                        <p>积分抵扣金额 <a href="javascript:void(0);" class="ml-2" title="积分抵扣总额" data-toggle="tooltip" data-trigger="hover" data-placement="bottom"><i class="icon icon-help"></i></a></p>
+                    </div>
+                        
+                    
+                </div>
+                <!-- page end -->
+{/block}
+{block name="script"}
+<script>
+require(['util'],function(util){
+    util.tips();
+    util.layDate('#date',true,function(value, date, endDate){
+        var start_date=date.year+"-"+date.month+"-"+date.date;
+        var end_date=endDate.year+"-"+endDate.month+"-"+endDate.date;
+        if(value==''){
+            start_date = '';
+            end_date = '';
+        }
+        if(date.date !== undefined || value==''){
+            $.ajax({
+                type: "post",
+                url: "{:__URL('PLATFORM_MAIN/Finance/financialReconciliation')}",
+                async : true,
+                data : {
+                    "start_date":start_date,
+                    "end_date": end_date
+                },
+                success: function (data) {
+                    $("#platform_trunover").html(data.platform_trunover);
+                    $("#account_entry").html(data.account_entry);
+                    $("#self_trunover").html(data.self_trunover);
+                    $("#balance_entry").html(data.balance_entry);
+                    $("#wx_payment").html(data.wx_payment);
+                    $("#ali_payment").html(data.ali_payment);
+                    $("#account_withdrawals").html(data.account_withdrawals);
+                    $("#wx_withdraw").html(data.wx_withdraw);
+                    $("#ali_withdraw").html(data.ali_withdraw);
+                    $("#bank_withdraw").html(data.bank_withdraw);
+                    $("#balance_payment").html(data.balance_payment);
+                    $("#balance_adjust").html(data.balance_adjust);
+                    $("#platform_preference").html(data.platform_preference);
+                    $("#commission_total").html(data.commission_total);
+                    $("#bonus_total").html(data.bonus_total);
+                    $("#shop_preference").html(data.shop_preference);
+                    $("#income_tax_total").html(data.income_tax_total);
+                    $("#service_charge_total").html(data.service_charge_total);
+                    $("#refund_total").html(data.refund_total);
+                    $("#point_discount_total").html(data.point_discount_total);
+                }
+            });
+        }
+    })
+})
+</script>
+{/block}

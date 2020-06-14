@@ -1,0 +1,42 @@
+<view class="ting_cricle_box">
+	<!--head-->
+	<view class="head">
+		<view class="info">
+			<image mode="widthFix" src="{{info.user_headimg != '' ? info.user_headimg : '/images/no-avatar.png'}}" class="avator"></image>
+			<view class="content">
+				<view class="name">{{info.thing_user_name ? info.thing_user_name : "匿名"}}</view>
+				<view class="number">好物圈号：{{info.thing_circle_uid}}</view>
+			</view>
+			<view class="icon iconfont v-icon-msg-02 icon_msg"></view>
+		</view>
+		<view class="box">
+			<view bindtap="toFollow">关注{{info.attentions ? info.attentions : 0}}</view>
+			<view bindtap="toFans">粉丝{{info.fans ? info.fans : 0}}</view>
+			<view>获赞{{info.likes ? info.likes : 0}}</view>
+		</view>
+	</view>
+	<!--tab-->
+	<view class="tab">
+		<van-tabs active="{{ active }}" bind:change="onTabsChange">
+			<van-tab title="干货"></van-tab>
+			<van-tab title="点赞"></van-tab>
+			<van-tab title="收藏"></van-tab>
+		</van-tabs>
+	</view>
+	<view class="van-list">
+		<view class="wrap">
+			<view class="item">
+				<view class="date">
+					<text>26</text>
+					<text class="month">12月</text>
+				</view>
+				<view class="boxes">
+					<view class="content">
+						<image mode="scaleToFill" src="/images/no-goods.png"></image>
+						<text>来这边</text>
+					</view>
+				</view>
+			</view>
+		</view>
+	</view>
+</view>

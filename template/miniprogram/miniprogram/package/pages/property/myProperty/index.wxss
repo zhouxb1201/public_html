@@ -1,0 +1,35 @@
+page{
+  font-size: 28rpx;
+  background-color: #f8f8f8;
+}
+.card_group_box{
+  margin: 20rpx;
+  border-radius: 20rpx;
+  overflow: hidden;
+  box-shadow: 0 0 10px 0 rgba(0,0,0,.05);
+}
+.property_box{
+  background-color: #fff;
+}
+.property_row{
+  padding: 20rpx 30rpx;
+  display: flex;
+  width: 100%;
+  box-sizing: border-box;  
+}
+.property_row .text_title{
+  width: 50%;
+}
+.property_row .text_value{
+  width: 45%;
+  text-align: right;
+  color: #969799;
+  margin-right: 10rpx;
+}
+.bottom_line{
+  border-bottom: 1px solid #ebedf0
+}
+.withdraw_cash{
+  margin-top: 20rpx;
+  background-color: #fff;
+}

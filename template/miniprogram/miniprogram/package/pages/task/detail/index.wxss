@@ -1,0 +1,83 @@
+page{
+  background-color: #fff;
+  font-size: 28rpx;
+}
+
+.head{
+  position: relative;
+  overflow: hidden;
+}
+.card_group_box{
+  margin: 20rpx;
+  border-radius: 20rpx;
+  overflow: hidden;
+  box-shadow: 0 0 10px 0 rgba(0,0,0,.05);
+}
+.head .box{
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  top: 0;
+  z-index: 1;
+  display: flex;
+  justify-content: space-between;
+  padding: 0 40rpx;
+}
+.box .info .img{
+  width: 100rpx;
+  height: 100rpx;
+  overflow: hidden;
+  border-radius: 50%;
+  border:4rpx solid #fff;
+}
+.box .info .img image{
+  width: 100%;
+  height: 100%;
+}
+.info{
+  display: flex;
+  align-items: center;
+  color: #fff;
+}
+.info .text{
+  margin-left: 20rpx;
+  line-height: 40rpx;
+}
+
+.cell_group{
+  display: flex;
+  flex-direction: column;
+  background-color: #fff;
+  overflow: hidden;
+  margin: 20rpx 30rpx;
+  line-height: 1.6;
+  box-sizing:border-box;
+}
+.cell_group .time{
+  color: #606266;
+}
+.cell_group .text_regular{
+  color: #606266;
+}
+.cell_group .text_regular text{
+  color: #f44;
+}
+.success{
+  color: rgb(26, 209, 87);
+}
+.fail{
+  color: #f44;
+}
+.cell .item{
+  line-height: 2.6;
+  border-bottom: 1px solid #ebedf0;
+  box-sizing:border-box;
+}
+.cell .text_secondary{
+  color: #909399;
+  padding-left: 20rpx;
+}
+.foot{
+  padding: 60rpx;
+}

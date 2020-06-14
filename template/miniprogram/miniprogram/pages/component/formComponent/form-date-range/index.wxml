@@ -1,0 +1,23 @@
+<!-- 范围 -->
+    <view class='custom date_range wx:if="{{customitem.required == true ? "custom_padd" : ""}}"'>
+      <view class='label_text'><text class="star" wx:if='{{customitem.required == true}}'>*</text>{{customitem.label}}</view>
+      <view class='range_group'>
+        <view class='range_group_cell border_b' data-id="2" data-index="{{index}}"  bindtap="onClickedDate">
+          <view class='range_title'>开始时间</view>
+          <view class='range_value'>
+            <input value='{{ getStartTime }}' disabled='disabled'></input>
+          </view>
+        </view>
+        <view class='range_group_cell' data-id="3" data-index="{{index}}"  bindtap="onClickedDate">
+          <view class='range_title'>结束时间</view>
+          <view class='range_value'>
+            <input value='{{ getEndTime }}' disabled='disabled'></input>
+          </view>
+        </view>        
+      </view>
+    </view>
+
+    <!-- 日期弹出框 -->
+<van-popup show="{{dateshow}}" position="bottom" bind:click-overlay="onDateClose">
+  <van-datetime-picker type="date" value="{{ currentDate }}" bind:confirm="onDateChange"/>
+</van-popup>

@@ -1,0 +1,221 @@
+{block name="main"}
+        <!-- page -->
+        <div class="mb-20">
+            <a href="{:__URL('ADDONS_MAINaddCouponType')}" class="btn btn-primary"><i class="icon icon-add1"></i> 添加优惠券</a>
+        </div>
+        <table class="table v-table table-auto-center">
+            <thead>
+            <tr>
+                <th class="col-md-2">优惠券名称</th>
+                <th class="col-md-1">门槛</th>
+                <th class="col-md-1">面值</th>
+                <th class="col-md-1">剩余数量/发放数量</th>
+                <th>领取时间</th>
+                <th>生效时间</th>
+                <th class="col-md-2 pr-14 operationLeft">操作</th>
+            </tr>
+            </thead>
+            <tbody id="coupon_type_list">
+            </tbody>
+        </table>
+        <input type="hidden" id="page_index">
+        <nav aria-label="Page navigation" class="clearfix">
+            <ul id="page" class="pagination pull-right"></ul>
+        </nav>
+
+        <!-- page end -->
+{/block}
+{block name="script"}
+<script id="shop_curr_list" type="text/html">
+    <%each data as item index%>
+    <tr>
+        <td><%item.coupon_name%></td>
+        <%if item.coupon_genre == 1 %>
+        <td>无门槛券</td>
+        <td><%item.money%>元</td>
+        <%else if item.coupon_genre == 2 %>
+        <td>满减券</td>
+        <td><%item.money%>元</td>
+        <%else if item.coupon_genre == 3 %>
+        <td>折扣券</td>
+        <td><%item.discount%>折</td>
+        <%/if%>
+		<%if item.count == 0 %>
+        <td>无限</td>
+		<%else %>
+		<td><%item.surplus%>/<%item.count%></td>
+		<%/if%>
+        <td>
+            <span><%timeStamp(item.start_receive_time)%></span>
+            ~
+            <span><%timeStamp(item.end_receive_time)%></span>
+        </td>
+        <td>
+            <span><%timeStamp(item.start_time)%></span>
+            ~
+            <span><%timeStamp(item.end_time)%></span>
+        </td>
+        <td class="operationLeft fs-0">
+            <a href="javascript:;" class="btn-operation" data-type="edit" data-coupon-type-id="<%item.coupon_type_id%>">编辑</a>
+            <!--<a href="javascript:;" class="btn-operation copy" data-type="copy" data-clipboard-text="{$receiveUrl}/<%item.coupon_type_id%>">活动链接</a>-->
+            <a class="btn-operation link-pr" href="javascript:void(0);"> <span>链接</span>
+                <div class="link-pos">
+                    <div class="link-arrow">
+                        <form class="form-horizontal">
+                            <%if addon_status.wap_status == 1%>
+                            <div class="form-group"><label class="col-md-2 control-label">手机端</label>
+                                <div class="col-md-10">
+                                    <div class="input-group"><input class="form-control" type="text" disabled
+                                                                    value="<%__URLS('SHOP_MAIN/wap/coupon/receive/'+item.coupon_type_id)%>"> <span
+                                            class="input-group-btn btn btn-primary bbllrr0 copy"
+                                            data-clipboard-text="<%__URLS('SHOP_MAIN/wap/coupon/receive/'+item.coupon_type_id)%>">复制链接</span> </div>
+                                </div>
+                            </div>
+                            <%/if%>
+                            <%if addon_status.is_minipro == 1%>
+                            <div class="form-group"><label class="col-md-2 control-label">小程序端</label>
+                                <div class="col-md-10">
+                                    <div class="input-group"><input class="form-control" type="text" disabled
+                                                                    value="package/pages/coupon/receiveCoupon/index?couponId=<%item.coupon_type_id%>"> <span
+                                            class="input-group-btn btn btn-primary bbllrr0 copy"
+                                            data-clipboard-text="package/pages/coupon/receiveCoupon/index?couponId=<%item.coupon_type_id%>">复制链接</span> </div>
+                                </div>
+                            </div>
+                            <%/if%>
+                            <!--<%if addon_status.is_pc_use == 1%>-->
+                            <!--<div class="form-group"><label class="col-md-2 control-label">电脑端</label>-->
+                            <!--<div class="col-md-10">-->
+                            <!--<div class="input-group"><input class="form-control" type="text" disabled-->
+                            <!--value="<%__URLS('SHOP_MAIN/goods/goodsinfo&goodsid='+item.goods_id)%>"> <span-->
+                            <!--class="input-group-btn btn btn-primary bbllrr0 copy"-->
+                            <!--data-clipboard-text="<%__URLS('SHOP_MAIN/goods/goodsinfo&goodsid='+item.goods_id)%>">复制链接</span> </div>-->
+                            <!--</div>-->
+                            <!--</div>-->
+                            <!--<%/if%>-->
+                        </form>
+                        <div class="flex link-flex">
+                            <%if addon_status.wap_status == 1%>
+                            <div class="flex-1">
+                                <div class="mb-04"><img
+                                        src="<%__URL('PLATFORM_MAIN/goods/getGoodsDetailQr')+'?coupon_type_id='+item.coupon_type_id +'&qr_type=1&wap_path=/wap/coupon/receive/'%>" style="width: 100px;height: 100px">
+                                </div>
+                                <p>(手机端二维码)</p></div>
+                            <%/if%>
+                            <%if addon_status.is_minipro == 1%>
+                            <div class="flex-1">
+                                <div class="mb-04"><img
+                                        src="<%__URL('PLATFORM_MAIN/goods/getGoodsDetailQr')+'?coupon_type_id='+item.coupon_type_id +'&qr_type=2&mp_path=package/pages/coupon/receiveCoupon/index'%>" style="width: 100px;height: 100px">
+                                </div>
+                                <p>(小程序二维码)</p>
+                            </div>
+                            <%/if%>
+                        </div>
+                    </div>
+                </div>
+            </a>
+            <a href="javascript:;" class="btn-operation" data-type="info" data-coupon-type-id="<%item.coupon_type_id%>">详情</a>
+            <a href="javascript:;" class="btn-operation" data-type="history" data-coupon-type-id="<%item.coupon_type_id%>">记录</a>
+            <a href="javascript:;" data-coupon-type-id="<%item.coupon_type_id%>" class="btn-operation del text-red1">删除</a>
+        </td>
+    </tr>
+    <%/each%>
+</script>
+
+<script>
+    require(['util', 'tpl'], function (util, tpl) {
+        util.initPage(LoadingInfo);
+        util.copy()
+        tpl.helper('__URLS',function(str){
+            return  __URLS(str)
+        })
+        tpl.helper('__URL',function(str){
+            return  __URL(str)
+        })
+        tpl.helper("timeStamp", function (timeStamp) {
+            if (timeStamp > 0) {
+                var date = new Date();
+                date.setTime(timeStamp * 1000);
+                var y = date.getFullYear();
+                var m = date.getMonth() + 1;
+                m = m < 10 ? ('0' + m) : m;
+                var d = date.getDate();
+                d = d < 10 ? ('0' + d) : d;
+                var h = date.getHours();
+                h = h < 10 ? ('0' + h) : h;
+                var minute = date.getMinutes();
+                var second = date.getSeconds();
+                minute = minute < 10 ? ('0' + minute) : minute;
+                second = second < 10 ? ('0' + second) : second;
+                return y + '-' + m + '-' + d + ' ' + h + ':' + minute + ':' + second;
+            } else {
+                return "";
+            }
+        });
+        $('#coupon_type_list').on('click', '.del', function () {
+            var coupon_type_id = $(this).attr('data-coupon-type-id');
+                util.alert('删除？', function () {
+                    $.ajax({
+                        type: "post",
+                        url: "{$deleteCouponTypeUrl}",
+                        data: {"coupon_type_id": coupon_type_id},
+                        dataType: "json",
+                        success: function (data) {
+                            if (data["code"] > 0) {
+                                util.message(data["message"], 'success', LoadingInfo($('#page_index').val()));
+                            } else if (data["code"] == -1) {
+                                util.message('已被领取的优惠券不可删除');
+                            } else {
+                                util.message(data['message']);
+                            }
+                        }
+                    })
+                })
+        })
+
+        $('#coupon_type_list').on('click', '.btn-operation', function () {
+            var type = $(this).attr('data-type');
+            var coupon_type_id = $(this).attr('data-coupon-type-id');
+            switch (type) {
+                case 'edit':
+                    location.href = __URL('ADDONS_MAINupdateCouponType&coupon_type_id=' + coupon_type_id);
+                    break;
+                case 'info':
+                    location.href = __URL('ADDONS_MAINcouponTypeInfo&coupon_type_id=' + coupon_type_id);
+                    break;
+                case 'history':
+                    location.href = __URL('ADDONS_MAINhistoryCoupon&coupon_type_id=' + coupon_type_id);
+                    break;
+                case 'copy':
+                    break;
+            }
+        })
+
+        function LoadingInfo(page_index) {
+            $("#page_index").val(page_index);
+            $.ajax({
+                type: "post",
+                url: "{$couponTypeListUrl}",
+                data: {
+                    "page_index": page_index,
+                    "search_text": $("#search_text").val(),
+                },
+                success: function (data) {
+                    html ='';
+                    html += '<tr><td colspan="7" class="h-200">暂无符合条件的数据记录</td></tr>';
+                    if(tpl('shop_curr_list', data)){
+                        $("#coupon_type_list").html(tpl('shop_curr_list', data));
+                        util.tips();
+                        $('#page').paginator('option', {
+                            totalCounts: data['total_count']  // 动态修改总数
+                        });
+                    }else{
+                        $("#coupon_type_list").html(html);
+                    }
+                }
+            });
+        }
+    })
+
+
+</script>
+{/block}

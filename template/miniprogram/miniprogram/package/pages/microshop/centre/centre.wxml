@@ -1,0 +1,12 @@
+<view wx:if="{{pageShow}}">
+  <view wx:if="{{!order_type}}">
+      <Mine wx:if="{{info.isshopkeeper}}" shopkeeperInfo="{{info}}" incomelist="{{incomelist}}"></Mine>
+      <Post wx:else pageType="2" info="{{info}}" goods="{{goods_info}}"></Post> 
+  </view>
+  <view wx:else>
+    <Post pageType="{{order_type}}" info="{{info}}" goods="{{goods_info}}" wx:if="{{order_type && info.isshopkeeper}}"></Post>
+  </view>
+</view>
+
+<!-- 登录组件 -->
+<login-component loginShow='{{loginShow}}' bind:request='requestLogin'></login-component>

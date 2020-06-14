@@ -1,0 +1,564 @@
+{extend name="platform/new_base" /}
+{block name="resources"/}
+{/block}
+{block name="main"}
+<form class="v-filter-container">
+    <div class="filter-fields-wrap">
+        <div class="filter-item clearfix">
+            <div class="filter-item__field">
+                <div class="v__control-group">
+                    <label class="v__control-label">会员ID</label>
+                    <div class="v__controls">
+                        <input type="text" id="member_id" class="v__control_input" autocomplete="off">
+                    </div>
+                </div>
+                <div class="v__control-group">
+                    <label class="v__control-label">会员信息</label>
+                    <div class="v__controls">
+                        <input type="text" class="v__control_input" id="user" placeholder="用户名/昵称/手机号码" autocomplete="off">
+                    </div>
+                </div>
+                <div class="v__control-group">
+                    <label class="v__control-label">会员等级</label>
+                    <div class="v__controls">
+                        <select class="v__control_input" id="member_level">
+                            <option value="">请选择</option>
+                            {foreach name="level_list['data']" item="vo"}
+                            <option value="{$vo.level_id}">{$vo.level_name}</option>
+                            {/foreach}
+                        </select>
+                    </div>
+                </div>
+                <div class="v__control-group">
+                    <label class="v__control-label">会员标签</label>
+                    <div class="v__controls">
+                        <select class="v__control_input" id="user_group">
+                            <option value="">请选择</option>
+                            {foreach name="label_list['data']" item="vo"}
+                            <option value="{$vo.group_id}" {if $member_group_id==$vo.group_id}selected{/if} >{$vo.group_name}</option>
+                            {/foreach}
+                        </select>
+                    </div>
+                </div>
+                <div class="v__control-group">
+                    <label class="v__control-label">会员状态</label>
+                    <div class="v__controls">
+                        <select class="v__control_input" id="member_status">
+                            <option value="">全部</option>
+                            <option value="0">黑名单</option>
+                            <option value="1">普通会员</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="v__control-group">
+                    <label class="v__control-label">注册时间</label>
+                    <div class="v__controls v-date-input-control">
+                        <label for="orderTime">
+                            <input type="text" class="v__control_input pr-30" id="orderTime" placeholder="请选择时间" autocomplete="off" data-types="datetime">
+                            <i class="icon icon-calendar"></i>
+                            <input type="hidden" id="orderStartDate">
+                            <input type="hidden" id="orderEndDate">
+                        </label>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+        <div class="filter-item clearfix">
+            <div class="filter-item__field">
+                <div class="v__control-group">
+                    <label class="v__control-label"></label>
+                    <div class="v__controls">
+                        <a class="btn btn-primary search"><i class="icon icon-search"></i> 搜索</a>
+                        <a class="btn btn-success ml-15 dataExcel">导出EXCEL</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</form>
+
+                <div class="screen-title">
+                    <span class="text">信息列表</span>
+                </div>
+                <div class="flex-auto-center mb-20 bg-info text-center border-info">
+                    <div class="flex-1 padding-15">
+                        <h3 class="strong">会员数</h3>
+                        <p>{$user_count_num}</p>
+                    </div>
+                    <div class="flex-1 padding-15">
+                        <h3 class="strong">可用余额</h3>
+                        <p id="user_balance">{$user_balance_num}</p>
+                    </div>
+                    <div class="flex-1 padding-15">
+                        <h3 class="strong">黑名单</h3>
+                        <p id="user_black">{$user_black_num}</p>
+                    </div>
+                    <div class="flex-1 padding-15">
+                        <h3 class="strong">可用积分</h3>
+                        <p id="user_point">{$user_point_num}</p>
+                    </div>
+                </div>
+<div class="mb-10 flex flex-pack-justify">
+    <div class="">
+        <a class="btn btn-primary addUsers" href="javascript:void(0);">添加会员</a>
+        <a class="btn btn-default updateLevel" href="javascript:void(0);">修改等级</a>
+        <a class="btn btn-default updateGroup" href="javascript:void(0);" data-uid="0">修改标签</a>
+        <a class="btn btn-default joinBlackLists" href="javascript:void(0);">加入黑名单</a>
+        <a class="btn btn-default delBlackLists" href="javascript:void(0);">移除黑名单</a>
+    </div>
+</div>
+                <table class="table v-table table-auto-center">
+                    <thead>
+                        <tr>
+                            <th><input type="checkbox" id="checkAll"></th>
+                            <th>ID</th>
+                            <th>推荐人</th>
+                            <th>会员信息</th>
+                            <th>等级/标签</th>
+                            <th>余额/积分</th>
+                            <th>成交</th>
+                            <th>注册时间</th>
+                            <th class="col-md-2 pr-14 operationLeft">操作</th>
+                        </tr>
+                    </thead> 
+                    <tbody id="list">
+
+                    </tbody>
+                </table>
+                <input type="hidden" id="page_index">
+                <nav aria-label="Page navigation" class="clearfix">
+                    <ul id="page" class="pagination pull-right"></ul>
+                </nav>
+                <!-- page end -->
+{/block}
+{block name="script"}
+<script>
+require(['util'],function(util){
+    util.initPage(getMemberList);
+    // util.layDate('#orderStartDate');
+    // util.layDate('#orderEndDate');
+    util.layDate('#orderTime',true,function(value, date, endDate){
+        var h=date.hours<10 ?"0"+date.hours : date.hours;
+        var m=date.minutes<10 ?"0"+date.minutes : date.minutes;
+        var s=date.seconds<10 ?"0"+date.seconds : date.seconds;
+        var h1=endDate.hours<10 ?"0"+endDate.hours : endDate.hours;
+        var m1=endDate.minutes<10 ?"0"+endDate.minutes : endDate.minutes;
+        var s1=endDate.seconds<10 ?"0"+endDate.seconds : endDate.seconds;
+        var date1=date.year+'-'+date.month+'-'+date.date+' '+h+":"+m+":"+s;
+        var date2=endDate.year+'-'+endDate.month+'-'+endDate.date+' '+h1+":"+m1+":"+s1;
+        if(value){
+            $('#orderStartDate').val(date1);
+            $('#orderEndDate').val(date2);
+        }
+        else{
+            $('#orderStartDate').val('');
+            $('#orderEndDate').val('');
+        }
+    });
+    function getMemberList(page_index){
+        $("#page_index").val(page_index);
+        var user = $("#user").val();
+        var member_id = $("#member_id").val();
+        var user_group = $("#user_group").val();
+        var member_status = $("#member_status").val();
+        var member_level = $("#member_level").val();
+        var start_create_date = $("#orderStartDate").val();
+        var end_create_date = $("#orderEndDate").val();
+        $.ajax({
+            type : "post",
+            url : "{:__URL('PLATFORM_MAIN/member/memberList')}",
+            async : true,
+            data : {
+                "page_index" : page_index,
+                "start_create_date":start_create_date,
+                "end_create_date":end_create_date,
+                "search_text" : user,
+                "member_level" : member_level,
+                "user_group" : user_group,
+                "member_status" : member_status,
+                "member_id" : member_id
+            },
+            success : function(data) {
+                var html = '';
+                if (data["data"].length > 0) {
+                    for (var i = 0; i < data["data"].length; i++) {
+                        var referee_name = '';
+                        if(data["data"][i]["referee_user_name"]){
+                            referee_name = data["data"][i]["referee_user_name"];
+                        }else if(data["data"][i]["referee_nick_name"]){
+                            referee_name = data["data"][i]["referee_nick_name"];
+                        }else if (data["data"][i]["referee_user_tel"]) {
+                            referee_name = data["data"][i]["referee_user_tel"];
+                        }
+                        html += '<tr>';
+                        html +='<td><input type="checkbox" name="check_uid" value='+ data["data"][i]["uid"]+'></td>';
+                        html += '<td>'+ data["data"][i]["uid"]+'</td>';
+                        html += '<td>';
+                        if(data["data"][i]["referee_id"]>0){
+                            // html +='<div class="media">';
+                            // html +='<div class="media-left">';
+                            if(data["data"][i]["referee_user_headimg"]){
+                                html +='<img src="'+__IMG(data["data"][i]["referee_user_headimg"])+'" height="30" width="30" alt="">';
+                            }else{
+                                html +='<img src="/public/static/images/headimg.png" height="30" width="30" alt="">';
+                            }
+                            // html +='</div>';
+                            // html +='<div class="media-body text-left">';
+                            if(data["data"][i]["referee_user_name"]){
+                                html +='<div class="line-1-ellipsis">'+data["data"][i]["referee_user_name"] +'</div>';
+                            }else if(data["data"][i]["referee_nick_name"]){
+                                html +='<div class="line-1-ellipsis">'+data["data"][i]["referee_nick_name"] +'</div>';
+                            }else if (data["data"][i]["referee_user_tel"]) {
+                                html +='<div class="line-1-ellipsis">'+data["data"][i]["referee_user_tel"] +'</div>';
+                            }else {
+                                html +='<div class="line-1-ellipsis">未设置昵称</div>';
+                            }
+                            if (data["data"][i]["referee_user_tel"]) {
+                                html +='<div>'+data["data"][i]["referee_user_tel"] +'</div>';
+                                if(data["data"][i]["refree_country_code_long"] !='0086'){
+                                    html += '<p class="p"><span class="label label-danger">'+data["data"][i]["refree_country"] + '(' +data["data"][i]["refree_country_code_long"] +')</span></p>';
+                                }
+                            } 
+                            // html +='</div>';
+                            // html +='</div>';
+                            html +='</td>';
+                        }else{
+                        	html += '<p class="p"><span class="label label-success">总店</span></p>';
+                        }
+                        html += '<td>';
+                        if(data["data"][i]["user_headimg"]){
+                            html +='<img src="'+__IMG(data["data"][i]["user_headimg"])+'" height="30" width="30" alt="">';
+                        }else{
+                            html +='<img src="/public/static/images/headimg.png" height="30" width="30" alt="">';
+                        }
+
+                        if(data["data"][i]["user_name"]){
+                            html +='<div class="line-1-ellipsis">'+data["data"][i]["user_name"] +'</div>';
+                        }else if(data["data"][i]["nick_name"]){
+                            html +='<div class="line-1-ellipsis">'+data["data"][i]["nick_name"] +'</div>';
+                        }else{
+                            html +='<div class="line-1-ellipsis">未设置昵称</div>';
+                        }
+                        if(data["data"][i]["user_status"] == 0) {
+                            html += '<p class="p"><span class="label label-default">黑名单</span></p>';
+                        }
+                        if(data["data"][i]["user_tel"]) {
+                            html +='<div>'+data["data"][i]["user_tel"] +'</div>';
+                            if(data["data"][i]["country_code_long"] !='0086'){
+                                html += '<p class="p"><span class="label label-danger">'+data["data"][i]["country"] + '(' +data["data"][i]["country_code_long"] +')</span></p>';
+                            }
+                        }
+                        // html +='</div>';
+                        // html +='</div>';
+                        html +='</td>';
+                        html +='<td>';
+                        html +='<p class="p"><span class="label label-danger">等级:'+ data["data"][i]["level_name"] +'</span></p>';
+                        if(data["data"][i]["group_name"]){
+                            html +='<span class="label label-success">标签:' + data["data"][i]["group_name"] + '</span>';
+                        }else{
+                            html +='<span class="label label-success">标签:未设置标签</span>';
+                        }
+                        html +='</td>';
+                        html +='<td>';
+                        html +='<p class="p"><span class="label label-danger">可用余额:'+ data["data"][i]["balance"] +'</span></p>';
+                        html +='<span class="label label-success">可用积分:' + data["data"][i]["point"] + '</span>';
+
+                        html +='</td>';
+                        html +='<td>';
+                        html +='<p class="p"><span class="label label-danger">订单:'+ data["data"][i]["order_num"] +'</span></p>';
+                        html +='<span class="label label-success">金额:'+ data["data"][i]["order_money"] +'</span>';
+                        html +='</td>';
+                        html += '<td >'+ data["data"][i]["reg_time"] +'</td>';
+                        html +='<td class="operationLeft fs-0">';
+                        html +='<a href="' +  __URL('PLATFORM_MAIN/Member/memberDetail?member_id='+ data['data'][i]['uid']) +'"  class="btn-operation">详情</a>';
+                        html +='<a href="javascript:void(0);" class="btn-operation updateGroup" data-uid="'+ data['data'][i]['uid'] +'">修改标签</a>';
+                        if("{$distributionStatus}"==1 && data["data"][i]["isdistributor"]!=2){
+                            html +='<a href="javascript:void(0);" class="btn-operation becomeDis" data-id ='+ data['data'][i]['uid']+' >设为分销商</a>';
+                        }
+                        if("{$distributionStatus}"==1){
+                            html +='<a href="javascript:void(0);" class="btn-operation updateDis" data-id ='+ data['data'][i]['uid']+' data-name='+referee_name+'>修改推荐人</a>';
+                        }
+                        html +='<a href="' +  __URL('PLATFORM_MAIN/Order/selfOrderList?member_id='+ data['data'][i]['uid']) +'" class="btn-operation">订单</a>';
+                        if(data["data"][i]["user_status"] == 0) {
+                            html += '<a href="javascript:void(0);" class="btn-operation delBlackList" data-id ='+ data['data'][i]['uid']+' >移除黑名单</a>';
+                        }else{
+                            html += '<a href="javascript:void(0);" class="btn-operation joinBlackList" data-id ='+ data['data'][i]['uid']+'>加入黑名单</a>';
+                        }
+
+                        html +='</td>';
+                        html += '</tr>';
+                    }
+
+                } else {
+                    html += '<tr align="center"><td colspan="9" class="h-200">暂无符合条件的数据记录</td></tr>';
+                }
+                $('#page').paginator('option', {
+                    totalCounts: data['total_count']  // 动态修改总数
+                });
+                $("#list").html(html);
+                util.tips();
+                joinBlackList();delBlackList();becomeDis();
+            }
+        });
+    }
+    $('.search').on('click',function(){
+        util.initPage(getMemberList);
+    });
+    // 设为分销商
+    function becomeDis(){
+        $('.becomeDis').on('click',function(){
+            $(".tooltip.fade.top.in").remove();
+            var uid = $(this).data('id');
+            util.alert('确定把该会员设为分销商？',function(){
+                $.ajax({
+                    type : "post",
+                    url : "{:__URL('PLATFORM_MAIN/Member/becomeDis')}",
+                    async : true,
+                    data : {
+                        "uid" : uid
+                    },
+                    success : function(data) {
+                        if (data["code"] > 0) {
+                            util.message(data["message"],'success',getMemberList($("#page_index").val()));
+                        }else{
+                            util.message(data["message"],'danger');
+                        }
+                    }
+                });
+            })
+        })
+    }
+    // 修改推荐人
+    $('body').on('click','.updateDis',function(){
+        var uid = $(this).data('id');
+        var name = $(this).data('name');
+        if(name ==null){
+            name = '总店';
+        }
+        var url= __URL(PLATFORMMAIN + '/system/updateReferee?uid='+uid+'&name='+name);
+        util.confirm('修改所属上级','url:'+url,function(){
+            var uid = this.$content.find('#uid').val();
+            var referee_id = this.$content.find('#referee_id').val();
+            var urls = __URL(PLATFORMMAIN + '/member/updateRefereeDistributor');
+            $.ajax({
+                type : "post",
+                url : urls,
+                data : {
+                    'uid':uid,
+                    'referee_id' :referee_id
+                },
+                success : function(data) {
+                    if (data['code'] > 0) {
+                        util.message(data["message"], 'success', getMemberList($("#page_index").val()));
+                    } else {
+                        util.message(data["message"], 'danger');
+                    }
+                }
+            });
+        },'large')
+    })
+        // 加入黑名单
+       function joinBlackList(){
+        $('.joinBlackList').on('click',function(){
+            $(".tooltip.fade.top.in").remove();
+            var uid = $(this).data('id');
+            util.alert('是否加入该会员至黑名单？',function(){
+                $.ajax({
+                    type : "post",
+                    url : "{:__URL('PLATFORM_MAIN/Member/memberLock')}",
+                    async : true,
+                    data : {
+                        "id" : uid
+                    },
+                    success : function(data) {
+                        if (data["code"] > 0) {
+                            util.message(data["message"],'success',getMemberList($("#page_index").val()));
+                        }else{
+                            util.message(data["message"],'danger');
+                        }
+                    }
+                });
+            })
+        })
+    }
+
+        // 移除黑名单
+       function delBlackList(){
+        $('.delBlackList').on('click',function(){
+            var uid = $(this).data('id');
+            $(".tooltip.fade.top.in").remove();
+            util.alert('是否移除黑名单？',function(){
+                $.ajax({
+                    type : "post",
+                    url : "{:__URL('PLATFORM_MAIN/Member/memberUnlock')}",
+                    async : true,
+                    data : {
+                        "id" : uid
+                    },
+                    success : function(data) {
+                        if (data["code"] > 0) {
+                            util.message(data["message"],'success',getMemberList($("#page_index").val()));
+                        }else{
+                            util.message(data["message"],'danger');
+                        }
+                    }
+                });
+            })
+        })
+       }
+
+    /**
+     * 会员数据导出
+     */
+    $('.dataExcel').on('click',function(){
+		var search_text = $("#user").val();
+		var member_id = $("#member_id").val();
+        var user_group = $("#user_group").val();
+		var start_create_date = $("#orderStartDate").val();
+		var end_create_date = $("#orderEndDate").val();
+        var member_status = $("#member_status").val();
+        var member_level = $("#member_level").val();
+		window.location.href = __URL("PLATFORM_MAIN/member/memberDataExcel" +
+		    "?search_text=" + search_text +
+		    "&member_id=" + member_id +
+		    "&member_level=" + member_level +
+            "&user_group=" + user_group +
+            "&member_status=" + member_status +
+		    "&start_create_date=" + start_create_date +
+		    "&end_create_date=" + end_create_date
+		);
+    })
+    //    点击全选
+    $("#checkAll").on('click',function(){
+        $(".v-table input[type = 'checkbox']").prop("checked", this.checked);
+    })
+    $('.joinBlackLists').on('click',function(){
+        var check_uid = $("input:checkbox[name='check_uid']:checked").map(function (index, elem) {
+            return $(elem).val();
+        }).get().join(',');
+        if(check_uid==''){
+            util.message('请先选择用户','danger');
+            return false;
+        }
+        util.alert('是否加入该会员至黑名单？',function(){
+            $.ajax({
+                type : "post",
+                url : "{:__URL('PLATFORM_MAIN/Member/memberLock')}",
+                async : true,
+                data : {
+                    "id" : check_uid
+                },
+                success : function(data) {
+                    if (data["code"] > 0) {
+                        util.message(data["message"],'success',getMemberList($('#page_index').val()));
+                    }else{
+                        util.message(data["message"],'danger');
+                    }
+                }
+            });
+        })
+    });
+    $('.delBlackLists').on('click',function(){
+        var check_uid = $("input:checkbox[name='check_uid']:checked").map(function (index, elem) {
+            return $(elem).val();
+        }).get().join(',');
+        if(check_uid==''){
+            util.message('请先选择用户','danger');
+            return false;
+        }
+        util.alert('是否移除黑名单？',function(){
+            $.ajax({
+                type : "post",
+                url : "{:__URL('PLATFORM_MAIN/Member/memberUnlock')}",
+                async : true,
+                data : {
+                    "id" : check_uid
+                },
+                success : function(data) {
+                    if (data["code"] > 0) {
+                        util.message(data["message"],'success',getMemberList($('#page_index').val()));
+                    }else{
+                        util.message(data["message"],'danger');
+                    }
+                }
+            });
+        })
+    });
+    $('body').on('click','.updateGroup',function(){
+        var check_uid = $("input:checkbox[name='check_uid']:checked").map(function (index, elem) {
+            return $(elem).val();
+        }).get().join(',');
+        var default_uid='';
+        var data_uid = $(this).attr('data-uid');
+        if(check_uid=='' && data_uid==0){
+            util.message('请先选择用户','danger');
+            return false;
+        }else if(data_uid!=0){
+            default_uid = data_uid;
+            check_uid = data_uid;
+        }else if($("input:checkbox[name='check_uid']:checked").length==1){
+            default_uid = $("input:checkbox[name='check_uid']:checked").val();
+            check_uid = default_uid ;
+        }
+        var url = "{:__URL('PLATFORM_MAIN/member/memberGroupLists')}&default_uid="+default_uid;
+        util.confirm('修改标签','url:'+url,function(){
+            var group_id = this.$content.find('#group_id').val();
+            $.ajax({
+                type : "post",
+                url : "{:__URL('PLATFORM_MAIN/member/updateMemberGroup')}",
+                data : {
+                    "group_id" : group_id,
+                    "check_uid" : check_uid,
+                },
+                success : function(data) {
+                    if (data["code"] > 0) {
+                        util.message(data["message"],'success',getMemberList($('#page_index').val()));
+                    }else{
+                        util.message(data["message"],'danger');
+                    }
+                }
+            });
+        })
+    });
+    //添加会员
+    $('.addUsers').on('click',function(){
+        var url = "{:__URL('PLATFORM_MAIN/member/addUsers')}"
+        window.location.href=url
+    })
+    $('.updateLevel').on('click',function(){
+        var check_uid = $("input:checkbox[name='check_uid']:checked").map(function (index, elem) {
+            return $(elem).val();
+        }).get().join(',');
+        if(check_uid==''){
+            util.message('请先选择用户','danger');
+            return false;
+        }
+        var url = "{:__URL('PLATFORM_MAIN/member/memberLevelLists')}";
+        util.confirm('修改等级','url:'+url,function(){
+            var level_id = this.$content.find('#level_id').val();
+            if(level_id ==''){
+                util.message('请选择等级','danger');
+                return false;
+            }
+            $.ajax({
+                type : "post",
+                url : "{:__URL('PLATFORM_MAIN/member/adjustMemberLevel')}",
+                data : {
+                    "level_id" : level_id,
+                    "uid" : check_uid,
+                },
+                success : function(data) {
+                    if (data["code"] > 0) {
+                        util.message(data["message"],'success',getMemberList($('#page_index').val()));
+                    }else{
+                        util.message(data["message"],'danger');
+                    }
+                }
+            });
+        })
+    });
+    })
+
+</script>
+{/block}

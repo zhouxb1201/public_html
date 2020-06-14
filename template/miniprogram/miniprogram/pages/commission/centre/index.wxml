@@ -1,0 +1,43 @@
+<view class='centre' wx:if='{{pageShow}}'>
+
+  <header-component
+    info="{{distributorData}}"
+    items="{{commissionFixed}}"
+  ></header-component>
+
+  <view class='distribution group'>
+    <view class='top'>
+      <view>{{txt_distribution_commission}}</view>
+      <view class='btn_group'>
+        <view class='btn' data-isdatum='{{distributorData.is_datum}}' bindtap='onWithdrawPage'>提现</view>        
+        <navigator url='../detail/index' hover-class='none'>
+          <view class='btn'>详情</view>
+        </navigator>      
+        
+      </view>
+    </view>
+
+    <view class='cell_card'>
+      <view class='card_item item_line_r item_cel_3'>
+        <view class='card_title'>{{txt_withdrawable_commission}}</view>
+        <view class='card_text'>{{distributorData.commission != null ? distributorData.commission : 0}}</view>
+      </view>
+      <view class='card_item item_line_r item_cel_3'>
+        <view class='card_title'>{{txt_withdrawals_commission}}</view>
+        <view class='card_text'>{{distributorData.withdrawals != null ? distributorData.withdrawals :0}}</view>
+      </view>
+      <view class='card_item item_cel_3'>
+        <view class='card_title'>{{txt_commission}}</view>
+        <view class='card_text'>{{distributorData.total_commission}}</view>
+      </view>
+    </view>
+  </view>
+
+  <tem-component wx:if="{{temData != ''}}" temData='{{temData}}'></tem-component>
+</view>
+
+<!-- 关联手机 -->
+<phone-compoent phoneShow='{{phoneShow}}' bind:phoneEven='phonereResult'></phone-compoent>
+
+<!-- 登录组件 -->
+<login-component loginShow='{{loginShow}}' bind:request='requestLogin'></login-component>

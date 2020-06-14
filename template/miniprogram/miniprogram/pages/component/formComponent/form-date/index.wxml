@@ -1,0 +1,12 @@
+<!-- 日期 -->
+<view class='custom customDisplay wx:if="{{customitem.required == true ? "custom_padd" : ""}}"'>
+  <view class='label_text'><text class="star" wx:if='{{customitem.required == true}}'>*</text>{{customitem.label}}</view>
+  <view data-index="{{index}}" data-id="1" bindtap="onClickedDate">
+    <input type='text' value='{{ getTime }}' placeholder='{{customitem.placeholder}}' disabled='disabled'></input>
+  </view>      
+</view>
+
+<!-- 日期弹出框 -->
+<van-popup show="{{dateshow}}" position="bottom" bind:click-overlay="onDateClose">
+  <van-datetime-picker type="date" value="{{ currentDate }}" bind:confirm="onDateChange"/>
+</van-popup>

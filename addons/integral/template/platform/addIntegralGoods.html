@@ -1,0 +1,489 @@
+<script src="../../../public/platform/js/validate-methods.js"></script>
+
+{block name="main"}
+<!-- page -->
+<!--tab栏切换-->
+<ul class="nav nav-tabs v-nav-tabs add_tab1" role="tablist">
+    <li role="presentation" class="active"><a href="#goods_info" aria-controls="goods_info" role="tab" data-toggle="tab"
+                                              class="flex-auto-center">基本信息</a></li>
+    <li role="presentation" class="goods_spec"><a href="#goods_attribute" aria-controls="goods_attribute" role="tab"
+                                                  data-toggle="tab" class="flex-auto-center">规格/属性</a></li>
+    <li role="presentation"><a href="#goods_detail" aria-controls="goods_detail" role="tab" data-toggle="tab"
+                               class="flex-auto-center">商品详情</a></li>
+    {if $distributionStatus==1 || $globalStatus==1 || $areaStatus==1 || $teamStatus==1}
+    <li role="presentation"><a href="#distribution_bonus" aria-controls="distribution_bonus" role="tab"
+                               data-toggle="tab" class="flex-auto-center">分销分红</a></li>
+    {/if}
+</ul>
+<form class="form-horizontal form-validate widthFixedForm" action="{:__URL('PLATFORM_MAIN/goods/GoodsCreateOrUpdate')}">
+    <input type="hidden" name="goodsId" id="goodsId" value="{$goods_id}"/>
+    <div id="myTabContent" class="tab-content">
+
+        <div class="tab-pane fade tab-1 active in" id="goods_info">
+            <div class="screen-title2" data-id="t2">
+                <span class="text">商品类型</span>
+                <span class="text1">可纯积分兑换或者积分+现金方式兑换,，积分必须大于0，金额可为0，启用规格后不能设置。</span>
+            </div>
+            <ul class="mb-20 type-select-radio clearfix integral-ts-radio">
+                <li class="goodType1 active" data-goods_type="goods">
+                    <div class="radio-label-div">
+                        <div class="">
+                            <div>实物商品</div>
+                            <p class="p1">(物流发货/线下自提)</p>
+                        </div>
+                        <!--<img src="/public/platform/images/goodType1.png" alt="" class="">-->
+                    </div>
+                    <span class="icon-success-sel"><img src="/public/platform/images/goodTypeSel.png" alt=""></span>
+                </li>
+                {if $coupon == 1}
+                    <li class="goodType2" data-goods_type="coupon">
+                        <div class="radio-label-div">
+                            <div class="">
+                                <div>优惠券</div>
+                                <p class="p1">(商城优惠券)</p>
+                            </div>
+
+                        </div>
+                        <span class="icon-success-sel"><img src="/public/platform/images/goodTypeSel.png" alt=""></span>
+                    </li>
+                {/if}
+                {if $giftvoucher == 1}
+                <li class="goodType2 goodType3" data-goods_type="gift">
+                    <div class="radio-label-div">
+                        <div class="">
+                            <div>礼品券</div>
+                            <p class="p1">(线下兑换券)</p>
+                        </div>
+
+                    </div>
+                    <span class="icon-success-sel"><img src="/public/platform/images/goodTypeSel.png" alt=""></span>
+                </li>
+                {/if}
+
+                <li class="goodType2 goodType4" data-goods_type="balance">
+                    <div class="radio-label-div">
+                        <div class="">
+                            <div>余额</div>
+                            <p class="p1">(商城账户余额)</p>
+                        </div>
+
+                    </div>
+                    <span class="icon-success-sel"><img src="/public/platform/images/goodTypeSel.png" alt=""></span>
+                </li>
+
+            </ul>
+
+
+            <div class="screen-title2" data-id="t2">
+                <span class="text">基本信息</span>
+            </div>
+            <div class="form-group goods_type goods_0" data-goods_type='goods'>
+                <label class="col-md-2 control-label">挑选商品</label>
+                <div class="col-md-5">
+                    <div class="input-group">
+                        <input type="text" class="form-control" placeholder="商品名称" disabled id="goods_name"
+                               value="{$search_info}">
+                        <span class="input-group-btn">
+                                <button class="btn btn-primary" id="selectGoods" type="button">选择商品</button>
+                            </span>
+                    </div>
+                </div>
+            </div>
+
+
+            <div class="form-group goods_type goods_1 hide" data-goods_type='coupon'>
+                <label class="col-md-2 control-label"><span class="text-bright">*</span>优惠券</label>
+                <div class="col-md-5">
+                    <div class="input-group">
+                        <input type="text" class="form-control" placeholder="优惠券名称" disabled id="coupon_name"
+                               value="{$coupon_list.coupon_name}">
+                        <input type="hidden" name="coupon_type_id" id="coupon_type_id" value="{$coupon_type_id}">
+                        <span class="input-group-btn">
+                                <button class="btn btn-primary" id="selectCoupon" type="button">选择优惠券</button>
+                                </span>
+                    </div>
+                </div>
+            </div>
+            <div class="form-group goods_type goods_2 hide" data-goods_type='gift'>
+                <label class="col-md-2 control-label"><span class="text-bright">*</span>礼品券</label>
+                <div class="col-md-5">
+                    <div class="input-group">
+                        <input type="text" class="form-control" placeholder="礼品券名称" disabled id="gift_name"
+                               value="{$gift_list.giftvoucher_name}">
+                        <input type="hidden" name="gift_voucher_id" id="gift_voucher_id" value="{$gift_voucher_id}">
+                        <span class="input-group-btn">
+                                <button class="btn btn-primary" id="selectGift" type="button">选择礼品券</button>
+                            </span>
+                    </div>
+                </div>
+            </div>
+            <div class="form-group goods_type goods_3 hide" data-goods_type='balance'>
+                <label class="col-md-2 control-label">设置余额</label>
+                <div class="col-md-5">
+                    <div class="input-group">
+                        <div class="input-group-addon">余额</div>
+                        <input type="number" min="0.01" class="form-control" name="balance_setting" id="balance_setting"
+                               placeholder="">
+                        <div class="input-group-addon">元</div>
+                    </div>
+                </div>
+            </div>
+
+
+            <div class="form-group">
+                <label class="col-md-2 control-label"><span class="text-bright">*</span> 商品分类</label>
+                <div class="col-md-5">
+                    <select class="form-control" type="cate_1" id="category_id_1" name="goods_sort_1"
+                            aria-invalid="false" required>
+                        <option value="">请选择</option>
+                        {foreach name="category_list" item="v1"}
+                        <option value="{$v1['integral_category_id']}">{$v1['category_name']}</option>
+                        {/foreach}
+                    </select>
+                    <div class="mb-0 help-block">
+                        没有分类？去<a href="{:__URL('platform/Menu/addonmenu?addons=integralCategory')}" target="_blank"
+                                 class="text-primary">新建</a>，新建完点<a href="javascript:void(0)"
+                                                                    class="text-primary refresh">刷新</a>
+                    </div>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-md-2 control-label"><span class="text-bright">*</span> 商品名称</label>
+                <div class="col-md-5">
+                    <input type="text" class="form-control" name="title"
+                           value="{if $coupon_type_id}{$coupon_list.coupon_name}{elseif $gift_voucher_id}{$gift_list.giftvoucher_name}{/if}"
+                           required>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-md-2 control-label"><span class="text-bright"></span> 商品编号</label>
+                <div class="col-md-5">
+                    <input type="text" class="form-control" id="code" name="code" autocomplete="off" notChinese="true">
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-md-2 control-label">商品货号</label>
+                <div class="col-md-5">
+                    <input type="text" class="form-control" name="item_no" id="item_no">
+                    <div class="help-block mb-0">启用规格后不能设置</div>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="col-md-2 control-label"><span class="text-bright">*</span>兑换价</label>
+                <div class="col-md-5">
+                    <div class="input-group no-balance" style="display:none;">
+                        <div class="input-group-addon">消耗</div>
+                        <input type="text" class="form-control no-balance-point" id="conversion_point" required name="conversion_point" value="{$goods_info.point_exchange}" placeholder="">
+                        <div class="input-group-addon">积分+金额</div>
+                        <input type="text" class="form-control" name="conversion_price" value="{$goods_info.price}" id="conversion_price" placeholder="">
+                        <div class="input-group-addon">元</div>
+                    </div>
+                    <div class="input-group balance" style="display:none;">
+                        <div class="input-group-addon">消耗</div>
+                        <input type="text" class="form-control balance-point" required name="conversion_point1" id="" value="" placeholder="">
+                        <div class="input-group-addon">积分</div>
+                    </div>
+                    <div class="help-block mb-0">积分必须大于0，金额可为0，启用规格后不能设置</div>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-md-2 control-label"><span class="text-bright">*</span> 市场价</label>
+                <div class="col-md-5">
+                    <input type="number" class="form-control" min="0" value="" step="0.01" name="market_price1"
+                           id="market_price1" required>
+                    <div class="help-block mb-0">启用规格后不能设置</div>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-md-2 control-label"><span class="text-bright">*</span> 总库存</label>
+                <div class="col-md-5">
+                    <input type="number" class="form-control" min="0" name="stock" id="stock" required>
+                    <div class="help-block mb-0">启用规格后不能设置</div>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-md-2 control-label">兑换限制</label>
+                <div class="col-md-5">
+                    <div class="input-group">
+                        <div class="input-group-addon">每人限</div>
+                        <input type="number" class="form-control" id="limit_num" name="limit_num" value="" placeholder="">
+                        <div class="input-group-addon">份，每天提供</div>
+                        <input type="text" class="form-control" name="day_num" id="day_num" value="" placeholder="">
+                        <div class="input-group-addon">份</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 信息 end -->
+            <div class="screen-title2" data-id="t4">
+                <span class="text">商品图片</span>
+            </div>
+            <div class="form-group">
+                <label class="col-md-2 control-label"><span class="text-bright">*</span>商品图片</label>
+                <div class="col-md-8">
+                    <div class="border-default padding-15">
+                        <div class="mb-20">
+                            <div class="picture-list" id="J-goodspic">
+                                {if print_r($goods_info)}{/if}
+                                {if condition="count($goods_info['img_temp_array']) gt 0" }
+                                {foreach $goods_info["img_temp_array"]  as $vo}
+                                <a href="javascript:void(0);" id="goods_pic_list" style="margin-right:10px;">
+                                    <i class="icon icon-danger" style="right:-15px;" title="删除"></i>
+                                    <img src="{:__IMG($vo['pic_cover'])}" />
+
+                                </a>
+                                <input type="hidden" name="upload_img_id" value="{$vo['pic_id']}" />
+                                {/foreach}
+                                {else /}
+                                <!--<div class="upload-thumb" id="default_uploadimg">-->
+                                <!--<img src="ADMIN_IMG/album/default_goods_image_240.gif" />-->
+                                <!--</div>-->
+                                {/if}
+                                <a href="javascript:void(0);" class="plus-box" data-toggle="multiPicture"><i
+                                        class="icon icon-plus"></i></a>
+                            </div>
+                        </div>
+                        <p class="small-muted text-center">第一张为主图，最多上传5张，支持同时上传多张，建议700*700，支持JPG\GIF\PNG格式，最大不超过1M</p>
+                    </div>
+                    <input type="text" class="visibility" name="picture" required data-visi-type="multiPicture">
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="col-md-2 control-label">主图视频</label>
+                <div class="col-md-8">
+                    <div class="picture-list" id="pc_video_adv"><a href="javascript:void(0);" class="plus-box"
+                                                                   data-toggle="singleVideo"><i
+                            class="icon icon-plus"></i></a></div>
+                    <p class="help-block">建议尺寸为1:1，最好控制在10-30秒以内，视频不能超过5M</p>
+                </div>
+            </div>
+            <!-- 图片 end -->
+
+            <div class="screen-title2" data-id="t7">
+                <span class="text">物流/其他</span>
+            </div>
+            <div class="isgoods_type_1">
+                <div class="form-group">
+                    <label class="col-md-2 control-label"><span class="text-bright">*</span>运费设置</label>
+                    <div class="col-md-8">
+                        <div class="radio">
+                            <label>
+                                <input type="radio" name="shipping_fee_type" value="0" {if
+                                       condition="$goods_info.shipping_fee_type  eq 0" } checked {/if}> 包邮
+                            </label>
+                        </div>
+                        <div class="radio">
+                            <label>
+                                <input type="radio" name="shipping_fee_type" value="1" {if
+                                       condition="$goods_info.shipping_fee_type  eq 1" } checked {/if}> 统一邮费
+                            </label>
+                            <div class="inline-block ml-10 w15">
+                                <input type="number" class="form-control number-form-control" id="shipping_fee"
+                                       name="shipping_fee" min="0" step="0.01" placeholder="￥" {if
+                                       condition="$goods_info.shipping_fee_type  eq !1" } disabled {/if}
+                                data-visi-type="prices_1">
+                            </div>
+                        </div>
+                        <div class="radio">
+                            <label>
+                                <input type="radio" name="shipping_fee_type" value="2" {if
+                                       condition="$goods_info.shipping_fee_type  eq 2" } checked {/if}> 运费模板
+                            </label>
+                            <div class="inline-block ml-10">
+                                <select class="form-control select-form-control" id="shipping_fee_id"
+                                        name="shipping_fee_id" {if condition="$goods_info.shipping_fee_type  eq !2" }
+                                        disabled {/if}>
+                                <option value="0">默认模板</option>
+                                {foreach name="shipping_list" item="vo"}
+                                <option value="{$vo.shipping_fee_id}" type="{$vo.calculate_type}">
+                                    {$vo.shipping_fee_name}
+                                </option>
+                                {/foreach}
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group is_shipping_fee_id hidden">
+                    <label class="col-md-2 control-label"></label>
+                    <div class="col-md-8">
+                        <div class="input-group w-200">
+                            <div class="input-group-addon">商品重量</div>
+                            <input type="number" class="form-control" name="goods_weight" min="0" step="0.1" value="0">
+                            <div class="input-group-addon">kg</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group is_shipping_fee_id_volume hidden">
+                    <label class="col-md-2 control-label"></label>
+                    <div class="col-md-8">
+                        <div class="input-group w-200">
+                            <div class="input-group-addon">商品体积</div>
+                            <input type="number" class="form-control" name="goods_volume" min="0" step="0.1" value="0">
+                            <div class="input-group-addon">m²</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-group is_shipping_fee_id_num hidden">
+                    <label class="col-md-2 control-label"></label>
+                    <div class="col-md-8">
+                        <div class="input-group w-200">
+                            <div class="input-group-addon">商品数量</div>
+                            <input type="number" class="form-control" name="goods_count" id="goods_count" min="0" step="1" value="0">
+                            <div class="input-group-addon">件</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="col-md-2 control-label">是否上架</label>
+                <div class="col-md-8">
+                    <div class="radio">
+                        <label>
+                            <input type="radio" name="state" value="1" checked> 立即上架
+                        </label>
+                    </div>
+                    <div class="radio">
+                        <label>
+                            <input type="radio" name="state" value="0"> 放入仓库
+                        </label>
+                    </div>
+                </div>
+            </div><!-- 物流/其他 end -->
+
+        </div>
+
+        <div class="tab-pane fade tab-2" id="goods_attribute">
+            <div class="isgoods_type_1">
+                <input type="hidden" name="goods_attribute_id" id="goods_attribute_id" value="0">
+                <div id="isgoods_attribute">
+                    <!--规格新模板 start-->
+                    <div class="screen-title2">
+                        <span class="text">商品规格</span>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-md-1 control-label"></label>
+                        <div class="col-md-10">
+                            <div class="flex spec-tips">
+                                <div style="width: 70px">规格须知：</div>
+                                <div>
+                                    <p>1、若当前商品没有可选的“规格”与“属性”，请先前往“<a href="javascript:void(0);" class="text-primary">商品品类</a>”进行关联绑定，商品品类最后需要关联到“<a href="javascript:void(0);" class="text-primary">商品分类</a>”才能触发使用。</p>
+                                    <p>2、商品发布成功后，若通过“<span class="text-red">商品规格</span>”栏目修改规格名或规格值，该商品规格值还是会保留发布时的规格名与规格值不会变化。</p>
+                                    <p>3、如需修改该商品的规格名与规格值，只需双击对应规格名或规格值的文字即可编辑，保存后只会影响该商品。</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-md-1 control-label"></label>
+                        <div class="col-md-10">
+                            <table class="table v-table table-auto-center table-bordered" id="spec_list">
+                                <thead>
+                                <th class="w-120">规格名</th>
+                                <th class="w-120">展示方式</th>
+                                <th>规格项</th>
+                                </thead>
+                                <tbody>
+                                <tr class="last-tr">
+                                    <td colspan="3" class="text-left">
+                                        <a href="javascript:void(0);" class="goods-value-add" data-show-type="10"><i class="icon icon-add1 mr-04"></i>添加规格</a>
+                                    </td>
+                                </tr>
+                                </tbody>
+
+                            </table>
+                            <table class="table table-bordered table-auto-center v-table" id="stock_table" style="display: none;" >
+                                <thead></thead>
+                                <tbody></tbody>
+                                <tfoot>
+                                <tr>
+                                    <td colspan="10" class="text-left">
+                                        批量修改：
+                                        <a href="javascript:void(0);" class="text-primary batchSet" data-batch_type="sku_price">兑换价</a>
+                                        <a href="javascript:void(0);" class="text-primary batchSet" data-batch_type="market_price">市场价</a>
+                                        <a href="javascript:void(0);" class="text-primary batchSet" data-batch_type="exchange_point">兑换积分</a>
+                                        <a href="javascript:void(0);" class="text-primary batchSet" data-batch_type="stock_num">库存</a>
+                                        <a href="javascript:void(0);" class="text-primary batchSet" data-batch_type="goods_code">商品货号</a>
+                                    </td>
+                                </tr>
+                                </tfoot>
+                            </table>
+                        </div>
+                    </div>
+
+                    <div class="screen-title2">
+                        <span class="text">商品属性</span>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-md-1 control-label"></label>
+                        <div class="col-md-10">
+                            <table class="table v-table table-auto-center table-bordered" id="attribute_list">
+                                <thead>
+                                <th class="w-120">属性名</th>
+                                <th>属性值</th>
+                                </thead>
+                                <tbody>
+                                <tr class="last-tr">
+                                    <td colspan="2" class="text-left">
+                                        <a href="javascript:void(0);" class="goods-value-add" data-show-type="11"><i class="icon icon-add1 mr-04"></i>添加属性</a>
+                                    </td>
+                                </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+
+                    <!--规格新模板 end-->
+
+                </div><!-- 规格/属性 end -->
+            </div>
+
+        </div>
+
+        <div class="tab-pane fade tab-3" id="goods_detail">
+            <div class="screen-title2" data-id="t5">
+                <span class="text">详情描述</span>
+            </div>
+            <div class="form-group">
+                <label class="col-md-2 control-label"><span class="text-bright">*</span>商品详情</label>
+                <div class="col-md-9">
+                    <div class="UE-box">
+                        <div id="UE-detail" data-content=''></div>
+                    </div>
+                    <!-- <input type="text" class="visibility" name="UE-detail" required data-visi-type="UE"> -->
+                </div>
+            </div><!-- 商品详情 end -->
+        </div>
+    </div>
+    <input type="hidden" name="confirmPinleiByCate" id="confirmPinleiByCate" value="{$confirmPinleiByCate}">
+    <input type="hidden" name="integralGoodsCreateOrUpdate" id="integralGoodsCreateOrUpdate" value="{$integralGoodsCreateOrUpdate}">
+    <input type="hidden" name="modalIntegralGoodsList" id="modalIntegralGoodsList" value="{$modalIntegralGoodsList}">
+    <input type="hidden" name="modalIntegralCouponList" id="modalIntegralCouponList" value="{$modalIntegralCouponList}">
+    <input type="hidden" name="modalIntegralGiftList" id="modalIntegralGiftList" value="{$modalIntegralGiftList}">
+    <input type="hidden" name="isCardStock" id="isCardStock" value="{$isCardStock}">
+    <input type="hidden" name="refreshCate" id="refreshCate" value="{$refreshCate}">
+    <div class="form-group">
+        <label class="col-md-2 control-label"></label>
+        <div class="col-md-8">
+            <button class="btn btn-primary" type="submit">添加</button>
+            <a href="javascript:history.go(-1);" class="btn btn-default">返回</a>
+        </div>
+    </div>
+</form>
+<!--<div class="list-group side-catalog"></div>-->
+<!-- page end  -->
+</div>
+</div>
+{/block}
+
+{block name="script"}
+<script>
+    require(['util', 'integralAddgood', 'sotr-selector'], function (util, integralAddgood) {
+        integralAddgood.goodsSkuCreate();
+    })
+</script>
+{/block}

@@ -1,0 +1,98 @@
+<import src="/common/wxParse/wxParse.wxml"/>
+<view class='area_apply' wx:if="{{boxShow}}">
+  <view class='banner' wx:if="{{bonusApplyData.area_bonus_agreement.logo != ''}}">
+    <image src='{{bonusApplyData.area_bonus_agreement.logo}}' binderror='errorimg'></image>
+  </view>
+
+  <!-- 等待审核 -->
+  <view class='auditing' wx:if='{{bonusApplyData.is_area_agent == 1}}'>
+    <view class='info'>
+      <van-icon class='icon' name="underway" size='4em' color='rgb(25, 137, 250)'/>
+      <view>提交成功，等待审核！</view>
+    </view>
+  </view>
+
+  <!-- 审核失败 -->
+  <view class='auditing' wx:if='{{bonusApplyData.is_area_agent == -1}}'>
+    <view class='info'>
+      <van-icon class='icon' name="clear" size='4em' color='rgb(102, 102, 102)'/>
+      <view>后台拒绝申请，请联系客服！</view>
+    </view>
+  </view>
+
+  <!-- 完善资料 -->
+  <view class='auditing' wx:if='{{bonusApplyData.is_area_agent == 3}}'>
+    <view class='info'>
+      <van-icon class='icon' name="more" size='4em' color='rgb(25, 137, 250)'/>
+      <view>满足条件，请完善资料！</view>
+    </view>
+  </view>  
+
+  <!-- 未申请，直接申请 -->
+  <view wx:if='{{bonusApplyData.is_area_agent == 0 || bonusApplyData.is_area_agent == -1}}'>
+    <view> 
+      <view class='apply_group' wx:if="{{customform == ''}}">
+        <view class='apply_cell'>
+          <view class='title'>真实姓名</view>
+          <view class='value'>
+            <input type='text' placeholder='请输入真实姓名' bindblur='realNameFun'></input>
+          </view>
+        </view>
+        <view class='apply_cell'>
+          <view class='title'>手机号码</view>
+          <view class='value'>
+            <input type='text' value='{{bonusApplyData.user_tel}}' disabled='disabled'></input>
+          </view>
+        </view>
+        <view class='apply_cell'>
+          <view class='title'>代理级别</view>
+          <view class='value'>
+            <picker mode='selector' bindchange="bindLevelPickerChange" value="{{level_index}}" range="{{level_array}}">
+              <view class="picker">                
+                <input type='text' value='{{level_array[level_index]}}' placeholder='请选择代理级别' disabled='true'></input>
+              </view>
+            </picker>
+          </view>
+        </view>
+        <view class='apply_cell'>
+          <view class='title'>代理区域</view>
+          <view class='value'>
+            <input type='text' placeholder='请选择代理区域' value='{{bonus_area_name}}' disabled='true' bindtap='bonusAreaShow'></input>
+          </view>
+        </view>
+      </view>
+      <view wx:else>
+        <!-- 自定义表单    -->
+        <form-com wx:if="{{customform != ''}}" customform='{{customform}}' bind:customformEven='customformData' ></form-com>
+      </view>
+      <view class='Agreement_btn'>
+        <view class='Agreement_radio'>
+          <label class='radio' data-checked='{{radioChecked}}' bindtap='radioApplyChange'>
+              <radio value="" checked="{{radioChecked}}" color='#1989fa'></radio>
+              我已阅读并同意以下协议
+            </label>
+        </view>    
+        <view class="sub_btn {{radioChecked == true ? 'active_btn' : ''}}">
+          <button bindtap='areaAgentApply'>提交申请</button>
+        </view>    
+      </view>
+    </view> 
+
+  </view>
+
+  <!-- 协议 -->
+  <view class='Agreement_content'>
+    <view class='Agreement_title'><text class='title_text'>{{txt_area_agreement}}协议</text></view>
+    <view class='content'>
+      <template is="wxParse" data="{{wxParseData:content.nodes}}" />
+    </view>
+  </view>
+
+</view>
+
+<van-popup show="{{ bonusAreaShow }}" position='bottom' bind:close="onBonusAreaClose">
+  <van-area area-list="{{ bonusAreaList }}" columns-num="{{ bonus_level }}" title="代理区域" bind:confirm='bonusAreaChange'  bind:cancel='onBonusAreaClose' />
+</van-popup>
+
+<!-- 关联手机 -->
+<phone-compoent phoneShow='{{phoneShow}}' bind:phoneEven='phonereResult'></phone-compoent>
